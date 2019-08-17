@@ -1,0 +1,1069 @@
+
+{:'/Proc/abec.js':}
+
+
+// "use strict";
+
+
+// shiv :: Cookies : https://github.com/js-cookie/js-cookie
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   !function(e){var n=!1;if("function"==typeof define&&define.amd&&(define(e),n=!0),"object"==typeof exports&&(module.exports=e(),n=!0),!n){var o=window.Cookies,t=window.Cookies=e();t.noConflict=function(){return window.Cookies=o,t}}}(function(){function g(){for(var e=0,n={};e<arguments.length;e++){var o=arguments[e];for(var t in o)n[t]=o[t]}return n}return function e(l){function C(e,n,o){var t;if("undefined"!=typeof document){if(1<arguments.length){if("number"==typeof(o=g({path:"/"},C.defaults,o)).expires){var r=new Date;r.setMilliseconds(r.getMilliseconds()+864e5*o.expires),o.expires=r}o.expires=o.expires?o.expires.toUTCString():"";try{t=JSON.stringify(n),/^[\{\[]/.test(t)&&(n=t)}catch(e){}n=l.write?l.write(n,e):encodeURIComponent(String(n)).replace(/%(23|24|26|2B|3A|3C|3E|3D|2F|3F|40|5B|5D|5E|60|7B|7D|7C)/g,decodeURIComponent),e=(e=(e=encodeURIComponent(String(e))).replace(/%(23|24|26|2B|5E|60|7C)/g,decodeURIComponent)).replace(/[\(\)]/g,escape);var i="";for(var c in o)o[c]&&(i+="; "+c,!0!==o[c]&&(i+="="+o[c]));return document.cookie=e+"="+n+i}e||(t={});for(var a=document.cookie?document.cookie.split("; "):[],s=/(%[0-9A-Z]{2})+/g,f=0;f<a.length;f++){var p=a[f].split("="),d=p.slice(1).join("=");this.json||'"'!==d.charAt(0)||(d=d.slice(1,-1));try{var u=p[0].replace(s,decodeURIComponent);if(d=l.read?l.read(d,u):l(d,u)||d.replace(s,decodeURIComponent),this.json)try{d=JSON.parse(d)}catch(e){}if(e===u){t=d;break}e||(t[u]=d)}catch(e){}}return t}}return(C.set=C).get=function(e){return C.call(C,e)},C.getJSON=function(){return C.apply({json:!0},[].slice.call(arguments))},C.defaults={},C.remove=function(e,n){C(e,"",g(n,{expires:-1}))},C.withConverter=e,C}(function(){})});
+   Cookies.defaults.path='/'; harden('Cookies');
+
+   extend(MAIN)
+   ({
+      cookie:
+      {
+         exists:function(b,v){v=Cookies.get(b); return isVoid(v);},
+         create:function(b,a,c,d){Cookies.set(b,btoa(JSON.stringify(a)),{expires:c||null,path:d||"/"}); return true;},
+         select:function(b,v){v=Cookies.get(b); if(!isVoid(v)){try{v=JSON.parse(atob(v))}catch(e){v=null}; return v}},
+         delete:function(b,a){return Cookies.remove(b,{path:a||"/"})},
+      }
+   });
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// tool :: copyToClipboard : use like: `copyToClipboard('whatever')`
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const copyToClipboard = str =>
+   {
+     const el=document.createElement('textarea'); el.value=str; el.setAttribute('readonly',''); el.style.position='absolute';
+     el.style.left='-9999px'; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// tool :: xdom : xml-to-dom elements
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const xdom = function(v)
+   {
+      if(isText(v)){v=v.trim()}; if(wrapOf(v)!='<>'){return};
+      let n=document.createElement('div'); n.innerHTML=v; let l=listOf(n.childNodes); let r=[]; l.forEach((i)=>
+      {
+         let t=i.nodeName.toLowerCase(); if((t=='#text')&&(i.textContent.trim()=='')){return}; // whitespace
+         if(t=='script'){t=i.innerHTML; i=VOID; i=document.createElement('script'); i.innerHTML=t; t='script'}; // permission
+         r.push(i);
+      });
+      return r;
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// tool :: (Array.prototype) : select
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   extend(Array.prototype)
+   ({
+      select:function(x)
+      {
+         if(!isText(x,1)||(this.length<1)||!isNode(this[0])){return}; let c,r; c=x[0]; r=[];
+         if(!isin(['#','.'],c)){c=VOID}; if(c){x=x.substring(1)}; this.forEach((i)=>
+         {
+            let n=(isNode(i)?i.nodeName.toLowerCase():(isKnob(i)?keys(i)[0]:VOID)); if(!n){return};
+            if(!c){if(x==n){r.push(n)};return}; if((c=='#')&&(x==n)){r.push(n);return}; if((c=='.')&&isin(i.className(x))){r.push(n);return};
+         });
+         return r;
+      },
+   });
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: userDoes : assert if the current user is in a clan -or list of clans .. can be given string, or multiple args or array
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const userDoes = function()
+   {
+      let a=listOf(arguments); if(a.length<1){return}; if(isList(a[0])){a=a[0]}; if(a.length<1){return}; // validate
+      if((a.length<2)&&isText(a[0])&&isin(a[0],',')){a=a[0]; a=a.split(' ').join('').split(',')}; // correct
+      let l,n,f,c; l=[]; n=[]; a.forEach((i)=>{if(f||!isText(i,4)){f=1;return}; c=i[0]; i=ltrim(i,'!'); l.push(i); if(c=='!'){n.push(i)}});
+      if(f){fail('invalid clan assertion');return}; let r=isin(sesn('CLAN'),l); if(n.length<1){return r};
+      if(r&&isin(n,r)){return false}; if(r){return ('!'+r)}; return a.join(',');
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: nodeName : of node/knob
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const nodeName = function(o)
+   {
+      if(isNode(o)){return o.nodeName.toLowerCase()}; if(isKnob(o)){return keys(o)[0]};
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: purl : process/path-URL
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const purl = function(p,d,f, o,x,e,cb,pe)
+   {
+      if(MAIN.HALT){return};
+      if(isText(p)&&isVoid(d)&&isVoid(f)){o={target:p,method:'GET',listen:{}}} // only URL given
+      else if(isText(p)&&isFunc(d)&&isVoid(f)){o={target:p,method:'GET',listen:{loadend:d}}} // URL + callback
+      else if(isText(p)&&isKnob(d)&&isVoid(f)){o=d; o.target=p; if(!isKnob(o.listen)){o.listen={}};} // URL + options
+      else if(isText(p)&&isKnob(d)&&isFunc(f)){o={target:p,method:'POST',convey:d,listen:{loadend:f}}} // URL + data + callback
+      else if(isKnob(p)&&isFunc(d)&&isVoid(f)){o=p; if(!isKnob(o.listen)){o.listen={}}; o.listen.loadend=d} // options + callback
+      else if(isKnob(p)&&isVoid(d)&&isVoid(f)){o=p}; // options only
+
+      e='invalid purl arguments'; if(!isKnob(o)){fail(e);return}; if(!isText(o.target,1)){fail(e);return}; // validate
+      if(!isKnob(o.listen)){fail(e);return}; if(!isFunc(o.listen.loadend)){fail(e);return}; // validate
+      if(!isFunc(o.listen.progress)){o.listen.progress=function(){}}; pe=o.listen.progress; delete o.listen.progress;
+
+      o.listen.progress=function(b)
+      {
+         if(!this.done){this.done=0}; let q=(Math.floor(b.loaded/b.total)*100);
+         if(this.done<q){this.done=q};pe(q,this.purl); if(this.busy){Busy.edit(this.purl,q)};
+      };
+
+      cb=o.listen.loadend; delete o.listen.loadend; o.listen.loadend=function() // event done
+      {
+         let r={path:this.purl,head:dval(this.getAllResponseHeaders()),body:this.response};
+         // if(wrapOf(r.body)=='<>'){r.body=xdom(r.body);};
+         if(!this.done){this.done=0};
+         if((this.status==200)&&(this.done<100)){pe(100,this.purl);if(this.busy){Busy.edit(this.purl,100)};};
+         if(x.silent){tick.after(250,()=>{delete server.silent.busy})};
+         cb(r);
+      };
+
+      if(o.silent){server.silent.busy=1};
+      if(!o.method){o.method='POST'}; if(!o.expect){o.expect='text'}; if(!isKnob(o.header)){o.header={}}; // method, responseType, headerOBJ
+      if(!o.header.INTRFACE){o.header.INTRFACE='API'}; x=(new XMLHttpRequest()); x.open(o.method,o.target); x.responseType=o.expect;
+      x.purl=o.target; o.listen.each((v,k)=>{x.addEventListener(k,v)}); o.header.each((v,k)=>{x.setRequestHeader(k,v)}); // events, headers
+      x.silent=o.silent; tick.after(500,()=>{if(x.done&&(x.done>99)){return}; x.busy=(x.silent?0:1)}); // show busy if true
+      x.send((isKnob(o.convey)?encode.JSON(o.convey):VOID)); // dispatch request
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: entity : creates new event emitter .. o is (optional) properties object
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const entity = function(o, r)
+   {r=(new EventTarget()); if(isKnob(o)){for(var k in o){r[k]=o[k];}}; return r;};
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// tool :: (events)
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   extend(EventTarget.prototype)
+   ({
+      signal:function(e,d,o, n,self,evnt)
+      {
+         self=(this||MAIN); expect.word(e); n=('on'+e); if(isText(d)&&isin([ONCE,EVRY],d)){o=d;d=VOID};
+         if(o!=EVRY){o=ONCE}; if((d!==VOID)&&!d.detail){d={detail:d}}; evnt=(d?(new CustomEvent(e,d)):(new Event(e)));
+         if(self[n]&&isFunc(self[n])){self[n].apply(self,[evnt]);
+         if(o==ONCE){if(self[n].__evntID){delete listen.jobs[self[n].__evntID]};self[n]=null}; return;};
+         self.dispatchEvent(evnt);
+      },
+
+
+      listen:function(evt,opt,hash,cbf, self,obst,fltr)
+      {
+         if(isNode(this)&&isKnob(evt))
+         {
+            evt.each((ef,en)=>{this.listen(en,ef)}); return this;
+         };
+
+         if(isFunc(evt)){cbf=evt;evt=VOID}; if(isFunc(opt)){cbf=opt;opt=EVRY}else if(isKnob(opt)){fltr=opt; opt=EVRY};
+         if(!listen.jobs){extend(listen)({jobs:{},hash:function(f,x){this.x+=1; return sha1(this.x+cbf.toString())}.bind({x:0})})};
+         if(isFunc(hash)){cbf=hash;hash=VOID}; self=(this||MAIN); if(!isText(hash)){hash=listen.hash(cbf)}else{cbf=listen.jobs[hash]};
+         if(!opt){opt=EVRY}else if(!isin([ONCE,EVRY],opt)){opt=EVRY}; expect.func(cbf); if(evt==VOID){evt=AUTO}; let ice;
+         if(evt==AUTO){evt=keys(self,AUTO,'on*');}; if(!isList(evt)){if(isin(evt,' ')){ice=evt; evt=['keydown','mousedown']}else{evt=[evt]}};
+         if(!self.events){self.events={}}; obst=this; if(!!obst&&!obst.listensFor){obst.listensFor=[]};
+         if(!!obst&&!!ice){radd(obst.listensFor,ice)}; evt.forEach((e)=>
+         {
+            if(e.slice(0,2)=='on'){e=e.slice(2)}; self.events[e]=hash; if(!!obst&&!!ice){radd(obst.listensFor,e)};
+            listen.jobs[hash]=[e,cbf]; let alt=VOID;
+
+            if(obst&&(e=='dragstart')){obst.draggable=true; obst.setAttribute('draggable',true);};
+            if(obst&&((e=='drop')||(e=='feed'))){obst.onFeed(cbf);return};
+
+            if(isin(e,['down','up','key','click','Click','contextmenu','mouse','Mouse']))
+            {
+               let kpr; if(isin(e,'key')&&isin(e,':')){kpr=stub(e,':'); e=kpr[0]; kpr=kpr[2]; if(e=='key'){e='keydown'}};
+               if(e=='LeftClick'){e='click';}else if(e=='RightClick'){e='contextmenu'};
+
+               alt=function(evnt)
+               {
+                  let evn,btn,tgt,kcl,hcn,cmb,dev,crd,rpt,pvk,rkc,rsp,grb,key; evn=evnt.type; tgt=evnt.target; cmb=[];
+                  dev=(isin(evn,'key')?'keyboard':'pointer'); pvk=this.pvk; rpt=evnt.repeat; key=this.kpr;
+                  if((evnt instanceof MouseEvent)){dev='pointer'};
+
+                  if(dev=='keyboard')
+                  {
+                     btn=evnt.key; if(btn==' '){btn='Space'};
+                     if(key&&(btn.slice(0,key.length)==key)){key=btn}else{key=VOID};
+                     if(!this.ice&&this.kpr){if(key==btn){this.run(evnt);};return};
+                  }
+                  else
+                  {
+                     if(evnt.which==null){btn=((evnt.button<2)?"LeftClick":((event.button==4)?"MiddleClick":"RightClick"))}
+                     else{(btn=(evnt.which<2)?"LeftClick":((evnt.which==2)?"MiddleClick":"RightClick"))};
+                     if(evnt.type=='mousewheel'){btn='MouseWheel'}else if(evnt.type=='mousemove'){btn='MouseMove'};
+                     crd=[evnt.clientX,evnt.clientY]; if(btn=='MouseWheel')
+                     {
+                        let x=(evnt.deltaX+''); let y=(evnt.deltaY+''); if(x=='-0'){x='0'}; if(y=='-0'){y='0'};
+                        x=(x.split('.')[0]*1); y=(y.split('.')[0]*1); crd=[x,y];
+                     };
+                  };
+
+                  if((btn=='RightClick')){grb=1;};
+                  kcl={ctrlKey:'Control',shiftKey:'Shift',metaKey:'Meta',altKey:'Alt'};
+                  kcl.each((v,k)=>{if(evnt[k]||isin(btn,v)){cmb.push(v)}; if(isin(btn,v)){hcn=1}});
+                  if((span(cmb)>0)&&!rpt&&!hcn){if(!isin(pvk,btn)){pvk.push(btn)}; this.pvk=pvk; cmb=cmb.concat(pvk);};
+
+                  cmb=cmb.join(' ').trim(); if(!isin(cmb,' ')){cmb=VOID}; if(!cmb){this.pvk=[];}; if(cmb&&rpt){return};
+                  evnt.device=dev; evnt.signal=(cmb||btn); evnt.coords=crd;
+                  if(!this.ice){this.run(evnt,grb); return};
+                  if(cmb&&(this.ice==cmb)){grb=1; this.run(evnt,grb); return};
+                  return false;
+               }
+               .bind({tgt:self,cbf:cbf,ice:ice,pvk:[],kpr:kpr,run:function(fe,ge)
+               {
+                  if(ge){fe.preventDefault(); fe.stopPropagation();};
+                  fe.Target=fe.currentTarget; this.cbf.apply(this.tgt,[fe]);
+               }});
+            };
+
+            if(!alt)
+            {
+               alt=function(evnt){evnt.Target=evnt.currentTarget; this.cbf.apply(this.tgt,[evnt]);}.bind({tgt:self,cbf:cbf});
+               if(isin(e,'mutation'))
+               {
+                  alt.worker=(new MutationObserver(function(l)
+                  {
+                     let q=addStack.log; if(!fubu('worker.MutationObserver.bind')){wack();return}; addStack.log=q;
+
+                     let k,v,h,r; for(var m of l)
+                     {
+                        if(!this.flt){this.tgt.signal(this.evt,{detail:m});continue};
+                        k=keys(this.flt)[0]; v=this.flt[k]; h=m[k]; r=[]; if(!h||(h.length<1)){continue}; h=listOf(h);
+                        h.each((n)=>{let x=n.Select(v); if(!isList(x)){x=[x]}; r=r.concat(x)}); if(r.length<1){continue};
+                        this.tgt.signal(this.evt,{detail:r});
+                     };
+                  }.bind({tgt:(obst||self),evt:e,flt:fltr})));
+                  alt.worker.observe((obst||document.documentElement),{childList:true,subtree:true,attributes:true});
+               };
+            };
+
+            listen.jobs[hash][1]=alt;
+
+            if(opt==EVRY){self.addEventListener(e,listen.jobs[hash][1],true);return};
+            if(opt==ONCE){self[('on'+e)]=listen.jobs[hash][1]; self[('on'+e)].__evntID=hash;return};
+         });
+         return hash;
+      },
+
+
+      ignore:function(e,f, n,self,hash,x)
+      {
+         expect.text(e); self=(this||MAIN); if(!self.events){self.events={}};
+         if(isFunc(f)){hash=sha1(f.toString());}else{hash=(!!listen.jobs[e]?e:self.events[e])};
+         x=listen.jobs[hash]; if(!x){fail('event hash `'+hash+'` is undefined');return};
+         if(f===VOID){e=x[0]; f=x[1]}; expect.word(e); expect.func(f); n=('on'+e);
+         if(self[n]===f){self[n]=VOID}else{self.removeEventListener(e,f,true);}; delete listen.jobs[hash];
+         if(!self.seized){self.seized={}}; self.seized[e]=1; return true;
+      },
+   });
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// tool :: server : listen & trigger server events .. `server.listen()` happens on a single stream which is used to listen on multiple events
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   extend(MAIN)
+   ({
+      server:
+      {
+         ostime:(("{:BOOTTIME:}").split('.')[0]*1),
+         stream:VOID,
+         sensor:{},
+         silent:{},
+         hashes:{},
+
+
+         vivify:function(f)
+         {
+            if(!!this.stream&&isFunc(f)){f(this.stream);return}; let p=('/Proc/listen');
+
+            this.stream=(new EventSource(p,{withCredentials:true})); this.stream.purl=p; server.sensor.live=0;
+            // this.stream.listen('open',function(evnt){});
+            this.stream.listen('ping',function(evnt){server.sensor.live=1});
+            this.stream.listen('shut',function(evnt){server.stream.close(); server.sensor.live=0});
+            this.stream.listen('fail',function(evnt){if(MAIN.Busy){Busy.tint('red')}; fail(atob(evnt.data));});
+
+            this.stream.listen('error',function(evnt) // this happens on reconnect -or "connection fail", only the latter is an error
+            {
+               if(!server.sensor.live)
+               {
+                  server.stream.close(); // prevent reconnect flood for in case the server disconnects upon connect
+                  purl(evnt.Target.purl,(rsp)=>
+                  {
+                     // debug this issue by visiting the event emitter via API interface
+                     fail('server event emitter `'+evnt.Target.purl+'` has issues\n\nDetails:\n'+(rsp.body||'undefined'));
+                  });
+               };
+            });
+
+            if(isFunc(f)){f(this.stream);};
+         },
+
+
+         listen:function(e,f,h, t)
+         {
+            if(isFunc(h)){t=f; f=h; h=t;}; // swapped args
+            if(isText(h,1)&&!!server.hashes[h]){return}; // already listening for this
+            if(!isWord(e)){fail('expecting 1st arg as :word:');return}; if(!isFunc(f)){fail('expecting 2nd arg as :func:');return};
+            this.vivify(()=>{server.stream.addEventListener(e,function(evnt){let d=dval(atob(evnt.data)); this.cb(d);}.bind({cb:f}),false);});
+            if(!isText(h,1)){return}; server.hashes[h]=1;
+         },
+
+
+         signal:function(e,d,t)
+         {
+            if(!isWord(e)){fail('SignalError: expecting 1st arg as word');return};
+            if(!isKnob(d,1)){fail('SignalError: expecting 2nd arg as non-empty object');return};
+            if(isText(t,1)&&((t!=='*')&&(t[0]!=='#')&&(t[0]!=='.')))
+            {fail('SignalError: invalid target,\nexpecting any 1 of: `*`, `#userName`, `.clanName`');return};
+
+            purl({target:'/Proc/signal', method:'POST', convey:{evnt:e,data:btoa(encode.JSON(d)),trgt:(t||null)}}, function(r)
+            {
+               if(r.body!=OK){fail(r.body)};
+            });
+         },
+      },
+   });
+
+   const UNIQUE = ':UNIQUE:';
+
+   tick.after(1500,function()
+   {
+      server.listen('busy',function(d){if(server.silent.busy){return}; Busy.edit(d.with,d.done)});
+      server.listen('done',function(d){Busy.done();});
+      server.listen('dump',function(d){dump(d)});
+   });
+
+   setInterval(()=>{server.ostime+=1;},1000);
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: requires : versatile preloader
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const requires = function(l,f, s,d,slf)
+   {
+      if(MAIN.HALT){return}; addStack(); if(!isList(l)){l=[l]}; if(!isFunc(f)){f=function(){}}; slf=this; d=span(l);
+      l.each((i)=>
+      {
+         let x=fext(i); if(x=='fnt'){x='css'}; if(!x){fail('expecting valid path');return STOP}; // validate
+         if(slf.done[i]){d--;return};
+
+         if(x=='js')
+         {
+            let n=create('script'); n.purl=i; n.listen('ready',function(){d--; slf.done[this.purl]=1});
+            n.modify({src:i}); document.head.insert(n); return;
+         };
+
+         if(x=='css')
+         {
+            let n=create('link'); n.purl=i; n.listen('ready',function(){d--; slf.done[this.purl]=1});
+            n.modify({rel:'stylesheet',href:i}); document.head.insert(n); return;
+         };
+
+         if((x=='htm')||(x=='html'))
+         {
+            purl(i,(r)=>
+            {
+               r=(xdom(r.body)||[]); r.forEach((n)=> // html - apply each element to the dom
+               {document[(isin(['script','style'],nodeName(n))?'head':'body')].insert(n);});
+               tick.after(10,()=>{d--; slf.done[r.path]=1})
+            }); return NEXT;
+         };
+
+         fail('unsupported file-extension `'+x+'`'); return STOP; // loop must not reach here
+      });
+
+      if(d<1){f();return}; // if already loaded before - no need to wait any longer
+      wait.until(()=>{return (d<1)},f);
+   }
+   .bind({call:{},done:{}});
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// tool :: custom : library for custom `domtag` and `attrib` .. extend anywhere with: `extend(custom.domtag)({newtag:funcion(){}})`
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const custom = {domtag:{},attrib:{}};
+
+   {:'/Proc/xtag.js':}
+
+   {:'/Proc/xatr.js':}
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: create : create DOM nodes from string, list, object .. custom nodes are defined in `/Proc/xtag.js`
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const create = function(t,a,c, r,x,n)
+   {
+      if(MAIN.HALT){return};
+      if(isList(t)){r=[]; t.forEach((o)=>{r.push(create(o,a,c))}); return r}; // list of nodes
+      if(wrapOf(trim(t))=='<>'){return xdom(t)}; // xml to node-list
+      if(isText(t,1)){t={[t]:(a||''),contents:c}}; if(!isKnob(t)){return}; // validate
+
+      a=t; t=VOID; t=keys(a)[0]; n=document.createElement(t); // new element
+      if(isList(a[t])){c=a[t];} // tag value is contents
+      else if(isText(a[t],2)&&((a[t][0]=='#')||(a[t][0]=='.'))) // tag value is id and/or classes
+      {
+         x=a[t]; delete a[t]; if(!a.class){a.class=''}; a.class=a.class.split(' '); // quick id & non/existing classes
+         x.split(' ').forEach((i)=>{c=i[0]; i=i.slice(1); if(c=='#'){a.id=i; a.name=i}else{a.class.push(i)}}); // set id/classes
+         a.class=a.class.join(' ').trim(); c=a.contents; // normalized classes string - now containing `.class` if defined
+      }
+      else if(isText(a[t])&&isVoid(a.contents)){c=a[t];} // tag value is contents
+      else if(!isVoid(a.contents)){c=a.contents}; // contents explicitly defined
+      delete a[t]; delete a.contents; // tag-name and `contents` are not attributes, get rid of them
+
+      let fc=a.forClans; if(!isVoid(fc)){delete a.forClans; if(!userDoes(fc)){return}}; // ignore if not for this user's clan
+      // if(isKnob(a.style)){a.style.each((v,k)=>{n.style[k]=v}); delete a.style}; // style object
+      if(isFunc(custom.domtag[t])){let dt=custom.domtag[t](n,a,c); if(dt==DONE){return n}}; // handle this node exclusively
+      r=modify(n,a,c); // set this node's attributes, the result is the updated node
+      if((r.childNodes.length<1)&&(c!=VOID)&&(c!='')){r=r.insert(c)}; // insert content if xtag & xatr did not
+      return r; // done
+   }
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: modify : define -or update exising DOM-node-attributes .. custom attributes are defined in `/Proc/xatr.js`
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const modify = function(n,a,c)
+   {
+      if(MAIN.HALT){return}; if(!isNode(n)||!isKnob(a)){return}; // validate
+      let slog=getStack(); addStack.log=slog;
+      a.each((v,k)=>
+      {
+         if(isFunc(custom.attrib[k])){if(!isVoid(custom.attrib[k](v,n,a,c))){return}}; // set attribute from custom, VOID returns get ignored
+         // if(isin(['src','href'],k)&&v.startsWith('~/')){v=ltrim(v,'~/'); v=('/User/data/'+sesn('USER')+'/home/'+v);};
+         if(!isFunc(v)&&!isKnob(v)&&(k!='innerHTML')){n.setAttribute(k,v);}; // normal attribute
+         if(k=='class'){k='className'}; // prep attribute name for JS
+         n[k]=v; // set attribute as property -which possibly triggers some intrinsic JS event
+      });
+      addStack.log=slog;
+      return n;
+   }
+
+   extend(Element.prototype)
+   ({
+      modify:function(a)
+      {
+         return modify(this,a);
+      },
+   });
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// tool :: (Element.prototype) : insert .. handy appendChild/innerHTML .. converts object/list/html to nodes .. converts non-text to text
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   extend(Element.prototype)
+   ({
+      insert:function(v)
+      {
+         if(MAIN.HALT){return}; if(v==VOID){return this}; addStack(); let t=nodeName(this);
+         if(isList(v)){var s=this; listOf(v).forEach((o)=>{s.insert(o)});return s}; // works with nodelist or list-of-anything
+         this.signal('insert');
+         if(t=='img'){return this}; // TODO :: impose?
+         if(t=='input'){this.value=tval(v); return this}; // form input text
+         if(isNode(v)){this.appendChild(v); return this}; // normal DOM-node append
+         if(isKnob(v)){this.appendChild(create(v));return this}; // create it first then append
+         if(isText(v)&&(wrapOf(trim(v))=='<>')){this.innerHTML=v; return this}; // convert html to nodes and try again
+         if(!isText(v)){v=tval(v);}; // convert any non-text to text .. circular, boolean, number, function, etc.
+         if(isin(['code','text'],t)){this.textContent=v; return this;}; // insert as TEXT
+         if(isin(['style','script','pre','span','p','a','i','b'],t)){this.innerHTML=v; return this}; // insert as HTML
+         let n=document.createElement('span'); n.innerHTML=v; this.appendChild(n); return this; // append text as span-node
+      },
+   });
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// shim :: TextAreaElement : insertAtCaret
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   extend(HTMLTextAreaElement.prototype)
+   ({
+      insertAtCaret:function(text)
+      {
+           text = text || '';
+           if (document.selection) {
+             // IE
+             this.focus();
+             var sel = document.selection.createRange();
+             sel.text = text;
+           } else if (this.selectionStart || this.selectionStart === 0) {
+             // Others
+             var startPos = this.selectionStart;
+             var endPos = this.selectionEnd;
+             this.value = this.value.substring(0, startPos) +
+               text +
+               this.value.substring(endPos, this.value.length);
+             this.selectionStart = startPos + text.length;
+             this.selectionEnd = startPos + text.length;
+           } else {
+             this.value += text;
+           }
+      }
+   });
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: remove : deletes element from DOM
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const remove = function(n)
+   {
+      if(!isNode(n)||!n.parentNode){return}; n.parentNode.removeChild(n); return true;
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: newGui : reboots the gui .. if path given it does a relocate, else reload
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const newGui = function(p, t)
+   {
+      server.stream.close();
+      if(isPath(p)){t=(location.protocol+'//'+location.host+p)}else{t=location.href};
+      document.body.insert
+      ([
+         {form:'#anonReboot', action:t, method:'POST', style:'position:absolute;opacity:0', contents:
+         [
+            {input:'#INTRFACE', type:'hidden', value:'GUI'}
+         ]}
+      ]);
+      select('#anonReboot').submit();
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// tool :: onFeed : drop-on event trap
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   extend(Element.prototype)
+   ({
+      onFeed:function(h)
+      {
+         this.ondragover=function(e){e.preventDefault();e.stopPropagation();}; this.handle=h; this.ondrop=function(e,s)
+         {
+            e.preventDefault(); e.stopPropagation(); var d,l,z; d=e.dataTransfer; l=d.files; s=this; z=([...l]);
+            if(z.length<1){let r=d.getData('text/plain'); if(isPath(r)){durl(r,function(t){s.handle(t);});return}; s.handle(r);return;};
+            z.forEach(function(f){decode.BLOB(f,function(r){s.handle(r,f.name);})});
+         };
+      },
+   });
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// tool :: (canvas) :  draw image on canvas with these methods
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   extend(MAIN)
+   ({
+      drawPrep:function(x,i,f)
+      {
+         if(!x||!x.canvas){fail('expecting canvas context as 1st argument');return}; // validate
+         if(!x.canvas.parentNode){fail('expecting canvas to be appended to the DOM');return}; // validate
+         if(nodeName(i)!='img'){fail('expecting img element as 2nd agument');return}; // validate
+         if(!isFunc(f)){fail('expecting callback as 3rd argument');return}; // validate
+         i.rectInfo((d)=>{f(x.canvas.width,x.canvas.height,d.width,d.height)}); // respond with image dimensions
+      },
+
+      drawFill:function(x,i,f){drawPrep(x,i,(cw,ch,iw,ih)=>
+      {
+         let xr,yr,dr,mx,my; xr=(cw/iw); yr=(ch/ih); dr=Math.max(xr,yr);
+         mx=((cw-iw*dr)/2); my=((ch-ih*dr)/2); x.drawImage(i,0,0,iw,ih,mx,my,(iw*dr),(ih*dr)); f();
+      })},
+
+      drawTile:function(x,i,f){drawPrep(x,i,(cw,ch,iw,ih)=>
+      {
+         let p=x.createPattern(i,'repeat'); x.rect(0,0,cw,ch); x.fillStyle=p; x.fill(); f();
+      })},
+
+      drawSpan:function(x,i,f){drawPrep(x,i,(cw,ch,iw,ih)=>
+      {
+         x.drawImage(i,0,0,iw,ih,0,0,cw,ch); f();
+      })},
+   });
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// tool :: (img Element.prototype) : impose .. super-impose images into the origin .. the origin does not have to be in the DOM
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   extend(HTMLImageElement.prototype)
+   ({
+      impose:function(v,f, s,c,x,l)
+      {
+         if(!isFunc(f)){fail('expecting callback');return}; if(isPath(v)){v={[v]:FILL}}; // validate
+         if(!isNode(v)&&(!isKnob(v)||!isPath(keys(v)[0]))){fail('invalid image reference');return}; // validate
+         s=this; s.rectInfo((sd)=> // get origin demensions
+         {
+            c=create({canvas:'',width:sd.width,height:sd.height,style:'position:absolute;top:0;left:0;opacity:1'}); // create canvas as origin
+            document.body.insert(c); x=c.getContext('2d'); x.drawImage(s,0,0); // draw origin on canvas
+            if(isNode(v)&&(nodeName(v)=='img')){x.drawImage(r,0,0)}else{l=span(v); v.each((w,p)=> // draw if image, else walk path object
+            {
+               if(!isPath(p)||!isin([FILL,TILE,SPAN],w)){remove(c);fail('invalid image reference');return STOP}; // validate
+               purl({target:p,header:{ACCEPT:'text/plain'}},(r)=> // fetch the image as dataURL
+               {
+                  let i=create({img:'',src:r.body}); w=('draw'+proprCase(unwrap(w))); MAIN[w](x,i,()=>
+                  {l--; if(l==0){let z=create({img:'',src:c.toDataURL()}); x=VOID; remove(c); c=VOID; r=VOID; f(z)}});
+               });
+            })};
+         });
+      },
+   });
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// tool :: (Element.prototype) : select .. handy document.getElement(s)By .. select ancestor with `^ ^2` .. and siblings with `< > <4 >2 << >>`
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const select = function(x,h, l,p,c,n,r,f)
+   {
+      if(isText(x)){x=x.trim()}; if(!isText(x,1)){return}; if(!isNode(h)){h=document.documentElement}; c=VOID; n=1; // validate
+      c=isin(x,['^^','<<','>>','^','<','>']); if(c&&(x.indexOf(c)>0)){c=VOID}; // validate special-select
+      if(c){p=stub(x,c); x=p[2]; p=stub(x,' '); if(p){n=(p[0]);x=p[2]}else if(!isNaN(x)){n=x;x=''}};
+      if(c){h=h.lookup(c,n); if(!x){return h}; return select(x,h)}; f='querySelectorAll'; // lookup relatives .. line below is all children *
+      if(x=='*'){r=[]; l=listOf(h.childNodes); l.forEach((i)=>{if(!((i.nodeName=='#text')&&!i.textContent.trim())){r.push(i)}}); return r};
+      c=x[0]; l=h[f](':scope '+x); if((l.length<1)&&(c=='#')&&(x.indexOf(' ')<1)){l=h[f](':scope [name='+x.slice(1)+']')}; // pseudo-selector
+      if(l.length<1){return}; r=[]; listOf(l).forEach((i)=>{r.push(i)}); if((c=='#')&&!isin(x,' ')){r=((r.length>0)?r[0]:VOID)}; return r;
+   };
+
+
+   extend(Element.prototype)
+   ({
+      select:function(x)
+      {
+         return select(x,this);
+      },
+
+      lookup:function(c,n, r,w)
+      {
+         if(!n){if(c=='^'){return this.parentNode}; if(c=='<'){return this.previousSibling}; if(c=='>'){return this.nextSibling}};
+         if((c=='<<')||(c=='>>')){r=this.parentNode; return (!r?VOID:((c=='<<')?r.firstElementChild:r.lastElementChild))};
+         if(!isText(c,1)){return}; if(c=='^^'){c='^',n=2}; n=(n*1); if(!isin(['^','<','>'],c)||!isInum(n)||(n<1)){return this}; // validate
+         r=this; w=((c=='^')?'parentNode':((c=='<')?'previousSibling':'nextSibling')); while(n){n--; if(!!r[w]){r=r[w]}else{break}}; // find
+         return r; // returns found-relative, or self if relative-not-found
+      },
+   });
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// tool :: parser : tool library for `parsed` .. extend this anywhere with: `extend(parser)({mimeType:function(){}})`
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const parsed = function(v,x,f)
+   {
+      if(MAIN.HALT){return};
+      if(!isText(v,1)){fail('expecting 1st arg as text');return}; v=v.trim(); if(v.length<1){f(v);};
+      if(!isText(x)){fail('expecting 2nd arg as text');return}; if(!isin(parser,x)){fail('no parser defined for mimeType `'+x+'`');return};
+      if(!isFunc(parser[x])){fail('expecting parser extension `'+x+'` as a function');return};
+      if(!isFunc(f)){fail('expecting 3rd arg as callback-function');return}; return parser[x](v,f);
+   };
+
+   const parser = {};
+
+   {:'/Proc/ximp.js':}
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: render : get remote asset and make it DOM-usable
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const render = function(p,f, s)
+   {
+      if(MAIN.HALT){return}; addStack();
+      expect({path:p,func:f}); s=this; purl({target:p,header:{Accept:'text/plain'}},(r)=>
+      {
+         if(MAIN.HALT){return};
+         let m,q,t,x; m=r.head.ContentType.split(';')[0].split('/x-').join('/'); q=m.split('/'); t=q[0]; x=q[1];
+         if(!isin(parser,t)){t=x}; parsed(r.body,t,(z)=>
+         {
+            if(t=='markdown'){z=create({div:'.markdown-page',contents:[z]})}; f(z);
+         });
+      });
+   }
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// tool :: (Element.prototype) : view .. shorthand for: `Element.style.display='shomeSh!t'`
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   extend(Element.prototype)
+   ({
+      view:function(v)
+      {
+         if(!isWord(v)){v='none'}; this.style.display=v;
+      },
+   });
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// tool :: (Element.prototype) : enclan/declan .. add/remove classNames of an element
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   extend(Element.prototype)
+   ({
+      enclan:function()
+      {
+         let c,l,a,slf; slf=this; c=(slf.className||'').trim(); l=(c?c.split(' '):[]); a=listOf(arguments); a.forEach((v,k)=>
+         {
+            v=ltrim(v,'.'); if(!isin(l,v)){l.push(v);
+            if(v=='holdSpanSize'){slf.parentNode.style.position='relative'; slf.style.position='absolute'; slf.resizeTo(slf.parentNode)}}
+         });
+         this.className=l.join(' ');
+      },
+
+      declan:function()
+      {
+         var c,l,a,x; c=(this.className||'').trim(); l=(c?c.split(' '):[]); a=listOf(arguments);
+         a.forEach((i)=>{x=l.indexOf(ltrim(i,'.')); if(x>-1){l.splice(x,1)}}); this.className=l.join(' ');
+      },
+   });
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+// tool :: (Element.prototype) : assort .. sort node children/siblings placement order either by `sorted` (arg/parent), or `placed` of siblings
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   extend(Element.prototype)
+   ({
+      assort:function(a, l)
+      {
+         if(!isText(a,6)){if(!this.parentNode){return}; a=this.parentNode.sorted; if(!isText(a,6)){l=listOf(this.parentNode.childNodes)}};
+         if(!l&&isText(a,6))
+         {
+            let p=stub(a,'::'); if(!p||!isin(p[2],':')){fail('invalid assort parameters');return};
+            // console.log('TODO :: Element.prototype.assort() .. '+a);
+         };
+      },
+   });
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+// tool :: (Element.prototype) : setStyle
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   extend(Element.prototype)
+   ({
+      setStyle:function(o,y, n)
+      {
+         n=this; if(isText(o)){o={[o]:y};}; expect({knob:o}); o.each((sv,sk)=>
+         {
+            if(isNumr(sv)&&!isin(['zIndex','opacity'],sk)){sv=(sv+'px')};
+            n.style[sk]=sv;
+
+            if((sk=='transform')&&isin(sv,['isoSkewX','isoSkewY']))
+            {
+               let pt=stub(sv,'('); sk=pt[0]; sv=(swap(rtrim(pt[2],')'),'deg','')*1); if(isNaN(sv)){sv=45}; sv=(sv%90);
+               if(!n.postProc){n.postProc={}}; if(!n.postProc.transform){n.postProc.transform={}}; n.postProc.transform[sk]=sv;
+               n.onready=function()
+               {
+                  let pt,sx,sy,iw,ih,ml,mt,mr,ob,nb,wd,hd,xd,yd; pt=this.postProc.transform; sx=pt.isoSkewX; sy=pt.isoSkewY;
+                  mr=(Math.atan(sx*(Math.PI/180))); ob=this.getBoundingClientRect(); iw=ob.width; ih=ob.height;
+                  this.style.transform=('perspective('+((iw/2)-(ih/2))+'px) rotateX('+sx+'deg)'); nb=this.getBoundingClientRect();
+                  if(nb.x<ob.x){this.style.marginLeft=((ob.x-nb.x)+'px'); this.style.marginRight=((ob.x-nb.x)+'px');}
+                  else if(nb.x>ob.x){this.style.marginLeft=(0-(nb.x-ob.x)+'px');};
+                  if(nb.y<ob.y){this.style.marginTop=((ob.y-nb.y)+'px');}else if(nb.y>ob.y){this.style.marginTop=(0-(nb.y-ob.y)+'px');};
+               };
+            };
+         });
+         return
+      },
+   });
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+// func :: avatar : returns a gravatar URL from given email address .. does very limited validity check -which throws an error if invalid
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const avatar = function(a,d,s)
+   {
+      if(isText(a)){a=a.trim().toLowerCase()}; if(!isText(a,8)||!isin(a,'@')||!isin(a,'.')){fail('invalid email address');return};
+      if(isNumr(d)){s=d;d=VOID}; if(!d){d='robohash'}; if(!s){s=80};
+      return ('https://www.gravatar.com/avatar/'+md5(a)+'?d='+d+'&s='+s);
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+// tool :: ordain : define CSS classes that respond on events
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const ordain = function(a)
+   {
+      if(isText(a)){a=a.trim()}; if(!isText(a,1)){fail('invalid CSS selector');return function(){}};
+      return function(o)
+      {
+         if(!isKnob(o)){fail('expecting 1st argument as object');return}; let ot,oi; ot=this.target;
+         oi=ot.replace(/[^A-Za-z0-9]/g,''); if(span(oi)<1){fail('invalid CSS selector');return}; oi=('#ORDAINED_'+oi);
+         if(o.ornate){document.head.insert([{style:oi,innerHTML:(ot+'\n{\n'+o.ornate+'\n}\n')}])};
+         ordained.chosen[ot]=o; ordained.vivify();
+      }
+      .bind({target:a});
+   };
+
+
+   const ordained = // object
+   {
+      chosen:{},
+
+      vivify:function()
+      {
+         this.chosen.each((v,k)=>
+         {
+            if(!isKnob(v.listen)||(span(v.listen)<1)){return NEXT};
+            let l=select(k); if(!l){return NEXT}; if(!isList(l)){l=[l]};
+            l.forEach((n)=>{if(n.anointed){return}; n.modify({anointed:true,listen:v.listen});});
+         });
+      },
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+// func :: newTab : creates a tabbed browsing interface in the target-node -or adds a new tab to an existing interface .. unique by tab-title
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const newTab = function(o)
+   {
+      expect({knob:o}); if(!o.listen){o.listen={}}; expect({text:o.titled, knob:o.holder, knob:o.listen});
+      let prnt=o.holder.select('tabs'); if(prnt){prnt=prnt[0]}; if(!prnt){prnt=create('tabs'); prnt.modify(o); o.holder.insert(prnt);};
+      dump('newTab - continue');
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: mimeName : get the relevant mime-name from a mime-type-string
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const mimeName = function(v, r)
+   {
+      if(!isText(v,3)||!isin(trim(v,'/'),'/')){return}; r=v.split(';')[0].split('/')[1].split('-').pop();
+      return r;
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: cStyle : computed-style of elements
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const cStyle = function(n,p)
+   {
+      if(!n||!n.style||!isText(p,1)){fail('invalid arguments');return}; if(!n.parentNode){fail('element must be inside the DOM');return};
+      let s=getComputedStyle(n); let v=s.getPropertyValue(p); if(v&&!isNaN(rtrim(v,'px'))){v=(rtrim(v,'px')*1)}; return v;
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: holdSpanSize : computed-style of elements
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const holdSpanSize = function(h, l)
+   {
+      l=select('.holdSpanSize',h); if(!l){return};
+      l.forEach((n)=>{let p=n.parentNode; p.style.position='relative'; n.style.position='absolute'; n.resizeTo(p)});
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: popModal : opens a modal dialogue
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const popModal = function(a1,a2)
+   {
+      if(isText(a1)){return this.txtBased(a1,a2);};
+      if(isKnob(a1)){return this.objBased(a1,a2);};
+   }
+   .bind
+   ({
+      txtBased:function(a1,a2)
+      {
+         return function(arg)
+         {
+            var mid,ttl,txt,btn,tmo,rsl; mid=('#MDL'+hash()); if(isKnob(arg)||isText(arg)){arg=[arg]};
+            txt=stub(this.txt,' :: '); if(txt){ttl=txt[0]; txt=txt[2]}else{txt=this.txt}; btn=[]; tmo=this.tmo;
+
+            if(!isList(arg)){fail('invalid arguments');return}; arg.each((o)=>
+            {
+               if(isText(o)){o={[o]:1}}; if(!isKnob(o)){fail('invalid arguments');}; let k,v,p,c; k=keys(o)[0]; v=o[k]; o=VOID;
+               if(!v){return NEXT}; if(!isFunc(v)){v=function(){}}; c='Auto'; p=stub(k,' :: '); if(p){c=p[0]; k=p[2]};
+               radd(btn,{butn:('.butn'+c), onclick:v, contents:k});
+            });
+
+            rsl=create({modal:mid, contents:[{wrap:[{grid:'.cenmid', contents:[{row:
+            [
+               {col:'.face', contents:
+               [
+                  {div:'.head', contents:[{span:ttl},{icon:'.shut', face:'cross', onclick:function(){this.root.close()}}]},
+                  {div:'.body', contents:txt},
+                  {div:'.foot', contents:btn},
+               ]},
+               {col:'.side ', contents:[{div:'.xbar'}]},
+            ]}]}]}]});
+
+            rsl.close=function(){if(this.ticker){clearInterval(this.ticker)}; this.signal('close'); tick.after(60,()=>{this.remove()})};
+            rsl.expire=function(sec)
+            {
+               let bar=this.select('.xbar')[0];  bar.view('block'); bar.declan('holdSpanSize'); let hgt=rectOf(bar.parentNode).height;
+               let unt=Math.round(hgt/sec); bar.setStyle({height:hgt}); this.ticker=tick.every(1000,()=>
+               {
+                  sec--; bar.setStyle({height:(unt*sec)}); if(sec>0){return}; clearInterval(this.ticker); this.signal('stale');
+                  tick.after(60,()=>{this.remove()});
+               });
+            };
+
+            rsl.listen('key:Escape',function(){this.close();});
+
+            document.body.appendChild(rsl); (rsl.select('butn')||[]).forEach((b)=>{b.root=rsl}); rsl.select('.shut')[0].root=rsl;
+            if(tmo){tick.after(60,()=>{rsl.expire(tmo)})}; rsl.focus(); return rsl;
+         }
+         .bind({txt:a1,tmo:a2});
+      },
+
+
+      objBased:function(obj){},
+   });
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// tool :: (Element.prototype) : rectInfo .. getBoundingRect info of element on-the-fly
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   extend(Element.prototype)
+   ({
+      rectInfo:function(f)
+      {
+         if(!isFunc(f)){return}; if(this.parentNode){f(this.getBoundingClientRect());return};
+         let p=(this.style.position||'relative'); let o=(this.style.opacity||1); this.style.position='absolute'; this.style.opacity=0;
+         document.body.appendChild(this); this.listen('ready',()=>
+         {
+            let i=this.getBoundingClientRect(); this.parentNode.removeChild(this); this.style.position=p; this.style.opacity=o; f(i);
+         });
+         // tick.after(10,()=>
+         // {
+         //    let i=this.getBoundingClientRect(); this.parentNode.removeChild(this); this.style.position=p; this.style.opacity=o; f(i);
+         // });
+      },
+
+      resizeTo:function(tgt, slf)
+      {
+         slf=this; if(isText(tgt)){tgt=select(tgt,slf);}; expect({node:tgt});
+         wait.until(()=>{return (!!tgt.parentNode)},()=>
+         {
+            let i,w,h; i=tgt.getBoundingClientRect(); w=Math.ceil(i.width); h=Math.ceil(i.height); slf.width=w; slf.height=h;
+            slf.setStyle({width:w, height:h, minWidth:w, minHeight:h, maxWidth:w, maxHeight:h});
+         });
+      },
+   });
+
+   const rectOf = function(a)
+   {
+      if(isText(a)){a=select(a)}; if(!isNode(a)){fail('expecting node or #nodeID');return};
+      if(!a.parentNode){fail('node is not attached to the DOM .. yet');return};
+      let r=a.getBoundingClientRect(); return r;
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+// evnt :: mutation : enables new nodes with src/href attributes to emit `ready` when true .. emits progress if loading takes longer than 1sec
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   listen('mutation',function(e, l)
+   {
+      if(MAIN.HALT){return}; if(!e.detail){return};
+      l=e.detail.addedNodes; if(isList(l)){l=listOf(l);}else{return}; // validate
+      this.walk(l); // check all new nodes - including their children
+   }
+   .bind
+   ({
+      walk:function(l,p, s,k)
+      {
+         s=this; l.forEach((n)=>{let t=nodeName(n); if(!t||(p=='svg')){return}; s.fire(n,t);
+         k=listOf(n.childNodes); if(k.length>0){s.walk(k,t)}});
+      },
+
+      fire:function(n,t, p)
+      {
+         p=path(n.src||n.href); if((!p&&(t!='script'))||(t=='a')){tick.after(10,()=>
+         {let q='holdSpanSize'; if(isin(n.className,q)){tick.after(160,()=>{n.declan(q); n.enclan(q)})}; n.signal('ready')});return}; // nodes without a path
+         n.purl=p; n.listen('load',ONCE,function(){this.done=100; tick.after(50,()=>{n.signal('ready')});}); // emit `ready` after onload
+         n.listen('error',function(){this.fail=1; if(!this.done){return}; Busy.tint('red'); Busy.edit(this.purl,100);}); // onfail
+         tick.after(750,()=>{if(n.done||Busy.jobs[p]){return}; n.waiting=function(j,s,t){this.done=1; s=this; t=setInterval(()=> // wait
+         {
+            if(Busy.jobs[j]){s.done=Busy.jobs[j];s.fail=1}; Busy.edit(j,s.done);
+            if(s.fail||(s.done>99)){clearInterval(t); delete s.waiting; return}; s.done++;
+         },50);}; n.waiting(p);});
+      }
+   }));
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+// evnt :: resize : listen on window resize
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   window.listen('resize',function()
+   {
+      holdSpanSize();
+   });
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+// glob :: prop : CURSOR
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   extend(MAIN)
+   ({
+      cursor:
+      {
+         posx:0, posy:0, refs:{},
+
+         bind:function(r,x,y)
+         {
+            if(isNode(r)){if(!r.id){r.id=('EL'+hash())}; r=('#'+r.id)}; let n=select(r);
+            if(!isNode(n)){fail('expecting node with id '+r+' to exist in the DOM');}; let dx,dy;
+            dx=(cursor.posx-x); dy=(cursor.posy-y);
+            if(!isNumr(x)){x=0;}; if(!isNumr(y)){y=0;}; this.refs[r]={xd:dx,yd:dy};
+         },
+
+         drop:function(r)
+         {
+            if(isNode(r)){r=('#'+r.id)}; let n=select(r); if(!isNode(n)){fail('invalid reference');return};
+            delete this.refs[r];
+         },
+
+         move:function(x,y)
+         {
+            cursor.posx=x; cursor.posy=y; if(span(cursor.refs)<1){return}; let nx,ny;
+            cursor.refs.each((p,r)=>
+            {
+               let n=select(r); if(!isNode(n)){return}; if(n.style.position!='absolute'){return};
+               nx=(x-p.xd); ny=(y-p.yd);
+               n.style.left=(nx+'px'); n.style.top=(ny+'px');
+               n.signal('boundmove',{x:x,y:y});
+            });
+         },
+      }
+   });
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   document.addEventListener("mousemove", function(e){cursor.move(e.clientX,e.clientY);},false);
+   document.addEventListener("dragover", function(e){cursor.move(e.pageX,e.pageY);},false);
+// --------------------------------------------------------------------------------------------------------------------------------------------

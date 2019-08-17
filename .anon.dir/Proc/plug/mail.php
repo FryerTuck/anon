@@ -1,0 +1,316 @@
+<?
+namespace Anon;
+
+
+# tool :: mail_plug : git abstraction
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   class mail_plug
+   {
+      private $mean=null;
+      private $link=null;
+      private $cols=['destAddy','destName','fromAddy','fromName','replAddy','replName','involves','disclose','mesgIndx','lookupID','unixTime','followID','flagTags','mesgHead','mesgBody','textBody','attached'];
+      private $prop=['subject','from','to','date','message_id','size','uid','msgno','udate'];
+      private $tags=['seen','answered','flagged','deleted','draft','recent'];
+      public $fail=false;
+
+      function __construct($x)
+      {
+         $this->mean=$x; $this->addy="$x->user@$x->host";
+      }
+
+
+      function __destruct()
+      {
+         $this->pacify();
+      }
+
+
+      function __call($n,$a)
+      {
+         return call($this->$n,$a);
+      }
+
+
+      function adjure()
+      {
+      }
+
+
+      function engage($h,$u,$p,$o)
+      {
+         deFail(); $r=knob(); $r->link=@imap_open($h,$u,$p,$o); $me=imap_errors(); $ma=imap_alerts(); enFail(); if($r->link){return $r;};
+         $f=[imap_last_error()]; if($me){$f=array_merge($f,$me);}; if($ma){$f=array_merge($f,$ma);}; $f=implode("\n",$f);
+         $r->fail=$f; wait(250); return $r;
+      }
+
+
+      function vivify($b,$o=null)
+      {
+         if($this->link){return $this->link;}; $i=$this->mean; $h=$i->host; $u="$i->user@$h"; $p=$i->pass; $n=$i->port; $s='novalidate-cert';
+         if(!isVoid($b)&&!isText($b,1)){fail('invalid mailbox specification');}; if(!$n){$n=993;}elseif($n!==993){fail('invalid IMAP port');};
+
+         $x="{imap.$h:$n/imap/ssl}$b"; $r=$this->engage($x,$u,$p,$o); $f=$r->fail; if(!$f){$this->link=$r->link; return $this->link;};
+
+         if(isin($f,'Certificate failure'))
+         {$x=swap($x,'}',"/$s}");$r=$this->engage($x,$u,$p,$o); $f=$r->fail; if(!$f){$this->link=$r->link; return $this->link;};};
+
+         dump($r->fail);
+      }
+
+
+      function pacify()
+      {
+         if($this->link){imap_close($this->link);}; $this->link=null;
+         // Proc::signal('busy',['with'=>"mail",'done'=>100]);
+      }
+
+
+      function create($a)
+      {
+      }
+
+
+      function descry($a=null)
+      {
+         $L=$this->vivify($a,(($a===null)?OP_HALFOPEN:null));
+
+         if($a===null)
+         {
+            $h=$this->mean->host; $c=imap_list($L,"{imap.$h}","*"); if(!is_array($c)){fail(imap_last_error());};
+            $r=[]; foreach($c as $i){$b=imap_utf7_decode($i); $p=stub($b,'}'); if($p){$b=$p[2];}; $r[]=$b;};
+            $this->pacify(); return $r;
+         };
+
+         $m=imap_search($L,'ALL',SE_UID); if(!isArra($m)){$m=[];};
+         $r=knob(['colNames'=>$this->cols,'flagTags'=>$this->tags,'mesgUids'=>$m]);
+         return $r;
+      }
+
+
+      function insert($a,$fcrt=null)
+      {
+         $oa=dupe($a);
+         if(isAssa($a)){$a=knob($a,U);}; expect::knob($a); $I=$this->mean; $user="$I->user@$I->host"; $pass=$I->pass; $port=$I->port; $dbug=0;
+         if($a->debug){$dbug=1;}; if(!isKnob($a->write)){$w=dupe($a); $a=knob(['write'=>$w]);}else{$w=$a->write;}; expect::knob($w);
+         if(!$port){$port=587;}elseif($port!==465){fail('invalid SMTP port');}; $w->destAddy=validEmail($w->destAddy,'destAddy');
+         if(!isVoid($w->involves)){$w->involves=validEmail($w->involves,'involves');};
+         if(!isVoid($w->disclose)){$w->disclose=validEmail($w->disclose,'disclose');}; if(isVoid($w->mesgHead)){$w->mesgHead='No Subject';};
+         if(isVoid($w->mesgBody)){$w->mesgBody='No Message';}; if(isText($w->attached)){$w->attached=[$w->attached];}; if(isFlat($w->attached))
+         {foreach($w->attached as $p){if(!isPath($p,R,F)){fail("expecting attachment path as readable file");}}}; $ts=(($port===465)?'ssl':'tls');
+         $w->mesgBody=trim(tval($w->mesgBody));if(isPath($w->mesgBody)&&!isPath($w->mesgBody,R,F)){fail("expecting embedded path as readable file");};
+
+         $L=requires::path('/Proc/libs/PHPMailer'); $L->isSMTP(); $L->CharSet='UTF-8'; $L->Host="smtp.$I->host"; $L->SMTPAuth=true;
+
+         if($w->followID!==null)
+         {
+            if(isFlat($w->followID)){$w->followID=fuse($w->followID,'');};
+            if((wrapOf($w->followID)!='<>')||!isin($w->followID,'@')||!isin($w->followID,'.')){fail('invalid reply followID');};
+            $L->addCustomHeader('In-Reply-To',$w->followID); $L->addCustomHeader('References',$w->followID);
+         };
+
+         requires::phpx('openssl'); $L->SMTPAutoTLS=true; if($dbug){$L->SMTPDebug=3;};
+
+         $L->Username=$user; $L->Password=$pass; $L->SMTPSecure=$ts; $L->Port=$port; $name=$I->user;
+         if(isin($name,'.')){$name=stub($name,'.')[0];}; $name=ucwords($name); $L->setFrom($user,$name); $L->Subject=$w->mesgHead;
+         foreach($w->destAddy as $tr){$L->addAddress($tr);}; if($w->attached){foreach($w->attached as $ap){$L->addAttachment(path($ap));};};
+
+         $w->mesgBody=trim($w->mesgBody); if(wrapOf($w->mesgBody)==='<>')
+         {
+            $L->isHTML(true); $l=expose($w->mesgBody,'<img','>'); unset($i); if($l){foreach($l as $i)
+            {
+               $f="<img{$i}>"; $i=expose($i,'src="','"'); if($i){$i=$i[0];}; if(!isPath($i,R,F)){fail("expecting `$i` as readable file");};
+               $n=swap(path::leaf($i),'.','_'); $w->mesgBody=swap($w->mesgBody,$f,"<img src=\"cid:$n\" />"); $L->AddEmbeddedImage(path($i),$n);
+            }};
+         };
+
+         if($fcrt){$L->SMTPOptions=['ssl'=>['verify_peer'=>false,'verify_peer_name'=>false,'allow_self_signed'=>true]];}; // faulty cert
+
+         Proc::signal('busy',['with'=>"mail",'done'=>12]);
+         $L->Body=$w->mesgBody; $mt=time(); $z=knob(['done'=>0,'fail'=>null]);
+         deFail(); ob_start(); $fm=''; $r=$L->send(); $fm=ob_get_clean(); enFail();
+
+         if(!$r)
+         {
+            $z->fail=$L->ErrorInfo; $z->fail.="\n\n$fm"; $zf=$z->fail;
+            if(isin($zf,'SMTP connect() failed')&&isin($zf,'certificate')){unset($L,$z); wait(60); $z=$this->insert($oa,1);}
+            return $z;
+         };
+
+         if(!$a->debug){$z->done='?'; Proc::signal('busy',['with'=>"mail",'done'=>99]); return $z;};
+         Proc::signal('busy',['with'=>"mail",'done'=>40]);
+         wait(750); Proc::signal('busy',['with'=>"mail",'done'=>50]);
+         unset($da); $fa=[]; $fx=[]; $L=null; try{$M=$this->vivify('INBOX');}catch(\Exception $e){fail("debug failed .. ".$e->getMessage());};
+         $mc=count($w->destAddy); $in=ceil(50/$mc); $bp=50; foreach($w->destAddy as $da)
+         {
+            $f=$this->select
+            ([
+               using=>'INBOX',fetch=>['mesgIndx'],
+               where=>
+               [
+                  "fromAddy ~ mailer-daemon*",
+                  "fromName = 'Mail Delivery Subsystem'",
+                  "unixTime >= $mt",
+                  "mesgHead = 'Delivery Status Notification (Failure)'",
+                  "mesgBody ~ *$da*",
+               ],
+               limit=>1,
+            ]);
+            if(count($f)>0){$fa[]=$da; $fx[]=$f[0]->mesgIndx;}else{$z->done++;};
+            $bp+=$in; if($bp>99){$bp=99;}; Proc::signal('busy',['with'=>"mail",'done'=>$bp]);
+         };
+
+         if(span($fx)<1){return $z;};
+         $z->fail=('failed: '.fuse($fa,', ')); $fx=fuse($fx,','); imap_setflag_full($M,$fx,"\\Deleted");
+         return $z;
+      }
+
+
+      function select($a)
+      {
+         Proc::signal('busy',['with'=>"mail",'done'=>21]); if(isAssa($a)){$a=knob($a,U);}; expect::knob($a);
+         if(!$a->using){$a->using='INBOX';}; $L=$this->vivify($a->using,($a->touch?null:OP_READONLY));
+         $fltr=$a->fetch; if(!$fltr){$fltr='*';}; if(!isText($fltr)&&!isFlat($fltr)){fail('invalid `fetch` clause');}; $cols=$this->cols;
+         if($fltr==='*'){$fltr=$cols;}elseif(isText($fltr)){$fltr=[$fltr];}; $a->fetch=$fltr; if($a->where)
+         {
+            $oper=padded((explode(' ',EXPROPER)),' ');
+            if(isText($a->where)){$a->where=[$a->where];}; if(!isFlat($a->where)){fail('invalid `where` clause');};
+            foreach($a->where as $c){$p=stub($c,$oper); if(!$p){fail('invalid `where` expression');}; if(!isin($fltr,$p[0])){$fltr[]=$p[0];}};
+         };
+
+         foreach($fltr as $col)
+         {if(!isText($col)){fail('expecting `fetch` items as :TEXT:');}; if(!isin($cols,$col)){fail("fetch column `$col` is undefined");}};
+         $mail=imap_search($L,'ALL'); if(!isArra($mail,1)){return [];}; rsort($mail); $r=[]; $limit=span($mail); $found=0;
+         if($a->limit!==null){if(is_int($a->limit)){$limit=$a->limit;}else{fail('invalid `limit` value');}}; $nf=$this->prop;
+
+         Proc::signal('busy',['with'=>"mail",'done'=>50]);
+
+         foreach($mail as $x)
+         {
+            $i=imap_headerinfo($L,$x); if(is_array($i)){$i=$i[0];}; $o=knob(); $t=$i->to[0]; $f=$i->sender[0]; $y=$i->reply_to[0];
+            if(isin($fltr,'destAddy')){$o->destAddy="$t->mailbox@$t->host";};
+            if(isin($fltr,'destName')){$o->destName=(isin($t,'personal')?$t->personal:null);};
+            if(isin($fltr,'fromAddy')){$o->fromAddy="$f->mailbox@$f->host";};
+            if(isin($fltr,'fromName')){$o->fromName=(isin($f,'personal')?$f->personal:null);};
+            if(isin($fltr,'replAddy')){$o->replAddy="$y->mailbox@$y->host";};
+            if(isin($fltr,'replName')){$o->replName=(isin($y,'personal')?$y->personal:null);};
+            if(isin($fltr,'mesgIndx')){$o->mesgIndx=$x;}; if(isin($fltr,'lookupID')){$o->lookupID=imap_uid($L,$x);};
+            if(isin($fltr,'unixTime')){$o->unixTime=($i->udate*1);}; if(isin($fltr,'followID')){$o->followID=htmlentities($i->message_id);};
+
+            if(isin($fltr,'flagTags'))
+            {
+               $fo=imap_fetch_overview($L,$x); if(is_array($fo)){$fo=$fo[0];}; $fl=diff(keys($fo),$nf); $o->flagTags=[];
+               foreach($fl as $fn){if($fo->$fn===1){$o->flagTags[]=$fn;}}; $o->flagTags=fuse($o->flagTags,' ');
+            };
+
+            if(isin($fltr,'mesgHead')){$o->mesgHead=$i->subject;}; unset($i,$fo,$fl,$fn);
+
+            if(isin($fltr,'mesgBody')||isin($fltr,'textBody')||isin($fltr,'attached'))
+            {
+               $s=imap_fetchstructure($L,$x); $used=[]; if(!isset($s->parts)){continue;}; $s=flattenParts($s->parts);
+            };
+
+            if(isin($fltr,'mesgBody')||isin($fltr,'textBody'))
+            {
+               $bl=[]; $il=[]; foreach($s as $sn => $so)
+               {
+                  $bo=getMailPart($L,$x,$sn,$so,false); $bo->numr=$sn; $bo->part=$so;
+                  if($so->type<1)
+                  {
+                     // if($o->mesgBody){continue;};
+                     if($sn[0]==='3'){continue;}; $bt=getMailPart($L,$x,$sn,$so,true)->data; $bt=trim($bt.'');
+                     if(($bo->type==='html')&&(wrapOf($bt)==='<>')){$o->mesgBody=$bt;continue;}
+                     elseif(($bo->type==='plain')||($bo->type==='text')){$o->textBody=$bt;continue;}else{$bl[]=$bt;};
+                  }
+                  elseif(($so->type===5)&&isset($bo->name)){$il[]=$bo;};
+               };
+
+               if(!$o->mesgBody){do{$o->mesgBody=lpop($bl);}while(!$o->mesgBody&&count($bl)); if(!$o->mesgBody){$o->mesgBody='';}};
+               unset($bo); foreach($il as $bo){$in=$bo->name; $ei="cid:$in"; if(isin($o->mesgBody,$ei))
+               {
+                  $used[]=$in; $ri=getMailPart($L,$x,$bo->numr,$bo->part,true)->data; $o->mesgBody=swap($o->mesgBody,$ei,$ri);
+               }};
+               if(isText($o->textBody)&&(strpos($o->textBody,'data:inode/directory;base64,')===0)){$o->textBody=furl($o->textBody)->data;};
+               if(isText($o->mesgBody)&&(strpos($o->mesgBody,'data:inode/directory;base64,')===0)){$o->mesgBody=furl($o->mesgBody)->data;};
+               unset($sn,$so,$bo,$ri,$bt);
+            };
+
+            if(isin($fltr,'attached'))
+            {
+               $o->attached=knob(); $tn=[3,4,5,6,7]; foreach($s as $sn => $so)
+               {
+                  if(!isin($tn,$so->type)){continue;}; $bo=getMailPart($L,$x,$sn,$so,false); if(isin($used,$bo->name)){continue;};
+                  $bo=getMailPart($L,$x,$sn,$so,true); $bn=$bo->name; $o->attached->$bn=$bo->data;
+               };
+               if(span($o->attached)<1){$o->attached=null;};
+            };
+
+            if($a->where){$cl=span($a->where);$cm=0;unset($cx);foreach($a->where as $cx){if(reckon($cx,$o)){$cm++;}};if($cm<$cl){continue;}};
+            $p=keys($o); foreach($p as $c){if(!isin($a->fetch,$c)){unset($o->$c);}};
+            $r[]=$o; $found++; if($limit&&($found>=$limit)){break;};
+         };
+         Proc::signal('busy',['with'=>"mail",'done'=>100]);
+         return $r;
+      }
+
+
+      function update($a)
+      {
+         if(isAssa($a)){$a=knob($a,U);}; expect::knob($a); if(!$a->using){$a->using='INBOX';}; $L=$this->vivify($a->using);
+         if(isText($a->where)){$a->where=[$a->where];}; if(!isFlat($a->where)){fail((!$a->where?'missing':'invalid').' `where` clause');};
+         if(isText($a->write)){$a->write=['flagTags'=>$a->write];}; if(isAssa($a->write)){$a->write=knob($a->write);};
+         if(!isKnob($a->write)){fail('invalid `write` clause');}; $fltr=['mesgIndx'];
+         foreach($a->write as $cn => $cv){if(!isin($fltr,$cn)){$fltr[]=$cn;}};
+         $mail=$this->select([using=>$a->using,fetch=>$fltr,where=>$a->where,limit=>$a->limit]); if(span($mail)<1){return null;}; $r=0;
+         foreach($mail as $m){unset($k,$v,$f);foreach($a->write as $k => $v)
+         {
+            if($k==='flagTags')
+            {
+               $of=$m->flagTags; if($of){$of=frag($of,' '); unset($f);
+               foreach($of as $f){$f=ucwords($f); $d=imap_clearflag_full($L,$m->mesgIndx,"\\$f"); if($d){$r++;};}};
+               if(!$v){continue;}; $e='invalid flagTags value'; if(isText($v)){$v=frag($v,' ');}; if(!isArra($v)){fail($e);};
+               unset($f); $r=0; foreach($v as $f){if(!isWord($f)){fail($e);}; $f=ucwords($f);
+               $d=imap_setflag_full($L,$m->mesgIndx,"\\$f"); if($d){$r++;};};
+            };
+         }};
+         return $r;
+      }
+
+
+      function deploy($a)
+      {
+      }
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+function getMailPart($L,$m,$n,$o,$dc=true)
+{
+   $r=knob(['type'=>strtolower(isset($o->subtype)?$o->subtype:'undefined')]); $r->mime=conf('/Proc/mimeType')->{$r->type};
+   $p=['dparameters','parameters']; $a=['filename','name']; foreach($p as $pn){$ip=isin($o,$pn); if(!$ip||($ip&&!$o->$pn)){continue;};
+   foreach($o->$pn as $po){$an=strtolower($po->attribute);if(isin($a,$an)){$an=$po->value;if($an){$r->name=$an;}}}}; if(!$dc){return $r;};
+   $d=imap_fetchbody($L,$m,$n); $e=$o->encoding; if($e===3){$m=mime("/$r->name"); $d="data:$m;base64,$d";}
+   elseif($e===4){$d=quoted_printable_decode($d);}; $r->data=$d; unset($d); return $r;
+}
+
+
+
+function flattenParts($messageParts, $flattenedParts = array(), $prefix = '', $index = 1, $fullPrefix = true)
+{
+	foreach($messageParts as $part)
+   {
+		$flattenedParts[$prefix.$index] = $part; if(!isset($part->parts)){$index++; continue;};
+		if($part->type == 2){$flattenedParts = flattenParts($part->parts, $flattenedParts, $prefix.$index.'.', 0, false);}
+		elseif($fullPrefix){$flattenedParts = flattenParts($part->parts, $flattenedParts, $prefix.$index.'.');}
+		else{$flattenedParts = flattenParts($part->parts, $flattenedParts, $prefix);}; unset($flattenedParts[$prefix.$index]->parts); $index++;
+	}
+	return $flattenedParts;
+}
+
+
+
+function validEmail($v,$c)
+{
+   if(!isArra($v)){$v=[$v];}; $f="inavlid $c address";
+   foreach($v as $m){if(!isText($m)){fail($f);}; if(!isMail($m)){fail("$f `$m`");};};
+   return $v;
+}

@@ -1,0 +1,109 @@
+@font-face
+{
+   font-family:"hack";
+   src:url("/Data/dcor/hack.woff") format("woff");
+   font-weight:normal; font-style:normal;
+}
+
+.font-head{font-family:"hack";}
+
+
+#DataToolView
+{
+   display:none !important;
+   width:100%; height:60px;
+   background:hsla(0,0%,0%,0.1);
+}
+
+
+.DataInfoView
+{
+   width:100%; height:24px;
+   background:hsla(0,0%,0%,0.1);
+}
+
+
+.treeItemCtrl
+{
+   color:hsla(50,100%,65%,1) !important;
+   cursor:pointer !important;
+}
+
+
+.treeItemShft
+{
+   color:hsla(220,100%,70%,1) !important;
+   cursor:pointer !important;
+}
+
+
+datagrid.darkSide
+{
+   font-family:'hack';
+   font-size:11px;
+   line-height:13px;
+   border:1px solid hsla(0,0%,90%,0.2);
+   border-radius:2px;
+   margin:6px;
+}
+
+datagrid.darkSide row:focus
+{background:hsla(0,0%,90%,0.03);}
+
+
+datagrid.darkSide row>col:nth-child(1)
+{border-left:none !important;}
+
+
+datagrid.darkSide .head
+{
+   width:20px !important;
+   background:hsla(0,0%,90%,0.05);
+   padding:4px;
+   border-left:1px solid hsla(0,0%,90%,0.2);
+   border-bottom:1px solid hsla(0,0%,90%,0.2);
+}
+datagrid.darkSide input
+{outline:none;}
+datagrid.darkSide .head input
+{font-weight:bold;}
+
+datagrid.darkSide .body
+{
+   width:20px !important;
+   padding:4px;
+   border-top:1px solid hsla(0,0%,90%,0.2);
+   border-left:1px solid hsla(0,0%,90%,0.2);
+}
+
+datagrid.darkSide input
+{
+   display:block !important;
+   position:relative !important;
+   width:100% !important;
+   /* min-width:20px !important; */
+   max-width:120px !important;
+   background:transparent !important;
+   font-family:'hack';
+   font-size:11px;
+   line-height:13px;
+   border:none !important;
+   color:inherit;
+   text-shadow:inherit !important;
+   user-select:none !important;
+   cursor:inherit !important;
+}
+
+.ctrlWarn
+{
+   color:hsla(60,100%,60%,1) !important;
+   outline:auto !important;
+   outline-color:hsla(60,100%,60%,1) !important;
+}
+
+.ctrlGood
+{
+   color:hsla(120,100%,60%,1) !important;
+   outline:auto !important;
+   outline-color:hsla(120,100%,60%,1) !important;
+}

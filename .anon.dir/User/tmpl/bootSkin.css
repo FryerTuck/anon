@@ -1,0 +1,23 @@
+
+/* info :: file : read this *\
+/* ---------------------------------------------------------------------------- *\
+   hey {:userName:}; you can use this file to customize your session upon login
+   use your browser's developer-tools to inspect on elements  you can customize
+\* ---------------------------------------------------------------------------- */
+
+
+
+
+/* custom :: CSS : enjoy!
+/* ---------------------------------------------------------------------------- */
+   #AnonAppsDeck
+   {
+      background:url('/User/dcor/blue.jpg');
+      background-size:cover;
+   }
+
+   #AnonAppsView
+   {
+      background:hsla(210,3%,16%,0.95);
+   }
+/* ---------------------------------------------------------------------------- */

@@ -1,0 +1,36 @@
+.slabViewBody
+{
+   width:100%; height:auto;
+}
+
+#DrawBodyView
+{
+   width:auto; height:auto;
+}
+
+#DrawToolView
+{
+   width:64px; height:100%;
+   background:hsla(0,0%,0%,0.1);
+   padding:2px;
+}
+
+#DrawToolPanl
+{
+   overflow:hidden !important;
+}
+
+#DrawBodyPanl
+{
+   overflow:hidden !important;
+}
+
+
+.DrawViewPanl
+{
+}
+
+.DrawViewWrap
+{
+   background:url('/Draw/dcor/void.jpg');
+}

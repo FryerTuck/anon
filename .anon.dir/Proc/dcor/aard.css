@@ -1,0 +1,752 @@
+
+/* tags :: base : view-span, base-size, base-tint
+/* ----------------------------------------------------------------------------------------------- */
+   html,body
+   {
+      position:relative;
+      height:100%;
+      background-color:#2e3133;
+      font-size:15px; line-height:20px;
+      font-family: Arial, Helvetica, sans-serif;
+      color:#AAA;
+      overflow:hidden;
+      padding:0px;
+      margin:0px;
+   }
+
+   ::-webkit-scrollbar
+   {
+      width:10px; height:10px;
+   }
+
+   ::-webkit-scrollbar-track
+   {
+      background:hsla(210,3%,15%,0.9);
+   }
+
+   ::-webkit-scrollbar-thumb
+   {
+      background:hsla(210,4%,22%,1);
+      border:1px solid hsla(210,3%,15%,0.9);
+      border-radius:3px;
+   }
+
+   ::-webkit-scrollbar-corner
+   {background:hsla(210,3%,15%,0.9);}
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* tags :: base : standardize
+/* ----------------------------------------------------------------------------------------------- */
+   div
+   {
+      display:block;
+      position:relative;
+      vertical-align:top;
+      box-sizing:border-box;
+      padding:0px;
+      margin:0px;
+   }
+
+   table,th,tr,td
+   {
+      border-width:0px;
+      border-collapse:collapse;
+      margin:0px;
+      padding:0px;
+      vertical-align:top;
+   }
+
+   iframe,object
+   {
+      display:inline-block;
+      position:relative;
+      box-sizing:border-box;
+      padding:0px;
+      margin:0px;
+      border:none;
+      background:transparent;
+      box-sizing:border-box;
+   }
+
+   pre
+   {
+      position:relative; padding:0px; margin:0px;
+      box-sizing:border-box;
+   }
+
+   ul
+   {
+      margin:0px;
+      padding:0px;
+      margin-left:1.5rem;
+      margin-top:0.5rem;
+   }
+
+   li
+   {
+      margin:0px;
+      padding:0px;
+   }
+
+   p
+   {
+      margin:0px;
+      margin-bottom:1rem;
+   }
+
+   a
+   {
+      font-weight:bold;
+      cursor:pointer;
+      text-decoration:underline;
+      color:#CCC;
+   }
+
+   a:hover
+   {color:#EEE;}
+
+   textarea
+   {
+      position:relative; margin:0px; padding:4px;
+      box-sizing:border-box;
+      resize:none;
+      font-family:monospace; font-size:12px; line-height:14px;
+      border:1px solid #AAA; border-radius:2px;
+   }
+
+   code
+   {
+      position:relative !important; margin:0px !important; padding:0px !important;
+      box-sizing:border-box;
+   }
+
+   sub, sup
+   {
+      font-size: 75%;
+      line-height: 0;
+      position: relative;
+      vertical-align: baseline;
+   }
+
+   sup{top: -0.5em;}
+   sub{bottom: -0.25em;}
+
+   small
+   {
+      display:inline-block;
+      font-size: 11px;
+      line-height: 14px;
+      position: relative;
+      vertical-align: baseline;
+   }
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* tags :: grid : tables
+/* ----------------------------------------------------------------------------------------------- */
+   grid
+   {
+      display:table !important; width:100%; height:100%; box-sizing:border-box;
+      border-width:0px; border:none;
+      margin:0px; padding:0px;
+   }
+
+   row
+   {
+      display:table-row !important; height:auto;
+   }
+
+   col
+   {
+      display:table-cell !important; width:auto; height:auto;
+      vertical-align:top; text-align:left;
+   }
+
+   datagrid
+   {
+      display:table !important; box-sizing:border-box;
+      border-width:0px; border:none;
+      margin:0px; padding:0px;
+   }
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* view :: boot : layers
+/* ----------------------------------------------------------------------------------------------- */
+   #anonMarkView
+   {
+      background:url('/Proc/dcor/syfy.png');
+   }
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* tags :: divs : delimiters
+/* ----------------------------------------------------------------------------------------------- */
+   vdiv
+   {
+      display:block; position:relative; box-sizing:border-box; height:100%;
+      overflow:hidden; margin:0px; padding:0px;
+   }
+
+   hdiv
+   {
+      display:block; position:relative; box-sizing:border-box; width:100%;
+      overflow:hidden; margin:0px; padding:0px;
+   }
+
+   .panlVertDlim
+   {
+      width:5px !important; height:100% !important; max-width:5px !important; padding:0px !important; margin:0px !important;
+   }
+   .panlVertDlim > vdiv
+   {
+      width:5px; min-width:5px; max-width:5px; height:100% !important;
+      background:hsla(210,3%,12%,1);
+      border-left:1px solid hsla(210,3%,8%,1); border-right:1px solid hsla(210,3%,22%,1);
+   }
+
+   .panlVertLine{width:1px; min-width:1px; max-width:1px;}
+   .panlVertLine > vdiv
+   {
+      width:1px; min-width:1px; max-width:1px;
+      border-left:1px solid hsla(210,3%,8%,1); border-right:1px solid hsla(210,3%,22%,1);
+   }
+
+   .panlHorzDlim{width:100% !important; height:5px; min-height:5px; max-height:5px;}
+   .panlHorzDlim > hdiv
+   {
+      width:100% !important; height:5px; min-height:5px; max-height:5px;
+      background:hsla(210,3%,12%,1);
+      border-top:1px solid hsla(210,3%,8%,1); border-bottom:1px solid hsla(210,3%,22%,1);
+   }
+
+   .panlHorzLine{height:1px; min-height:1px; max-height:1px;}
+   .panlHorzLine > hdiv
+   {
+      height:1px; min-height:1px; max-height:1px;
+      border-top:1px solid hsla(210,3%,8%,1); border-bottom:1px solid hsla(210,3%,22%,1);
+   }
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* clan :: note
+/* ----------------------------------------------------------------------------------------------- */
+   notedeck
+   {
+      display:inline-block; position:absolute; box-sizing:border-box;
+      z-index:99999998;
+      text-align:left; color:#BBB;
+   }
+
+   noteface
+   {
+      display:inline-block; position:relative; box-sizing:border-box;
+      border:1px solid hsla(0,0%,30%,1);
+      background-color:#2e3133;
+      border:1px solid #5e6163; border-radius:2px;
+      box-shadow:0px 0px 12px hsla(0,0%,0%,0.2);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size:12px; line-height:14px; color:#FFF;
+      padding:6px;
+   }
+
+   notedeck.Good>noteface,notedeck.Good>notearro>div{background-color:hsla(140,60%,20%,1); border:1px solid hsla(140,60%,40%,1);}
+   notedeck.Info>noteface,notedeck.Info>notearro>div{background-color:hsla(210,60%,20%,1); border:1px solid hsla(210,60%,40%,1);}
+   notedeck.Need>noteface,notedeck.Need>notearro>div{background-color:hsla(280,60%,20%,1); border:1px solid hsla(280,60%,40%,1);}
+   notedeck.Warn>noteface,notedeck.Warn>notearro>div{background-color:hsla(40,60%,20%,1); border:1px solid hsla(40,60%,40%,1);}
+   notedeck.Fail>noteface,notedeck.Fail>notearro>div{background-color:hsla(0,60%,20%,1); border:1px solid hsla(0,60%,40%,1);}
+
+   notearro
+   {
+      display:inline-block; position:absolute; box-sizing:border-box;
+      width:12px; height:6px; overflow:hidden;
+   }
+
+   notearro div
+   {
+      display:inline-block; position:relative; box-sizing:border-box;
+      width:12px; height:12px; margin-top:2px; overflow:hidden; transform:rotate(45deg);
+      background-color:#2e3133;
+      border:1px solid #5e6163;
+   }
+
+   notearro.TL {left:0px;  top:0px;}
+   notearro.TM {left:50%;  top:0px; transform:translate(-50%,0%);}
+   notearro.TR {right:0px; top:0px;}
+
+   notearro.RT {transform:rotate(90deg);  right:0px; top:0px;}
+   notearro.RM {transform:rotate(90deg);  right:0px; top:50%; transform:translate(0%,-50%);}
+   notearro.RB {transform:rotate(90deg);  right:0px; bottom:0px;}
+
+   notearro.BR {transform:rotate(180deg); right:0px; bottom:0px;}
+   notearro.BM {transform:rotate(180deg); left:50%;  transform:translate(50%,0%); bottom:0px;}
+   notearro.BL {transform:rotate(180deg); left:0px;  bottom:0px;}
+
+   notearro.LB {transform:rotate(270deg); left:0px;  bottom:0px;}
+   notearro.LM {transform:rotate(270deg); left:0px;  top:50%; transform:translate(0%,-50%);}
+   notearro.LT {transform:rotate(270deg); left:-8px;  top:6px;}
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* view :: floats ontop, fills window
+/* ----------------------------------------------------------------------------------------------- */
+   .view,view
+   {
+      display:block;
+      position:fixed;
+      z-index:9990;
+      top:0px; left:0px;
+      width:100%; height:100%;
+      vertical-align:top;
+      box-sizing:border-box;
+      padding:0px;
+      margin:0px;
+      overflow:auto;
+   }
+
+   .dbugPanl
+   {
+      position:fixed !important; top:0px; left:0px;
+      z-index:99999997;
+   }
+
+   #failExit
+   {
+      position:fixed !important; z-index:99999999; top:0px; right:0px;
+      width:20px; height:20px;
+      background:hsla(0,0%,0%,0.7);
+      cursor:pointer;
+      font-weight:bold;
+      font-size:14px; line-height:17px;
+      text-align:center;
+      overflow:hidden;
+   }
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* bots :: trap : only bots can see the element
+/* ----------------------------------------------------------------------------------------------- */
+   .nonhuman
+   {
+      display:inline-block; position:absolute;
+      width:320px; height:240px; top:-500px; left:-500px;
+      overflow:hidden;
+   }
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* clan :: dbug : visually see boundaries .. for prototyping
+/* ----------------------------------------------------------------------------------------------- */
+   .dbug
+   {
+      min-width:20px !important;
+      min-height:20px !important;
+      background:#BADA55 !important;
+      font-size:11px !important;
+      color:#AA0000 !important;
+      border:1px solid #AA0000 !important;
+      border-radius:0px !important;
+      opacity:1 !important;
+   }
+
+   .dbug-block
+   {
+      display:block !important;
+      position:relative !important;
+      min-width:20px !important;
+      min-height:20px !important;
+      background:#BADA55 !important;
+      font-size:11px !important;
+      color:#AA0000 !important;
+      border:1px solid #AA0000 !important;
+      border-radius:0px !important;
+      opacity:1 !important;
+   }
+
+   .dbug-inline
+   {
+      display:inline-block !important;
+      position:relative !important;
+      min-width:20px !important;
+      min-height:20px !important;
+      background:#BADA55 !important;
+      font-size:11px !important;
+      color:#AA0000 !important;
+      border:1px solid #AA0000 !important;
+      border-radius:0px !important;
+      opacity:1 !important;
+   }
+
+   .dbug-layer
+   {
+      display:block !important;
+      position:absolute !important;
+      min-width:20px !important;
+      min-height:20px !important;
+      left:0px; top:0px;
+      background:#BADA55 !important;
+      font-size:11px !important;
+      color:#AA0000 !important;
+      border:1px solid #AA0000 !important;
+      border-radius:0px !important;
+      opacity:1 !important;
+   }
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* clan :: holder : general container
+/* ----------------------------------------------------------------------------------------------- */
+   .holder
+   {
+      display:block; position:relative;
+      box-sizing:border-box;
+      overflow:auto;
+   }
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* path :: include : knob
+/* ----------------------------------------------------------------------------------------------- */
+/*{:'/Proc/dcor/knob.css':}*/
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* clan :: dropZone : for file uploads
+/* ----------------------------------------------------------------------------------------------- */
+   .dropZone
+   {
+      display:flex; position:absolute;
+      width:50%; height:50%; background:hsla(0,0%,50%,0.1);
+      justify-content:center; align-items:center; text-align:center;
+      font-family:Arial Helvetica sans-serif; font-size:3vw; color:hsla(0,0%,50%,0.4);
+      border:2px dashed hsla(0,0%,50%,0.4); border-radius:1vw;
+      top:50%; left:50%; transform:translate(-50%, -50%);
+   }
+   .dropZoneInfo
+   {
+      padding-top:3vw;
+      font-size:1.5vw;
+   }
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* clan :: move
+/* ----------------------------------------------------------------------------------------------- */
+   .moveHorz {cursor:col-resize;}
+   .moveVert {cursor:row-resize;}
+   .moveBoth {cursor:move;}
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* tags :: custom
+/* ----------------------------------------------------------------------------------------------- */
+   panl
+   {
+      display:block; position:relative;
+      box-sizing:border-box; width:100%; height:100%;
+      outline:none;
+      overflow:auto;
+   }
+
+   wrap
+   {
+      display:block; position:relative;
+      box-sizing:border-box; width:100%; height:100%;
+      outline:none;
+      overflow:hidden;
+   }
+
+   note
+   {
+      display:inline-block; position:relative; box-sizing:border-box;
+      border:1px solid hsla(0,0%,30%,1);
+      background-color:#2e3133;
+      border:1px solid #5e6163; border-radius:2px;
+      box-shadow:0px 0px 12px hsla(0,0%,0%,0.2);
+      font-family: Arial, Helvetica, sans-serif;
+      text-align:center; color:#FFF;
+      padding:2em;
+   }
+
+   icon
+   {
+      display:inline-block; position:relative; box-sizing:border-box;
+      padding:0px; margin:0px; font-size:16px; line-height:16px;
+   }
+
+   modal
+   {
+      display:block;
+      position:fixed;
+      z-index:9990;
+      top:0px; left:0px;
+      width:100%; height:100%;
+      vertical-align:top;
+      box-sizing:border-box;
+      padding:0px;
+      margin:0px;
+      overflow:hidden;
+      background:hsla(0,0%,5%,0.9);
+      outline:none;
+   }
+
+   modal>wrap>grid
+   {
+      width:auto !important; height:auto !important;
+      background:hsla(0,0%,95%,1);
+      border:1px solid hsla(0,0%,50%,1);
+      border-radius:2px;
+      box-shadow:0px 0px 8px hsla(0,0%,0%,0.5);
+   }
+
+   modal>wrap>grid>row
+   {
+      height:100% !important;
+   }
+
+   modal>wrap>grid .face>div
+   {
+      padding:5px;
+      font-size:13px;
+      color:hsla(0,0%,20%,1);
+   }
+
+   modal>wrap>grid .face .head
+   {
+      background:hsla(0,0%,93%,1);
+      font-weight:bold;
+      border-bottom:1px solid hsla(0,0%,85%,1);
+   }
+
+   modal>wrap>grid .face .head>icon
+   {
+      position:absolute; top:5px; right:4px;
+      font-size:10px !important; line-height:10px !important;
+      color:hsla(0,0%,50%,1);
+      cursor:pointer;
+   }
+
+   modal>wrap>grid .face .body
+   {
+      padding:15px;
+      max-width:900px; max-height:600px;
+   }
+
+   modal>wrap>grid .face .foot
+   {
+      background:hsla(0,0%,93%,1);
+      text-align:right;
+      border-top:1px solid hsla(0,0%,85%,1);
+   }
+
+   modal>wrap>grid .side
+   {
+      width:3px !important; max-width:3px !important; min-width:3px !important;
+   }
+
+   modal>wrap>grid .side>div
+   {
+      display:none;
+      background-color:hsla(220,100%,50%,1);
+   }
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* clan :: alignment
+/* ----------------------------------------------------------------------------------------------- */
+   .center {position:absolute !important; left:50%; transform:translate(-50%,0%);}
+   .middle {position:absolute !important; top:50%; transform:translate(0%,-50%);}
+   .cenmid {position:absolute !important; left:50%; top:50%; transform:translate(-50%,-50%);}
+   .midcen {position:absolute !important; left:50%; top:50%; transform:translate(-50%,-50%);}
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* Anon :: repo : diff colors
+/* ----------------------------------------------------------------------------------------------- */
+   .diffXX
+   {
+      /* eXists eXclusive .. untouched */
+   }
+
+   .diffUN
+   {
+      /* Untracked Natively */
+      color:hsla(120,100%,70%,1) !important;
+   }
+
+   .diffAN
+   {
+      /* Added Natively */
+      color:hsla(220,100%,70%,1) !important;
+   }
+
+   .diffMN
+   {
+      /* Modified Natively */
+      color:hsla(65,75%,60%,1) !important;
+   }
+
+   .diffAR
+   {
+      /* Added Remotely */
+      color:hsla(120,100%,70%,1) !important;
+   }
+
+   .diffMR
+   {
+      /* Modified Remotely */
+      color:hsla(330,100%,75%,1) !important;
+   }
+
+   .diffDR
+   {
+      /* Deleted Remotely */
+      color:hsla(0,0%,45%,1) !important;
+   }
+
+   .diffGC
+   {
+      /* Git Conflict */
+      color:hsla(5,100%,60%,1) !important;
+   }
+
+   .diffANMR
+   {
+      /* Modified Natively + Modified Remotely */
+      color:hsla(265,100%,65%,1) !important;
+   }
+
+   .diffANMN
+   {
+      /* Added Natively + Modified Natively */
+      color:hsla(120,100%,60%,1) !important;
+   }
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* clan :: treeview
+/* ----------------------------------------------------------------------------------------------- */
+   treeview
+   {
+      display:block;
+      position:relative;
+      text-align:left;
+      vertical-align:top;
+      box-sizing:border-box;
+      padding:0px;
+      margin:0px;
+      user-select:none;
+   }
+
+
+   treeface
+   {
+      display:block;
+      position:relative;
+      text-align:left;
+      vertical-align:top;
+      box-sizing:border-box;
+      padding:0px;
+      margin:0px;
+      outline:none;
+      user-select:none;
+   }
+
+
+   treetwig
+   {
+      display:block;
+      position:relative;
+      text-align:left;
+      vertical-align:top;
+      box-sizing:border-box;
+      padding:0px;
+      margin:0px;
+      outline:none;
+      text-shadow:0px 0px 1px hsla(0,0%,0%,1), 0px 0px 1px hsla(0,0%,0%,1), 0px 0px 1px hsla(0,0%,0%,1), 0px 0px 2px hsla(0,0%,0%,1), 0px 0px 2px hsla(0,0%,0%,1);
+      user-select:none;
+   }
+
+   .treeTwigArro
+   {
+      width:12px !important;
+      font-size:12px !important;
+      text-align:center !important;
+      color:inherit !important;
+      user-select:none;
+   }
+
+   .treeTwigIcon
+   {
+      width:16px !important;
+      font-size:16px !important;
+      padding-left:6px !important;
+      padding-right:4px !important;
+      color:inherit !important;
+      user-select:none;
+   }
+
+   .treeTwigText input
+   {
+      width:100% !important;
+      background:transparent !important;
+      font-family:'code';
+      border:none !important;
+      color:inherit !important;
+      text-shadow:inherit !important;
+      user-select:none !important;
+      cursor:inherit !important;
+   }
+
+   treeTwig.dragOver
+   {
+      outline:auto !important;
+      outline-color:hsla(120,100%,65%,1) !important;
+   }
+
+   treefork
+   {
+      display:block;
+      position:relative;
+      text-align:left;
+      vertical-align:top;
+      box-sizing:border-box;
+      padding:0px;
+      margin:0px;
+      display:none;
+      user-select:none;
+   }
+/* ----------------------------------------------------------------------------------------------- */

@@ -1,0 +1,215 @@
+
+#TaskPanlSlab
+{
+   width:100%; height:100%;
+   position:relative;
+   overflow:auto;
+}
+
+#TaskPanlSlab .slabMenuBody>panl
+{
+   padding:10px;
+   min-width:320px;
+}
+
+#TaskPanlSlab .slabMenuBody>panl:focus
+{
+   outline:none;
+   box-shadow:inset 0px 0px 6px 0px hsla(200,100%,60%,0.1);
+}
+
+.slabHasFocus
+{
+   color:hsla(220,100%,70%,1);
+   text-shadow:0px 0px 5px hsla(210,100%,80%,0.2);
+}
+
+
+jobcard
+{
+   display:block;
+   position:relative;
+   vertical-align:top;
+   box-sizing:border-box;
+   padding:0px;
+   margin:0px;
+   width:100%;
+   max-height:200px;
+   background:hsla(0,0%,90%,1);
+   outline:none;
+   border:1px solid hsla(0,0%,70%,1);
+   border-radius:3px;
+   box-shadow:0px 1px 4px hsla(0,0%,0%,0.4);
+   margin-bottom:12px;
+   color:hsla(0,0%,30%,1);
+   overflow:hidden;
+   user-select:text;
+}
+
+.AnonCardLift
+{
+   box-shadow:4px 4px 12px hsla(0,0%,0%,0.3);
+   transform:rotate(2deg);
+}
+
+
+.cardHeadPane
+{
+   width:100%;
+   max-height:40px;
+   overflow:hidden;
+   padding:6px;
+}
+
+.cardHeadIcon
+{
+   width:16px;
+   height:16px;
+   font-size:16px;
+   line-height:16px;
+   text-align:center;
+}
+
+.cardHeadText
+{
+   padding-left:6px;
+   font-size:13px;
+   line-height:16px;
+   font-weight:bold;
+}
+
+
+.cardBodyPane
+{
+   font-size:12px;
+   line-height:12px;
+   max-height:130px;
+   padding:8px;
+   background:hsla(0,0%,95%,1);
+   overflow:hidden;
+   border-top:1px solid hsla(0,0%,85%,1);
+   border-bottom:1px solid hsla(0,0%,85%,1);
+}
+.cardBodyPane .markdown-body
+{
+   font-size:12px !important;
+   line-height:14px !important;
+}
+.cardBodyPane .markdown-body>h1
+{
+   font-size:15px !important; line-height:20px !important;
+   margin:0px !important; margin-bottom:12px !important; padding:0px !important;
+}
+.cardBodyPane .markdown-body>h2
+{
+   font-size:14px !important; line-height:20px !important;
+   margin:0px !important; margin-bottom:12px !important; padding:0px !important;
+}
+.cardBodyPane .markdown-body>h3
+{
+   font-size:13px !important; line-height:20px !important;
+   margin:0px !important; margin-bottom:12px !important; padding:0px !important;
+}
+.cardBodyPane .markdown-body>h4
+{
+   font-size:12px !important; line-height:20px !important;
+   margin:0px !important; margin-bottom:12px !important; padding:0px !important;
+}
+.cardBodyPane .markdown-body>pre
+{
+   font-size:16px !important; line-height:12px !important;
+   margin:0px !important; padding:0px !important;
+   overflow:visible !important;
+}
+.cardBodyPane .markdown-body>pre>code
+{
+   font-family:'code' !important; font-size:16px !important; line-height:12px !important;
+   margin:0px !important; padding:0px !important;
+}
+
+.cardFootPane
+{
+   min-height:24px;
+   padding:6px;
+   overflow:hidden;
+   text-align:right;
+   font-size:13px;
+   line-height:14px;
+}
+.cardFootPane .cardFootNick
+{
+   font-weight:bold;
+   margin-right:6px;
+}
+.cardFootPane .cardFootTime
+{
+   opacity:0.8;
+}
+
+.cardFaceView
+{
+   width:150px;
+   height:64px;
+}
+
+.cardFacePane
+{
+   width:150px;
+   height:64px;
+   overflow:hidden;
+}
+
+.cardFaceInfo
+{
+   display:inline-block;
+   width:94px;
+   height:64px;
+   padding-right:6px;
+   padding-top:4px;
+   text-align:right;
+   font-size:12px;
+}
+
+.cardFaceHold
+{
+   display:inline-block;
+   width:48px;
+   height:48px;
+   overflow:hidden;
+   border:2px solid #FFFFFF;
+   border-radius:6px;
+   box-shadow:0px 0px 4px hsla(0,0%,0%,0.25);
+   margin-top:8px;
+}
+
+.cardFacePics
+{
+   position:absolute;
+   width:48px;
+   height:48px;
+   user-select:none;
+}
+
+
+.cardButnPane
+{
+   padding:8px;
+   white-space:nowrap;
+   font-size:13px;
+}
+.cardButnPane div
+{
+   display:inline-block;
+   margin-left:8px;
+   margin-right:8px;
+}
+
+
+.cardInfoPane
+{
+   padding:8px;
+   padding-top:6px;
+   font-size:12px;
+   text-align:center;
+   white-space:nowrap;
+}

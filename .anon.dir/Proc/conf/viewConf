@@ -1,0 +1,3 @@
+protectImgPath: ['/*'],
+protectImgSize: {w:256,h:256},
+protectImgMark: {'/Proc/dcor/mark.svg':FILL},

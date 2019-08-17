@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+      <style>
+         html,body{position:relative; height:100%; overflow:hidden; padding:0px; margin:0px; background-color:#2e3133;}
+         #snth{display:inline-block; position:absolute; width:320px; height:240px; top:-500px; left:-500px; overflow:hidden;}
+      </style>
+
+      <script>
+         window.isModern=function(cb)
+         {
+            var x='(function(){class ಠ extends Array{constructor(j=`a`,...c){const q=(({u:e})=>{return {[`${c}`]:Symbol(j)};})({});'+
+            'super(j,q,...c)}}new Promise(f=>{const a=function*(){return "\u{20BB7}".match(/./u)[0].length===2||!0};for (let z of a())'+
+            '{const [x,y,w,k]=[new Set(),new WeakSet(),new Map(),new WeakMap()];break}f(new Proxy({},{get:(h,i)=>i in h ?h[i]:"j".repeat'+
+            '(0o2)}))}).then(t=>new ಠ(t.d)); if(!navigator.storage||!navigator.storage.estimate){throw "!"}; let n=document.createElement'+
+            '("canvas"); let g=(!!n.getContext?(n.getContext("webgl")||n.getContext("experimental-webgl")):null); if(!g||!(g instanceof '+
+            'WebGLRenderingContext)){throw "!"}; if(btoa("jz\'")!=="anon"){throw "!"};})();';
+
+            if(!window.addEventListener){cb(false);return;}; var n=document.createElement('script'); n.ondone=function(event,s)
+            {
+               s=this; if(s.done){window.removeEventListener('error',s.ondone,true); if(s.parentNode){s.parentNode.removeChild(s)}; return};
+               this.done=1; cb(((event&&event.error)?false:true));
+            };
+
+            window.addEventListener('error',n.ondone,true); n.appendChild(document.createTextNode(x));
+            n.id='dbug'; document.head.appendChild(n); setTimeout(n.ondone,10);
+         };
+
+
+         window.isModern.t=setInterval(function()
+         {
+            if(!document.getElementById('nojs')){return;}; clearInterval(window.isModern.t); // wait for document to load
+            setTimeout(function(k,v,q,m,p,x,n,d)
+            {
+               q=function(s){return s.split('^').join('').split('').reverse().join('')};m=this;
+               p=document.getElementById('nojs').innerHTML.split('URL=')[1].split('"')[0];
+               x=function(u){window.location.href=(p+'?#'+u);}; isModern(function(yes){if(!yes){x('lcjs')}else
+               {
+                  v=(document[q('e^iko^oc')]+'').split(';')[0]; if(!v){x('kuki');return}; k=v.substr(0,v.indexOf('='));
+                  n=document.createElement('script'); n.appendChild(document.createTextNode(q(m[q('bot^a')](v.split(k+'=').join('')))));
+                  document.body.innerHTML=''; delete window.isModern; document.head.appendChild(n);
+               }});
+            },300); // wait for evasive snth to misbehave
+         },10);
+      </script>
+   </head>
+   <body>
+      <div id="snth">
+         <form action="{:(botHoney):}" method="POST" rel="nofollow">
+            <input type="text" name="age"/><input type="submit" value="ok"/>
+         </form>
+         <a href="{:(botHoney):}?welcome=yes" rel="nofollow">contacts</a>
+         <noscript id="nojs">
+            <meta http-equiv="refresh" content="1; URL={:(DBUGPATH):}"/>
+         </noscript>
+      </div>
+   </body>
+</html>

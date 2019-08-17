@@ -1,0 +1,77 @@
+#TimePanlSlab .treeMenuView
+{
+   width:260px;
+}
+
+#TimeMainMenu
+{
+   overflow:hidden !important;
+}
+
+#TimeMainMenu grid
+{
+   height:10px;
+}
+
+#TimeMenuFltr.show
+{display:table !important;}
+#TimeMenuFltr.hide
+{display:none !important;}
+
+#TimeMainMenu input
+{
+   width:100% !important;
+   box-sizing:border-box;
+   background:transparent !important;
+   font-family:'code' !important;
+   font-size:16px !important;
+   padding:4px !important;
+   border:1px solid hsla(0,0%,60%,1) !important;
+   border-radius:2px !important; margin-bottom:6px;
+   color:inherit !important;
+   text-shadow:inherit !important;
+   user-select:none !important;
+}
+
+#TimeMainMenu butn
+{
+   margin-top:6px !important;
+}
+
+#TimeMainMenu .spacer
+{min-width:6px;}
+
+
+.timeToglCell
+{
+   height:10px; max-height:10px; min-height:10px;
+   text-align:center !important;
+}
+
+#TimeFltrTogl
+{
+   cursor:pointer;
+}
+
+#TimeMenuExec
+{
+   padding:6px;
+}
+
+
+.TimeViewPanl
+{
+   background:hsla(0,0%,100%,1);
+}
+
+#TimeToolView
+{
+   width:32px; min-width:32px; max-width:32px;
+   padding:4px;
+   background:hsla(0,0%,0%,0.1);
+}
+
+.ct-label
+{
+   color:hsla(0,0%,0%,1) !important;
+}

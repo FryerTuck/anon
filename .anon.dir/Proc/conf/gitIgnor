@@ -1,0 +1,17 @@
+/Bill/data/*
+/Bill/conf/autoMail
+/Data/link/*
+/Data/base/*
+/Help/conf/autoMail
+/Mail/link/*
+/Mail/data/*
+/Mail/conf/autoMail
+/Proc/temp/*
+/Proc/conf/autoMail
+/Proc/conf/hostName
+/Task/data/*
+/Task/vars/*
+/Task/conf/autoMail
+/Time/data/*
+/User/data/*
+/User/conf/autoMail

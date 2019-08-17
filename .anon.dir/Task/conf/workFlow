@@ -1,0 +1,11 @@
+surf: sort
+back: sort
+sort: deal
+deal: plan,gang,lead
+plan: gang,lead
+gang: geek,draw,mind,bill
+lead: deal
+geek: geek,test
+draw: draw,test
+mind: mind,test
+test: bill

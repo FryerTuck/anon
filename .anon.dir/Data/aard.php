@@ -1,0 +1,140 @@
+<?
+namespace Anon;
+
+
+
+
+
+class Data
+{
+   static $meta;
+
+   private static function dataTree($lnk,$flt=null,$lvl=0)
+   {
+      $obj=crud($lnk); if(!$lvl){$lvl=$obj->mean->levl;}; $inf=$obj->info; if(!$inf){$inf=knob();};
+      $mxl=$inf->maxLevel; if($mxl===null){$mxl=($lvl+1);}; $lvt=$inf->levlType; $tpe=($lvt?$lvt[$lvl]:'none');
+      $lst=$obj->select('*'); if(!isNuma($lst)){return $lst;}; $prl=$obj->mean->purl; $pth=$obj->mean->path; $rsl=[];
+
+      foreach($lst as $itm)
+      {
+         $pts=stub($itm,'::'); $tpe=$pts[0]; $itm=$pts[2]; if($flt&&!isin($flt,$tpe)){continue;};
+         $dat=knob
+         ([
+            "repo"=>null,
+            "purl"=>"$prl/$itm",
+            "path"=>swap("$pth/$itm",'//','/'),
+            "levl"=>($lvl+1),
+            "name"=>$itm,
+            "mime"=>null,
+            "type"=>$tpe,
+            "size"=>0,
+            "time"=>0,
+            "data"=>null,
+         ]);
+
+         $kds=isin(['dbase','table'],$tpe);
+         if($kds){$kds=self::dataTree("$lnk/$itm",$flt,($lvl+1)); $dat->size=span($kds); $dat->data=$kds;};
+
+         $rsl[]=$dat;
+      };
+
+      return $rsl;
+   }
+
+
+
+
+   static function treeMenu()
+   {
+      Proc::signal('busy',['with'=>"repo",'done'=>11]); wait(150); $v=knob($_POST);
+      if($v->purl){$r=self::dataTree($v->purl,$v->fltr); Proc::signal('busy',['with'=>"repo",'done'=>100]); dump(['data'=>$r]);};
+      $h='/Data/link'; $r=path::tree($h); if(span($r->data)<1){dump($r);};
+      foreach($r->data as $idx => $dbl)
+      {
+         $purl=pget($dbl->path); $kids=self::dataTree($purl); unset($r->data[$idx]->data);
+         $r->data[$idx]->purl=$purl; $r->data[$idx]->levl=path::info($purl)->levl;
+         $r->data[$idx]->data=$kids;
+      };
+      Proc::signal('busy',['with'=>"repo",'done'=>100]);
+      dump($r);
+   }
+
+
+
+   static function openItem()
+   {
+      $vrs=knob($_POST); $tpe=$vrs->type; $dbc=crud($vrs->purl); $lmt=500; $qry=null; $rsl=null;
+      $rsl=$dbc->select([fetch=>'*',limit=>$lmt]);
+      dump($rsl);
+
+      // if($tpe==='dbase')
+      // {};
+      //
+      // if(isin(['table','field'],$tpe))
+      // {
+      //    // $rsl=$dbc->select([using=>fetch=>(($tpe==='table')?'*':$dbc->mean->refs->field),limit=>$lmt]); dump($rsl);
+      // };
+      //
+      // if(isin(['sproc','funct'],$tpe))
+      // {
+      //    $nic=$dbc->mean->leaf; $rsl=$dbc->select('*');
+      //    dump($rsl);
+      // };
+
+   }
+
+
+
+   static function saveItem()
+   {
+      $vrs=knob($_POST); $prl=$vrs->purl; $tpe=$vrs->type; $dta=decode::b64($vrs->data); $dbc=crud($prl); $rfs=$dbc->mean->refs;
+
+      if(isin(['sproc','funct'],$tpe))
+      {
+         $nic=$dbc->mean->leaf; $rsl=$dbc->delete([sproc=>$nic]); $rsl=$dbc->adjure($dta); ekko(($rsl?OK:FAIL));
+      };
+
+      if($tpe=='table')
+      {
+         if($vrs->row&&$vrs->col)
+         {
+            $pts=stub($vrs->row,':'); $ridk=$pts[0]; $ridv=$pts[2];
+            $rsl=$dbc->update
+            ([
+               using => $rfs->table,
+               where => "$ridk = $ridv",
+               write => ["$vrs->col"=>$dta],
+               limit => 1,
+            ]);
+            dump(($rsl===true)?OK:FAIL);
+         };
+      };
+   }
+
+
+
+   static function runQuery()
+   {
+      $vrs=knob($_POST); $prl=$vrs->purl; $sql=decode::b64($vrs->cmnd); $tmp=lowerCase($sql);
+      $sho=pick($tmp,['show *','show all','show databases','show dbases','show tables','show fields']);
+
+      if($sho&&(indx($tmp,$sho)===0))
+      {
+         $arg=null; if(span($tmp,' ')>1){$pts=rstub($tmp,' '); $arg=$pts[2]; $tmp=$pts[0];}; $inf=path::info($prl); $lvl=$inf->levl;
+         if(isin($tmp,'fields')&&($lvl<2)){ekko('fields of which table?');}; if(isin($tmp,'tables')&&($lvl<1)){ekko('tables of which dbase?');};
+         $tmp=swap($tmp,'data','d'); $dbc=crud($prl); $rfs=$dbc->mean->refs; if($tmp==='show dbases'){$rsl=$dbc->descry('*',0,$rfs);}
+         elseif($tmp==='show tables'){$rsl=$dbc->descry('*',1,$rfs);}else{$rsl=$dbc->descry('*');};
+         ekko($rsl);
+      };
+
+      $rsl=crud($prl)->adjure($sql); ekko($rsl);
+   }
+
+
+
+   static function exists()
+   {
+      $vrs=knob($_POST); $prl=$vrs->purl;
+      try{$rsl=crud($prl)->descry(); ekko(OK);}catch(\Exception $e){$e=$e->getMessage(); ekko("FAIL .. $e");};
+   }
+}

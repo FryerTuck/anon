@@ -1,0 +1,641 @@
+<?
+namespace Anon;
+
+
+
+# tool :: xeno : global reference to use as "foreign masculine" character who performs giving methods defined by any other php script
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   class xeno
+   {
+      private static $meta;
+
+      static function learns($n,$f)
+      {
+         if(!isWord($n)){fail('My skills are named, try using a word next time');};
+         if(!isFunc($f)){fail('I can learn skills by methods only');}; if(!isKnob(self::$meta)){self::$meta=knob();};
+         if(isFunc(self::$meta->$n)){fail("I already know how to `$n`");}; self::$meta->$n=$f;
+      }
+
+      static function __callStatic($n,$a)
+      {
+         $f=self::$meta->$n; if(!isFunc($f)){fail("I don't know how to `$n` .. yet .. teach me?");};
+         try{$r=call($f,$a); return $r;}catch(\Exception $e)
+         {$m=$e->getMessage(); $f=$e->getFile(); $l=$e->getLine(); fail("I could not `$n` because: $m");};
+      }
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+# tool :: xena : global reference to use as "foreign feminine" character who performs receiving methods defined by any other php script
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   class xena
+   {
+      private static $meta;
+
+      static function learns($n,$f)
+      {
+         if(!isWord($n)){fail('My skills are named, try using a word next time');};
+         if(!isFunc($f)){fail('I can learn skills by methods only');}; if(!isKnob(self::$meta)){self::$meta=knob();};
+         if(isFunc(self::$meta->$n)){fail("I already know how to `$n`");}; self::$meta->$n=$f;
+      }
+
+      static function __callStatic($n,$a)
+      {
+         $f=self::$meta->$n; if(!isFunc($f)){fail("I don't know how to `$n` .. yet .. teach me?");};
+         try{$r=call($f,$a); return $r;}catch(\Exception $e)
+         {$m=$e->getMessage(); $f=$e->getFile(); $l=$e->getLine(); fail("I could not `$n` because: $m");};
+      }
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+# func :: reckon : assert on property values by using string as expression .. for use in `where` crud-filters that don't use database
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   function reckon($expr,$vars)
+   {
+      if(isKnob($expr)&&($expr->any||$expr->all))
+      {
+         $ow=($expr->any?'any':'all'); $cl=$expr->$ow; $cr=false; $any=false; $all=true; expect::{'array'}($cl); if(count($cl)<1){return;};
+         foreach($cl as $c){$r=reckon($c,$vars); if($r){$any=true;}else{$all=false;}};
+         if($ow==='any'){return $any;}; if($ow==='all'){return $all;}; return;
+      };
+
+      expect::text($expr); expect::knob($vars); $oper=padded((explode(' ',EXPROPER)),' '); $p=stub($expr,$oper);
+
+      if(!$p){fail("invalid expression `$expr`");}; $l=trim($p[0]); $l=$vars->$l; $o=trim($p[1]); $r=$p[2]; $r=dval($r);
+      if($o==='!='){return ($l!==$r);}; if($o==='<='){return ($l<=$r);}; if($o==='>='){return ($l>=$r);}; if($o==='='){return ($l===$r);};
+      if($o==='<'){return ($l<$r);}; if($o==='>'){return ($l>$r);}; if(!isin($o,'~')||!isin($r,'*')){return;}; $f=akin($l,$r);
+      if($o==='~'){return ($f?true:false);}; if($o==='!~'){return ($f?false:true);}; return (!$f?true:false);
+   }
+
+   function any(){return knob(['any'=>func_get_args()]);};
+   function all(){return knob(['all'=>func_get_args()]);};
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+# tool :: requires : assert or import dependencies
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   class requires
+   {
+      private static $mods;
+
+      static function phpx()
+      {
+         $a=func_get_args(); if(span($a)<1){return;} if(is_nokey_array($a[0])){$a=$a[0];}; foreach($a as $n)
+         {
+            if(!isWord($n)){fail('expecting extension-name as word');}; if(extension_loaded($n)){continue;};
+            fail("the `$n` extension is required; make sure it is installed and configured, or contact your hosting provider");
+            return true;
+         };
+         return true;
+      }
+
+      static function stem()
+      {
+         $a=func_get_args(); if(span($a)<1){return;} if(is_nokey_array($a[0])){$a=$a[0];}; foreach($a as $n)
+         {if(!isWord($n)){fail('expecting class-name as word');}; if(is_class($n)){continue;}; import($n);};
+         return true;
+      }
+
+      static function path()
+      {
+         $a=func_get_args(); if(span($a)<1){return;} if(is_nokey_array($a[0])){$a=$a[0];}; if(count($a)<1){return;};
+         if(!isKnob(self::$mods)){self::$mods=knob();}; $cr=sha1(implode(',',$a)); $rc=self::$mods->$cr; if($rc){return $rc;};
+         $fldr=0; if((count($a)===1)&&isFold($a[0])){$fldr=1; $h=$a[0]; $a=pget($h); $a=padded($a,"$h/",'');};
+         $_RESL=[]; foreach($a as $p)
+         {
+            $t=isee($p); if($t&&is_dir($t)){$i=path::indx($t); if($i){$t="$t/$i";}}; if($t){$p="$t";};
+            if(!$t||!is_file($t)||(fext($t)!=='php')){if($fldr){continue;}; $p=tval($p); fail("expecting `$p` as readable php file");};
+            $_PATH=$p; $export=null; ob_start(); require_once "$_PATH"; $r=trim(ob_get_clean()); $r=(isVoid($export)?$r:$export);
+            if($r){$_RESL[]=$r;};
+         };
+         $c=count($_RESL); $z=(($c<1)?true:(($c<2)?$_RESL[0]:$_RESL)); self::$mods->$cr=$z; return $z;
+      }
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+# tool :: encode/decode : encoding/decoding
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   class encode
+   {
+      static function nbx($d,$b)
+      {
+         if($b===64){if(!isText($d)){$d=texted($d);}; return base64_encode($d);};
+         if(!isNumr($d)||isin($d,'.')||($d<1)){fail::base_convert('expecting positive integer');};
+         if(!is_int($b)||(($b%2)!==0)||($b>62)){fail::base_convert("invalid encoding base");};
+         return gmp_strval(gmp_init($d,10),$b);
+      }
+
+      static function jso($d,$v=null)
+      {return json_encode($d,JSON_UNESCAPED_SLASHES);}
+
+      static function __callStatic($n,$a)
+      {
+         if(strlen($n)<1){fail::reference('invalid method name');}; if(!isset($a[0])){$a[0]=null;}; if(!isset($a[1])){$a[1]=null;};
+         $f=(($n==='hex')?'b16':(($n==='json')?'jso':(($n==='cfg')?'vmp':$n))); if(isin(__CLASS__,$f)){return self::{$f}($a[0],$a[1]);};
+         $b=null; if($f[0]==='b'){$b=substr($f,1); $b=(is_numeric($b)?($b*1):null); if(!is_int($b)){$b=null;};};
+         if($b){return self::nbx($a[0],$b);}; $f=swap($f,' ',''); $l=frag($f,'->'); if(span($l)<2){fail("invalid method `$f`");};
+         $r=$a[0]; foreach($l as $i){$r=encode::{$i}($r,$a[1]);}; return $r;
+      }
+   }
+
+
+   class decode
+   {
+      static function nbx($d,$b)
+      {
+         $v=(isNumr($d)?"$d":$d); if(!isText($v)){fail::arguments('expecting 1st arg as :text: or :numr:');};
+         if(!is_int($b)||(($b%2)!==0)){fail::base("invalid encoding base");};
+         if($b===16){return hex2bin($v);}; if($b===64){return base64_decode($v);}; return hex2bin(gmp_strval(gmp_init($v,$b),16));
+      }
+
+      static function jso($d,$v=null)
+      {
+         if(isPath($d)){expect::path($d,[R,F]); $t=pget($d);}else{$t=$d;}; $o=wrapOf($t);
+         $r=json_decode($t); if($o==='{}'){$r=knob($r);}; return $r;
+      }
+
+      static function __callStatic($n,$a)
+      {
+         if(strlen($n)<1){fail::reference('invalid method name');}; if(!isset($a[0])){$a[0]=null;}; if(!isset($a[1])){$a[1]=null;};
+         $f=(($n==='hex')?'b16':(($n==='json')?'jso':(($n==='cfg')?'vmp':$n))); if(isin(__CLASS__,$f)){self::{$f}($a[0],$a[1]);};
+         $b=null; if($f[0]==='b'){$b=substr($f,1); $b=(is_numeric($b)?($b*1):null); if(!is_int($b)){$b=null;};};
+         if($b){return self::nbx($a[0],$b);}; fail("invalid method `$f`");
+      }
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+# func :: gudref : create random short-reference-number -free of bad-words and is unique in context .. supports char-length: 5 >=< 30
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   function gudref($dp,$rl=null)
+   {
+      expect::path($dp);
+      $bw=conf('Proc/badWords'); $rn=null; if(!is_int($rl)){$r=12;}; if($rl<6){$rl=6;}elseif($rl>30){$rl=30;};
+      do
+      {
+         $mt=(fractime().''); $mt=swap($mt,'.',''); $mt=($mt*1);
+         $tr=substr((random(10).encode::b62($mt).random(10)),0,$rl);
+         if(isin(strtolower($tr),$bw)||isee("$dp/$tr")){continue;}; $rn=$tr;
+      }
+      while(!$rn); return $rn;
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+# tool :: find : userByMail .. taskByPath .. firmByPath
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   class find
+   {
+      static function userByMail($a)
+      {
+         if(!isMail($a)){return;}; $l=pget('/User/data'); $r='anonymous';
+         foreach($l as $i){if(pget("/User/data/$i/mail")===$a){$r=$i;break;}};
+         return $r;
+      }
+
+      static function taskByPath($a)
+      {
+         if(!isPath($a)){return;}; $h='/Task/data'; $l=pget($h); $r=null;
+         foreach($l as $i){$p=pget("$h/$i/workPath"); if($p&&isin($a,$p)){$r=$i;break;}};
+         return $r;
+      }
+
+      static function firmByTask($a)
+      {
+         if(!isText($a,1)){return;}; $r=pget("/Task/data/$a/business"); if(!$r){$r=conf('Bill/firmName');};
+         return $r;
+      }
+
+      static function firmByPath($a)
+      {
+         if(!isPath($a)){return;}; $t=self::taskByPath($a); $r=self::firmByTask(($t?$t:'?'));
+         return $r;
+      }
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+# func :: userDoes : assert if user "does" anything related to a specific clan
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   function userDoes()
+   {
+      $a=func_get_args(); $c=sesn('CLAN'); $r=isin($c,$a); return $r;
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+# func :: diff : returns the difference .. like `array_diff` -but also works on numr,text,array,object
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   function diff()
+   {
+      $a=func_get_args(); if((span($a)===1)&&isNuma($a[0])){$a=$a[0];}; if(span($a)<2){return (isset($a[0])?$a[0]:null);};
+      $r=lpop($a); $t=type($r); do
+      {
+         $x=lpop($a); if($t!==type($x)){fail('diff args type mismatch');}; if($t==='numr'){$r=(($r>$x)?($r-$x):($x-$r)); continue;};
+         if($t==='text'){$r=((indx($r,$x)!==null)?swap($r,$x,''):swap($x,$r,'')); continue;}; if(isNuma($r)&&isNuma($x))
+         {
+            if(isFlat($x)&&isFlat($r)){$d=array_diff($x,$r); $r=((count($d)>0)?$d:array_diff($r,$x)); continue;}; $d=[]; $n=null;
+            foreach($x as $xi){$n=tval($xi); foreach($r as $ri){if(tval($ri)===$n){$n=null;};}; if($n){$d[]=$xi;};};  unset($n,$ri,$xi);
+            if(span($d)<1){foreach($r as $ri){$n=tval($ri); foreach($x as $xi){if(tval($xi)===$n){$n=null;};}; if($n){$d[]=$ri;};};};
+            $r=$d; continue;
+         };
+         if(($t!=='list')&&($t!=='knob')){fail('invalid diff arg type');};
+         $rk=keys($r); $xk=keys($x); $kd=array_diff($xk,$rk); if(count($kd)<1){$kd=array_diff($rk,$xk);}; if(count($kd)<1){continue;};
+         $rd=dupe($r); $xd=dupe($x); $r=(($t==='list')?[]:tron());
+         foreach($kd as $kn){if($t==='list'){$r[$kn]=(exists($rd,$kn)?$rd[$kn]:$xd[$kn]);}else{$r->$kn=(exists($rd,$kn)?$rd->$kn:$xd->$kn);};};
+      }
+      while(count($a)>0); if(is_array($r)){$r=array_values($r);};
+      return $r;
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+# func :: fuse : merges arrays or objects .. result data-type is the same as the first arg .. duplicate keys are replaced
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   function fuse()
+   {
+      $a=func_get_args(); $c=count($a); if($c<2){return (isset($a[0])?$a[0]:null);};
+      if(($c===2)&&(isNuma($a[0])||(is_array($a[0])&&(count($a[0])<1)))&&isText($a[1])){return implode($a[1],$a[0]);};
+      $r=dupe((array_shift($a))); $t=type($r); if(($t!='list')&&($t!='knob')){return $r;}; foreach($a as $i)
+      {
+         $q=type($i); $x=span($i); if(($q!='list')&&($q!='knob')){continue;};
+         foreach($i as $k =>$v){if(is_numeric("$k")){$k=$x; $x++;}; if($t=='list'){$r[$k]=$v; continue;}; $r->$k=$v;};
+      };
+      return $r;
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+# tool :: todo : make a docket from calling `todo::{"some title"}("some message");` in code
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   class todo
+   {
+      static function __callStatic($ttl,$arg)
+      {
+         $stk=dbug::stak(); if(isset($stk[1])&&($stk[1]->func=='todo')){$stk=$stk[1];}else{$stk=$stk[0];};
+         $ttl=trim($ttl); expect::text($ttl,2); expect::flat($arg,1); if(!isset($arg[1])){radd($arg,NOEXIT);};
+         $msg=$arg[0]; $opt=$arg[1]; $f=$stk->file; $l=$stk->line; $hsh=sha1("$ttl:$f"); requires::stem('Task');
+         $tdp="/Task/vars/geekTodo/$hsh"; $usr=sesn('USER'); $eml=pget("/User/data/$usr/mail");
+
+
+         if(isee($tdp))
+         {
+            $v=decode::jso($tdp); if($msg===$v->mesg)
+            {
+               $i=$v->hits; $y=$v->line; $x=($i+1); $v->hits=$x; $v->line=$l; path::make($tdp,encode::jso($v));
+               $n=pget($v->note); $n=swap($n,"\nhits: $i\n","\nhits: $x\n"); $n=swap($n,"\nline: $y\n","\nline: $l\n");
+               path::make($v->note,$n); if($opt===NOEXIT){return OK;}; fail("TODO :: $msg"); return;
+            };
+
+            $y=$v->line; if($y!==$l)
+            {
+               $v->line=$l; path::make($tdp,encode::jso($v));
+               $n=pget($v->note); $n=swap($n,"\nline: $y\n","\nline: $l\n"); path::make($v->note,$n);
+            };
+            Task::makeNote($v->dref,['nick'=>$usr,'mail'=>$eml,'mesg'=>$msg,'clan'=>'geek','tags'=>'geekTodo']);
+            if($opt===NOEXIT){return OK;}; fail("TODO :: $v->mesg\n$msg"); return;
+         };
+
+
+         lock::awaits('todo'); $r=gudref('/Task/data',12); $c=gudref("/Task/data/$r/comments",16); $u=$usr;
+         $o=knob(['mesg'=>$msg,'file'=>$f,'line'=>$l,'note'=>"/Task/data/$r/comments/$c/mesg",'hits'=>1]); path::make($tdp,encode::jso($o));
+         unset($o); $m="# $ttl\n\n$msg\n\n```\nfile: $f\nline: $l\nhits: 1\n```"; $m=swap($m,"\n\n\n\n","\n\n"); // message to markdown
+         $z=Task::makeDokt(['dref'=>$r,'cref'=>$c,'nick'=>$u,'mail'=>$eml,'mesg'=>$m,'clan'=>'geek','tags'=>'geekTodo']);
+         lock::remove('todo'); if($opt===NOEXIT){return OK;}; fail("TODO :: $msg");
+      }
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+# func :: todo : make a docket from calling `todo()` in PHP code
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   function todo($v,$o=NOEXIT)
+   {
+      expect::text($v,8); if(!isin($v,' :: ')){fail('expecting format as `title :: message`');};
+      $p=stub($v,' :: '); $t=$p[0]; $m=$p[2]; $r=todo::{"$t"}($m,$o); return $r;
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+# func :: ekko : use instead of `dump` .. remove headers & purge buffer .. cast $v to visible text .. respect interface .. $m is mime .. exits
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   function ekko($v,$e=null,$m=null)
+   {
+      if(!headers_sent()){header_remove();}; while(ob_get_level()){ob_end_clean();}; $r=tval($v);
+      if(!is_funnic($e)){$e='text';};
+      if(facing('SSE')&&envi('SSEREADY')){$r=base64_encode($r); print_r("event: $e\ndata: $r\n\n"); flush(); return;}; // server-side event
+
+      header('HTTP/1.1 200 OK');
+
+      if(facing('GUI')){sesn('USER'); if(!$m&&(wrapOf($r)==='<>')){$m='html';}};
+
+      if(USERMIME==='application/json')
+      {
+         if(!$m){$m=USERMIME;};
+         if((strpos($r,'data:')!==0)&&(strpos($r,';base64,')!==false)){$r=base64_encode($r); $r="data:text/plain;base64,$r";};
+         $r=json_encode(knob(['name'=>$e, 'data'=>$r]));
+      };
+
+      if(!is_funnic($m)){$m='txt';}; $m=mime($m); if(!$m){$m='text/plain';};
+      header("Content-Type: text/plain"); print_r($r); flush(); die();
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+# func :: finish : send parsed output to client
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   function finish($a,$vo=null,$nx=null)
+   {
+      if($vo===NOEXIT){$nx=$vo; $vo=null;}; if(!is_object($vo)){$vo=knob($vo);};
+
+      if(is_int($a))
+      {
+         ekko::head($a); if($nx){return;}; if(!facing('GUI')){exit;}; $c=conf('Proc/httpCode'); $m=$c->$a;
+         $r=import('/Proc/stat.htm',['code'=>$a,'text'=>$m]); echo ($r); exit;
+      };
+
+      if(path($a))
+      {
+         $p=isee($a); if(!$p){$p=path($a); finish((!file_exists($p)?404:403));};
+         $m=mime($a); if(!$m){finish(415);}; $x=fext($a);
+
+         if(facing('SSE')&&envi('SSEREADY')){ekko(durl($a),'feed'); return;};
+         if(facing('BOT')){dump('TODO :: feed bot : '.$a);};
+
+         if(envi('ACCEPT')==='application/json')
+         {
+            header('Content-Type: application/json');
+            if((strpos($r,'data:')!==0)&&(strpos($r,';base64,')!==false)){$r=base64_encode($r); $r="data:text/plain;base64,$r";};
+            $r=json_encode(knob(['name'=>'feed', 'data'=>$r])); print_r($r); flush(); die();
+         };
+
+         // if(envi('ACCEPT')==='text/plain'){$m='text/plain';};
+         ekko::head(['Content-Type'=>$m]);
+         $r=import($a,$vo); if($r){print_r($r);}elseif(envi('ACCEPT')==='text/plain'){print_r(durl($p));}else{readfile($p);};
+         if(!$nx){die();};
+      };
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+# tool :: ekko : response
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   class ekko
+   {
+      static $stat=0;
+
+
+      static function head($a,$nx=true)
+      {
+         if(is_int($a))
+         {
+            $c=conf('Proc/httpCode'); $m=$c->$a; if(!$m){$a=501; $m=$c->$a;};
+            if(!headers_sent()){header_remove();}; while(ob_get_level()){ob_end_clean();}; self::$stat=1;
+            if(facing('SSE')&&envi('SSEREADY'))
+            {$r=base64_encode("$a - $m"); print_r("event: status\ndata: $r\n\n"); flush(); if($nx){return;}; exit;};
+
+            header("HTTP/1.1 $a $m");
+
+            if(facing('API')){$v=conf('/Proc/corsFrom'); header("Access-Control-Allow-Origin: $v");};
+            if(facing('GUI')){header("X-Frame-Options: SAMEORIGIN");}; if($nx){return;}; defn(['HALT'=>1]); die();
+         };
+
+         if(is_assoc_array($a)){$a=knob($a);}; if(!is_object($a)){return;}; if(!self::$stat){self::head(200);};
+         if(!$a->Interface){$a->Interface=envi('INTRFACE');};
+         if($a->cache!==null){$c=$a->cache; unset($a->cache); if(!$c) // kill it, burn it, hurl the ashes to the sun in a sealed capsule
+         {
+            header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
+            header("Cache-Control: post-check=0, pre-check=0",false);
+            header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
+            header("Pragma: no-cache"); // HTTP/1.0
+            header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
+         }};
+         foreach($a as $k => $v){header("$k: $v");}; if($nx){return;}; die();
+      }
+
+
+      static function path($a,$nx=null)
+      {
+         $p=expect::path($a,R); $x=path::type($p); $m=mime($x); if(!$m){fail("no mime-type configured for extension `$x`");};
+         if($x!=='fold'){self::head(['Content-Type'=>$m]); readfile($p); exit;}; // regular file
+         todo('serve folders');
+      }
+
+
+      static function body($a,$nx=null)
+      {
+
+      }
+
+
+      static function foot($a,$nx=null)
+      {
+
+      }
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+# tool :: flog : file-log .. shorthand to add a log-entry into a file .. uses tval so new-lines and tabs won't interfere
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   class flog
+   {
+      static function __callStatic($p,$a)
+      {
+         expect::path($p); if(isset($a[0])&&isNuma($a[0])){$a=$a[0];}; foreach($a as $k => $v){$a[$k]=tval($v);}; $ct=time(); ladd($a,$ct);
+         $f=pget($p); $r=($f?frag($f,"\n"):[]); $s=count($r); $x=conf('Proc/logFlood'); if($s===$x){rpop($r);}; $l=fuse($a,"\t");
+         if(count($r)>0){$lp=stub($r[0],"\t"); $lt=($lp[0]*1); $cp=stub($l,"\t"); if((($ct-$lt)<2)&&($lp[2]===$cp[2])){return;}}; // skip dupe
+         ladd($r,$l); $r=fuse($r,"\n"); path::make($p,$r); return OK;
+      }
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+# func :: pick : look in haystack and return the first item found in needle
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   function pick($h,$n)
+   {
+      if(!$h){return;}; expect::flat($n,1); foreach($n as $i){if(isin($h,$i)){return $i;}};
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+# func :: clanOf : returns the clan(s) text of a given nick & mail .. if given user-creds mismatch then `surf` is returned .. fails if invalid
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   function clanOf($n,$m)
+   {
+      expect::word($a); expect::mail($m); $dm=pget("/User/data/$n/mail"); if($dm!==$m){$n='anonymous';};
+      $r=pget("/User/data/$n/clan"); return $r;
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+# func :: unbury : dig up data in asso/knob by field-name .. $o is what to omit .. returns array of values
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   function unbury($d,$f,$o=null)
+   {
+      expect::numa($d); expect::text($f,1); if(span($d<1)){return;}; $r=[]; foreach($d as $i)
+      {if(isAsso($i)){$i=knob($i);}; if(!isin($i,$f)){continue;}; $v=$i->$f; if(isin($o,$v)){continue;}; $r[]=$v;};
+      return $r;
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+# func :: args : get args as numeric_array from `func_get_args()` .. if the first argument is a numeric_array then it is returned as the args
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   function args($a)
+   {
+      if($a===null){return [];}; if(!isNuma($a)){return [$a];}; if(!isset($a[0])){return [];};
+      if(isNuma($a[0])){return $a[0];}; return $a;
+   };
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+# func :: (buffer) : shorthands to manage output buffer
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   function bufrVoid()
+   {
+      if( @ob_get_level() < 1 ){return;};
+      while( @ob_get_level() > 0)
+      {
+         @ob_end_clean();
+      };
+   }
+
+   function bufrSend()
+   {
+      if( @ob_get_level() < 1 ){return;};
+      while( @ob_get_level() > 0)
+      {
+         @ob_flush();
+      };
+      @flush();
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+# func :: done : exit process
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   function done($sb=1)
+   {
+      if($sb){bufrSend();}else{bufrVoid();}; defn(['HALT'=>1]); exit;
+   };
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+# func :: crud : standard interface for many URL schemas
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   function crud($d)
+   {
+      $x=path::info($d); if(!isKnob($x)){fail('expecting path, or URL');}; $o=$x->plug; $p=$x->path;
+      if((($x->type==='git')&&isin($o,'http'))||(($o==='file')&&($x->type==='fold')&&isee("$p/.git"))){$o='git';}; $c="Anon\\{$o}_plug";
+      if(!is_class($c)){$p="/Proc/plug/$o.php"; requires::path($p); if(!is_class($c)){$p=crop($p); fail("expecting class `$c` in: `$p`");}};
+      $i=(new $c($x)); return $i;
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+# tool :: ftp : extremely simple FTP class .. any warning/error will be silenced, but kept in `fail`
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   class ftp
+   {
+      public $link;
+      public $fail;
+      public $host;
+      public $fold;
+
+
+      function __construct($hn,$pn=21,$un=null,$pw=null)
+      {
+         $C=$this->connect($hn,$pn,$un,$pw,1);
+         if(!$C&&isin($this->fail,'AUTH not understood')){$C=$this->connect($hn,$pn,$un,$pw,0);};
+         return $this;
+      }
+
+
+      public function connect($hn,$pn=21,$un=null,$pw=null,$sm=true)
+      {
+         $HF=null; $SF=null; deFail();
+            try{$L=($sm?ftp_ssl_connect($hn,$pn):ftp_connect($hn,$pn));}catch(\Exception $e){$HF=$e->getMessage();};
+         $SF=enFail(); if($L===false){$F=trim(($HF?$HF:($SF?$SF:'connection failed')).''); if(!$F){$F=null;}; $this->fail=$F; return;};
+         $this->host=$hn; $this->fold='/'; $this->fail=null; $this->link=$L; if($un===null){return $this->link;};
+         $S=$this->login($un,$pw); if(!$S||$this->fail){if($this->link){$F=$this->fail; $this->close(); $this->link=null; $this->fail=$F;}};
+         return (($S&&!$this->fail)?true:false);
+      }
+
+
+      public function read($rp,$op=FTP_BINARY)
+      {
+         ob_start(); $s=ftp_get($this->link,'php://output',$rp,$op); $r=ob_get_clean();
+         if($s===true){return $r;}; $this->fail="could not read `$rp`";
+      }
+
+
+      public function write($f,$b)
+      {
+         $h=$this->host; $d=$this->fold; $h=sha1("$h/$d/$f"); $p="/Proc/temp/file/$h"; lock::awaits($p);
+         pset($p,$b); $r=$this->put($f,path($p),FTP_BINARY); void($p); lock::remove($p); return $r;
+      }
+
+
+      public function __call($n,$a)
+      {
+         if(is_string($n)){$n=trim($n); if(strlen($n)<1){return;}}; $f="ftp_$n"; $r=null; $fa=(isset($a[0])?$a[0]:null);
+         if(!function_exists($f)){fail("call to undefined method ftp::$n");}; array_unshift($a,$this->link);
+         deFail(); $HF=null; $SF=null; try{$r=call_user_func_array($f,$a);}catch(\Exception $e){$HF=$e->getMessage();}; $SF=enFail();
+         $E=trim(($HF?$HF:($SF?$SF:null)).''); if(!$E){$E=null;}; $this->fail=$E; if(!$E)
+         {
+            if($n==='chdir'){$this->fold=path::fuse($this->fold,$fa);};
+         };
+         return $r;
+      }
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
