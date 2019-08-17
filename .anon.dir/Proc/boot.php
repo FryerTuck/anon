@@ -483,9 +483,9 @@ namespace Anon;
 
       if(isRepo('/'))
       {
-         $h='/.anon.dir'; $c=conf('Proc/gitIgnor');
-         foreach($c as $i){repo::ignore('/',write,($h.$i));};
-         unset($h,$c,$i);
+         $h='/.anon.dir'; $l=conf('Proc/gitIgnor');
+         foreach($l as $i){$c=substr($i,0,1); if($c==='!'){$i=substr($i,1);}else{$c='';}; repo::ignore('/',write,($c.$h.$i));};
+         unset($h,$l,$c,$i);
       };
 
       path::make('/Proc/dbug.inf',$tmn);
