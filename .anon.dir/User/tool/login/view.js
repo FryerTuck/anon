@@ -25,14 +25,7 @@ extend(repl)
          window.onbeforeunload=null;
          tick.after(750,()=> // wait for DOM to settle then reboot GUI
          {
-            document.body.insert
-            ([
-               {form:'#anonReboot', action:location.href, method:'POST', style:'position:absolute;opacity:0', contents:
-               [
-                  {input:'#INTRFACE', type:'hidden', value:'GUI'}
-               ]}
-            ]);
-            select('#anonReboot').submit();
+            newGui();
          });
       });
    },

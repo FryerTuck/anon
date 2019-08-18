@@ -57,13 +57,10 @@ extend(Anon)
 
       init:function()
       {
-server.listen('testing',function()
-{
-   dump('yup, server events are working');
-});
+         Busy.edit('/Help/treeMenu',0);
          select('#HelpTreeMenu').insert
          ([
-            {treeview:'', source:'/Help/treeMenu', uproot:true, listen:
+            {treeview:'#HelpTreeMenu', source:'/Help/treeMenu', listen:
             {
                'LeftClick':function()
                {
@@ -72,6 +69,10 @@ server.listen('testing',function()
                },
             }}
          ]);
+         select('#HelpTreeMenu').listen('loaded',()=>
+         {
+            Busy.edit('/Help/treeMenu',100);
+         });
       },
 
 

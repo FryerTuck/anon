@@ -928,7 +928,8 @@ $zz=(($h==="seen")&&($n==="*seen*"));
             // if($lmtn&&(isin($lmtn,"!$i")||(!isin($lmtn,"!$i")&&!isin($lmtn,$i)))){continue;};
             // if($lmtn&&(isin($lmtn,"!$i"))){continue;};
             // if(isKnob($q->limit)&&$q->limit->name){if(isin($q->limit->name,"!$i")){continue;}};
-            $p="$h/$i"; $t=(isFile($p)?'file':(isFold($p)?'fold':'link')); $fx=self::type($p); $fs=self::size($p); $mt=mime($p);
+            $p=crop("$h/$i"); $t=(isFile($p)?'file':(isFold($p)?'fold':'link')); $fx=self::type($p); $fs=self::size($p); $mt=mime($p);
+            if(isKnob($q->limit)&&$q->limit->type&&!isin($q->limit->type,$t)){continue;};
             $xp=isee($p); $pm=($xp?substr(sprintf('%o',fileperms($xp)),-4):null);
             $o=knob(['repo'=>null,'path'=>$p,'name'=>$i,'mime'=>$mt,'type'=>$t,'size'=>$fs,'time'=>info($p)->mtime,'mode'=>$pm,'levl'=>$levl,'data'=>null]);
             $rpo=null; if(($t==='fold')&&(span($repo)<1)){$rpo=isRepo($p);}; $o->repo=$repo->$p;
@@ -964,7 +965,7 @@ $zz=(($h==="seen")&&($n==="*seen*"));
          $z->data=self::ogle
          ([
             using => $h,
-            fetch => 'repo,path,name,mime,type,size,time,data',
+            fetch => self::cols(),
             limit => 'data:fold',
          ]);
          return $z;

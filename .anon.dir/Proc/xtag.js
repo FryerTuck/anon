@@ -76,6 +76,7 @@ extend(custom.domtag)
             if(!n.info.plug){return}; if(s!='open'){return};
 
             l=n.info.levl; d=(!!n.draggable); r=n.info.repo; if(r){r=r.fork}; f=n.select('>'); f.innerHTML='';
+            Busy.edit('/User/plugMenu',0);
             purl('/User/plugMenu',{purl:n.info.plug},(r)=>
             {
                r=decode.jso(r.body); r.each((v)=>
@@ -83,6 +84,7 @@ extend(custom.domtag)
                   v.plug=(n.info.plug+'/'+v.name); v.root=n.info.root;
                   f.insert(n.info.root.sprout(v,l,d,r));
                });
+               Busy.edit('/User/plugMenu',100);
             });
          },
 
@@ -111,6 +113,7 @@ extend(custom.domtag)
 
       n.sprout = function(into,levl,drgs,fork)
       {
+         if(isNode(into)){return};
          let slf = this; let pth=into.path; let lib=slf.status.mime; levl+=16; let ext = (into.mime||into.type||'').split('/')[0];
          let val=into.name; let tpe=into.type; let kds=((tpe=='fold')?into.data:((tpe=='plug')?[]:VOID));
 
@@ -161,9 +164,10 @@ extend(custom.domtag)
          purl({target:this.source,convey:vars,silent:slnt},(r)=>
          {
             r=r.body; if((span(r)<1)||(r=='null')){return};
-            if(wrapOf(r)!='{}'){fail('expecting json');return}; r=decode.JSON(r); if(span(r)<1){return};
-            self.repo=r.repo; r.root=self; delete r.repo; let rsl=self.sprout(r,(self.uproot?-32:-16),drgs);
-
+            if(!isJson(r)){fail('expecting json');return}; r=decode.JSON(r); if(span(r)<1){return};
+            self.repo=r.repo; r.root=self; delete r.repo;
+            if(isList(r)){self.uproot=1; r={name:'void',path:'/',mime:'inode/directory',type:'fold',data:r}};
+            let rsl=self.sprout(r,(self.uproot?-32:-16),drgs);
             if(self.uproot){rsl=listOf(rsl.select('treefork')[0].childNodes);};
             self.innerHTML=''; self.insert(rsl);
             tick.after(250,()=>

@@ -11,7 +11,6 @@ To identify yourself, use the following credentials:
 
 
 You can change your password to something easy to remember, like: `R00k13!`
-If you are told to RTFM, just login and go here: https://{:(HOSTNAME):}/Help
 
 It dawned upon the powers that be that you may need to know ***how to login***
 - use your favorite web browser and go here: https://{:(HOSTNAME):}
@@ -19,6 +18,6 @@ It dawned upon the powers that be that you may need to know ***how to login***
 - in the command console that pops up, type `login {:(username):}` and hit the `Enter` key
 - now you are prompted for your password, just enter your password .. copy & paste works too
 - if all went well, you should no longer be anonymous .. well done ;)
-- now enter `help` .. or hit the book icon on the panel menu
+- to change your password, use: `passwd`
 
 Welcome to the team!

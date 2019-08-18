@@ -25,6 +25,9 @@
             '/Proc/libs/prism/prism.js','/Proc/libs/prism/prism.css'
          ],()=>
          {
+            d=d.split('\n...\n').join('\n<br><br><br>\n');
+            d=d.split('\n..\n').join('\n<br><br>\n');
+            d=d.split('\n.\n').join('\n<br>\n');
             marked(d,{gfm:true,breaks:true},function(e,r)
             {
                if(e){throw (e); return}; let n,p,c,h; h=('#MD'+hash());
