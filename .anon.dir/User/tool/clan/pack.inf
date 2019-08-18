@@ -1,2 +1,2 @@
 forClans: lead,gang,geek
-provides: useradd,gpasswd,usermod,id,passwd,userdel,lsusr
+provides: lsgrp
