@@ -257,9 +257,10 @@
       h.forEach((i)=>{if(b&&(i.slice(0,s)==x)){r.push(i)}else if(e&&(frag(i,(0-s),s)==x)){r.push(i)}}); return r;
    };
 
-   const vals = function(d)
+   const vals = function(d,x)
    {
-      var r = [];  keys(d).forEach(function(k){r.push(d[k])});  return r;
+      var r = [];  keys(d).forEach(function(k){r.push(d[k])}); if(!isNumr(x)){return r}; if(x<0){x=((r.length-1)+x)};
+      return r[x];
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -292,7 +293,7 @@
 
 // defn :: flag : words .. do NOT define these earlier (up) .. defn() needs all the above
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   defn('AUTO INFO GOOD NEED WARN FAIL NEXT SKIP STOP DONE KEYS VALS ONCE EVRY BFOR AFTR UNTL EVNT FILL TILE SPAN');
+   defn('AUTO INFO GOOD NEED WARN FAIL NEXT SKIP STOP DONE ACTV NONE BUSY KEYS VALS ONCE EVRY BFOR AFTR UNTL EVNT FILL TILE SPAN OPEN SHUT');
    defn('TL TM TR RT RM RB BR BM BL LB LM LT');
    defn('A B C D E F G H I J K L M N O P Q R S T U V W X Y Z');
    defn('OK NA');

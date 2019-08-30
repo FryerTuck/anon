@@ -248,4 +248,9 @@
       display:block; position:relative;
       box-sizing:border-box;
    }
+   flap>div
+   {
+      border:1px solid hsla(0,0%,50%,1);
+      border-radius:2px;
+   }
 /* ----------------------------------------------------------------------------------------------- */

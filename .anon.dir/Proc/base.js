@@ -684,7 +684,7 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const render = function(p,f, s)
    {
-      if(MAIN.HALT){return}; addStack();
+      if(MAIN.HALT){return}; addStack(); if(!p){p='/'};
       expect({path:p,func:f}); s=this; purl({target:p,header:{Accept:'text/plain'}},(r)=>
       {
          if(MAIN.HALT){return};
@@ -692,6 +692,10 @@
          if(!isin(parser,t)){t=x}; parsed(r.body,t,(z)=>
          {
             if(t=='markdown'){z=create({div:'.markdown-page',contents:[z]})}; f(z);
+            tick.after(3000,()=>
+            {
+               Busy.done();
+            });
          });
       });
    }
@@ -888,7 +892,11 @@
    const popModal = function(a1,a2)
    {
       if(isText(a1)){return this.txtBased(a1,a2);};
-      if(isKnob(a1)){return this.objBased(a1,a2);};
+      if(isKnob(a1))
+      {
+         if(a1.head&&a1.body){return this.objBased(a1);};
+         return function(a3){return this.fnc(a3,this.atr)}.bind({fnc:this.objBased,atr:a1});
+      };
    }
    .bind
    ({
@@ -896,7 +904,7 @@
       {
          return function(arg)
          {
-            var mid,ttl,txt,btn,tmo,rsl; mid=('#MDL'+hash()); if(isKnob(arg)||isText(arg)){arg=[arg]};
+            var mid,ttl,txt,btn,tmo,box,rsl; mid=('#MDL'+hash()); if(isKnob(arg)||isText(arg)){arg=[arg]};
             txt=stub(this.txt,' :: '); if(txt){ttl=txt[0]; txt=txt[2]}else{txt=this.txt}; btn=[]; tmo=this.tmo;
 
             if(!isList(arg)){fail('invalid arguments');return}; arg.each((o)=>
@@ -906,38 +914,133 @@
                radd(btn,{butn:('.butn'+c), onclick:v, contents:k});
             });
 
-            rsl=create({modal:mid, contents:[{wrap:[{grid:'.cenmid', contents:[{row:
+            box=create({grid:'.cenmid .modalBox', contents:
             [
-               {col:'.face', contents:
+               {row:[{col:'.head', contents:[{div:[{span:ttl},{icon:'.shut', face:'cross', onclick:function(){this.root.exit()}}]}]}]},
+               {row:[{col:'.body', contents:[{grid:'.holdSpanSize', contents:[{row:
                [
-                  {div:'.head', contents:[{span:ttl},{icon:'.shut', face:'cross', onclick:function(){this.root.close()}}]},
-                  {div:'.body', contents:txt},
-                  {div:'.foot', contents:btn},
-               ]},
-               {col:'.side ', contents:[{div:'.xbar'}]},
-            ]}]}]}]});
+                  {col:'.view', contents:[{panl:txt}]},
+                  {col:'.side ', contents:[{div:'.xbar'}]},
+               ]}]}]}]},
+               {row:[{col:'.foot', contents:[{grid:[{row:
+               [
+                  {col:'.footLeft', contents:[]},
+                  {col:'.footRait', contents:btn},
+               ]}]}]}]},
+            ]});
 
-            rsl.close=function(){if(this.ticker){clearInterval(this.ticker)}; this.signal('close'); tick.after(60,()=>{this.remove()})};
-            rsl.expire=function(sec)
+
+            rsl=create({modal:mid, contents:[{wrap:[box]}]});
+            rsl.exit=function(){if(this.ticker){clearInterval(this.ticker)}; this.signal('exit'); tick.after(60,()=>{this.remove()})};
+            rsl.gone=function(sec)
             {
-               let bar=this.select('.xbar')[0];  bar.view('block'); bar.declan('holdSpanSize'); let hgt=rectOf(bar.parentNode).height;
-               let unt=Math.round(hgt/sec); bar.setStyle({height:hgt}); this.ticker=tick.every(1000,()=>
+               let bar=this.select('.xbar')[0]; let hgt=rectOf(this.select('.body')[0]).height; bar.view('block');
+               let unt=(hgt/sec); bar.setStyle({height:hgt}); this.ticker=tick.every(1000,()=>
                {
-                  sec--; bar.setStyle({height:(unt*sec)}); if(sec>0){return}; clearInterval(this.ticker); this.signal('stale');
+                  sec--; bar.setStyle({height:Math.floor(unt*sec)}); if(sec>0){return}; clearInterval(this.ticker); this.signal('gone');
                   tick.after(60,()=>{this.remove()});
                });
             };
 
-            rsl.listen('key:Escape',function(){this.close();});
-
             document.body.appendChild(rsl); (rsl.select('butn')||[]).forEach((b)=>{b.root=rsl}); rsl.select('.shut')[0].root=rsl;
-            if(tmo){tick.after(60,()=>{rsl.expire(tmo)})}; rsl.focus(); return rsl;
+            if(tmo){tick.after(60,()=>{rsl.gone(tmo)})}; rsl.focus(); return rsl;
          }
          .bind({txt:a1,tmo:a2});
       },
 
 
-      objBased:function(obj){},
+      objBased:function(obj,atr)
+      {
+         if(!isKnob(obj)){fail('expecting object');return};
+         if(!isText(obj.head,1)&&!isList(obj.head,1)&&!isKnob(obj.head,1)){fail('invalid modal head');};
+         if(!isText(obj.body,1)&&!isList(obj.body,1)&&!isKnob(obj.body,1)){fail('invalid modal body');};
+         if((obj.info!=VOID)&&!isText(obj.info,1)&&!isList(obj.info,1)&&!isKnob(obj.info,1)){fail('invalid modal info');};
+
+         if(!atr){atr={}}; var mid,box,inf,rsl; atr.id=(atr.id||('MDL'+hash())); mid=atr.id; if(!atr.class){atr.class='';};
+         atr.class=atr.class.split(' '); radd(atr.class,'modalBox'); radd(atr.class,'cenmid'); atr.class=atr.class.join(' ');
+
+         if(isText(obj.head)){obj.head={span:obj.head}}; let fiob,liob,pagr;
+         if(!isList(obj.head)){obj.head=[obj.head]}; radd(obj.head,{icon:'.shut', face:'cross', onclick:function(){this.root.exit()}});
+         if(isList(obj.body,2)&&isKnob(obj.body[0])){fiob=obj.body[0];}; if(!!fiob&&isKnob(vals(obj.body,-1))){liob=vals(obj.body,-1)};
+
+         if(!!fiob&&(isText(fiob.panl)||isText(fiob.page))&&!!liob&&(isText(liob.panl)||isText(liob.page)))
+         {
+            delete obj.foot; pagr=1; if(!isList(obj.info)){obj.info=[];}; obj.body.each((o,x)=>
+            {
+               let t=(o.panl||o.page); if(!isText(t)){t=(o.info||o.title)}else{if(o.panl){obj.body[x].panl=''}else{obj.body[x].page=''}};
+               obj.body[x].id=(mid+'PGE'+x); if(!isText(t)||isin(['#','.'],t[0])){fail('invalid title for modal-body item '+x); return STOP};
+               if(x>0){let cn=o.class; if(!cn){cn=''}; cn=cn.split(' '); radd(cn,'hide'); cn=cn.join(' '); obj.body[x].class=cn;};
+               radd(obj.info,{div:('#'+mid+'INF'+x+' .modlInfoItem'),contents:[{icon:((x>0)?'primitive-dot':'arrow-right1')},{span:t}],
+               status:((x>0)?AUTO:ACTV),
+               change:function(a)
+               {
+                  let l={[AUTO]:'primitive-dot',[ACTV]:'arrow-right1',[BUSY]:'hour-glass',[DONE]:'checkmark',[FAIL]:'warning'};
+                  let i=l[a]; if(!i){fail('invalid modal page status');};
+                  this.select('icon')[0].className=('icon-'+i); this.status=a;
+               }});
+
+            });
+
+            obj.foot=[{grid:[{row:
+            [
+               {col:'.footLeft', contents:
+               [
+                  {butn:'.info', contents:'Back', onclick:function(){this.root.page('<')}},
+                  {butn:'.info', contents:'Next', onclick:function(){this.root.page('>')}},
+               ]},
+               {col:'.footRait', contents:
+               [
+                  {butn:'.auto', contents:'Done', onclick:function(){this.root.done()}},
+                  {butn:'.auto', contents:'Cancel', onclick:function(){this.root.exit()}},
+               ]},
+            ]}]}];
+         };
+
+         box=create({grid:'', contents:
+         [
+            {row:[{col:'.head', contents:[{div:obj.head}]}]},
+            {row:[{col:'.body', contents:[{grid:'.holdSpanSize', contents:[{row:
+            [
+               (obj.info?{col:'.info', contents:obj.info}:VOID),{col:'.view', contents:obj.body}
+            ]}]}]}]},
+            {row:[{col:'.foot', contents:obj.foot}]},
+         ]});
+         box.modify(atr);
+
+         rsl=create({modal:mid, contents:[{wrap:[box]}]});
+         rsl.page=function(d, me,cx,lx,nx,nl,fn)
+         {
+            if(!this.pageIndx){this.pageIndx=0;}; me=this; cx=me.pageIndx; nl=listOf(me.select('.view')[0].childNodes);
+            lx=(nl.length-1); nx=cx; if(d=='<'){nx-=1}else if(d=='>'){nx+=1}else if(isNumr(d)){nx=((d<0)?(nx+d):d)}else{return}; // validate
+            if((nx<0)||(nx>lx)){return}; if(!nl[nx]){return}; // boundaries
+
+            fn=function(sw)
+            {
+               if(!sw){sw=DONE}; me.pageIndx=nx; nl[cx].declan('show'); nl[cx].enclan('hide'); nl[nx].declan('hide'); nl[nx].enclan('show');
+               nl=VOID; nl=me.select('.modlInfoItem'); nl[cx].change(sw); nl[nx].change(ACTV);
+               me.signal('page',{indx:nx,info:nl[nx].select('span')[0].innerHTML});
+            };
+
+            if(!isFunc(nl[cx].validate)){fn(DONE);}
+            else
+            {
+               me.select('.modlInfoItem')[cx].change(BUSY);
+               nl[cx].validate(fn);
+            };
+         };
+
+         rsl.done=function(me,cx,pl,il,lx,ad)
+         {
+            if(!this.pageIndx){this.pageIndx=0;}; me=this; cx=me.pageIndx; pl=listOf(me.select('.view')[0].childNodes);
+            il=me.select('.modlInfoItem'); lx=(pl.length-1); if(!isFunc(pl[cx].validate)){pl[cx].validate=function(cb){cb(DONE)}};
+            if(il[cx].status!=DONE){il[cx].change(BUSY); pl[cx].validate((sw)=>{if(!sw){sw=DONE}; il[cx].change(sw);});};
+            wait.until(()=>{ad=true; il.forEach((sn)=>{if(sn.status!=DONE){ad=false}}); return ad},()=>
+            {me.signal('done'); tick.after(60,()=>{if(!me.wait){me.exit()};});});
+         };
+
+         rsl.exit=function(){if(this.ticker){clearInterval(this.ticker)}; this.signal('exit'); tick.after(60,()=>{this.remove()})};
+         document.body.appendChild(rsl); (rsl.select('butn')||[]).forEach((b)=>{b.root=rsl}); rsl.select('.shut')[0].root=rsl;
+      },
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------
 

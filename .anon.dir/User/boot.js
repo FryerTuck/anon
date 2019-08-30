@@ -91,16 +91,29 @@
       {
          popModal('Idle :: Your session is about to expire.',obj.time)
          ([
-            {"Good :: I'm still here":function(){this.root.close()}},
+            {"good :: I'm still here":function(){this.root.exit()}},
          ])
          .listen
          ({
-            stale:function(){repl.exit();},
-            close:function(){navigator.sendBeacon('/User/isActive','1');},
+            gone:function(){repl.exit();},
+            exit:function(){navigator.sendBeacon('/User/isActive','1');},
          });
       });
 
       initPanl();
+   }
+   else
+   {
+      (function(t,h,s,p)
+      {
+         t=tick.every(1000,()=>
+         {
+            h=window.location.hash; if(!h){return;}; h=h.slice(1); if(!isin(['panlOpen','panlShut'],h)||(s==h)){return;};
+            p=((typeof AnonPanl)!='undefined'); if((h=='panlOpen')&&!p){s=h; initPanl(); return;};
+            if((h=='panlOpen')&&p&&!AnonPanl.actv){s=h;AnonPanl.show();return};
+            if((h=='panlShut')&&p&&AnonPanl.actv){s=h;AnonPanl.hide();return};
+         });
+      }());
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -118,6 +131,13 @@
 
    listen('Control r',function()
    {
+      window.onbeforeunload=null; newGui();
+   });
+
+
+   listen('key:F5',function(e)
+   {
+      if(e.signal=='Control F5'){return;}; e.preventDefault(); e.stopPropagation();
       window.onbeforeunload=null; newGui();
    });
 

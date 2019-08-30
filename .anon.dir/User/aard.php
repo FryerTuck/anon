@@ -134,8 +134,33 @@ namespace Anon;
 
       static function plugMenu()
       {
-         $v=knob($_POST); $p=$v->purl; $r=crud($p)->select('*');
-         dump($r);
+         $v=knob($_POST); $p=$v->purl; $i=path::info($p); $r=crud($p)->select('*');
+
+         if(isin(['ftp','ftps'],$i->plug)){ekko($r);};
+
+         $rsl=[]; $prl=$p; $pth=$i->path; if(!$pth){$pth='/';}; $lvl=$i->levl;
+
+         foreach($r as $itm)
+         {
+            $pts=stub($itm,'::'); $tpe=$pts[0]; $itm=$pts[2];
+            $dat=knob
+            ([
+               "repo"=>null,
+               "purl"=>"$prl/$itm",
+               "path"=>swap("$pth/$itm",'//','/'),
+               "levl"=>($lvl+1),
+               "name"=>$itm,
+               "mime"=>null,
+               "type"=>$tpe,
+               "size"=>0,
+               "time"=>0,
+               "data"=>[],
+            ]);
+
+            $rsl[]=$dat;
+         };
+
+         dump($rsl);
       }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------

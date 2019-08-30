@@ -213,3 +213,29 @@ jobcard
    text-align:center;
    white-space:nowrap;
 }
+
+
+.AnonTaskDokt
+{
+   min-width:720px !important;
+   min-height:480px !important;
+}
+
+
+.TaskDoktPage
+{
+
+}
+
+
+.TaskDoktFlap
+{
+   width:0.1px;
+   vertical-align:middle;
+}
+
+
+.TaskDoktConf
+{
+   width:0.1px;
+}

@@ -92,11 +92,16 @@ extend(Anon)
 
       init:function()
       {
-         server.listen(UNIQUE+'docketUpdate','/Task/dispense',(r)=>
+         purl('/Task/dispense',(r)=>
          {
-            let jl=keys(r); (select('#TaskPanlSlab').select('jobcard')||[]).forEach((n)=>
-            {let jr=ltrim(n.id,'JC'); if(!isin(jl,jr)){remove(n)}});
-            r.each((v,k)=>{Anon.Task.jobCards.render(v);});
+            r=decode.jso(r.body); r.each((v,k)=>{let j=select(('#JC'+k)); if(j){remove(j);}; Anon.Task.jobCards.render(v);});
+         });
+
+         server.listen('docketUpdate',(d)=>
+         {
+            let k,v,j; k=keys(d)[0]; v=d[k]; j=select(('#JC'+v.docketID));
+            if((v.withUser&&(v.withUser!=sesn('USER')))||(v.withClan&&!userDoes(v.withClan))){if(j){remove(j)};return}; // not for me
+            Anon.Task.jobCards.render(v);
          });
       },
 
@@ -131,6 +136,7 @@ extend(Anon)
                {
                   grablift:function(){this.enclan('.AnonCardLift')},
                   grabdrop:function(){this.declan('.AnonCardLift'); Anon.Task.jobCards.mvCard(this.info.docketID,this.parentNode.role);},
+                  dblclick:function(){Anon.Task.jobCards.readMe(this.info);},
                },
 
                contents:
@@ -175,6 +181,38 @@ extend(Anon)
             purl('/Task/moveCard',{dref:dref,mvto:mvto},(r)=>
             {
                if(r.body!=':OK:'){dump(r.body); alert('something went wrong');};
+            });
+         },
+
+
+         readMe:function(i)
+         {
+            popModal
+            ({
+               class:'AnonTaskDokt',
+               info:i,
+            })
+            ({
+               head:i.mesgHead,
+
+               body:[{grid:[{row:
+               [
+                  {col:'.TaskDoktPage', contents:
+                  [
+                     {h2:i.mesgHead},
+                  ]},
+                  {col:'.TaskDoktFlap', contents:[{flap:'', goal:L, size:9, open:false, shut:true, togl:function(){}}]},
+                  {col:'.TaskDoktConf', contents:
+                  [
+
+                  ]},
+               ]}]}],
+
+               foot:
+               [
+                  {butn:'.info', contents:'Save', onclick:function(){dump('save');}},
+                  {butn:'.info', contents:'Close', onclick:function(){this.root.exit();}},
+               ],
             });
          },
       },

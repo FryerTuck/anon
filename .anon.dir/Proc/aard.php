@@ -146,7 +146,7 @@ namespace Anon;
             if(($c==='.')&&isin($g,$f)){$t[]=$i;};
          }};
 
-         if(!is_array($t)){return;}; if(count($t)<1){return;}; $d=encode::jso(['name'=>$e,'data'=>tval($d)]); $s=0;
+         if(!is_array($t)){return;}; if(count($t)<1){return;}; $d=encode::jso(['name'=>$e,'data'=>$d]); $s=0;
          foreach($t as $x){$p="$h/$x/emit"; if(!isee($p)){path::make("$p/");}; $n=count(pget($p)); $n++; $p="$p/$n"; path::make($p,$d); $s++;};
          if($fc){ekko(OK);}; return $s;
       }

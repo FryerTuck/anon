@@ -43,20 +43,21 @@ class Data
 
 
 
-
    static function treeMenu()
    {
-      Proc::signal('busy',['with'=>"repo",'done'=>11]); wait(150); $v=knob($_POST);
-      if($v->purl){$r=self::dataTree($v->purl,$v->fltr); Proc::signal('busy',['with'=>"repo",'done'=>100]); dump(['data'=>$r]);};
-      $h='/Data/link'; $r=path::tree($h); if(span($r->data)<1){dump($r);};
-      foreach($r->data as $idx => $dbl)
-      {
-         $purl=pget($dbl->path); $kids=self::dataTree($purl); unset($r->data[$idx]->data);
-         $r->data[$idx]->purl=$purl; $r->data[$idx]->levl=path::info($purl)->levl;
-         $r->data[$idx]->data=$kids;
-      };
-      Proc::signal('busy',['with'=>"repo",'done'=>100]);
-      dump($r);
+      $r=path::tree('/Data/link'); dump($r);
+
+      // Proc::signal('busy',['with'=>"repo",'done'=>11]); wait(150); $v=knob($_POST);
+      // if($v->purl){$r=self::dataTree($v->purl,$v->fltr); Proc::signal('busy',['with'=>"repo",'done'=>100]); dump(['data'=>$r]);};
+      // $h='/Data/link'; $r=path::tree($h); if(span($r->data)<1){dump($r);};
+      // foreach($r->data as $idx => $dbl)
+      // {
+      //    $purl=pget($dbl->path); $kids=self::dataTree($purl); unset($r->data[$idx]->data);
+      //    $r->data[$idx]->purl=$purl; $r->data[$idx]->levl=path::info($purl)->levl;
+      //    $r->data[$idx]->data=$kids;
+      // };
+      // Proc::signal('busy',['with'=>"repo",'done'=>100]);
+      // dump($r);
    }
 
 

@@ -179,7 +179,8 @@ namespace Anon;
 
          foreach($fltr as $col)
          {if(!isText($col)){fail('expecting `fetch` items as :TEXT:');}; if(!isin($cols,$col)){fail("fetch column `$col` is undefined");}};
-         $mail=imap_search($L,'ALL'); if(!isArra($mail,1)){return [];}; rsort($mail); $r=[]; $limit=span($mail); $found=0;
+         $mail=imap_search($L,'ALL');
+         if(!isArra($mail,1)){return [];}; rsort($mail); $r=[]; $limit=span($mail); $found=0;
          if($a->limit!==null){if(is_int($a->limit)){$limit=$a->limit;}else{fail('invalid `limit` value');}}; $nf=$this->prop;
 
          Proc::signal('busy',['with'=>"mail",'done'=>50]);
@@ -206,8 +207,9 @@ namespace Anon;
 
             if(isin($fltr,'mesgBody')||isin($fltr,'textBody')||isin($fltr,'attached'))
             {
-               $s=imap_fetchstructure($L,$x); $used=[]; if(!isset($s->parts)){continue;}; $s=flattenParts($s->parts);
+               $s=imap_fetchstructure($L,$x); $used=[]; if(isset($s->parts)){$s=flattenParts($s->parts);};
             };
+
 
             if(isin($fltr,'mesgBody')||isin($fltr,'textBody'))
             {

@@ -6,7 +6,7 @@ namespace Anon;
 $export=function($a,$u,$d)
 {
    $d=dval($d); if(is_assoc_array($d)){$d=knob($d);}; $h="/User/data/$u"; $sudo=isin(user('clan'),'sudo');
-
+   if(isin(['anonymous','master'],$u)){ekko("cannot perform `$a` on user `$u`");};
 
 
    if($a==='make')
@@ -95,6 +95,13 @@ $export=function($a,$u,$d)
    if($a==='info')
    {
       $m=pget("$h/mail"); $c=pget("$h/clan"); ekko("$m .. $c");
+   };
+
+
+
+   if($a==='list')
+   {
+      $r=pget('/User/data'); $r=fuse($r,"\n"); ekko($r);
    };
 
 

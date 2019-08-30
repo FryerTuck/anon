@@ -138,6 +138,9 @@ namespace Anon;
       static function jso($d,$v=null)
       {return json_encode($d,JSON_UNESCAPED_SLASHES);}
 
+      static function hex($d)
+      {return implode(unpack("H*",$d));}
+
       static function __callStatic($n,$a)
       {
          if(strlen($n)<1){fail::reference('invalid method name');}; if(!isset($a[0])){$a[0]=null;}; if(!isset($a[1])){$a[1]=null;};
@@ -164,6 +167,9 @@ namespace Anon;
          $r=json_decode($t); if($o==='{}'){$r=knob($r);}; return $r;
       }
 
+      static function hex($d)
+      {return pack("H*",$d);}
+
       static function __callStatic($n,$a)
       {
          if(strlen($n)<1){fail::reference('invalid method name');}; if(!isset($a[0])){$a[0]=null;}; if(!isset($a[1])){$a[1]=null;};
@@ -182,7 +188,7 @@ namespace Anon;
    function gudref($dp,$rl=null)
    {
       expect::path($dp);
-      $bw=conf('Proc/badWords'); $rn=null; if(!is_int($rl)){$r=12;}; if($rl<6){$rl=6;}elseif($rl>30){$rl=30;};
+      $bw=conf('Proc/badWords'); $rn=null; if(!is_int($rl)){$rl=12;}; if($rl<6){$rl=6;}elseif($rl>30){$rl=30;};
       do
       {
          $mt=(fractime().''); $mt=swap($mt,'.',''); $mt=($mt*1);
@@ -296,7 +302,7 @@ namespace Anon;
       {
          $stk=dbug::stak(); if(isset($stk[1])&&($stk[1]->func=='todo')){$stk=$stk[1];}else{$stk=$stk[0];};
          $ttl=trim($ttl); expect::text($ttl,2); expect::flat($arg,1); if(!isset($arg[1])){radd($arg,NOEXIT);};
-         $msg=$arg[0]; $opt=$arg[1]; $f=$stk->file; $l=$stk->line; $hsh=sha1("$ttl:$f"); requires::stem('Task');
+         $msg=$arg[0]; $opt=$arg[1]; $f=crop($stk->file); $l=$stk->line; $hsh=sha1("$ttl:$f"); requires::stem('Task');
          $tdp="/Task/vars/geekTodo/$hsh"; $usr=sesn('USER'); $eml=pget("/User/data/$usr/mail");
 
 

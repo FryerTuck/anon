@@ -104,6 +104,36 @@ namespace Anon;
       static function openMail($plg,$box)
       {
       }
+
+
+      static function disposed($cmd,$ref=null)
+      {
+         $dom=HOSTNAME; if(!facing('API')){finish(420);}; if(envi('REQUEST_METHOD')!=='POST'){finish(405);}; if(!isWord($cmd)){finish(406);};
+
+         if($cmd==='make')
+         {
+            if(!isText($ref)){$ref='';};
+            $sfx=(random(2).swap(substr(BOOTTIME,6),'.','').random(2));
+            $box="{$ref}{$sfx}@$dom";
+            $ssn=sesn('HASH'); path::make("/Proc/temp/sesn/$ssn/mbox",$box);
+            $rsl=['box'=>$box, 'ref'=>$ssn]; ekko($rsl);
+         };
+
+         if($cmd==='read')
+         {
+            if(!isText($ref,40)){finish(406);}; $pth="/Proc/temp/sesn/$ref"; $box=pget("$pth/mbox"); if(!$box){finish(404);};
+            $thn=(pget("$pth/TIME")*1); $now=time(); if(($now-$thn)<10){finish(429);}; $plg=conf('Mail/autoMail');
+            $rsl=crud($plg)->select
+            ([
+               using=>'INBOX',
+               fetch=>'*',
+               where=>["destAddy = $box", "flagTags !~ *seen*"],
+               touch=>true,
+               order=>'unixTime:DSC',
+            ]);
+            ekko($rsl);
+         };
+      }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 

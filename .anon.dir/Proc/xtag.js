@@ -115,7 +115,7 @@ extend(custom.domtag)
       {
          if(isNode(into)){return};
          let slf = this; let pth=into.path; let lib=slf.status.mime; levl+=16; let ext = (into.mime||into.type||'').split('/')[0];
-         let val=into.name; let tpe=into.type; let kds=((tpe=='fold')?into.data:((tpe=='plug')?[]:VOID));
+         let val=into.name; let tpe=into.type; let kds=((tpe=='fold')?into.data:(isin(['plug','dbase','table'],tpe)?[]:VOID));
 
          if(tpe=='fold'){delete into.data}; if(!!kds&&!slf.status.fold[pth]){slf.status.fold[pth]='shut'};
 
@@ -358,6 +358,36 @@ extend(custom.domtag)
          };
       })};
 
+      return DONE;
+   },
+
+
+   flap:function(n,a,c)
+   {
+      if((a.open==VOID)&&(a.shut==VOID)){a.shut=1; a.open=0;}; if(a.shut==a.open){fail('flap `open` and `shut` cannot be the same');return};
+      if(a.open==VOID){a.open=(a.shut?0:1);}else if(a.shut==VOID){a.shut=(a.open?0:1);}; if(!isInum(a.size)){a.size=9}; // defaults
+      if(!isFunc(a.togl)){fail('expecting `togl` as func');return};  let w='chevron-'; let g=a.goal; let s=a.size;
+      if(!isin([U,D,L,R],g)){fail('expecting `goal` as any: U, D, L, R');return}; n.modify(a); n.conf={};
+
+      n.conf[U]={icon:`${w}up`,    togl:D, width:(s*6), height:(s*2), transform:'isoSkewX(15deg)'};
+      n.conf[D]={icon:`${w}down`,  togl:U, width:(s*6), height:(s*2), transform:'isoSkewX(-15deg)'};
+      n.conf[L]={icon:`${w}left`,  togl:R, width:(s*2), height:(s*6), transform:'isoSkewY(15deg)'};
+      n.conf[R]={icon:`${w}right`, togl:L, width:(s*2), height:(s*6), transform:'isoSkewY(-15deg)'};
+
+      n.face=(a.shut?g:n.conf[g].togl); let d=n.conf[n.face];
+      n.setStyle({width:d.width,height:d.height,overflow:'hidden'});
+      n.insert
+      ([
+         {div:'', style:{position:'absolute',width:d.width,height:d.height,transform:d.transform}},
+         {icon:'.cenmid', face:n.conf[n.face].icon, size:s},
+      ]);
+
+      n.listen('click',function()
+      {
+         this.face=n.conf[this.face].togl; let t;
+         if(this.open){t=SHUT; this.open=0; this.shut=1;}else{t=OPEN; this.open=1; this.shut=0;};
+         this.togl(t);
+      });
       return DONE;
    },
 

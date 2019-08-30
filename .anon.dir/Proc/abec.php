@@ -62,11 +62,12 @@ namespace Anon;
    {
       if(!is_string($d)){return false;}; if($d!==trim($d)){return false;}; $l=strlen($d);
       if(($l<9)||(strlen($d)!==mb_strlen($d))){return false;}; $p=stub($d,['://','::']); if(!$p){return false;};
-      if(!isWord($p[0])){return false;}; if(strpos($p[2],'.')===false){return false;};
-      $ci=strpos($p[2],':'); $ai=strpos($p[2],'@'); $di=strpos($p[2],'.'); if(($ci!==false)&&($ci===false)){return false;};
+      if(!isWord($p[0])){return false;}; $p=$p[2]; if(strpos($p,'.')===false){return false;};
+      $ci=strpos($p,':'); $ai=strpos($p,'@'); $di=strpos($p,'.'); if(($ci!==false)&&($ai===false)){return false;};
       if(($ci!==false)&&(($ci>$ai)||($ci>$di))){return false;}; if(($ai!==false)&&($ai>$di)){return false;};
-      $p=explode('/',$p[2])[0]; $p=stub($p,'.')[2]; if(strpos($p,'..')!==false){return false;};
-      $p=swap($p,'.',''); return test($p,'/^[a-z]{2,16}$/');
+      $p=explode('/',$p); $d=$p[0]; $d=explode('@',$d); $d=array_pop($d);  if(strpos($d,'.')===false){return false;};
+      $d=swap($d,'.',''); if(test($d,'/^[a-z0-9-]{4,36}$/')){return true;}; if(!test($d,'/^[0-9]{5,12}$/')){return false;};
+      if(!is_numeric($d)){return false;}; return true;
    }
 
    function isFold($d,$g=null,$l=null){$p=isPath($d,D); if(!$p){return;}; return $p;}
@@ -869,7 +870,7 @@ $zz=(($h==="seen")&&($n==="*seen*"));
             $a=((strlen($a)<1)?[]:explode('/',$a)); // make arguments array
          };
          $r=import($x); if(is_closure($r)){return call($r,$a);}; if(!isset($a[0])){return $r;}; // load controller
-         $f=lpop($a); if(is_class($r)&&is_method("$r::$f")){return call("$r::$f");}; // call controller method
+         $f=lpop($a); if(is_class($r)&&is_method("$r::$f")){return call("$r::$f",$a);}; // call controller method
          if(is_object($r)&&is_closure($r->$f)){return call($r->$f,$a);}; $o[]=$x; $r=self::call($p,$o,$a); // call closure
          return (($r===null)?true:$r);
       }

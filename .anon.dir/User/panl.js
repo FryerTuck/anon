@@ -10,7 +10,7 @@
       if(userDoes('work')){select('#anonPanlView').style.height='100%'};
       select('#anonPanlView').insert
       ([
-         {grid:'#AnonMainGrid', style:('width:100%;'+(userDoes('work')?' height:100%':' height:10px')), contents:
+         {grid:('#AnonMainGrid'), style:('width:100%;'+(userDoes('work')?' height:100%':' height:10px; position:absolute; bottom:0px')), contents:
          [
             {row:'', forClans:'work', contents:
             [
@@ -96,7 +96,8 @@
 
          init:function(id,ea,dj, os,ns, ob,op, nb,np)
          {
-            select('#anonPanlView').view('block'); os=this.vars.active; ns=id.slice(0,4); // references
+            select('#anonPanlView').declan('hide');  //select('#anonPanlView').enclan('show');
+            os=this.vars.active; ns=id.slice(0,4); // references
             this.vars.active=ns;
 
             ob=select(('#'+os+'MenuKnob')); if(ob){ob.declan('AnonActvKnob')}; // de-focus old-button
@@ -128,12 +129,12 @@
       {
          show:function()
          {
-            select('#anonPanlView').view('block'); this.actv=1;
+            select('#anonPanlView').declan('hide'); this.actv=1;
             select('#AnonReplFeed').focus();
          },
          hide:function()
          {
-            select('#anonPanlView').view('none'); this.actv=0;
+            select('#anonPanlView').enclan('hide'); this.actv=0;
          },
          actv:0,
       },
@@ -148,7 +149,7 @@
    listen('key:Esc',function(evnt)
    {
       if(Busy.node){Busy.kill(); return};
-      let mdl = select('modal'); if(mdl){mdl[0].remove();return};
+      let mdl = select('modal'); if(mdl){vals(mdl,-1).exit();return};
       AnonPanl.hide();
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------
@@ -158,8 +159,8 @@
 
 // evnt :: create : docket
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   listen(conf.toggleMakeDokt,function()
-   {
-      AnonDokt.open();
-   });
+   // listen(conf.toggleMakeDokt,function()
+   // {
+   //    AnonDokt.open();
+   // });
 // --------------------------------------------------------------------------------------------------------------------------------------------
