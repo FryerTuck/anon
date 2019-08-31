@@ -88,20 +88,44 @@ extend(Anon)
          });
       },
 
-
+      vars:
+      {
+         icon:
+         {
+            auto:'file',
+            csv:'file-excel',
+            css:'file-code',
+            doc:'file-word',
+            docx:'file-word',
+            htm:'file-code',
+            html:'file-code',
+            jpg:'file-picture',
+            jpeg:'file-picture',
+            js:'file-code',
+            mp3:'file-music',
+            ogg:'file-music',
+            mp4:'file-video',
+            gif:'file-picture',
+            odf:'file-openoffice',
+            pdf:'file-pdf1',
+            php:'file-code',
+            png:'file-picture',
+            sql:'file-code',
+            xls:'file-excel',
+            zip:'file-zip1',
+         },
+      },
 
       init:function()
       {
          purl('/Task/dispense',(r)=>
          {
-            r=decode.jso(r.body); r.each((v,k)=>{let j=select(('#JC'+k)); if(j){remove(j);}; Anon.Task.jobCards.render(v);});
+            Anon.Task.jobCards.prerun(decode.jso(r.body));
          });
 
          server.listen('docketUpdate',(d)=>
          {
-            let k,v,j; k=keys(d)[0]; v=d[k]; j=select(('#JC'+v.docketID));
-            if((v.withUser&&(v.withUser!=sesn('USER')))||(v.withClan&&!userDoes(v.withClan))){if(j){remove(j)};return}; // not for me
-            Anon.Task.jobCards.render(v);
+            Anon.Task.jobCards.prerun(d);
          });
       },
 
@@ -109,6 +133,13 @@ extend(Anon)
 
       jobCards:
       {
+         prerun:function(d)
+         {
+            let l=select('#TaskPanlSlab').select('jobcard'); (l||[]).forEach((n)=>{if(!d[n.info.docketID]){remove(n)}});
+            d.each((v,k)=>{Anon.Task.jobCards.render(v);});
+         },
+
+
          render:function(o, c,s,d)
          {
             let l,x; l=keys(o.comments); s=span(l); c={}; x=l.shift(); c[x]=o.comments[x]; if(s>1){x=l.pop(); c[x]=o.comments[x]};
@@ -187,32 +218,95 @@ extend(Anon)
 
          readMe:function(i)
          {
-            popModal
-            ({
-               class:'AnonTaskDokt',
-               info:i,
-            })
-            ({
-               head:i.mesgHead,
+            purl('/Task/openDokt',{dref:i.docketID},(r, d)=>
+            {
+               d=VOID; d=[{h2:i.mesgHead}]; r=decode.jso(r.body);
 
-               body:[{grid:[{row:
-               [
-                  {col:'.TaskDoktPage', contents:
+               r.forEach((v)=>
+               {
+                  let a=[]; if(!isList(v.atch)){v.atch=[]}; v.atch.forEach((f)=>
+                  {
+                     let x=fext(f); if(!x){x='auto'}; x=Anon.Task.vars.icon[x]; if(!x){x=Anon.Task.vars.icon.auto};
+                     radd(a,{icon:'', face:x, size:16, title:f, path:`/Task/data/${i.docketID}/comments/${v.cref}/${f}`, onclick:function()
+                     {Anon.Task.jobCards.viuAtc(this.path)}});
+                  });
+                  let p=v.mesg.split('\n'); (['# ','## ','### ','#### ']).forEach((h)=>{if(p[0].startsWith(h+i.mesgHead)){lpop(p)}});
+                  v.mesg=p.join('\n');
+
+                  radd(d,{div:'.DoktCmntWrap', contents:
                   [
-                     {h2:i.mesgHead},
-                  ]},
-                  {col:'.TaskDoktFlap', contents:[{flap:'', goal:L, size:9, open:false, shut:true, togl:function(){}}]},
-                  {col:'.TaskDoktConf', contents:
+                     {grid:'.DoktCmntData', contents:[{row:
+                     [
+                        {col:'.DoktCmntText', contents:[{div:'', format:'markdown', contents:v.mesg}]},
+                        {col:'.DoktCmntAtch', contents:a},
+                     ]}]},
+                     {grid:'.DoktCmntInfo', contents:[{row:
+                     [
+                        {col:'.DoktCmntTime', contents:timeText(v.time)},
+                        {col:'.DoktCmntRate', contents:
+                        [
+                           {div:[{icon:'triangle-up', dref:i.docketID, cref:v.cref, onclick:function()
+                           {Anon.Task.jobCards.rating(this.dref,this.cref,'+',this.select('^>'))}}]},
+                           {div:v.rate},
+                           {div:[{icon:'triangle-down', dref:i.docketID, cref:v.cref, onclick:function()
+                           {Anon.Task.jobCards.rating(this.dref,this.cref,'-',this.select('^<'))}}]},
+                        ]},
+                        {col:'.DoktCmntUser', contents:[{grid:[{row:
+                        [
+                           {col:'.DoktUserFace', contents:[{div:
+                           [
+                              {img:'',src:avatar(v.mail,'blank',60)},
+                              {img:'',src:'/User/dcor/mug2.jpg'},
+                           ]}]},
+                           {col:'.DoktUserInfo', contents:[{b:v.nick},{b:v.rank}]},
+                        ]}]}]},
+                     ]}]},
+                  ]});
+               });
+
+               popModal
+               ({
+                  class:'AnonTaskDokt',
+                  info:i,
+               })
+               ({
+                  head:('Docket #'+i.docketID+' - '+i.mesgHead),
+
+                  body:[{grid:[{row:
                   [
+                     {col:'.TaskDoktPage', contents:[{panl:d}]},
+                     {col:'.TaskDoktFlap', contents:[{flap:'', goal:L, size:12, open:false, shut:true, togl:function(v)
+                     {
+                        let t=this.select('^>'); let c=lowerCase(unwrap(v)); t.declan('open','shut'); t.enclan(c);
+                     }}]},
+                     {col:'.TaskDoktConf', contents:
+                     [
 
-                  ]},
-               ]}]}],
+                     ]},
+                  ]}]}],
 
-               foot:
-               [
-                  {butn:'.info', contents:'Save', onclick:function(){dump('save');}},
-                  {butn:'.info', contents:'Close', onclick:function(){this.root.exit();}},
-               ],
+                  foot:
+                  [
+                     {butn:'.info', contents:'Save', onclick:function(){dump('save');}},
+                     {butn:'.info', contents:'Close', onclick:function(){this.root.exit();}},
+                  ],
+               });
+            });
+         },
+
+
+         viuAtc:function(p)
+         {
+            dump(`popModal for '${p}'`);
+         },
+
+
+         rating:function(d,c,v,n, p)
+         {
+            purl('/Task/voteNote',{dref:d,cref:c,vote:v},(r)=>
+            {
+               if(r.body!=OK){return}; n=n.childNodes[0]; p=((v=='+')?1:-1); v=((n.textContent.trim())*1); v=(v+p);
+               n.textContent=v;
             });
          },
       },

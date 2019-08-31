@@ -162,5 +162,14 @@ namespace Anon;
 
          dump($rsl);
       }
+
+
+      static function voteMail($m=null,$v=null)
+      {
+         if(!$m){$x=knob($_POST); $m=$x->mail; $v=$x->vote;}; $f=user('mail'); $h='/User/vote';
+         if(!isee("$h/$m")){path::make("$h/$m",'0');}; if(!isee("$h/$f")){path::make("$h/$f",'0');};
+         $tn=(pget("$h/$m")*1); $fn=(pget("$h/$f")*1); if($v==='+'){$tn+=3; $fn+=1;}else{$tn-=1; $fn-=1;};
+         path::make("$h/$m",$tn); path::make("$h/$f",$fn); return OK;
+      }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------

@@ -777,9 +777,11 @@
                if(!n.postProc){n.postProc={}}; if(!n.postProc.transform){n.postProc.transform={}}; n.postProc.transform[sk]=sv;
                n.onready=function()
                {
-                  let pt,sx,sy,iw,ih,ml,mt,mr,ob,nb,wd,hd,xd,yd; pt=this.postProc.transform; sx=pt.isoSkewX; sy=pt.isoSkewY;
-                  mr=(Math.atan(sx*(Math.PI/180))); ob=this.getBoundingClientRect(); iw=ob.width; ih=ob.height;
-                  this.style.transform=('perspective('+((iw/2)-(ih/2))+'px) rotateX('+sx+'deg)'); nb=this.getBoundingClientRect();
+                  let pt,sx,sy,iw,ih,ml,mt,ob,nb,wd,hd,xd,yd; pt=this.postProc.transform; sx=pt.isoSkewX; sy=pt.isoSkewY;
+                  ob=this.getBoundingClientRect(); iw=ob.width; ih=ob.height;
+                  if(sx){this.style.transform=('perspective('+((iw/2)-(ih/2))+'px) rotateX('+sx+'deg)');}
+                  else{this.style.transform=('perspective('+((ih/2)-(iw/2))+'px) rotateY('+sy+'deg)');};
+                  nb=this.getBoundingClientRect();
                   if(nb.x<ob.x){this.style.marginLeft=((ob.x-nb.x)+'px'); this.style.marginRight=((ob.x-nb.x)+'px');}
                   else if(nb.x>ob.x){this.style.marginLeft=(0-(nb.x-ob.x)+'px');};
                   if(nb.y<ob.y){this.style.marginTop=((ob.y-nb.y)+'px');}else if(nb.y>ob.y){this.style.marginTop=(0-(nb.y-ob.y)+'px');};
@@ -794,7 +796,7 @@
 
 
 
-// func :: avatar : returns a gravatar URL from given email address .. does very limited validity check -which throws an error if invalid
+// func :: avatar : returns a gravatar URL from given email address .. for options see: https://en.gravatar.com/site/implement/images/
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const avatar = function(a,d,s)
    {

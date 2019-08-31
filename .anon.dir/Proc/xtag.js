@@ -369,41 +369,27 @@ extend(custom.domtag)
       if(!isFunc(a.togl)){fail('expecting `togl` as func');return};  let w='chevron-'; let g=a.goal; let s=a.size;
       if(!isin([U,D,L,R],g)){fail('expecting `goal` as any: U, D, L, R');return}; n.modify(a); n.conf={};
 
-      n.conf[U]={icon:`${w}up`,    togl:D, width:(s*6), height:(s*2), transform:'isoSkewX(15deg)'};
-      n.conf[D]={icon:`${w}down`,  togl:U, width:(s*6), height:(s*2), transform:'isoSkewX(-15deg)'};
-      n.conf[L]={icon:`${w}left`,  togl:R, width:(s*2), height:(s*6), transform:'isoSkewY(15deg)'};
-      n.conf[R]={icon:`${w}right`, togl:L, width:(s*2), height:(s*6), transform:'isoSkewY(-15deg)'};
+      n.conf[U]={icon:`${w}up`,    togl:D, width:(s*4), height:(s*1.5), transform:'isoSkewX(15deg)', mrgn:'bottom', padn:'Top'};
+      n.conf[D]={icon:`${w}down`,  togl:U, width:(s*4), height:(s*1.5), transform:'isoSkewX(-15deg)', mrgn:'top', padn:'Bottom'};
+      n.conf[L]={icon:`${w}left`,  togl:R, width:(s*1.5), height:(s*4), transform:'isoSkewY(-15deg)', mrgn:'right', padn:'Left'};
+      n.conf[R]={icon:`${w}right`, togl:L, width:(s*1.5), height:(s*4), transform:'isoSkewY(15deg)', mrgn:'left', padn:'Right'};
 
-      n.face=(a.shut?g:n.conf[g].togl); let d=n.conf[n.face];
-      n.setStyle({width:d.width,height:d.height,overflow:'hidden'});
+      n.face=(a.shut?g:n.conf[g].togl); let d=n.conf[n.face]; let b={w:d.width,h:d.height}; if(isin([U,D],g)){b.w+=s}else{b.h+=s};
+      n.setStyle({width:b.w,height:b.h,overflow:'hidden'}); let m=d.mrgn; let p=('padding'+d.padn);
+      let y={position:'absolute',width:d.width,height:d.height,transform:d.transform}; y[m]='-1px';
+
       n.insert
       ([
-         {div:'', style:{position:'absolute',width:d.width,height:d.height,transform:d.transform}},
-         {icon:'.cenmid', face:n.conf[n.face].icon, size:s},
+         {div:'', style:y},
+         {icon:'.cenmid', face:n.conf[n.face].icon, size:s, style:{[p]:'3px'}},
       ]);
 
       n.listen('click',function()
       {
-         this.face=n.conf[this.face].togl; let t;
+         this.face=this.conf[this.face].togl; let t,i; i=this.conf[this.face].icon;
          if(this.open){t=SHUT; this.open=0; this.shut=1;}else{t=OPEN; this.open=1; this.shut=0;};
-         this.togl(t);
+         this.select('icon')[0].className=('cenmid icon-'+i); this.togl(t);
       });
       return DONE;
    },
-
-
-   // flap:function(n,a,c)
-   // {
-   //    let ctrl,stat,fbdy,func,hrvr,icon; ctrl=a.control; if(!ctrl){return}; if(a.open==VOID){a.open=TRUE}; stat=(a.open?'Open':'Shut');
-   //    if(!isin([(VERT+BFOR),(VERT+AFTR),(HORZ+BFOR),(HORZ+AFTR)],ctrl))
-   //    {fail('invalid `control` value .. expecting VOID or :VERT::AFTR: or :HORZ::BFOR: .. or some such');return};
-   //    func=(isin(ctrl,BFOR)?'unshift':'push'); hrvr=proprCase(unwrap(ctrl).split('::')[0]); n.modify(a);
-   //    icon=(isin(ctrl,VERT)?((a.open||isin(ctrl,BFOR))?'circle-up':'circle-down'):((a.open||isin(ctrl,BFOR))?'circle-left':'circle-right'));
-   //    fbdy=[{div:('.flapFace'+hrvr), style:('display:'+(a.open?'block':'none')), contents:c}]; fbdy[func]({div:('.flapCtrl'+hrvr), contents:
-   //    [
-   //       {div:'.flapKnob .midcen', contents:[{icon:icon}]}
-   //    ]});
-   //    n.insert(fbdy);
-   //    return DONE;
-   // },
 })

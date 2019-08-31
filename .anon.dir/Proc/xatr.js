@@ -147,4 +147,15 @@ extend(custom.attrib)
       if((v==TRUE)||(v=='yes')||(v==1)){v=1}else{v=0}; if(!v){return};
       n.setAttribute('tabindex',-1); n.tabindex=-1; return TRUE;
    },
+
+
+
+   format:function(v,n,a,c)
+   {
+      n.listen('ready',()=>
+      {
+         parsed(c,v,(r)=>{n.innerHTML=''; n.textContent=''; n.insert(r)});
+      });
+      return TRUE;
+   },
 });

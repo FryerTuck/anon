@@ -199,7 +199,7 @@
 // ---------------------------------------------------------------------------------------------------------------------------------------------
    const fext = function(p)
    {
-      p=pathOf(p); if(!p){return}; let b=p.split('/').pop(); if(!isin(b,'.')){return}; let r=b.split('.').pop();
+      let r=pathOf(p); if(!r){r=pathOf('/'+p); if(!r){return}}; let b=r.split('/').pop(); if(!isin(b,'.')){return}; r=b.split('.').pop();
       if(test(r,/^[a-zA-Z0-9]{1,8}$/)){return r};
    };
 // ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -796,6 +796,13 @@
       {
          d=timeDiff(f,n); l={yrs:'years',mth:'months',wks:'weeks',day:'days',hrs:'hours',min:'minutes',sec:'seconds'}; r=VOID;
          d.each((v,k)=>{if(v){r=(v+' '+((v>1)?l[k]:rtrim(l[k],'s'))+' ago'); return STOP}}); if(!r){r='1 second ago';};
+         return r;
+      },
+
+      timeText:function(f,o, d,r)
+      {
+         if(isText(f)){f*=1}; if(!isNumr(f)||(span(f)<10)){fail('invalid timestamp');return};
+         if(span(f)<13){f=(f*1000)}; if(!o){o='toGMTString'}; d=(new Date(f)); r=d[o]();
          return r;
       },
    });

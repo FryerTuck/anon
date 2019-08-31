@@ -224,7 +224,7 @@ jobcard
 
 .TaskDoktPage
 {
-
+   padding:1rem;
 }
 
 
@@ -233,9 +233,113 @@ jobcard
    width:0.1px;
    vertical-align:middle;
 }
-
+.TaskDoktFlap>flap
+{margin-right:-1px;}
+.TaskDoktFlap>flap>div
+{background:hsla(0,0%,90%,1);}
+.TaskDoktFlap>flap>icon
+{
+   margin-top:-1px;
+   color:hsla(0,0%,50%,1);
+}
 
 .TaskDoktConf
 {
    width:0.1px;
+   background:hsla(0,0%,90%,1);
+   border-left:1px solid hsla(0,0%,65%,1);
+}
+.TaskDoktConf.open
+{width:200px;}
+.TaskDoktConf.shut
+{width:0.1px;}
+
+
+.DoktCmntWrap
+{
+   border:1px solid hsla(0,0%,85%,1);
+   border-radius:2px;
+   background:hsla(0,0%,98%,1);
+   /* padding:10px; */
+}
+
+.DoktCmntText>div
+{
+   padding:10px;
+}
+
+
+.DoktCmntAtch
+{
+   width:20px;
+   padding-top:2px;
+}
+.DoktCmntAtch>icon
+{
+   color:hsla(0,0%,50%,1);
+   margin:2px;
+   margin-bottom:0px;
+   line-height:16px;
+   cursor:pointer;
+}
+
+
+.DoktCmntTime
+{
+   font-size:13px;
+   padding:10px;
+}
+
+
+.DoktCmntRate
+{
+   width:30px;
+   padding-top:2px;
+}
+.DoktCmntRate>div
+{
+   font-size:16px;
+   line-height:16px;
+   font-weight:bold;
+   text-align:center;
+   color:hsla(0,0%,60%,1);
+}
+.DoktCmntRate>div>icon
+{
+   font-size:24px !important;
+   line-height:24px !important;
+   cursor:pointer;
+}
+
+
+.DoktCmntUser
+{
+   width:20px;
+   padding:6px;
+}
+
+.DoktUserFace
+{
+   width:60px; height:60px;
+}
+.DoktUserFace>div
+{
+   width:60px; height:60px;
+   border:3px solid hsla(0,0%,100%,1);
+   border-radius:5px;
+   box-shadow:0px 0px 2px hsla(0,0%,0%,0.3);
+   overflow:hidden;
+}
+.DoktUserFace>div>img
+{
+   position:absolute; top:-2px; left:-2px;
+   width:60px; height:60px;
+   border-radius:5px;
+   margin:0px;
+}
+
+.DoktUserInfo
+{
+   padding-left:6px;
+   font-size:13px;
 }

@@ -464,10 +464,10 @@ namespace Anon;
       {
          if(!is_dir("$h/$d")){pset("$h/$d/");}; $l=pget("$h/$d"); foreach($l as $i)
          {
-            if(aged("$h/$d/$i")<=$dbs){continue;}; if($d!=='sesn'){void("$h/$d/$i"); continue;};
-            $t=(pget("$h/$d/$i/TIME")*1); if((($tmn-$t)>($dbs+1))&&isin($cln,['work','sudo']))
+            if(aged("$h/$d/$i")<=($dbs+2)){continue;}; if($d!=='sesn'){void("$h/$d/$i"); continue;};
+            $t=(pget("$h/$d/$i/TIME")*1); if((($tmn-$t)>($dbs+2))&&isin($cln,['work','sudo']))
             {
-               $x=acid(); void("$h/$d/$i"); setcookie($x,null,-9,'/',envi('HOST'));
+               $x=acid(); void("$h/$d/$i"); setcookie($x,null,-1,'/',envi('HOST'));
                if(facing('GUI')){$p=envi('URI'); header("Location: $p"); defn(['HALT'=>1]); die();}
                else{ekko::head(408,false);};
             };
