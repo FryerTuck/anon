@@ -164,5 +164,23 @@ namespace Anon;
       {
          $o=import("/Proc/tool/$t"); $r=$o->$f(); ekko($r);
       }
+
+
+
+      static function makeDurl()
+      {
+         $v=knob($_POST); $p=$v->purl; if(!$p){ekko(FAIL);}; $l=isPath($p); $r=isPurl($p); if(!$l&&!$r){ekko(FAIL);}; $i=path::info($p);
+         if($l){$p=crop($p); if(!isee($p)){ekko(404);}; ekko(durl($p));};
+         if(!isin(['ftp','ftps','http','https'],$i->plug)){ekko(501);}; $f=path::leaf($i->path); $m=mime($f); if(!$m){ekko(415);};
+
+         if(isin($i->plug,'ftp'))
+         {
+            $l=(new ftp($i->host,null,$i->user,$i->pass)); if($l->fail){ekko(FAIL);}; $l->pasv(true); $d=path::twig($i->path);
+            $l->chdir($d); if($l->fail){ekko(FAIL);}; $r=$l->read($f); if($l->fail){ekko(FAIL);}; $r=base64_encode($r);
+            $r="data:$m;base64,$r"; ekko($r);
+         };
+
+         $r=spuf($p); $r=base64_encode($r); $r="data:$m;base64,$r"; ekko($r);
+      }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------

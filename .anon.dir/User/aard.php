@@ -102,11 +102,19 @@ namespace Anon;
       }
 
 
-      static function ratingOf($u,$m)
+      static function ratingOf($m)
       {
-         expect::text($u,1); expect::text($m,1); $p="/User/data/$u/rate"; if(!isee($p)){return;};
-         if(isFile($p)){$r=(pget($p)*1); return $r;}; if(!isFold($p)){return 0;}; $h=md5($m); $r=pget("$p/$h");
-         return ($r?($r*1):0);
+         expect::mail($m,1); $p="/User/vote/$m"; $r=pget($p); if(span($r)<1){path::make($p,'0'); $r='0';};
+         $r=($r*1); return $r;
+      }
+
+
+      static function voteMail($m=null,$v=null,$b=null)
+      {
+         if(!$m){$x=knob($_POST); $m=$x->mail; $v=$x->vote; $b=$x->bfor;}; $f=user('mail'); if($m===$f){return;};
+         $h='/User/vote'; if(!isee("$h/$m")){path::make("$h/$m",'0');}; if(!isee("$h/$f")){path::make("$h/$f",'0');};
+         $tn=(pget("$h/$m")*1); $fn=(pget("$h/$f")*1); if($v==='+'){$tn+=($b?1:3); $fn+=1;}else{$tn-=1; $fn-=1;};
+         path::make("$h/$m",$tn); path::make("$h/$f",$fn); return OK;
       }
 
 
@@ -128,7 +136,7 @@ namespace Anon;
             if(!isRepo('/')){repo::create('/'); wait(50);}; repo::cloned('/',"$h/root",$b,user('name'));
          };
 
-         $r=path::tree($h); dump($r);
+         $r=path::tree($h); ekko($r);
       }
 
 
@@ -161,15 +169,6 @@ namespace Anon;
          };
 
          dump($rsl);
-      }
-
-
-      static function voteMail($m=null,$v=null)
-      {
-         if(!$m){$x=knob($_POST); $m=$x->mail; $v=$x->vote;}; $f=user('mail'); $h='/User/vote';
-         if(!isee("$h/$m")){path::make("$h/$m",'0');}; if(!isee("$h/$f")){path::make("$h/$f",'0');};
-         $tn=(pget("$h/$m")*1); $fn=(pget("$h/$f")*1); if($v==='+'){$tn+=3; $fn+=1;}else{$tn-=1; $fn-=1;};
-         path::make("$h/$m",$tn); path::make("$h/$f",$fn); return OK;
       }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------

@@ -549,6 +549,17 @@
 
 
 
+// func :: durl : create data-url from path -or blob
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const durl = function(d,f, n)
+   {
+      if(pathOf(d)){n=d.split('/').pop(); purl('/Proc/makeDurl',{purl:d},(r)=>{f(r.body,n)}); return;};
+      decode.BLOB(d,f);
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 // tool :: onFeed : drop-on event trap
 // --------------------------------------------------------------------------------------------------------------------------------------------
    extend(Element.prototype)
@@ -558,7 +569,7 @@
          this.ondragover=function(e){e.preventDefault();e.stopPropagation();}; this.handle=h; this.ondrop=function(e,s)
          {
             e.preventDefault(); e.stopPropagation(); var d,l,z; d=e.dataTransfer; l=d.files; s=this; z=([...l]);
-            if(z.length<1){let r=d.getData('text/plain'); if(isPath(r)){durl(r,function(t){s.handle(t);});return}; s.handle(r);return;};
+            if(z.length<1){let r=d.getData('text/plain'); if(pathOf(r)){durl(r,function(t,f){s.handle(t,f);});return}; s.handle(r);return;};
             z.forEach(function(f){decode.BLOB(f,function(r){s.handle(r,f.name);})});
          };
       },

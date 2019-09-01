@@ -217,12 +217,12 @@ jobcard
 
 .AnonTaskDokt
 {
-   min-width:720px !important;
-   min-height:480px !important;
+   min-width:860px !important;
+   min-height:520px !important;
 }
 
 
-.TaskDoktPage
+.TaskDoktPage>panl
 {
    padding:1rem;
 }
@@ -249,18 +249,52 @@ jobcard
    background:hsla(0,0%,90%,1);
    border-left:1px solid hsla(0,0%,65%,1);
 }
+
+.TaskDoktConf>panl
+{
+   width:200px !important;
+   padding:4px;
+   overflow:hidden !important;
+}
+
+.TaskDoktConf>panl>input
+{
+   display:block;
+   width:186px;
+   border:1px solid hsla(0,0%,65%,1);
+   border-radius:2px;
+   font-size:12px; line-height:12px;
+   padding:2px;
+   background:hsla(0,0%,95%,1);
+   /* margin:4px; */
+   margin-bottom:4px;
+}
+
 .TaskDoktConf.open
 {width:200px;}
+.TaskDoktConf.open>panl
+{display:block !important;}
+
 .TaskDoktConf.shut
 {width:0.1px;}
+.TaskDoktConf.shut>panl
+{display:none !important;}
 
+.TaskDoktConf>panl>grid
+{
+   margin-top:20px;
+}
+.TaskDoktConf>panl>grid butn
+{
+   font-size:13px;
+}
 
 .DoktCmntWrap
 {
    border:1px solid hsla(0,0%,85%,1);
    border-radius:2px;
    background:hsla(0,0%,98%,1);
-   /* padding:10px; */
+   margin-bottom:30px;
 }
 
 .DoktCmntText>div
@@ -284,17 +318,26 @@ jobcard
 }
 
 
-.DoktCmntTime
+.DoktCmntMade
 {
+   width:1px;
    font-size:13px;
-   padding:10px;
+   padding-top:30px;
+   padding-right:30px;
+   white-space:nowrap;
+}
+.DoktCmntMade>b
+{
+   display:block;
 }
 
 
 .DoktCmntRate
 {
-   width:30px;
-   padding-top:2px;
+   width:40px;
+   min-width:40px;
+   padding-top:3px;
+   padding-left:10px;
 }
 .DoktCmntRate>div
 {
@@ -342,4 +385,62 @@ jobcard
 {
    padding-left:6px;
    font-size:13px;
+}
+.DoktUserInfo>span
+{
+   display:block;
+}
+
+
+.DoktCmntMake
+{
+   width:100%; height:110px;
+   border:none !important;
+   outline:none !important;
+   background:transparent;
+   /* font-family:Arial, Helvetica, sans-serif; */
+   font-size:13px;
+   line-height:13px;
+   color:hsla(0,0%,0%,1);
+}
+.DoktAtchKnob
+{
+   margin-bottom:10px !important;
+}
+
+
+.CmntAtchPanl
+{
+   min-width:600px !important;
+   min-height:300px !important;
+}
+
+.CmntAtchMenu
+{
+   width:200px;
+   min-width:200px !important;
+   border-right:1px solid hsla(0,0%,85%,1);
+}
+
+.CmntAtchView
+{
+   padding:10px;
+}
+
+.CmntAtchList
+{
+   width:200px;
+   min-width:200px !important;
+   border-left:1px solid hsla(0,0%,85%,1);
+   padding:10px;
+}
+.CmntAtchList b
+{
+   display:block !important;
+   margin:auto !important;
+}
+.CmntAtchList icon
+{
+   display:block !important;
+   margin-top:4px !important;
 }

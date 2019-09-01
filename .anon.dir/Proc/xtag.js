@@ -40,7 +40,9 @@ extend(custom.domtag)
       if(!c){c='bug'}; if(!isText(a.face,1)){a.face=c}; if(!isText(a.font,1)){a.font='icon'};
       a.size=(isInum(a.size)?(a.size+'px'):(isNumr(a.size)?(a.size+'rem'):(isText(a.size,3)?a.size:'16px')));
       let fce,fnt,sze; fce=a.face; fnt=a.font; sze=a.size; delete a.face; delete a.font; delete a.size;
+      c=VOID; if(a.text){c=a.text; delete a.text};
       modify(n,a); n.enclan(('.'+fnt+'-'+fce)); n.style.fontSize=sze; // n.style.lineHeight=a.size;
+      if(c){n.insert({div:c})};
       return DONE;
    },
 
@@ -55,7 +57,7 @@ extend(custom.domtag)
 
    treeview:function(n,a,c)
    {
-      n.setAttribute('tabindex',-1); n.tabindex=-1; n.events=(a.listen||a.events); delete a.listen; delete a.events;
+      n.setAttribute('tabindex',-1); n.tabindex=-1; n.events=(a.listen||a.events||{}); delete a.listen; delete a.events;
 
       if(!n.events.dragover){n.events.dragover=function(){this.enclan('dragOver');};};
       if(!n.events.dragleave){n.events.dragleave=function(){this.declan('dragOver');};};
@@ -143,7 +145,11 @@ extend(custom.domtag)
 
          twg.listen('click',function(){this.info.root.status.togl(this)});
          if(!!kds){twg.info.kids=true};
-         if(drgs){twg.listen('dragstart',function(e){e.dataTransfer.setData('text/plain',this.info.path);})};
+         if(drgs){twg.listen('dragstart',function(e)
+         {
+            let tp=(this.info.plug||this.info.path); if(tp[0]=='~'){tp=('/'+tp);};
+            e.dataTransfer.setData('text/plain',tp);
+         })};
 
          let frk = VOID; if(kds)
          {
@@ -203,7 +209,12 @@ extend(custom.domtag)
       };
 
 
-      n.listen('ready',ONCE,function(){this.vivify()});
+      n.listen('ready',ONCE,function()
+      {
+         this.vivify();
+      });
+
+      // return DONE;
    },
 
 
@@ -362,6 +373,7 @@ extend(custom.domtag)
    },
 
 
+
    flap:function(n,a,c)
    {
       if((a.open==VOID)&&(a.shut==VOID)){a.shut=1; a.open=0;}; if(a.shut==a.open){fail('flap `open` and `shut` cannot be the same');return};
@@ -392,4 +404,14 @@ extend(custom.domtag)
       });
       return DONE;
    },
-})
+
+
+
+   dropzone:function(n,a,c)
+   {
+      if(!c){c=[];}; if(span(c)<1){radd(c,{h3:'drop zone'})};
+      n.insert({div:c});
+      n.listen('drop',(a.feed||a.onfeed||a.onFeed||a.drop||a.ondrop||a.onDrop));
+      return DONE;
+   },
+});

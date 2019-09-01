@@ -991,7 +991,7 @@ $zz=(($h==="seen")&&($n==="*seen*"));
    function mime($x)
    {
       if(!isText($x,1)){return;}; $x=trim($x); if(!$x){return;};
-      if(isPath($x)){$x=path::type($x);}elseif(isin($x,'.')){$x=rstub($x)[2]; $x=trim($x); if(!$x){return;}};
+      if(isPath($x)){$x=path::type($x);}elseif(isin($x,'.')){$x=rstub($x,'.')[2]; $x=trim($x); if(!$x){return;}};
       $r=conf('/Proc/mimeType')->$x; return $r;
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------

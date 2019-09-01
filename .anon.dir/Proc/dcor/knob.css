@@ -241,7 +241,7 @@
 
 
 
-/* clan :: flap
+/* node :: flap
 /* ----------------------------------------------------------------------------------------------- */
    flap
    {
@@ -253,5 +253,315 @@
    {
       border:1px solid hsla(0,0%,50%,1);
       border-radius:2px;
+   }
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* node :: dropzone
+/* ----------------------------------------------------------------------------------------------- */
+   dropzone
+   {
+      display:block; position:relative;
+      width:100%; height:100%;
+      box-sizing:border-box;
+      border:2px dashed hsla(0,0%,50%,1);
+      border-radius:10px;
+      color:hsla(0,0%,50%,1);
+      overflow:hidden;
+      opacity:0.6;
+   }
+   dropzone>div
+   {
+      position:absolute !important; left:50%; top:50%;
+      transform:translate(-50%,-50%);
+      text-align:center !important;
+   }
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* Anon :: repo : diff colors
+/* ----------------------------------------------------------------------------------------------- */
+   .diffXX
+   {
+      /* eXists eXclusive .. untouched */
+   }
+
+   .diffUN
+   {
+      /* Untracked Natively */
+      color:hsla(120,100%,70%,1) !important;
+   }
+
+   .diffAN
+   {
+      /* Added Natively */
+      color:hsla(220,100%,70%,1) !important;
+   }
+
+   .diffMN
+   {
+      /* Modified Natively */
+      color:hsla(65,75%,60%,1) !important;
+   }
+
+   .diffAR
+   {
+      /* Added Remotely */
+      color:hsla(120,100%,70%,1) !important;
+   }
+
+   .diffMR
+   {
+      /* Modified Remotely */
+      color:hsla(330,100%,75%,1) !important;
+   }
+
+   .diffDR
+   {
+      /* Deleted Remotely */
+      color:hsla(0,0%,45%,1) !important;
+   }
+
+   .diffGC
+   {
+      /* Git Conflict */
+      color:hsla(5,100%,60%,1) !important;
+   }
+
+   .diffANMR
+   {
+      /* Modified Natively + Modified Remotely */
+      color:hsla(265,100%,65%,1) !important;
+   }
+
+   .diffANMN
+   {
+      /* Added Natively + Modified Natively */
+      color:hsla(120,100%,60%,1) !important;
+   }
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* node :: treeview
+/* ----------------------------------------------------------------------------------------------- */
+   treeview
+   {
+      display:block;
+      position:relative;
+      text-align:left;
+      vertical-align:top;
+      box-sizing:border-box;
+      padding:0px;
+      margin:0px;
+      user-select:none;
+   }
+
+
+   treeface
+   {
+      display:block;
+      position:relative;
+      text-align:left;
+      vertical-align:top;
+      box-sizing:border-box;
+      padding:0px;
+      margin:0px;
+      outline:none;
+      user-select:none;
+   }
+
+
+   treetwig
+   {
+      display:block;
+      position:relative;
+      text-align:left;
+      vertical-align:top;
+      box-sizing:border-box;
+      padding:0px;
+      margin:0px;
+      outline:none;
+      /* text-shadow:0px 0px 1px hsla(0,0%,0%,1), 0px 0px 1px hsla(0,0%,0%,1), 0px 0px 1px hsla(0,0%,0%,1), 0px 0px 2px hsla(0,0%,0%,1), 0px 0px 2px hsla(0,0%,0%,1); */
+      text-shadow:0px 0px 1px hsla(0,0%,0%,0.3), 0px 0px 1px hsla(0,0%,0%,0.3), 0px 0px 1px hsla(0,0%,0%,0.3);
+      user-select:none;
+   }
+
+   .treeTwigArro
+   {
+      width:12px !important;
+      font-size:12px !important;
+      text-align:center !important;
+      color:inherit !important;
+      user-select:none;
+   }
+
+   .treeTwigIcon
+   {
+      width:16px !important;
+      font-size:16px !important;
+      padding-left:6px !important;
+      padding-right:4px !important;
+      color:inherit !important;
+      user-select:none;
+      -webkit-font-smoothing: antialiased !important;
+   }
+
+   .treeTwigText input
+   {
+      width:100% !important;
+      background:transparent !important;
+      font-family:'code';
+      border:none !important;
+      color:inherit !important;
+      text-shadow:inherit !important;
+      user-select:none !important;
+      cursor:inherit !important;
+      -webkit-font-smoothing: antialiased !important;
+   }
+
+   treeTwig.dragOver
+   {
+      outline:auto !important;
+      outline-color:hsla(120,100%,65%,1) !important;
+   }
+
+   treefork
+   {
+      display:block;
+      position:relative;
+      text-align:left;
+      vertical-align:top;
+      box-sizing:border-box;
+      padding:0px;
+      margin:0px;
+      display:none;
+      user-select:none;
+   }
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+
+/* node :: modal
+/* ----------------------------------------------------------------------------------------------- */
+   modal
+   {
+      display:block;
+      position:fixed;
+      z-index:9990;
+      top:0px; left:0px;
+      width:100%; height:100%;
+      vertical-align:top;
+      box-sizing:border-box;
+      padding:0px;
+      margin:0px;
+      overflow:hidden;
+      background:hsla(0,0%,5%,0.9);
+      outline:none;
+   }
+
+   modal>wrap>grid
+   {
+      width:auto !important; height:auto !important;
+      background:hsla(0,0%,95%,1);
+      border:1px solid hsla(0,0%,50%,1);
+      border-radius:2px;
+      box-shadow:0px 0px 8px hsla(0,0%,0%,0.5);
+   }
+
+   /* modal>wrap>grid>row
+   {
+      height:100% !important;
+   } */
+
+   modal>wrap>grid .head
+   {
+      height:10px;
+      padding:5px;
+      font-size:13px; color:hsla(0,0%,20%,1);
+      font-weight:bold;
+      border-bottom:1px solid hsla(0,0%,85%,1);
+      background:hsla(0,0%,93%,1);
+   }
+
+   modal>wrap>grid .head>div>icon
+   {
+      position:absolute; top:5px; right:4px;
+      font-size:10px !important; line-height:10px !important;
+      color:hsla(0,0%,50%,1);
+      cursor:pointer;
+   }
+
+   modal>wrap>grid .body
+   {
+      max-width:900px; max-height:600px;
+      color:hsla(0,0%,30%,1);
+   }
+
+   modal>wrap>grid .body .info
+   {
+      padding:4px;
+      padding-left:8px;
+      font-size:13px; color:hsla(0,0%,20%,1);
+      border-right:1px solid hsla(0,0%,85%,1);
+   }
+
+   /* modal>wrap>grid .body>grid
+   {
+      width:100%;
+      height:100%;
+   } */
+
+   modal>wrap>grid .body .view>panl
+   {padding:15px;}
+   modal>wrap>grid .body .view>page
+   {padding:15px;}
+
+   modal>wrap>grid .body .view h1,h2,h3
+   {margin-top:0px;}
+
+   modal>wrap>grid .foot
+   {
+      height:10px;
+      background:hsla(0,0%,93%,1);
+      border-top:1px solid hsla(0,0%,85%,1);
+      font-size:13px; color:hsla(0,0%,20%,1);
+   }
+
+   modal>wrap>grid .foot{padding:5px; text-align:right;}
+   modal>wrap>grid .foot .footLeft{text-align:left;}
+   modal>wrap>grid .foot .footRait{text-align:right;}
+
+
+   modal>wrap>grid .side
+   {
+      width:3px !important; max-width:3px !important; min-width:3px !important;
+   }
+
+   modal>wrap>grid .side>div
+   {
+      display:none;
+      background-color:hsla(220,100%,50%,1);
+   }
+
+   modal>wrap>grid .body .modlInfoItem>icon
+   {font-size:10px !important; margin-right:4px !important}
+
+   modal>wrap>grid .view>page.hide{display:none;}
+   modal>wrap>grid .view>panl.hide{display:none;}
+   modal>wrap>grid .view>page.show{display:block;}
+   modal>wrap>grid .view>panl.show{display:block;}
+
+   .modalBox
+   {
+      min-width:320px !important;
+      min-height:200px !important;
    }
 /* ----------------------------------------------------------------------------------------------- */

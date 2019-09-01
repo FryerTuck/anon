@@ -220,6 +220,13 @@ namespace Anon;
          return $r;
       }
 
+      static function firmByMail($a)
+      {
+         if(!isText($a,1)){return;}; $r=pget("/Bill/data/contacts/.index/$a"); if($r){return $r;}; $u=self::userByMail($a);
+         $c=pget("/User/data/$u/clan"); if(isin($c,['work','lead','sudo'])){$r=conf('Bill/firmName'); return $r;};
+         $r='Undefined Company Name'; path::make("/Bill/data/contacts/.index/$a",$r); return $r;
+      }
+
       static function firmByTask($a)
       {
          if(!isText($a,1)){return;}; $r=pget("/Task/data/$a/business"); if(!$r){$r=conf('Bill/firmName');};
@@ -599,9 +606,9 @@ namespace Anon;
       public $fold;
 
 
-      function __construct($hn,$pn=21,$un=null,$pw=null)
+      function __construct($hn,$pn=null,$un=null,$pw=null)
       {
-         $C=$this->connect($hn,$pn,$un,$pw,1);
+         if($pn===null){$pn=21;}; $C=$this->connect($hn,$pn,$un,$pw,1);
          if(!$C&&isin($this->fail,'AUTH not understood')){$C=$this->connect($hn,$pn,$un,$pw,0);};
          return $this;
       }

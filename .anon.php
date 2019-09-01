@@ -122,7 +122,7 @@
       $p=isee($p); if(!$p){return;}; if(!is_dir($p)){$r=file_get_contents($p); if($t){$r=trim($r);}; return $r;};
       $r=array_diff(scandir($p),array('.','..')); if(!$t){return array_values($r);};
       $z=array(); do{$i=array_shift($r); if($i===null){continue;}; $c=substr($i,0,1); if($c!=='.'){$z[]=$i;};}while(count($r));
-      return array_values($z);
+      $z=array_values($z); sort($z); return $z;
    };
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 

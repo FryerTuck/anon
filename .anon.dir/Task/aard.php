@@ -54,7 +54,7 @@ namespace Anon;
             {$i=pget("/Task/tags/$n"); if(!$i){fail("undefined task-tag `$n`");}; $f[$x]=$i;}; $l->$tr->tagIcons=$f; unset($f,$x,$n,$i);
 
             unset($cl,$cn,$cd); $cl=keys($td->comments); $cn=rpop($cl); $cd=dupe($td->comments->$cn); unset($td->comments);
-            $cd->user=knob(['rate'=>User::ratingOf($cd->nick,$cd->mail)]); $f=$cd->tags; if(!$f){$f='';};
+            $cd->user=knob(['rate'=>User::ratingOf($cd->mail)]); $f=$cd->tags; if(!$f){$f='';};
             $f=frag($f,','); foreach($f as $x => $n){$i=pget("/Task/tags/$n"); if(!$i){fail("undefined task-tag `$n`");}; $f[$x]=$i;};
             $cd->tico=$f; $l->$tr->comments=knob([$cn=>$cd]);
             $r->$tr=$l->$tr;
@@ -157,7 +157,7 @@ namespace Anon;
    # ------------------------------------------------------------------------------------------------------------------------------------------
       static function makeNote($o)
       {
-         $r=$o->dref; $a=$o->atch; unset($o->dref,$o->clan,$o->comp,$o->atch);
+         $r=$o->dref; $a=$o->atch; unset($o->dref,$o->clan,$o->firm,$o->atch);
          $h="/Task/data/$r/comments"; $x=($o->cref?$o->cref:gudref($h,16)); unset($o->cref); $h="$h/$x"; if(!isee($h)){path::make("$h/");};
          $o->time=time(); $o->rate=0; foreach($o as $k => $v){path::make("$h/$k",$v);}; // create text-data
          if(isKnob($a)){foreach($a as $f => $d){if(isDurl($d)){$d=furl($d)->data;}; path::make("$h/atch/$f",$d); $d=null;}}; // attachments
@@ -172,10 +172,11 @@ namespace Anon;
    # ------------------------------------------------------------------------------------------------------------------------------------------
       static function voteNote($d=null,$c=null,$v=null)
       {
-         if(!$d){$x=knob($_POST); $d=$x->dref; $c=$x->cref; $v=$x->vote;}; $h="/Task/data/$d/comments/$c"; $t=pget("$h/mail"); $f=user('mail');
-         if(isee("$h/vote/$f")){$y=pget("$h/vote/$f"); if($y===$v){return FAIL;}}; path::make("$h/vote/$f",$v); // validate
-         $q=(($v==='+')?1:-1); $x=(pget("$h/rate")*1); $x=($x+$q); path::make("$h/rate",$x); User::voteMail($t,$v);
-         return OK;
+         if(!$d){$x=knob($_POST); $d=$x->dref; $c=$x->cref; $v=$x->vote;}; $h="/Task/data/$d/comments/$c";
+         $t=pget("$h/mail"); $f=user('mail'); if($t===$f){return 'voting your own comment is not supported';}; $vb=0;
+         if(isee("$h/vote/$f")){$vb=1; $y=pget("$h/vote/$f"); if($y===$v){return 'cannot vote the same twice';}};
+         path::make("$h/vote/$f",$v); $q=(($v==='+')?1:-1); $x=(pget("$h/rate")*1); $x=($x+$q); path::make("$h/rate",$x);
+         User::voteMail($t,$v,$vb); return OK;
       }
    # ------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -189,10 +190,25 @@ namespace Anon;
 
          foreach($cl as $ci)
          {
-            $co=knob(['cref'=>$ci]); $dl=pget("$hp/$ci"); foreach($dl as $di){$co->$di=pget("$hp/$ci/$di");}; $rd[]=$co;
+            $co=knob(['cref'=>$ci]); $dl=pget("$hp/$ci"); foreach($dl as $di){$co->$di=pget("$hp/$ci/$di");};
+            $co->repu=User::ratingOf($co->mail); $co->firm=find::firmByMail($co->mail);
+            $rd[]=$co;
          };
 
          return $rd;
+      }
+   # ------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+   # func :: saveConf : save docket properties
+   # ------------------------------------------------------------------------------------------------------------------------------------------
+      static function saveConf()
+      {
+         $o=knob($_POST); $h="/Task/data/$o->dref"; unset($o->dref);
+         foreach($o as $k => $v){if(!isee("$h/$k")){continue;}; path::make("$h/$k",$v);};
+         if(!$o->business){return OK;}; $m=pget("$h/fromAddy"); path::make("/Bill/data/contacts/.index/$m",$o->business);
+         return OK;
       }
    # ------------------------------------------------------------------------------------------------------------------------------------------
    }

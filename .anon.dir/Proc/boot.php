@@ -192,7 +192,8 @@ namespace Anon;
       if(is_array($v)){$v=array_values($v); foreach($v as $x => $i){$v[$x]=crop($i,$l);}; return $v;}; if(!is_string($v)){return;};
       $rup=envi('USERPATH'); $cup=USERPATH; if((strpos($v,$rup)===0)||(strpos($v,$cup)===0)){$v=str_replace([$rup,$cup],'~',$v);};
       if(path($v)){$v=rtrim($v,'/'); $c=COREPATH; $r=ROOTPATH; if(!$v||($v===$r)){$v='/';}elseif($v===$c){$v='$';}
-      else{$v=str_replace([$c,$r],'',$v);}; $v=str_replace('//','/',$v);}; $s=strlen($v); if($s<4){return $v;}; if(!is_int($l)){return $v;};
+      else{$v=str_replace([$c,$r],'',$v);}; $v=str_replace('//','/',$v); if(strpos($v,'/~')===0){$v=substr($v,1);}};
+      $s=strlen($v); if($s<4){return $v;}; if(!is_int($l)){return $v;};
       if(($l<1)||($s<$l)){return $v;}; $v=substr($v,0,$l); return "$v...";
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
