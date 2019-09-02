@@ -142,11 +142,16 @@ namespace Anon;
 
       static function plugMenu()
       {
-         $v=knob($_POST); $p=$v->purl; $i=path::info($p); $r=crud($p)->select('*');
+         $v=knob($_POST); $l=xeno::showHyperConduit($v->path,parts); $p=$l->plug;
+         if($l->path){$p="$p/$l->path";}; $i=path::info($l->plug); $r=crud($p)->select('*');
 
-         if(isin(['ftp','ftps'],$i->plug)){ekko($r);};
+         if(isin(['ftp','ftps'],$i->plug))
+         {
+            foreach($r as $x => $o){if($i->path&&!$l->path&&(strpos($o->path,$i->path)===0)){$r[$x]->path=stub($o->path,$i->path)[2];};};
+            ekko($r);
+         };
 
-         $rsl=[]; $prl=$p; $pth=$i->path; if(!$pth){$pth='/';}; $lvl=$i->levl;
+         $rsl=[]; $prl=$p; $i=path::info($p); $pth=$i->path; if(!$pth){$pth='/';}; $lvl=$i->levl;
 
          foreach($r as $itm)
          {

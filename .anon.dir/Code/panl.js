@@ -285,13 +285,12 @@ extend(Anon)
                ready:function(){this.vars={line:0,char:0, pick:{line:this.width,char:this.height}, dime:rectOf(this)}},
                mousemove:function()
                {
-                  let bi,cp,pn,sd; bi=this.vars.dime; cp={x:(cursor.posx-bi.x),y:(cursor.posy-bi.y)}; pn=this.parentNode;
-                  sd={x:pn.scrollLeft,y:pn.scrollTop}; select('#CodeInfoPosi').innerHTML=(((cp.x+sd.x)+1)+':'+((cp.y+sd.y)+1));
+                  let bi,cp,pn,sd,ci; bi=this.vars.dime; cp={x:(cursor.posx-bi.x),y:(cursor.posy-bi.y)}; pn=this.parentNode;
+                  sd={x:pn.scrollLeft,y:pn.scrollTop}; ci=select('#CodeInfoPosi'); if(!ci){return};
+                  ci.innerHTML=(((cp.x+sd.x)+1)+':'+((cp.y+sd.y)+1));
                },
             }}]}]});
          });
-
-
       },
 
 

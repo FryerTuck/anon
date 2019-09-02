@@ -112,7 +112,11 @@ namespace Anon;
 
          $L->Username=$user; $L->Password=$pass; $L->SMTPSecure=$ts; $L->Port=$port; $name=$I->user;
          if(isin($name,'.')){$name=stub($name,'.')[0];}; $name=ucwords($name); $L->setFrom($user,$name); $L->Subject=$w->mesgHead;
-         foreach($w->destAddy as $tr){$L->addAddress($tr);}; if($w->attached){foreach($w->attached as $ap){$L->addAttachment(path($ap));};};
+         foreach($w->destAddy as $tr){$L->addAddress($tr);}; if($w->attached){foreach($w->attached as $ak => $av)
+         {
+            if(is_int($ak)&&isPath($av)){$L->addAttachment(path($av)); continue;}; if(!isText($ak,1)||!isDurl($av)){continue;};
+            $av=furl($av); $L->AddStringAttachment($av->data,$ak,'base64',$av->mime);
+         }};
 
          $w->mesgBody=trim($w->mesgBody); if(wrapOf($w->mesgBody)==='<>')
          {

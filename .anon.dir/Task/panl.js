@@ -218,13 +218,17 @@ extend(Anon)
 
          readMe:function(i)
          {
+            Busy.init();
             purl('/Task/openDokt',{dref:i.docketID},(r, d)=>
             {
                d=VOID; d=[{h2:i.mesgHead}]; r=decode.jso(r.body);
 
                r.forEach((v)=>
                {
-                  let a=[]; if(!isList(v.atch)){v.atch=[]}; v.atch.forEach((f)=>
+                  let a=[]; if(!isList(v.atch)){v.atch=[]};
+                  if(span(v.atch)>0){radd(a,{icon:'floppy-disk', class:'DoktAtchKnob', size:16, title:'save attached', onclick:function()
+                  {Anon.Task.jobCards.savAtc(this.parentNode.attached);}})};
+                  v.atch.forEach((f)=>
                   {
                      let x=fext(f); if(!x){x='auto'}; x=Anon.Task.vars.icon[x]; if(!x){x=Anon.Task.vars.icon.auto};
                      radd(a,{icon:'', face:x, size:16, title:f, path:`/Task/data/${i.docketID}/comments/${v.cref}/${f}`, onclick:function()
@@ -261,7 +265,7 @@ extend(Anon)
                            {col:'.DoktCmntMade', contents:[{span:timeText(v.time)},{b:v.firm}]},
                         ]}]},
                      ]},
-                     {col:'.DoktCmntAtch', contents:a},
+                     {col:'.DoktCmntAtch', attached:{path:`/Task/data/${i.docketID}/comments/${v.cref}/atch`,data:v.atch}, contents:a},
                   ]}]}]});
                });
 
@@ -276,7 +280,10 @@ extend(Anon)
                      {icon:'attachment', class:'DoktAtchKnob', size:16, title:'attach files', onclick:function()
                      {
                         let il=Anon.Task.vars.icon; Anon.Task.jobCards.attach((al)=>
-                        {al.each((v,k)=>{let x=(il[fext(k)]||il.auto); this.parentNode.insert({icon:x,title:k,file:{name:k,data:v}})})});
+                        {
+                           this.parentNode.attached=al; al.each((v,k)=>
+                           {let x=(il[fext(k)]||il.auto); this.parentNode.insert({icon:x,title:k})});
+                        });
                      }}
                   ]},
                ]}]}]});
@@ -318,10 +325,11 @@ extend(Anon)
                      // {butn:'.info', contents:'Save', onclick:function(){dump('save');}},
                      {butn:'.info', contents:'Done', onclick:function()
                      {
-                        Anon.Task.jobCards.mkNote(this.root.select('#DoktMakeCmnt'),()=>{this.root.exit();});
+                        Anon.Task.jobCards.mkCmnt(this.root.select('#DoktMakeCmnt'),()=>{this.root.exit();});
                      }},
                   ],
                });
+               Busy.done();
             });
          },
 
@@ -362,6 +370,36 @@ extend(Anon)
          },
 
 
+         savAtc:function(ad, cb)
+         {
+            cb=function(sp,mo)
+            {
+               ad.dest=sp; purl('/Task/saveAtch',ad,(r)=>{r=r.body; if(r!=OK){alert(r);return};mo.exit()});
+            };
+
+            popModal({class:'AtchSavePanl'})
+            ({
+               head:'Save attachments',
+               body:[{grid:
+               [
+                  {row:[{col:'.AtchSavePath', contents:[{input:'', type:'text', value:'~'}]}]},
+                  {row:[{col:'.AtchSaveTree', contents:[{panl:[{treeview:'', source:'/User/treeMenu', uproot:true, listen:
+                  {
+                     'LeftClick':function()
+                     {
+                        if(!this.info.kids){return}; let i=this.info; let v=i.path;
+                        this.info.root.main.select('.AtchSavePath>input')[0].value=v;
+                     },
+                  }}]}]}]},
+               ]}],
+               foot:[{butn:'', contents:'Done', onclick:function()
+               {
+                  cb(this.root.select('.AtchSavePath>input')[0].value,this.root);
+               }}],
+            });
+         },
+
+
          attach:function(cb)
          {
             popModal({class:'CmntAtchPanl'})
@@ -384,18 +422,21 @@ extend(Anon)
                   ]}]},
                   {col:'.CmntAtchList', contents:[{panl:[{b:'Attachments'}]}]},
                ]}]}],
-               foot:[{butn:'', contents:'Done', cb:cb, onclick:function()
+               foot:[{butn:'', contents:'Done', onclick:function()
                {
-                  cb(this.root.select('.CmntAtchList')[0].attached); this.root.exit();
+                  cb(this.root.select('.CmntAtchList')[0].attached||{}); this.root.exit();
                }}],
             });
          },
 
 
-         mkNote:function(g,f)
+         mkCmnt:function(g,f)
          {
-            dump('save comment');
-            dump(g);
+            let dr,mt,af; dr=g.dref; mt=g.select('.DoktCmntMake')[0].value; af=g.select('.DoktCmntAtch')[0].attached;
+            purl('/Task/makeCmnt',{dref:dr,mesg:(mt+'').trim(),atch:af},(r)=>
+            {
+               r=r.body; if(r!=OK){alert(r);return}; f();
+            });
          },
       },
    }

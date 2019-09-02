@@ -79,6 +79,19 @@ namespace Anon;
 
 
 
+# xeno :: showHyperConduit : reveal contents of 1st plug in path, e.g. `/path/to/some.url/file.ext` returns `ftp://example.com/file.ext`
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   xeno::learns('showHyperConduit',function($v,$w=null)
+   {
+      if(!isPath($v)){return;}; $v=crop($v); if(strlen($v)<5){return;}; if((substr($v,-4,4)!=='.url')&&!strpos($v,'.url/')){return;};
+      $s=stub($v,'.url'); $c="$s[0].url"; $p=$s[2]; if(!isee($c)){return;}; $c=rtrim(pget($c),'/'); if(!isPurl($c)){return;};
+      if(!isPath($p)){$p=null;}; $r=knob(['plug'=>$c,'path'=>$p]); if($w){return $r;}; if(!$p){return $c;}; return ($c.$p);
+   });
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
 # tool :: requires : assert or import dependencies
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    class requires

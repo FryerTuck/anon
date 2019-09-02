@@ -19,7 +19,7 @@ $export=function($v)
 
    if(!$nd||$od||$dj){$mh=trim(stub($mh,"#$dr -")[1]);}; $tb=$mo->textBody; $mp=stub($tb,"\r\n>");
    if($mp){$tb=$mp[0];}; $mb=rstub($tb,["\r\n\r\n\r\nOn ","\r\n\r\n","\n\n"]); $mb=($mb?$mb[0]:$tb);
-   $dd=knob(['dref'=>$dr,'nick'=>$fn,'user'=>$un,'mail'=>$fa,'firm'=>$mo->business,'atch'=>$mo->attached]);
+   $dd=knob(['dref'=>$dr,'nick'=>$fn,'user'=>$un,'mail'=>$fa,'dest'=>$mo->destAddy,'firm'=>$mo->business,'atch'=>$mo->attached]);
    if($dj){$dd->tags='dejavu';};
 
    Proc::impede('busy.mail');

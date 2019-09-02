@@ -1,6 +1,5 @@
 # About docket #{:docketID:} - {:mesgHead:}
 
-***
 
 ### Thank you {:fromName:}
 

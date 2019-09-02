@@ -133,9 +133,11 @@ namespace Anon;
 
       static function signal($e=null,$d=null,$t=null)
       {
+         wait(1); // take a breather
          $fc=0; if($e===null){$v=knob($_POST); if($v->evnt){$fc=1; $e=$v->evnt; $d=json_decode(base64_decode($v->data)); $t=$v->trgt;}};
-         if(!is_funnic($e)||self::$meta->hush->$e){return;}; // silence!! i keel yoo
-         if(isAssa($d)||isKnob($d)){$d=knob($d);}; if(($e==='busy')&&self::$meta->hush->{"$e.$d->with"}){return;}; // silence!!
+         if(!is_funnic($e)||self::$meta->hush->$e){return;}; // silence!!
+         if($d===null){$d='!';}elseif(isAssa($d)||isKnob($d)){$d=knob($d);};
+         if(($e==='busy')&&self::$meta->hush->{"$e.$d->with"}){return;}; // silence!! i keel yoo
          $h='/Proc/temp/sesn'; if($t==='*'){$t=pget($h);}elseif($t===null){$t=[acid()];}; $c=0; $f=0;
          // if($d===null){$sn=acid(); $hp="$h/$sn/hook/$e"; if(isee($hp)){$hd=decode::jso($hp); self::enhook($e,$hd->purl,$hd->uniq);return;}};
          if(is_string($t)&&(strlen($t)>1)){$c=$t[0]; $f=substr($t,1);}; if(($c!=='#')&&($c!=='.')){$c=0;}; $w=self::$meta->wait;
@@ -148,7 +150,7 @@ namespace Anon;
 
          if(!is_array($t)){return;}; if(count($t)<1){return;}; $d=encode::jso(['name'=>$e,'data'=>$d]); $s=0;
          foreach($t as $x){$p="$h/$x/emit"; if(!isee($p)){path::make("$p/");}; $n=count(pget($p)); $n++; $p="$p/$n"; path::make($p,$d); $s++;};
-         if($fc){ekko(OK);}; return $s;
+         if($fc){ekko(OK);}; wait(1); return $s;
       }
 
 
@@ -169,8 +171,8 @@ namespace Anon;
 
       static function makeDurl()
       {
-         $v=knob($_POST); $p=$v->purl; if(!$p){ekko(FAIL);}; $l=isPath($p); $r=isPurl($p); if(!$l&&!$r){ekko(FAIL);}; $i=path::info($p);
-         if($l){$p=crop($p); if(!isee($p)){ekko(404);}; ekko(durl($p));};
+         $v=knob($_POST); $p=$v->purl; if(!$p){ekko(FAIL);}; $l=isPath($p); $r=xeno::showHyperConduit($p); if(!$l&&!$r){ekko(FAIL);};
+         $i=path::info($p); if($l){$p=crop($p); if(!isee($p)){ekko(404);}; ekko(durl($p));};
          if(!isin(['ftp','ftps','http','https'],$i->plug)){ekko(501);}; $f=path::leaf($i->path); $m=mime($f); if(!$m){ekko(415);};
 
          if(isin($i->plug,'ftp'))

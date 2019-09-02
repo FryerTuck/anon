@@ -33,6 +33,7 @@ namespace Anon;
    # ------------------------------------------------------------------------------------------------------------------------------------------
       static function dispense()
       {
+         Proc::signal('busy',['with'=>'/Task/dispense','done'=>rand(11,81)]);
          $r=knob(); $uc=sesn('CLAN'); $un=sesn('USER'); $l=path::ogle
          ([
             using => '/Task/data',
@@ -59,7 +60,7 @@ namespace Anon;
             $cd->tico=$f; $l->$tr->comments=knob([$cn=>$cd]);
             $r->$tr=$l->$tr;
          };
-
+         Proc::signal('busy',['with'=>'/Task/dispense','done'=>100]);
          return $r;
       }
    # ------------------------------------------------------------------------------------------------------------------------------------------
@@ -135,6 +136,7 @@ namespace Anon;
             'editTime'=>$t,
             'flagTags'=>($o->tags?$o->tags:''),
             'fromAddy'=>$o->mail,
+            'destAddy'=>$o->dest,
             'fromName'=>$o->nick,
             'fromUser'=>$un,
             // 'handlers'=>'',
@@ -208,6 +210,40 @@ namespace Anon;
          $o=knob($_POST); $h="/Task/data/$o->dref"; unset($o->dref);
          foreach($o as $k => $v){if(!isee("$h/$k")){continue;}; path::make("$h/$k",$v);};
          if(!$o->business){return OK;}; $m=pget("$h/fromAddy"); path::make("/Bill/data/contacts/.index/$m",$o->business);
+         return OK;
+      }
+   # ------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+   # func :: saveAtch : save attachments
+   # ------------------------------------------------------------------------------------------------------------------------------------------
+      static function saveAtch()
+      {
+         $ad=knob($_POST); $fp=$ad->path; $dp=$ad->dest; $xp=xeno::showHyperConduit($dp);
+         if(!$xp){foreach($ad->data as $fn){path::copy("$fp/$fn","$dp/$fn");}; return OK;};
+
+         $i=path::info($xp); $e=0; if(isin($i->plug,'ftp'))
+         {
+            $l=(new ftp($i->host,null,$i->user,$i->pass)); if($l->fail){ekko(FAIL);}; $l->pasv(true); $l->chdir($i->path);
+            if($l->fail){ekko(FAIL);}; foreach($ad->data as $fn){$l->put($fn,path("$fp/$fn"),FTP_BINARY); $e=$l->fail; if($e){$f=$fn;break;}};
+            if(!$e){ekko(OK);}; ekko("failed to save `$f` in `$dp`\n\n$e");
+         };
+      }
+   # ------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+   # func :: makeCmnt : save & send comment made on open docket
+   # ------------------------------------------------------------------------------------------------------------------------------------------
+      static function makeCmnt()
+      {
+         $co=knob($_POST); $dr=$co->dref; $dp="/Task/data/$dr"; $un=user('name'); $co->nick=$un; $co->user=$un;
+         $co->mail=user('mail'); $mh=pget("$dp/mesgHead"); $da=0; $mp=stub($co->mesg,"\n"); $bw=conf('Proc/badWords'); $af=$co->atch;
+         if($mp&&(strpos($mp[0],'#')===0)){$mp[0]=substr(trim($mp[0]),1); if(isMail($mp[0])){$da=$mp[0]; $co->mesg=trim($mp[2]);}};
+         if(span($co->mesg)<2){ekko('invalid message');}; if(isin($co->mesg,$bw)){ekko('try "less crude" words .. sarcasm could be nice ;)');};
+         self::makeNote($co); if(!$da){ekko(OK);}; $fa=pget("$dp/destAddy"); $mh="About docket #$dr - $mh"; requires::stem('Mail');
+         xeno::sendMarkDownMail(['fromAddy'=>$fa,'destAddy'=>$da, 'mesgHead'=>$mh, 'mesgBody'=>$co->mesg, 'attached'=>$af, 'runDebug'=>true]);
          return OK;
       }
    # ------------------------------------------------------------------------------------------------------------------------------------------

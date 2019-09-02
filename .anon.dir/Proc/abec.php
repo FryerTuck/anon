@@ -939,7 +939,7 @@ $zz=(($h==="seen")&&($n==="*seen*"));
             {
                // if(!$o->repo&&(span($repo)>0)){$o->repo=knob(['flag'=>'UN','user'=>$usr->name,'mail'=>$usr->mail,'time'=>$o->time]);};
                $plg=(($fx==='url')?pget($p):null); if(($fx==='url')&&!isPurl($plg)){$o->mime='text/plain'; $plg=null;};
-               if($plg){$o->data=$plg; $o->type='plug';}
+               if($plg){$o->data=[]; $o->type='plug';}
                elseif(isKnob($q->limit)&&($q->limit->data==='fold')){$o->data=null;}else{$o->data=pget($p);};
             }
             elseif(($t==='fold')&&$q&&$q->fetch&&isin($q->fetch,'data'))

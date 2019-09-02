@@ -444,3 +444,36 @@ jobcard
    display:block !important;
    margin-top:4px !important;
 }
+
+
+.AtchSavePanl
+{
+   width:400px !important; min-width:400px !important; max-width:400px !important;
+   min-height:400px !important;
+}
+
+.AtchSaveTree
+{
+   padding:6px !important;
+}
+
+.AtchSavePath
+{
+   height:1px;
+   padding:6px !important;
+}
+
+.AtchSavePath>input
+{
+   display:block;
+   width:100%;
+   position:relative;
+   box-sizing:border-box;
+   font-size:11px !important;
+   line-height:15px !important;
+   border:1px solid hsla(0,0%,65%,1) !important;
+   border-radius:2px !important;
+   background:none;
+   outline:none;
+   padding:3px;
+}

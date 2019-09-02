@@ -26,9 +26,9 @@ namespace Anon;
 
       static function openFile()
       {
-         $v=knob($_POST); $p=$v->path; $x=$v->plug; $v=$v->view;
+         $v=knob($_POST); $p=crop($v->path); $x=xeno::showHyperConduit($p); $v=$v->view;
          if(!$x&&!$v){expect::path($p,[R,F]); ekko::path($p);}; // native edit
-         if(!$x&&$v){expect::path($p,[R,F]); echo durl($p); done();}; // native view
+         if(!$x&&$v){expect::path($p,[R,F]); ekko(durl($p));}; // native view
 
          $r=crud($x)->select('*'); $m=mime($p);
 

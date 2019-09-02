@@ -74,16 +74,15 @@ extend(custom.domtag)
             s=((s=='shut')?'open':'shut'); i=((s=='open')?'down':'right');
             this.fold[p]=s; n.select('.treeTwigArro i')[0].className=('icon-chevron-'+i);
             n.select('>').style.display=((s=='open')?'block':'none');
-            if((n.info.type=='plug')&&!n.info.plug){n.info.plug=n.info.data;};
-            if(!n.info.plug){return}; if(s!='open'){return};
+            if(n.info.type!='plug'){return;}; if(s!='open'){return};
 
             l=n.info.levl; d=(!!n.draggable); r=n.info.repo; if(r){r=r.fork}; f=n.select('>'); f.innerHTML='';
             Busy.edit('/User/plugMenu',0);
-            purl('/User/plugMenu',{purl:n.info.plug},(r)=>
+            purl('/User/plugMenu',{path:n.info.path},(r)=>
             {
                r=decode.jso(r.body); r.each((v)=>
                {
-                  v.plug=(n.info.plug+'/'+v.name); v.root=n.info.root;
+                  v.path=(n.info.path+v.path); v.root=n.info.root;
                   f.insert(n.info.root.sprout(v,l,d,r));
                });
                Busy.edit('/User/plugMenu',100);

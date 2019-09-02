@@ -1053,6 +1053,7 @@
 
          rsl.exit=function(){if(this.ticker){clearInterval(this.ticker)}; this.signal('exit'); tick.after(60,()=>{this.remove()})};
          document.body.appendChild(rsl); (rsl.select('butn')||[]).forEach((b)=>{b.root=rsl}); rsl.select('.shut')[0].root=rsl;
+         (rsl.select('treeview')||[]).forEach((b)=>{b.main=rsl});
       },
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------
