@@ -43,7 +43,7 @@ namespace Anon;
             if(!strpos($i,'.php(')){continue;}; $y=explode('.php(',$i); $p=crop($y[0]); $p=(explode(' ',$p)[1].'.php'); $y=$y[1];
             $y=explode('): ',$y); $l=($y[0]*1); $y=crop($y[1]); $y=explode('(',$y); $f=$y[0]; $f=ltrim($f,'Anon\\');
             if(($p[0]==='.')||(in_array($f,['{closure}','call_user_func_array','dbug::stak']))){continue;};
-            $b[]=json_decode(json_encode(['func'=>$f,'file'=>$p,'line'=>$l])); $y=null;
+            $b[]=json_decode(json_encode(['func'=>$f,'file'=>crop($p),'line'=>$l])); $y=null;
          };
          if(($n===null)&&($x===null)){return $b;}; $y=0;
          foreach($b as $i => $o){if(($i===$x)||($o->func===$n)){$y=1; continue;}; if($y){$r[]=$o;};}; if(count($r)>0){return $r;}; return $b;

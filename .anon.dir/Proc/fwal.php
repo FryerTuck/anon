@@ -51,7 +51,7 @@ namespace Anon;
 
 
 
-# cond :: bots : a nasty bot should hide as fake user-agent and misuse `Disallow` in `/robots.txt` .. let's not disappoint them .. for now
+# cond :: bots : a nasty bot could spoof user-agent-string and misuse `Disallow` in `/robots.txt` .. let's not disappoint them .. for now
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    if(NAVIPATH==='/robots.txt')
    {
@@ -60,9 +60,10 @@ namespace Anon;
       if(!headers_sent()){header_remove();}; while(ob_get_level()){ob_end_clean();}; // remove any tosh
       header('HTTP/1.1 200 OK'); header('Content-Type: text/plain'); // send expected headers
       header('Expires: Jan 1999 23:59 GMT'); // don't cache, asking nicely
-      print_r($b); flush(); die(); // serve assembled `robots.txt`
+      print_r($b); flush(); done(); // serve assembled `robots.txt`
    };
 # ---------------------------------------------------------------------------------------------------------------------------------------------
+
 
 
 # cond :: bots : if a bot violates our permissions, we serve them a mouthful of ... trash -or nothing .. you can edit this in badRobot config
@@ -70,6 +71,19 @@ namespace Anon;
    if(tref(sha1(USERADDR.envi('USER_AGENT')))) // check if this is the bot that wanted the robots.txt a few seconds ago
    {
       $b=pget('/Proc/temp/file/robots.txt'); $b.="\n"; $l=expose($b,'Disallow: ',"\n"); // get list of bot-forbidden paths
-      foreach($l as $i){if(akin(NAVIPATH,rtrim($i,'$'))){kbot();};}; // really? - eat this! .. and stay out! .. for conf/kbanSecs they get 503
+      foreach($l as $i){if(akin(NAVIPATH,rtrim($i,'$'))){kbot();};}; // really? - eat this! .. and stay out! .. for conf/kbanSecs echo 503
+      unset($b,$l,$i);
+   };
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+# cond :: sesn : change the value of the boot cookie
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   if(facing('GUI')&&(NAVIPATH==='/Proc/base.js')&&(kuki(sesn('HASH'))!=='...'))
+   {
+      $v='...'; kuki(sesn('HASH'),$v); $r=import(NAVIPATH); $m=mime(NAVIPATH);
+      while(ob_get_level()){ob_end_clean();}; header("Content-Type: $m");
+      echo($r); done();
    };
 # ---------------------------------------------------------------------------------------------------------------------------------------------

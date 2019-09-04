@@ -84,8 +84,8 @@ namespace Anon;
       {
          $l=array_keys($_COOKIE); if(count($l)<1){ekko(OK);}; $t='/^[a-z0-9]{40}$/'; $h='/Proc/temp/sesn';
          Time::logEvent(user('name'),$c=user('clan'),'API');
-         foreach($l as $i){if(!test($i,$t)){continue;}; setcookie($i,null,-1,'/',HOSTNAME); void("/Proc/temp/sesn/$i");};
-         ekko(OK);
+         foreach($l as $i){if(!test($i,$t)){continue;}; kuki($i,null); unset($_COOKIE[$i]); void("/Proc/temp/sesn/$i");};
+         done(OK);
       }
 
 

@@ -45,6 +45,7 @@ namespace Anon;
 
          foreach($l as $tr => $td)
          {
+            $bn=$td->business; if(!$bn){$bn=find::firmByMail($td->fromAddy); $td->business=$bn;};
             $wc=$td->withClan; if(!is_array($wc)){$wc=explode(',',$wc);}; if(!isin($uc,$wc)){continue;}; $tt=isin($wc,'test');
             $wu=$td->withUser; $rc=pick($wc,['geek','draw','mind']);
             if(!$tt&&($un!==$wu)&&($wu!=='')){continue;}; // jobcard is work in progress with another user
@@ -209,7 +210,7 @@ namespace Anon;
       {
          $o=knob($_POST); $h="/Task/data/$o->dref"; unset($o->dref);
          foreach($o as $k => $v){if(!isee("$h/$k")){continue;}; path::make("$h/$k",$v);};
-         if(!$o->business){return OK;}; $m=pget("$h/fromAddy"); path::make("/Bill/data/contacts/.index/$m",$o->business);
+         if($o->business===null){return OK;}; $m=pget("$h/fromAddy"); path::make("/Bill/data/contacts/.index/$m",$o->business);
          return OK;
       }
    # ------------------------------------------------------------------------------------------------------------------------------------------

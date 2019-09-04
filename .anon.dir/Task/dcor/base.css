@@ -6,10 +6,16 @@
    overflow:auto;
 }
 
+#TaskPanlSlab .slabMenuBody
+{
+   position:relative;
+   min-width:320px;
+}
+
 #TaskPanlSlab .slabMenuBody>panl
 {
+   position:absolute;
    padding:10px;
-   min-width:320px;
 }
 
 #TaskPanlSlab .slabMenuBody>panl:focus

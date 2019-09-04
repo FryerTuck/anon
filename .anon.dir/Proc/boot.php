@@ -323,6 +323,36 @@ namespace Anon;
 
 
 
+# func :: (buffer) : shorthands to manage output buffer
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   function bufrVoid()
+   {
+      if(ob_get_level()<1){return;};
+      while(ob_get_level()>0){ob_end_clean();};
+   }
+
+   function bufrSend()
+   {
+      if(ob_get_level()<1){return;};
+      while(ob_get_level()>0){ob_end_flush();};
+      flush();
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+# func :: done : exit process
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   function done($sb=true)
+   {
+      defn(['HALT'=>1]); if($sb===true){bufrSend(); die();}; if(($sb===null)||($sb===false)||($sb==='')){bufrVoid(); die();};
+      if(!is_string($sb)){$sb=tval($sb);}; if(!headers_sent()){header('Content-Type: text/plain');};
+      echo $sb; bufrSend(); die();
+   };
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 # tool :: lock
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    class lock
@@ -393,13 +423,14 @@ namespace Anon;
    function sesn($a=null)
    {
       $u=defn('SESNUSER'); $h=defn('SESNHASH'); if(($a==='USER')&&$u){return $u;};  if(($a==='HASH')&&$h){return $h;};
-      $d="/Proc/temp/sesn"; $l=pget($d); if(count($l)>9999){defn('HALT',1); header('HTTP/1.1 429 Too Many Sessions'); die();}; // flood protect
+      $d="/Proc/temp/sesn"; $l=pget($d); if(count($l)>9999){defn('HALT',1); header('HTTP/1.1 429 Too Many Sessions'); done();}; // flooding
       $t=time(); if(!$h) // new -or resume session
       {
          $h=acid(); $ns=0; if(!$h){$ns=1; $h=sha1(random(6).microtime(true).envi('USERADDR').getmypid().random(6));}; $p="$d/$h";
-         if(!isee($p)){pset("$p/USER",'anonymous'); setrawcookie($h,'...',0,'/',HOSTNAME);}; $u=pget("$p/USER");
+         if(!isee($p)){pset("$p/USER",'anonymous');}; $u=pget("$p/USER");
          $c=pget("/User/data/$u/clan"); defn(['SESNHASH'=>$h, 'SESNUSER'=>$u, 'SESNCLAN'=>$c]); $i=envi('INTRFACE');
-         if(($i!=='SSE')&&($i!=='DPR')){$o=pget("$p/TIME"); if(!$o){$o=$t;}; $y=($t-$o); pset("$p/TIME",$t); if(!$ns){pset("$p/BSEC",$y);}};
+         if(($u!=='anonymous')&&($i!=='SSE')&&($i!=='DPR'))
+         {$o=pget("$p/TIME"); if(!$o){$o=$t;}; $y=($t-$o); pset("$p/TIME",$t); if(!$ns){pset("$p/BSEC",$y);}};
       }
       else
       {$u=defn('SESNUSER'); $c=defn('SESNCLAN'); $p="$d/$h";}; // current session
@@ -430,14 +461,17 @@ namespace Anon;
 
 # func :: guiStrap : make & send boot cookie
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   function guiStrap()
+   function guiStrap($u=null,$sc=1)
    {
-      $h=sesn('HASH'); $v=knob(['WACKMESG'=>base64_encode(pget('/Proc/hack.inf'))]); $p='/Proc/aard.js'; $d=[];
+      $h=sesn('HASH'); $v=knob(['WACKMESG'=>base64_encode(pget('/Proc/hack.inf'))]); $p='/Proc/aard.js'; $d=[]; if(!$u){$u=sesn('USER');};
+      $v->SESNUSER=$u; $v->SESNCLAN=pget("/User/data/$u/clan");
+      foreach($_COOKIE as $cn => $cv){if(test($cn,'/^[a-z0-9]{40}$/')&&($cn!==$h)){kuki($cn,VOID);}};
       $c=pget('/User/data/master/pass'); if(!$c){wack();}; if(password_verify('0m1cr0n!',$c)){$d[]='editRootPass';};
       $c=pget('/Proc/conf/autoMail'); if(!isin($c,'mail://')||!isin($c,'@')||!isin($c,'.')){$d[]='confAutoMail';}; // debug automail
-      $r=base64_encode(tval($d));
-      $v->badCfg=$r; $c=import($p,$v); $c=base64_encode(strrev($c)); $f="after encoding, `$p` exceeds maximum cookie size of 4093 bytes";
-      if(span($c)>4093){fail::usage($f);}; setrawcookie($h,$c,0,'/',HOSTNAME);
+      $r=base64_encode(tval($d)); $v->badCfg=$r; $c=import($p,$v); $c=base64_encode(strrev($c)); $m=4093;
+      $f="after encoding, `$p` exceeds maximum cookie size of $m bytes"; if(span($c)>$m){fail::usage($f);};
+      // if(facing('GUI')&&MADEFUBU){ekko('gotcha bitch');};
+      if($sc){kuki($h,$c);return true;}; return $c;
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -453,34 +487,33 @@ namespace Anon;
 
 
 
+
 # dbug :: temp : housekeeping - delete old temp-files .. create temp folders if undefined .. remove stale sessions, locks, refs, etc.
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    $dbs=(pget('/User/conf/inactive')*1); $ldb=(pget('/Proc/dbug.inf')*1); $tmn=time();
 
    if(($tmn-$ldb)>$dbs)
    {
-      $h='/Proc/temp'; $x=['file','kban','lock','refs','sesn'];  $cln=user('clan');
+      $h='/Proc/temp'; $x=['file','kban','lock','refs','sesn'];  $cln=user('clan'); $hsh=sesn('HASH');
 
       foreach($x as $d)
       {
          if(!is_dir("$h/$d")){pset("$h/$d/");}; $l=pget("$h/$d"); foreach($l as $i)
          {
-            if(aged("$h/$d/$i")<=($dbs+2)){continue;}; if($d!=='sesn'){void("$h/$d/$i"); continue;};
-            $t=(pget("$h/$d/$i/TIME")*1); if((($tmn-$t)>($dbs+2))&&isin($cln,['work','sudo']))
-            {
-               $x=acid(); void("$h/$d/$i"); setcookie($x,null,-1,'/',envi('HOST'));
-               if(facing('GUI')){$p=envi('URI'); header("Location: $p"); defn(['HALT'=>1]); die();}
-               else{ekko::head(408,false);};
-            };
+            if(aged("$h/$d/$i")<=($dbs+2)){continue;}; if($d!=='sesn'){void("$h/$d/$i"); continue;}; // non-session related
+            $t=(pget("$h/$d/$i/TIME")*1); $dif=($tmn-$t); if($dif<$dbs){continue;}; // session is still active .. don't do anything
+            if($dif>($dbs+2)){void("$h/$d/$i");}; // stale sessions
+            if($i!==$hsh){continue;}; if(!facing('GUI')){kuki($x,null); ekko::head(408,false);};
+            acid(); done();
          };
-         unset($l,$i,$t);
+         unset($l,$i,$t,$dif);
       };
 
       if(facing('GUI'))
       {
          if(!isee('/Proc/conf/hostName')){pset('/Proc/conf/hostName',HOSTNAME);};
       };
-      unset($h,$x,$d,$cln);
+      unset($h,$hsh,$d,$cln);
 
       if(isRepo('/'))
       {
@@ -500,21 +533,15 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    require(path('/Proc/fwal.php')); // essential security .. right of passage through "the pass"
 
-   if(facing('GUI')&&(NAVIPATH==='/Proc/base.js')&&($_COOKIE[(sesn('HASH'))]!=='...'))
-   {
-      setrawcookie(sesn('HASH'),'...',0,'/',HOSTNAME); $r=import(NAVIPATH); $m=mime(NAVIPATH); header("Content-Type: $m");
-      while(ob_get_level()){ob_end_clean();}; defn(['HALT'=>1]); echo($r); exit;
-   }
-
    if(facing('GUI'))
    {
-      ekko::head(200); ekko::head(['cache'=>false]); guiStrap(); // send bootStrap headers
-      finish('/Proc/aard.htm',['botHoney'=>conf('Proc/badRobot')->lure],NOEXIT); die(); // dbug browser capabilities and trap clever bots
+      guiStrap();
+      //ekko::head(['Referrer-Policy'=>'origin','cache'=>false,'cookies'=>true]); // send bootStrap headers
+      $r=import('/Proc/aard.htm',['botHoney'=>conf('Proc/badRobot')->lure]); echo($r); done(); // send BootStrap GUI keeping headers intact
    };
 
-   // if((envi('METHOD')==='POST')&&facing('DPR')&&(NAVIPATH==='/')){finish('/Proc/aard.htm',$_POST);};
    if((envi('METHOD')==='POST')&&facing('API')){$d=file_get_contents('php://input'); if(wrapOf($d)==='{}')
-   {$d=json_decode($d); foreach($d as $k => $v){$_POST[$k]=$v;}}};
+   {$d=json_decode($d); foreach($d as $k => $v){$_POST[$k]=$v;}}; unset($d,$k,$v);};
 
    defn(['AUTOMAIL'=>pget('/Proc/conf/autoMail')]); // needed
 # ---------------------------------------------------------------------------------------------------------------------------------------------

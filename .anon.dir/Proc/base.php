@@ -142,7 +142,7 @@ namespace Anon;
    {
       static function nbx($d,$b)
       {
-         if($b===64){if(!isText($d)){$d=texted($d);}; return base64_encode($d);};
+         if($b===64){if(!isText($d)){$d=tval($d);}; return base64_encode($d);};
          if(!isNumr($d)||isin($d,'.')||($d<1)){fail::base_convert('expecting positive integer');};
          if(!is_int($b)||(($b%2)!==0)||($b>62)){fail::base_convert("invalid encoding base");};
          return gmp_strval(gmp_init($d,10),$b);
@@ -235,9 +235,9 @@ namespace Anon;
 
       static function firmByMail($a)
       {
-         if(!isText($a,1)){return;}; $r=pget("/Bill/data/contacts/.index/$a"); if($r){return $r;}; $u=self::userByMail($a);
-         $c=pget("/User/data/$u/clan"); if(isin($c,['work','lead','sudo'])){$r=conf('Bill/firmName'); return $r;};
-         $r='Undefined Company Name'; path::make("/Bill/data/contacts/.index/$a",$r); return $r;
+         if(!isText($a,1)){return;}; $r=pget("/Bill/data/contacts/.index/$a"); if($r){return $r;}; $r='Unknown Company Name';
+         $u=self::userByMail($a); $c=pget("/User/data/$u/clan"); if(isin($c,['work','lead','sudo'])){$r=conf('Bill/firmName');};
+         path::make("/Bill/data/contacts/.index/$a",$r); return $r;
       }
 
       static function firmByTask($a)
@@ -374,12 +374,11 @@ namespace Anon;
    function ekko($v,$e=null,$m=null)
    {
       if(!headers_sent()){header_remove();}; while(ob_get_level()){ob_end_clean();}; $r=tval($v);
-      if(!is_funnic($e)){$e='text';};
-      if(facing('SSE')&&envi('SSEREADY')){$r=base64_encode($r); print_r("event: $e\ndata: $r\n\n"); flush(); return;}; // server-side event
+      if(!is_funnic($e)){$e='text';}; if(facing('SSE')){Proc::emit($e,$r); return;}; // server-side event
 
-      header('HTTP/1.1 200 OK');
+      if(facing('API')&&MADEFUBU){ekko::head(['cookies'=>true]);};
 
-      if(facing('GUI')){sesn('USER'); if(!$m&&(wrapOf($r)==='<>')){$m='html';}};
+      if(facing('GUI')){if(!$m&&(wrapOf($r)==='<>')){$m='html';}};
 
       if(USERMIME==='application/json')
       {
@@ -445,36 +444,56 @@ namespace Anon;
       {
          if(is_int($a))
          {
-            $c=conf('Proc/httpCode'); $m=$c->$a; if(!$m){$a=501; $m=$c->$a;};
-            if(!headers_sent()){header_remove();}; while(ob_get_level()){ob_end_clean();}; self::$stat=1;
-            if(facing('SSE')&&envi('SSEREADY'))
-            {$r=base64_encode("$a - $m"); print_r("event: status\ndata: $r\n\n"); flush(); if($nx){return;}; exit;};
+            $c=conf('Proc/httpCode'); $m=$c->$a; if(!$m){$a=501; $m=$c->$a;}; $hs=headers_sent();
+            if(!$hs){header_remove();}; while(ob_get_level()){ob_end_clean();}; self::$stat=1;
+
+            if(facing('SSE')){Proc::emit('status',"$a - $m"); if($nx){return;}; done();};
 
             header("HTTP/1.1 $a $m");
 
-            if(facing('API')){$v=conf('/Proc/corsFrom'); header("Access-Control-Allow-Origin: $v");};
-            if(facing('GUI')){header("X-Frame-Options: SAMEORIGIN");}; if($nx){return;}; defn(['HALT'=>1]); die();
+            if(facing('API'))
+            {
+               $v=conf('/Proc/corsFrom'); header("Access-Control-Allow-Origin: $v");
+               // header("Access-Control-Allow-Credentials: true");
+               // header("Access-Control-Expose-Headers: Lokomotionz");
+               // header("Access-Control-Allow-Headers: Lokomotionz");
+            };
+
+            if(facing('GUI')){header("X-Frame-Options: SAMEORIGIN");};
+
+            if($nx){return;}; done();
          };
 
          if(is_assoc_array($a)){$a=knob($a);}; if(!is_object($a)){return;}; if(!self::$stat){self::head(200);};
-         if(!$a->Interface){$a->Interface=envi('INTRFACE');};
-         if($a->cache!==null){$c=$a->cache; unset($a->cache); if(!$c) // kill it, burn it, hurl the ashes to the sun in a sealed capsule
+         if(!$a->Interface){$a->Interface=envi('INTRFACE');}; if(($a->cache===null)&&facing('API')){$a->cache=false;};
+
+         if($a->cache!==null){$c=$a->cache; unset($a->cache);
+         if(!$c) // kill it, burn it, hurl the ashes to the sun in a sealed capsule
          {
             header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
             header("Cache-Control: post-check=0, pre-check=0",false);
             header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
             header("Pragma: no-cache"); // HTTP/1.0
             header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
-         }};
-         foreach($a as $k => $v){header("$k: $v");}; if($nx){return;}; die();
+         }}; unset($c);
+
+         if($a->cookies!==null){$c=$a->cookies; unset($a->cookies);
+         if($c)
+         {
+            if(isAssa($c)){$c=knob($c);}elseif(!isKnob($c)){$c=knob();}; $ec=knob($_COOKIE); $sh=sesn('HASH');
+            foreach($c as $cn => $cv){if($ec->$cn!==$cv){$ec->$cn=$cv; if(!$hs){kuki($cn);}}};
+            $a->Cookies=base64_encode(encode::jso($ec));
+         }}; unset($c);
+
+         foreach($a as $k => $v){header("$k: $v");}; if($nx){return;}; done();
       }
 
 
       static function path($a,$nx=null)
       {
          $p=expect::path($a,R); $x=path::type($p); $m=mime($x); if(!$m){fail("no mime-type configured for extension `$x`");};
-         if($x!=='fold'){self::head(['Content-Type'=>$m]); readfile($p); exit;}; // regular file
-         todo('serve folders');
+         if($x!=='fold'){self::head(['Content-Type'=>$m]); readfile($p); done();}; // regular file
+         todo('ekko.path :: serve folders');
       }
 
 
@@ -553,42 +572,6 @@ namespace Anon;
    {
       if($a===null){return [];}; if(!isNuma($a)){return [$a];}; if(!isset($a[0])){return [];};
       if(isNuma($a[0])){return $a[0];}; return $a;
-   };
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-
-# func :: (buffer) : shorthands to manage output buffer
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-   function bufrVoid()
-   {
-      if( @ob_get_level() < 1 ){return;};
-      while( @ob_get_level() > 0)
-      {
-         @ob_end_clean();
-      };
-   }
-
-   function bufrSend()
-   {
-      if( @ob_get_level() < 1 ){return;};
-      while( @ob_get_level() > 0)
-      {
-         @ob_flush();
-      };
-      @flush();
-   }
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-
-# func :: done : exit process
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-   function done($sb=1)
-   {
-      if($sb){bufrSend();}else{bufrVoid();}; defn(['HALT'=>1]); exit;
    };
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 

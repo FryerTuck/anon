@@ -15,11 +15,11 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    select('body')[0].insert
    ([
-      {view:'#anonMarkView', style:'overflow:hidden; opacity:0.1', contents:
+      {view:'#anonMarkView .full', style:'overflow:hidden; opacity:0.1', contents:
       [
          // {img:'.cenmid', src:'/Proc/dcor/mark.svg'}
       ]},
-      {view:'#anonMainView'},
+      {view:'#anonMainView .full'},
       {view:'#anonPanlView .hide'},
       {view:'#anonModlView .hide'},
       {view:'#anonNoteView .hide'},

@@ -14,16 +14,17 @@ extend(repl)
       repl.mumble('verifying ...');
       purl('/User/runRepel/login',{args:['login',s.un,s.pw]},(r,b)=>
       {
-         s.un=VOID; s.pw=VOID; b=r.body;
-         if(b!=':OK:') // login failed
+         s.un=VOID; s.pw=VOID; b=r.body; if(b!=':OK:') // login check
          {
             repl.mumble(b); repl.ENV.target='exec'; f.modify({type:'text'}); f.modify({value:''}); // notify & reset
             p.modify({innerHTML:('['+sesn('USER')+'&nbsp;'+repl.PWD+']')}); return;  // reset mechanism
          };
-         repl.noprom();
-         repl.mumble('access granted'); repl.mumble('refreshing ...'); // notify the user what's happening
+
+         let sh=sesn('HASH'); let cv=r.head.Cookies[sh]; Cookies.set(sh,cv,{path:'/'});
+         repl.noprom(); repl.mumble('access granted'); repl.mumble('refreshing ...'); // notify the user what's happening
          window.onbeforeunload=null;
-         tick.after(750,()=> // wait for DOM to settle then reboot GUI
+
+         tick.after(500,()=> // wait for DOM to settle then reboot GUI
          {
             newGui();
          });

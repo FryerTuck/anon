@@ -57,7 +57,8 @@ extend(custom.domtag)
 
    treeview:function(n,a,c)
    {
-      n.setAttribute('tabindex',-1); n.tabindex=-1; n.events=(a.listen||a.events||{}); delete a.listen; delete a.events;
+      n.setAttribute('tabindex',-1); n.tabindex=-1;
+      if(!!a.events){n.events=a.events; delete a.events}else if(!!a.listen){n.events=a.listen; delete a.listen}else{n.events={}};
 
       if(!n.events.dragover){n.events.dragover=function(){this.enclan('dragOver');};};
       if(!n.events.dragleave){n.events.dragleave=function(){this.declan('dragOver');};};
@@ -74,7 +75,7 @@ extend(custom.domtag)
             s=((s=='shut')?'open':'shut'); i=((s=='open')?'down':'right');
             this.fold[p]=s; n.select('.treeTwigArro i')[0].className=('icon-chevron-'+i);
             n.select('>').style.display=((s=='open')?'block':'none');
-            if(n.info.type!='plug'){return;}; if(s!='open'){return};
+            if((n.info.type!='plug')&&!isin(n.info.path,'.url/')){return;}; if(s!='open'){return};
 
             l=n.info.levl; d=(!!n.draggable); r=n.info.repo; if(r){r=r.fork}; f=n.select('>'); f.innerHTML='';
             Busy.edit('/User/plugMenu',0);

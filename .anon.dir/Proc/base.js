@@ -16,8 +16,12 @@
       {
          exists:function(b,v){v=Cookies.get(b); return isVoid(v);},
          create:function(b,a,c,d){Cookies.set(b,btoa(JSON.stringify(a)),{expires:c||null,path:d||"/"}); return true;},
-         select:function(b,v){v=Cookies.get(b); if(!isVoid(v)){try{v=JSON.parse(atob(v))}catch(e){v=null}; return v}},
          delete:function(b,a){return Cookies.remove(b,{path:a||"/"})},
+         select:function(b, r,v,t)
+         {
+            if(b=='*'){b=VOID}; r=Cookies.get(b); if(isVoid(r)){return}; if((b==VOID)){try{v=JSON.parse(atob(r))}catch(e){v=r}; return v};
+            r.each((v,k)=>{try{t=JSON.parse(atob(v))}catch(e){t=v}; r[k]=t;}); return r;
+         },
       }
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------
@@ -119,9 +123,8 @@
 
       cb=o.listen.loadend; delete o.listen.loadend; o.listen.loadend=function() // event done
       {
-         let r={path:this.purl,head:dval(this.getAllResponseHeaders()),body:this.response};
-         // if(wrapOf(r.body)=='<>'){r.body=xdom(r.body);};
-         if(!this.done){this.done=0};
+         let h=dval(this.getAllResponseHeaders()); if(h.Cookies){h.Cookies=decode.jso(decode.b64(h.Cookies))};
+         let r={path:this.purl,head:h,body:this.response}; if(!this.done){this.done=0};
          if((this.status==200)&&(this.done<100)){pe(100,this.purl);if(this.busy){Busy.edit(this.purl,100)};};
          if(x.silent){tick.after(250,()=>{delete server.silent.busy})};
          cb(r);
@@ -129,7 +132,9 @@
 
       if(o.silent){server.silent.busy=1};
       if(!o.method){o.method='POST'}; if(!o.expect){o.expect='text'}; if(!isKnob(o.header)){o.header={}}; // method, responseType, headerOBJ
-      if(!o.header.INTRFACE){o.header.INTRFACE='API'}; x=(new XMLHttpRequest()); x.open(o.method,o.target); x.responseType=o.expect;
+      if(!o.header.INTRFACE){o.header.INTRFACE='API'}; x=(new XMLHttpRequest()); x.open(o.method,o.target);
+      // x.withCredentials=true;
+      x.responseType=o.expect;
       x.purl=o.target; o.listen.each((v,k)=>{x.addEventListener(k,v)}); o.header.each((v,k)=>{x.setRequestHeader(k,v)}); // events, headers
       x.silent=o.silent; tick.after(500,()=>{if(x.done&&(x.done>99)){return}; x.busy=(x.silent?0:1)}); // show busy if true
       x.send((isKnob(o.convey)?encode.JSON(o.convey):VOID)); // dispatch request
@@ -735,8 +740,11 @@
       {
          let c,l,a,slf; slf=this; c=(slf.className||'').trim(); l=(c?c.split(' '):[]); a=listOf(arguments); a.forEach((v,k)=>
          {
-            v=ltrim(v,'.'); if(!isin(l,v)){l.push(v);
-            if(v=='holdSpanSize'){slf.parentNode.style.position='relative'; slf.style.position='absolute'; slf.resizeTo(slf.parentNode)}}
+            v=ltrim(v,'.'); if(!isin(l,v))
+            {
+               l.push(v);
+               // if(v=='holdSpanSize'){slf.parentNode.style.position='relative'; slf.style.position='absolute'; slf.resizeTo(slf.parentNode)};
+            }
          });
          this.className=l.join(' ');
       },
@@ -893,8 +901,8 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const holdSpanSize = function(h, l)
    {
-      l=select('.holdSpanSize',h); if(!l){return};
-      l.forEach((n)=>{let p=n.parentNode; p.style.position='relative'; n.style.position='absolute'; n.resizeTo(p)});
+      // l=select('.holdSpanSize',h); if(!l){return};
+      // l.forEach((n)=>{let p=n.parentNode; p.style.position='relative'; n.style.position='absolute'; n.resizeTo(p)});
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -1080,12 +1088,12 @@
 
       resizeTo:function(tgt, slf)
       {
-         slf=this; if(isText(tgt)){tgt=select(tgt,slf);}; expect({node:tgt});
-         wait.until(()=>{return (!!tgt.parentNode)},()=>
-         {
-            let i,w,h; i=tgt.getBoundingClientRect(); w=Math.ceil(i.width); h=Math.ceil(i.height); slf.width=w; slf.height=h;
-            slf.setStyle({width:w, height:h, minWidth:w, minHeight:h, maxWidth:w, maxHeight:h});
-         });
+         // slf=this; if(isText(tgt)){tgt=select(tgt,slf);}; expect({node:tgt});
+         // wait.until(()=>{return (!!tgt.parentNode)},()=>
+         // {
+         //    let i,w,h; i=tgt.getBoundingClientRect(); w=Math.ceil(i.width); h=Math.ceil(i.height); slf.width=w; slf.height=h;
+         //    slf.setStyle({width:w, height:h, minWidth:w, minHeight:h, maxWidth:w, maxHeight:h});
+         // });
       },
    });
 
@@ -1119,7 +1127,8 @@
       fire:function(n,t, p)
       {
          p=path(n.src||n.href); if((!p&&(t!='script'))||(t=='a')){tick.after(10,()=>
-         {let q='holdSpanSize'; if(isin(n.className,q)){tick.after(160,()=>{n.declan(q); n.enclan(q)})}; n.signal('ready')});return}; // nodes without a path
+         {n.signal('ready')});return}; // nodes without a path
+         // {let q='holdSpanSize'; if(isin(n.className,q)){tick.after(160,()=>{n.declan(q); n.enclan(q)})}; n.signal('ready')});return}; // nodes without a path
          n.purl=p; n.listen('load',ONCE,function(){this.done=100; tick.after(50,()=>{n.signal('ready')});}); // emit `ready` after onload
          n.listen('error',function(){this.fail=1; if(!this.done){return}; Busy.tint('red'); Busy.edit(this.purl,100);}); // onfail
          tick.after(750,()=>{if(n.done||Busy.jobs[p]){return}; n.waiting=function(j,s,t){this.done=1; s=this; t=setInterval(()=> // wait
@@ -1136,10 +1145,10 @@
 
 // evnt :: resize : listen on window resize
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   window.listen('resize',function()
-   {
-      holdSpanSize();
-   });
+   // window.listen('resize',function()
+   // {
+   //    holdSpanSize();
+   // });
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 

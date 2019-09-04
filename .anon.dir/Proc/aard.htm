@@ -6,6 +6,7 @@
       <style>
          html,body{position:relative; height:100%; overflow:hidden; padding:0px; margin:0px; background-color:#2e3133;}
          #snth{display:inline-block; position:absolute; width:320px; height:240px; top:-500px; left:-500px; overflow:hidden;}
+         iframe{display:block; width:100%; height:100%; border:none; background:transparent; margin:0px; padding:0px;}
       </style>
 
       <script>
@@ -25,24 +26,25 @@
             };
 
             window.addEventListener('error',n.ondone,true); n.appendChild(document.createTextNode(x));
-            n.id='dbug'; document.head.appendChild(n); setTimeout(n.ondone,10);
+            n.id='dbug'; document.head.appendChild(n); setTimeout(n.ondone,1);
          };
 
 
          window.isModern.t=setInterval(function()
          {
             if(!document.getElementById('nojs')){return;}; clearInterval(window.isModern.t); // wait for document to load
-            setTimeout(function(k,v,q,m,p,x,n,d)
+            setTimeout(function(k,v,q,m,p,x,n,d,y,f,c,a,z)
             {
-               q=function(s){return s.split('^').join('').split('').reverse().join('')};m=this;
-               p=document.getElementById('nojs').innerHTML.split('URL=')[1].split('"')[0];
-               x=function(u){window.location.href=(p+'?#'+u);}; isModern(function(yes){if(!yes){x('lcjs')}else
+               q=function(s){return s.split('^').join('').split('').reverse().join('')}; d=document; c='createElement'; a='appendChild';
+               p=d.getElementById('nojs').innerHTML.split('URL=')[1].split('"')[0]; m=this; d.body.innerHTML='';
+               f=function(w){z=d[c]('iframe'); z.setAttribute('frameborder',0); d.body[a](z); z.src=(p+'?#'+w);};
+               isModern(function(yes){if(!yes){f('lcjs')}else
                {
-                  v=(document[q('e^iko^oc')]+'').split(';')[0]; if(!v){x('kuki');return}; k=v.substr(0,v.indexOf('='));
-                  n=document.createElement('script'); n.appendChild(document.createTextNode(q(m[q('bot^a')](v.split(k+'=').join('')))));
-                  document.body.innerHTML=''; delete window.isModern; document.head.appendChild(n);
+                  v=(d[q('e^iko^oc')]+'').split('; ').pop(); if(!v){f('kuki');return}; k=v.substr(0,v.indexOf('='));
+                  v=v.split(k+'=').join(''); try{v=m[q('bot^a')](v)}catch(e){console.error('boot fail\n\n'+btoa(v)); f('auto'); return};
+                  n=d[c]('script'); n[a](d.createTextNode(q(v))); delete window.isModern; d.head[a](n);
                }});
-            },300); // wait for evasive snth to misbehave
+            },250); // wait for evasive snth to misbehave
          },10);
       </script>
    </head>

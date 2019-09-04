@@ -51,7 +51,7 @@
       $x=array('X','HTTP','REDIRECT','REQUEST'); for($i=0; $i<$s; $i++)
       {
          $k=$l[$i]; if(!isset($v[$k])){$w=array_values($x); do{$p=(array_shift($w)."_$k"); if(isset($v[$p])){$k=$p;break;}}while(count($w));};
-         if(!isset($v[$k])){continue;}; $q=$v[$k]; if(is_int($q)||is_float($q)){$q="$q";}; if(is_string($q)&&(strlen($q)>0)){$f[$i]=$q;}
+         if(!isset($v[$k])){continue;}; $q=$v[$k]; if($q&&!is_string($q)){$q=json_encode($q);}; if(is_string($q)&&(strlen($q)>0)){$f[$i]=$q;}
       };
       $c=count($f); if($s===1){if($c<1){return '';}; return $f[0];}; $r=($c/$s); return $r;
    }
@@ -193,15 +193,29 @@
 
 
 
+# func :: kuki : get/set/rip raw session-only cookie at host root without hassle .. 1 arg = get .. 2 args = set .. returns null if invalid
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   function kuki($k,$v='<:(/*\):>')
+   {
+      if(!is_string($k)){return;}; if(strlen($k)!==strlen(trim($k))){return;}; // validate cookie-name
+      if($v==='<:(/*\):>'){if(!isset($_COOKIE[$k])){return;}; return $_COOKIE[$k];}; // get
+      if(($v==='')||($v===':VOID:')){$v=null;}; if($v===null){setcookie($k,$v,-1,'/',envi('HOST')); unset($_COOKIE[$k]);}; // delete
+      setrawcookie($k,$v,0,'/',envi('HOST')); $_COOKIE[$k]=$v; return true; // set
+   };
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 # func :: acid : returns authorised cookie ID
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function acid($new=null)
    {
       $l=array_keys($_COOKIE); if(count($l)<1){return;}; $r=null; $t='/^[a-z0-9]{40}$/'; $c=envi('COREPATH'); $h="$c/Proc/temp/sesn";
       $n=null; do{$n=array_pop($l); if(!test($n,$t)){$n=null; continue;}; $p=is_dir("$h/$n"); if($p){$r=$n;break;}}while(count($l));
-      $u=null; if($r&&$n){$u=pget("$h/USER");}; if($u==='anonymous'){unset($_COOKIE[$r]); $r=null; $n=null;};
-      if($r){return $r;}; if(!$n){return;}; if(!$new){return;}; usleep(10000); $h=envi('SERVER_NAME'); if(!$h){$h=envi('HOST');};
-      setcookie($n,null,-1,'/',$h); $p=envi('URI'); header("Location: $p"); die();
+      $u=null; if($r&&$n){$u=pget("$h/USER");}; //if($u==='anonymous'){unset($_COOKIE[$r]); $r=null; $n=null;};
+      if($r){return $r;}; return;
+      // if(!$n){return;}; if(!$new){return;}; usleep(10000); kuki($n,null); $p=envi('URI');
+      // header('Referrer-Policy: no-referrer'); header("Location: $p"); define('HALT',1); die();
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -234,7 +248,7 @@
       elseif(!is_writable(isee('/Proc/temp/sesn'))){$c=417; $m='Expectation Failed - writable temp.sesn'; $f=__FILE__; $l=__LINE__;}
       else
       {
-         if(!$h){$h=sha1(random(6).$t.envi('USERADDR').getmypid().random(6)); pset("/Proc/temp/sesn/$h/.user",$u); setcookie($h,$v,0,'/',$d);}
+         if(!$h){$h=sha1(random(6).$t.envi('USERADDR').getmypid().random(6)); pset("/Proc/temp/sesn/$h/.user",$u); kuki($h,$v);}
          else{$u=pget("/Proc/temp/sesn/$h/.user");}; if(isee("/User/data/$u/clan")){$k=pget("/User/data/$u/clan");};
       };
 
@@ -350,7 +364,7 @@
    elseif(isset($_POST['INTRFACE'])&&$_SERVER['MADEFUBU']){$i=$_POST['INTRFACE'];}
    elseif((($m==='application/json')&&($x!=='json'))||(($m==='text/plain')&&($x!=='txt'))){$i='API';}
    elseif($_SERVER['MADEFUBU']&&($_SERVER['USERDEED']==='insert')){$i='API';}
-   elseif($s&&$k&&($_COOKIE[$k]==='...')){$i='DPR';}else{$i='GUI';};
+   elseif($s&&$k&&(kuki($k)==='...')){$i='DPR';}else{$i='GUI';};
 
    if(($p===envi('DBUGPATH'))&&($i!=='BOT')){$i='DPR';};
 

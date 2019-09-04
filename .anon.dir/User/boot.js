@@ -57,7 +57,7 @@
                   purl(('/User/readNote/'+c),(r)=>
                   {
                      r=('\n'+r.body+'\n\n'); repl.mumble(r); let h=r.split('\n').length; select('#AnonReplPanl').scrollTop=0;
-                     if(h<9){return}; h=((h+1)*16); select('#AnonReplView').style.height=(h+'px');
+                     if(h<9){return}; h=((h+1)*16); select('#AnonReplPanl').parentNode.style.height=(h+'px');
                   });
                });
             });
@@ -91,7 +91,7 @@
       {
          popModal('Idle :: Your session is about to expire.',obj.time)
          ([
-            {"good :: I'm still here":function(){this.root.exit()}},
+            {"good :: I'm here":function(){this.root.exit()}},
          ])
          .listen
          ({
@@ -124,11 +124,25 @@
    window.onbeforeunload=function(e)
    {
       navigator.sendBeacon('/User/doLogout','1');
-      server.stream.close();
+      server.stream.close(); cookie.delete(sesn('HASH'));
       return true;
    };
 
+   // document.addEventListener('visibilitychange',function()
+   // {
+   //    if(document.visibilityState=='unloaded'){navigator.sendBeacon('/User/doLogout','1'); server.stream.close();};
+   // });
 
+   (function()
+   {
+      (cookie.select('*')||{}).each((v,k)=>{if(!test(k,/^[a-z0-9]{40}$/)){return}; if(k!=sesn('HASH')){cookie.delete(k)};});
+   }());
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// evnt :: (keys) : hotkeys
+// --------------------------------------------------------------------------------------------------------------------------------------------
    listen('Control r',function()
    {
       window.onbeforeunload=null; newGui();
@@ -140,10 +154,4 @@
       if(e.signal=='Control F5'){return;}; e.preventDefault(); e.stopPropagation();
       window.onbeforeunload=null; newGui();
    });
-
-
-   // document.addEventListener('visibilitychange',function()
-   // {
-   //    if(document.visibilityState=='unloaded'){navigator.sendBeacon('/User/doLogout','1'); server.stream.close();};
-   // });
 // --------------------------------------------------------------------------------------------------------------------------------------------

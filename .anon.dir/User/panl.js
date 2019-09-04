@@ -7,22 +7,22 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    requires(['/User/dcor/aard.css','/User/dcor/icon.fnt','/User/dcor/code.fnt','/User/dcor/head.fnt','/User/dcor/butn.fnt'],()=>
    {
-      if(userDoes('work')){select('#anonPanlView').style.height='100%'};
+      select('#anonPanlView').enclan((userDoes('work')?'full':'part'));
       select('#anonPanlView').insert
       ([
-         {grid:('#AnonMainGrid'), style:('width:100%;'+(userDoes('work')?' height:100%':' height:10px; position:absolute; bottom:0px')), contents:
+         {grid:'#AnonMainGrid', contents:
          [
-            {row:'', forClans:'work', contents:
+            {row:'#MainGridRow1', forClans:'work', contents:
             [
-               {col:'', style:'position:relative; width:100%', contents:
+               {col:'#MainGridCol1', contents:
                [
                   {panl:'#AnonMainPanl', contents:
                   [
-                     {grid:'', style:'width:100%; height:100%', contents:
+                     {grid:'#AnonAppsGrid', contents:
                      [
                         {row:'', style:'height:100%', contents:
                         [
-                           {col:'#AnonAppsMenu', style:'height:100%', contents:(function()
+                           {col:'#AnonAppsMenu', contents:(function()
                            {
                               var mods={:(mods):}; var btns=[];
                               mods.each((v,k)=>{btns.push({butn:('#'+k+'MenuKnob .AnonMainButn .icon-'+v), title:k, listen:
@@ -37,7 +37,7 @@
                                     if(evnt.type=='keydown'){this.enclan('AnonButnWarn');return}; this.declan('AnonButnWarn');
                                  },
                                  'LeftClick':function(evnt){AnonMenu.init(this.id,evnt.ctrlKey)},
-                              }});}); return btns;
+                              }});}); return [{div:[btns]}];
                            }())},
                            {col:'.panlVertDlim', style:'height:100%',  contents:{vdiv:''}},
                            {col:'#AnonAppsDeck', style:'height:100%', contents:[{panl:'#AnonAppsView'}]},
@@ -46,13 +46,14 @@
                   ]},
                ]}
             ]},
-            {row:
+            {row:'#MainGridRow2', contents:
             [
-               {col:'.panlHorzDlim', role:'gridFlex', axis:Y, contents:{hdiv:''}},
+               {col:'#MainGridCol2 .panlHorzDlim', role:'gridFlex', axis:Y, contents:{hdiv:''}},
             ]},
-            {row:
+            {row:'#MainGridRow3', contents:
             [
-               {col:'#AnonReplView', listen:{flex:function(){(select('.holdSpanSize')||[]).forEach((n)=>{n.resizeTo('^')});}}, contents:
+               // {col:'#AnonReplView', listen:{flex:function(){(select('.holdSpanSize')||[]).forEach((n)=>{n.resizeTo('^')});}}, contents:
+               {col:'#MainGridCol3', contents:
                [
                   {panl:'#AnonReplPanl', onmouseup:function(){select('#AnonReplFeed').focus()}, contents:
                   [

@@ -352,10 +352,10 @@ extend(Anon)
 
          config:
          {
-            save:function(m, l,o,j)
+            save:function(m, l,o,j,k,v)
             {
-               l=m.select('.TaskDoktConf')[0].select('input'); o={}; o.dref=m.info.docketID; j=select('#JC'+o.dref);
-               l.forEach((n)=>{if(n.inival==n.value){return}; o[n.placeholder]=n.value; j.info[n.placeholder]=n.value});
+               l=m.select('.TaskDoktConf')[0].select('input'); o={}; o.dref=m.info.docketID; j=select('#JC'+o.dref); l.forEach((n)=>
+               {v=n.value;k=n.placeholder; if(n.inival==v){return}; if((k=='business')&&!v){v='Unknown Company Name'}; o[k]=v; j.info[k]=v});
                purl('/Task/saveConf',o,(r)=>
                {
                   if(r.body!=OK){console.error(r.body);alert(r.body);};

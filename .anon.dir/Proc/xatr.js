@@ -38,6 +38,7 @@ extend(custom.attrib)
             this.flxVrs.opos=[cursor.posx,cursor.posy]; this.flxVrs.lpos=[cursor.posx,cursor.posy];
             let b=this.flxVrs.trgt.getBoundingClientRect(); this.flxVrs.odim=[b.width,b.height]; let i=(new Image());
             i.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs='; e.dataTransfer.setDragImage(i,0,0);
+            e.dataTransfer.setData(null,null); // firefox bein' a dick
          },false);
 
          n.addEventListener('drag',function(e)
@@ -62,8 +63,8 @@ extend(custom.attrib)
 
    onflex:function(v,n,a)
    {
-      window.listen('resize',function(){this.trgt.signal('flex');}.bind({trgt:n}));
-      n.listen('flex',v); return TRUE;
+      // window.listen('resize',function(){this.trgt.signal('flex');}.bind({trgt:n}));
+      // n.listen('flex',v); return TRUE;
    },
 
 

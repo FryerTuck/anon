@@ -15,11 +15,11 @@ $export=function($v)
 
    $nd=0; $od=0; $dj=0; $mh=$mo->mesgHead; $dr=expose($mh,'#',' -'); if($dr){$dr=$dr[0]; if(!test($dr,'/^[a-zA-Z0-9]{12}$/')){$dr=null;}};
    if(!$dr){$nd=1; $dr=gudref('/Task/data',12);}else{$od=isee("/Task/data/$dr"); if(!$od){$nd=1;$dj=1;}}; $fa=$mo->fromAddy; $fn=$mo->fromName;
-   if($fn){$fn=frag($fn,' ')[0];}else{$fn=stub($um,'@')[0]; $fn=frag($fn,'.')[0];}; $un=find::userByMail($fa);
+   if($fn){$fn=frag($fn,' ')[0];}else{$fn=stub($um,'@')[0]; $fn=frag($fn,'.')[0];}; $un=find::userByMail($fa); $ft='xenoMail';
 
    if(!$nd||$od||$dj){$mh=trim(stub($mh,"#$dr -")[1]);}; $tb=$mo->textBody; $mp=stub($tb,"\r\n>");
    if($mp){$tb=$mp[0];}; $mb=rstub($tb,["\r\n\r\n\r\nOn ","\r\n\r\n","\n\n"]); $mb=($mb?$mb[0]:$tb);
-   $dd=knob(['dref'=>$dr,'nick'=>$fn,'user'=>$un,'mail'=>$fa,'dest'=>$mo->destAddy,'firm'=>$mo->business,'atch'=>$mo->attached]);
+   $dd=knob(['dref'=>$dr,'nick'=>$fn,'user'=>$un,'mail'=>$fa,'dest'=>$mo->destAddy,'firm'=>$mo->business,'tags'=>$ft,'atch'=>$mo->attached]);
    if($dj){$dd->tags='dejavu';};
 
    Proc::impede('busy.mail');

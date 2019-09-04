@@ -8,6 +8,8 @@
       bottom:0px;
       box-shadow:0px 0px 5px hsla(0,0%,0%,0.5);
    }
+   #anonPanlView.part
+   {top:auto !important; bottom:0px !important;}
 
    #AnonAppsView .panlHorzDlim {opacity:0.9;}
    #AnonAppsView .panlHorzLine {opacity:0.9;}
@@ -18,15 +20,41 @@
 
 
 
-/* Anon :: Main : Panl
+/* Anon :: Main : grid
 /* ----------------------------------------------------------------------------------------------------------------------------------------- */
+   #AnonMainGrid
+   {
+      position:relative;
+      width:100%; height:100%;
+      background:hsla(210,3%,16%,1);
+      user-select:none;
+   }
+
+   #MainGridRow1 {}
+   #MainGridCol1 {position:relative;}
+
+   #MainGridRow2 {height:5px;}
+   #MainGridCol2 {height:5px;}
+
+   #MainGridRow3 {height:100px;}
+   #MainGridCol3
+   {
+      height:100px;
+      vertical-align:top;
+   }
+
    #AnonMainPanl
    {
       position:absolute;
-      width:100%; height:100%;
-      background:hsla(210,3%,16%,1);
+      width:100%; height:100% !important;
       overflow:hidden;
       user-select:none;
+   }
+
+   #AnonAppsGrid
+   {
+      position:relative;
+      width:100% !important; height:100% !important;
    }
 /* ----------------------------------------------------------------------------------------------------------------------------------------- */
 
@@ -37,8 +65,15 @@
 /* ----------------------------------------------------------------------------------------------------------------------------------------- */
    #AnonAppsMenu
    {
-      width:44px;
+      position:relative;
+      width:46px; height:100%;
       user-select:none;
+   }
+   #AnonAppsMenu>div
+   {
+      position:absolute;
+      width:66px; height:100%;
+      overflow:auto;
    }
 /* ----------------------------------------------------------------------------------------------------------------------------------------- */
 
@@ -47,15 +82,17 @@
 
 /* Anon :: Main : View
 /* ----------------------------------------------------------------------------------------------------------------------------------------- */
-   #AnonAppsView
+   #AnonAppsDeck
    {
-      width:100%; height:100%; overflow:hidden;
-      background:hsla(210,3%,16%,0.95);
+      position:relative;
    }
 
-   #anonPanlView>grid
+   #AnonAppsView
    {
-      width:100%; height:100%;
+      position:absolute !important;
+      width:100% !important; height:100% !important;
+      background:hsla(210,3%,16%,0.95);
+      overflow:hidden !important;
    }
 /* ----------------------------------------------------------------------------------------------------------------------------------------- */
 
@@ -64,15 +101,6 @@
 
 /* Anon :: Repl
 /* ----------------------------------------------------------------------------------------------------------------------------------------- */
-   #AnonReplView
-   {
-      width:100%; height:100px;
-      background:hsla(210,0%,6%,1);
-      font-family:'code';
-      font-size:16px;
-      vertical-align:top;
-   }
-
    #AnonReplPanl
    {
       width:100% !important; height:100% !important;
@@ -330,20 +358,15 @@
       font-size:16px !important;
       line-height:18px !important;
    }
-   .treeMenuView treeview
-   {
-      margin-top:4px;
-   }
 
-   treetwig:focus
+   .treeMenuView treetwig:focus
    {
       background:hsla(0,0%,100%,0.05);
    }
 
-   .treeTwigText input
+   .treeMenuView .treeTwigText input
    {
       color:hsla(0,0%,85%,1);
-      font-size:16px !important;
    }
 /* ----------------------------------------------------------------------------------------------------------------------------------------- */
 

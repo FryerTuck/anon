@@ -128,7 +128,7 @@ extend(MAIN)
             {
                r=('\n'+r.body+'\n\n'); repl.mumble(r); select('#AnonReplPanl').scrollTop=0;
                let h=r.split('\n').length; if(h<9){return}; h=((h+1)*16); let m=Math.ceil((rectOf(document.body).height/4)*3);
-               if(h>m){h=m}; select('#AnonReplView').style.height=(h+'px');
+               if(h>m){h=m}; select('#AnonReplPanl').parentNode.style.height=(h+'px');
             });
             return;
          };

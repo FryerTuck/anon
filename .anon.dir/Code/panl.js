@@ -19,13 +19,13 @@ select('#AnonAppsView').insert
                [
                   {row:[{col:'.slabMenuHead', contents:'code'}]},
                   {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
-                  {row:[{col:'.slabMenuBody', contents:[{panl:'#CodeTreeView'}]}]},
+                  {row:[{col:'#CodeTreeView .slabMenuBody', contents:[{panl:'#CodeTreePanl'}]}]},
                ]}
             ]},
-            {col:'.panlVertDlim', contents:[{vdiv:''}]},
+            {col:'.panlVertDlim', role:'gridFlex', axis:X, target:'<', contents:{vdiv:''}},
             {col:
             [
-               {grid:'.holdSpanSize', contents:
+               {grid:'#CodeMainGrid', contents:
                [
                   {row:[{col:'#CodeHeadView .slabViewHead', contents:
                   [
@@ -36,7 +36,7 @@ select('#AnonAppsView').insert
                   [
                      {grid:'#CodeViewGrid', contents:
                      [
-                        {row:'#CodeBodyView', contents:[{col:[{panl:'#CodeBodyPanl .holdSpanSize'}]}]},
+                        {row:'#CodeBodyView', contents:[{col:[{panl:'#CodeBodyPanl'}]}]},
                         {row:'#CodeToolView', contents:[{col:[{panl:'#CodeToolWrap', contents:
                         [
                            {grid:
@@ -75,7 +75,7 @@ extend(Anon)
       {
          select('#CodeTabber').closeAll((tv)=>
          {
-            tv=select('#CodeTreeView').select('treeview');
+            tv=select('#CodeTreePanl').select('treeview');
             if(tv){tv[0].remove()}; tick.after(60,cbf);
          });
       },
@@ -84,32 +84,11 @@ extend(Anon)
 
       init:function(ea, dir,tmr)
       {
-         ea=(ea||{}); this.vars.external=ea; dir=(ea.treePath||'/User/treeMenu');
-         tmr=Anon.Code.conf.beatTime; if(!isNumr(tmr)||isFrac(tmr)||(tmr<100)){fail('invalid beatTime .. expecting INT >= 100');return};
+         ea=(ea||{}); this.vars.external=ea; dir=(ea.treePath||'/User/treeMenu'); tmr=Anon.Code.conf.beatTime;
+         if(!isNumr(tmr)||isFrac(tmr)||(tmr<100)){fail('invalid beatTime .. expecting INT >= 100');return};
 
 
-         select('#CodeTabber').listen('close',function(e)
-         {
-            let drv=e.detail.driver; let tgt=e.detail.target; tgt.head.hijacked=1;
-            Anon.Code.shut(drv,tgt);
-         });
-
-
-         select('#CodeTabber').listen('focus',function(e, bfr)
-         {
-            bfr=VOID; wait.until
-            (
-               ()=>
-               {
-                  bfr=(e.detail.target.body.select('.CodeEditBufr')||e.detail.target.body.select('.CodeViewBufr'));
-                  return ((span(bfr)>0)&&(span(bfr[0].vars)>0))
-               },
-               ()=>{Anon.Code.info(bfr[0])}
-            );
-         });
-
-
-         select('#CodeTreeView').insert
+         select('#CodeTreePanl').insert
          ([
             {treeview:'#CodeTreeMenu', source:dir, uproot:true, initVars:ea.initVars, listen:
             {
@@ -139,21 +118,23 @@ extend(Anon)
             {
                let upd=0; if(rm.select('#Path'+sha1(v.path))){upd=1};
                if(upd){select('#CodeTreeMenu').update();};
-            });return}; // .. so if there is no "repo" in the tree, then the code below is ignored
+            })};
 
             select('#CodePanlSlab').listen('Control f',(evnt)=>
             {
-               evnt.preventDefault(); evnt.stopPropagation(); evnt.stopImmediatePropagation(); let od=rectOf(select('#CodeBodyPanl'));
-               let vg,bv,tv,gs,bs,ts,hd; vg=select('#CodeBodyView'); bv=select('#CodeBodyView'); tv=select('#CodeToolView');
-               if(isin(tv.className,'show')){tv.declan('show'); bv.setStyle({height:od.height}); holdSpanSize(); return};
-               gs=rectOf(vg); bs=rectOf(bv); tv.enclan('show'); ts=rectOf(tv); hd=(bs.height-ts.height);
-               bv.setStyle({height:hd}); bv.childNodes[0].setStyle({height:hd}); holdSpanSize();
-               return;
+               let tvrw=select('#CodeToolView'); if(isin(tvrw.className,'show')){tvrw.declan('show');return}; tvrw.enclan('show'); // togl
+               let tlbx=select('#CodeToolPanl');
+               // evnt.preventDefault(); evnt.stopPropagation(); evnt.stopImmediatePropagation(); let od=rectOf(select('#CodeBodyPanl'));
+               // let vg,bv,tv,gs,bs,ts,hd; vg=select('#CodeBodyView'); bv=select('#CodeBodyView'); tv=select('#CodeToolView');
+               // if(isin(tv.className,'show')){tv.declan('show'); bv.setStyle({height:od.height}); holdSpanSize(); return};
+               // gs=rectOf(vg); bs=rectOf(bv); tv.enclan('show'); ts=rectOf(tv); hd=(bs.height-ts.height);
+               // bv.setStyle({height:hd}); bv.childNodes[0].setStyle({height:hd}); holdSpanSize();
+               // return;
             });
 
             select('#CodePanlSlab').listen('Control Shift S',()=>
             {
-               let inf=select('#CodeTreeMenu').select('.isRepo')[0].info;
+               let inf=select('#CodeTreeMenu').select('.isRepo')[0]; if(!inf){return}; inf=inf.info;
                let drv=select('#CodeTabber').driver; let tab=drv.active; let bfr={saved:1};
                if(tab){bfr=tab.body.select('.CodeEditBufr')[0]}; let nfo=encode.jso((bfr.info||{}));
                Anon.Code.save(bfr,()=>
@@ -170,10 +151,31 @@ extend(Anon)
 
             server.listen('repoUpdate',(v)=>
             {
-               let upd=0; select('#CodeTreeMenu').select('.isRepo').each((n)=>
+               let upd=0; (select('#CodeTreeMenu').select('.isRepo')||[]).each((n)=>
                {if(n.info.repo.head.fork==v.fork){upd=1; return STOP}}); if(!upd){return};
                select('#CodeTreeMenu').update();
             });
+         });
+
+
+         select('#CodeTabber').listen('close',function(e)
+         {
+            let drv=e.detail.driver; let tgt=e.detail.target; tgt.head.hijacked=1;
+            Anon.Code.shut(drv,tgt);
+         });
+
+
+         select('#CodeTabber').listen('focus',function(e, bfr)
+         {
+            bfr=VOID; wait.until
+            (
+               ()=>
+               {
+                  bfr=(e.detail.target.body.select('.CodeEditBufr')||e.detail.target.body.select('.CodeViewBufr'));
+                  return ((span(bfr)>0)&&(span(bfr[0].vars)>0))
+               },
+               ()=>{Anon.Code.info(bfr[0])}
+            );
          });
 
 
@@ -203,21 +205,21 @@ extend(Anon)
                      [{col:'.CodeGutrNumr',contents:[]},{col:'.CodeGutrTint',contents:[]}]}]}
                   ]}]},
                   {col:'.CodeEditHpad'},
-                  {col:'.CodeEditHold', contents:[{panl:'.CodeEditPanl .holdSpanSize', contents:
+                  {col:'.CodeEditHold', contents:[{panl:'.CodeEditWrap', contents:[{panl:'.CodeEditPanl', contents:
                   [
                      {pre:('.CodeEditBase .language-'+mime), contents:[{code:('.CodeEditDeck .language-'+mime)}]},
                      {div:'.CodeEditCrsr'},
                      {textarea:'.CodeEditBufr', tab:ttl, path:p, info:nfo, hash:sha1(r.body), value:r.body, spelling:spel,
                         time:(beat*3), typing:FALS,
                      },
-                  ]}]},
+                  ]}]}]},
                ]}]}]}]},
             ]}]});
 
             tab=tabr.select(ttl,0); bfr=tab.body.select('.CodeEditBufr')[0]; bin=bfr.parentNode; bin.dime=rectOf(bin);
             tab.body.select('.CodeEditPanl')[0].listen('scroll',function()
             {
-               this.select('^^').select('.CodeGutrBase')[0].style.top=((0-this.scrollTop)+'px');
+               this.select('^3').select('.CodeGutrBase')[0].style.top=((0-this.scrollTop)+'px');
             });
 
             bfr.base=select('<<',bfr); bfr.seek=select('<',bfr);
