@@ -223,12 +223,13 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const dump = function()
    {
-      let m,a,t,f,x; m=('dump stack size of '+this.mkb+'Kb exceeded'); a=([].slice.call(arguments)); a.forEach((i)=>
+      let m,a,t,f,x,n,d; m=('dump stack size of '+this.mkb+'Kb exceeded'); a=([].slice.call(arguments)); a.forEach((i)=>
       {
-         t=tval(i); this.ckb+=(t.length/1024); f=(this.ckb>this.mkb); x=(f?m:i); console[(f?'error':'log')](x);
+         n=time(); d=(n-this.old); t=tval(i); this.ckb+=(t.length/1024); f=(this.ckb>this.mkb); if(f){this.ckb=0; this.old=n;};
+         if(f&&(d>5)){console.clear(); f=0}; x=(f?m:i); console[(f?'error':'log')](x);
          MAIN.dispatchEvent((new CustomEvent('dump',{detail:x})));
       });
-   }.bind({ckb:0,mkb:64});
+   }.bind({ckb:0,mkb:64,old:0});
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -761,14 +762,15 @@
             pars.readAsDataURL(data);
          },
 
-         JSON:function(data)
+         JSON:function(data,nofail, r)
          {
+            r=VOID; if(nofail){try{r=JSON.parse(data);}catch(e){r=VOID}; return r;};
             return JSON.parse(data);
          },
 
-         jso:function(data)
+         jso:function(d,f)
          {
-            return JSON.parse(data);
+            return this.JSON(d,f);
          },
 
          b64:function(s){return atob(s);},

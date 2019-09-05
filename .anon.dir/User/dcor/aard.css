@@ -31,15 +31,19 @@
    }
 
    #MainGridRow1 {}
-   #MainGridCol1 {position:relative;}
+   #MainGridCol1
+   {
+      position:relative;
+   }
 
-   #MainGridRow2 {height:5px;}
+   /* #MainGridRow2 {height:5px;} */
    #MainGridCol2 {height:5px;}
 
-   #MainGridRow3 {height:100px;}
+   /* #MainGridRow3 {height:100px;} */
    #MainGridCol3
    {
-      height:100px;
+      position:relative;
+      height:100px; min-height:0.1px;
       vertical-align:top;
    }
 
@@ -103,6 +107,7 @@
 /* ----------------------------------------------------------------------------------------------------------------------------------------- */
    #AnonReplPanl
    {
+      position:absolute;
       width:100% !important; height:100% !important;
       padding:5px; overflow:auto !important;
       font-family:"code";

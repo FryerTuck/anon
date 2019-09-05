@@ -52,7 +52,6 @@
             ]},
             {row:'#MainGridRow3', contents:
             [
-               // {col:'#AnonReplView', listen:{flex:function(){(select('.holdSpanSize')||[]).forEach((n)=>{n.resizeTo('^')});}}, contents:
                {col:'#MainGridCol3', contents:
                [
                   {panl:'#AnonReplPanl', onmouseup:function(){select('#AnonReplFeed').focus()}, contents:
@@ -150,7 +149,8 @@
    listen('key:Esc',function(evnt)
    {
       if(Busy.node){Busy.kill(); return};
-      let mdl = select('modal'); if(mdl){vals(mdl,-1).exit();return};
+      let mnu=select('#AnonDropMenu'); if(mnu){remove(mnu);return};
+      let mdl=select('modal'); if(mdl){vals(mdl,-1).exit();return};
       AnonPanl.hide();
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------

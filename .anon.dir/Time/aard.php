@@ -12,7 +12,7 @@ namespace Anon;
 
       static function __init()
       {
-         if(!isin(NAVIPATH,'/getTools.js')){return;}; $h='/Time/tool'; $l=pget($h);
+         if(!isin(NAVIPATH,'/Time/getTools.js')){return;}; $h='/Time/tool'; $l=pget($h);
          $r="\"use strict\";\n\n"; foreach($l as $i){$s=pget("$h/$i"); $r.="$s\n\n\n";};
          ekko::head(['Content-Type'=>mime('js')]); echo $r; defn(['HALT'=>1]); exit;
       }

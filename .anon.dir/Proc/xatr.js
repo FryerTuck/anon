@@ -39,6 +39,7 @@ extend(custom.attrib)
             let b=this.flxVrs.trgt.getBoundingClientRect(); this.flxVrs.odim=[b.width,b.height]; let i=(new Image());
             i.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs='; e.dataTransfer.setDragImage(i,0,0);
             e.dataTransfer.setData(null,null); // firefox bein' a dick
+// dump('drag init');
          },false);
 
          n.addEventListener('drag',function(e)
@@ -47,6 +48,7 @@ extend(custom.attrib)
             cx=cursor.posx; cy=cursor.posy; ox=fv.opos[0]; oy=fv.opos[1]; lx=lp[0]; ly=lp[1]; ow=fv.odim[0]; oh=fv.odim[1];
             ax=fv.axis; mx=(ax==X); my=(ax==Y); if(cx===lx){mx=VOID;}; if(cy===ly){my=VOID;};
             if((ax==X)&&!mx){return}; if((ax==Y)&&!my){return}; mv=(mx?((cx<lx)?L:R):((cy<ly)?U:D));
+// dump('drag move');
             bd=tn.getBoundingClientRect(); cw=bd.width; ch=bd.height; // box dimensions
             pd=((mv==U)?(ly-cy):((mv==D)?(cy-ly):((mv==L)?(lx-cx):(cx-lx)))); // pixel difference
 

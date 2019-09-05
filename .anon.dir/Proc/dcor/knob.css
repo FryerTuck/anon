@@ -54,34 +54,89 @@
 
 
 
-/* clan :: dropMenu
+/* clan :: dropmenu
 /* ----------------------------------------------------------------------------------------------- */
-   .dropMenu
+   dropmenu
    {
-      display:inline-block;
-      position:absolute;
+      display:inline-block; position:absolute; box-sizing:border-box;
       z-index:99999998;
       text-align:left;
       color:#BBB;
       background-color:hsla(210,3%,18%,1);
-      border:1px solid #5e6163;
+      border:1px solid hsla(210,3%,28%,1);
       border-radius:2px;
-      box-shadow:0px 0px 12px hsla(0,0%,0%,0.2);
+      box-shadow:0px 0px 1px hsla(0,0%,0%,0.4), 0px 0px 4px hsla(0,0%,0%,0.3), 0px 0px 20px hsla(0,0%,0%,0.2);
    }
 
-   .dropMenuItem
+   item
    {
-      min-width:200px;
-      padding:2px;
-      padding-left:7px;
-      font-size:12px;
-      line-height:18px;
-      cursor:default;
+      display:block; position:relative; box-sizing:border-box;
+      margin:0px;
    }
-   .dropMenuItem:hover
+
+   dropmenu>h1
+   {
+      display:block !important; position:relative !important; box-sizing:border-box !important;
+      min-width:120px !important; max-width:400px !important;
+      padding:6px !important;
+      margin:0px !important;
+      font-size:11px !important;
+      font-weight:bold;
+      line-height:11px !important;
+      color:hsla(0,0%,60%,1);
+      white-space:nowrap !important;
+      background-color:hsla(210,3%,15%,1);
+      cursor:default !important;
+   }
+
+   dropmenu>h1>icon
+   {
+      font-size:16px !important; line-height:16px !important;
+      margin-right:8px !important;
+   }
+
+   dropmenu>h1>div
+   {
+      display:inline-block !important;
+      padding-top:3px;
+   }
+
+   dropmenu>item
+   {
+      min-width:120px !important; max-width:400px !important;
+      padding:2px !important;
+      padding-top:4px !important;
+      padding-left:6px !important;
+      padding-right:12px !important;
+      font-size:12px !important;
+      line-height:18px !important;
+      white-space:nowrap !important;
+      overflow:hidden !important;
+      cursor:default !important;
+   }
+
+   dropmenu>item:hover
    {
       background-color:#3e4143;
       color:#EEE;
+   }
+
+   dropmenu>line
+   {
+      display:block !important; position:relative !important; box-sizing:border-box !important;
+      height:1px !important; min-height:1px !important; max-height:1px !important;
+      border-left:none !important; border-right:none !important;
+      border-top:1px solid hsla(210,3%,8%,1) !important;
+      border-bottom:1px solid hsla(210,3%,22%,1) !important;
+      padding:0px !important; margin:0px !important;
+   }
+
+   dropmenu>item>icon
+   {
+      font-size:16px !important;
+      line-height:16px !important;
+      padding:0px !important;
+      margin:0px !important;
    }
 /* ----------------------------------------------------------------------------------------------- */
 
@@ -393,6 +448,7 @@
       /* text-shadow:0px 0px 1px hsla(0,0%,0%,1), 0px 0px 1px hsla(0,0%,0%,1), 0px 0px 1px hsla(0,0%,0%,1), 0px 0px 2px hsla(0,0%,0%,1), 0px 0px 2px hsla(0,0%,0%,1); */
       text-shadow:0px 0px 1px hsla(0,0%,0%,0.3), 0px 0px 1px hsla(0,0%,0%,0.3), 0px 0px 1px hsla(0,0%,0%,0.3);
       user-select:none;
+      cursor:default !important;
    }
 
    .treeTwigArro
@@ -428,6 +484,7 @@
       user-select:none !important;
       cursor:inherit !important;
       -webkit-font-smoothing: antialiased !important;
+      pointer-events:none;
    }
 
    treeTwig.dragOver

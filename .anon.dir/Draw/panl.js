@@ -18,23 +18,29 @@ select('#AnonAppsView').insert
                {grid:
                [
                   {row:[{col:'.slabMenuHead', contents:'draw'}]},
-                  {row:[{col:'.panlHorzLine', contents:{hdiv:''}}]},
-                  {row:[{col:'.slabMenuBody', contents:{panl:'#DrawTreeMenu'}}]},
+                  {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
+                  {row:[{col:'#DrawTreeView .slabMenuBody', contents:[{panl:'#DrawTreePanl'}]}]},
                ]}
             ]},
-            {col:'.panlVertDlim', contents:{vdiv:''}},
+            {col:'.panlVertDlim', role:'gridFlex', axis:X, target:'<', contents:{vdiv:''}},
             {col:
             [
-               {grid:
+               {grid:'#DrawMainGrid', contents:
                [
-                  {row:[{col:'#DrawHeadView .slabViewHead', contents:[{tabber:'#DrawTabber', tabStyle:'.tabsDark', target:'#DrawBodyPanl'}]}]},
-                  {row:[{col:'.panlHorzLine', contents:{hdiv:''}}]},
-                  {row:[{col:'.slabViewBody', contents:{grid:[{row:
+                  {row:[{col:'#DrawHeadView .slabViewHead', contents:
                   [
-                     {col:'#DrawBodyView', contents:[{panl:'#DrawBodyPanl'}]},
-                     {col:'.panlVertLine', contents:[{vdiv:''}]},
-                     {col:'#DrawToolView', contents:[{panl:'#DrawToolPanl'}]},
-                  ]}]}}]},
+                     {tabber:'#DrawTabber', tabStyle:'.tabsDark', target:'#DrawBodyPanl'}
+                  ]}]},
+                  {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
+                  {row:[{col:'.slabViewBody', contents:
+                  [
+                     {grid:'#DrawViewGrid', contents:[{row:
+                     [
+                        {col:'#DrawBodyView', contents:[{panl:'#DrawBodyPanl'}]},
+                        {col:'.panlVertLine', contents:[{vdiv:''}]},
+                        {col:'#DrawToolView', contents:[{panl:'#DrawToolPanl'}]},
+                     ]}]}
+                  ]}]},
                ]}
             ]},
          ]}
@@ -66,9 +72,13 @@ extend(Anon)
 
       init:function(slf)
       {
-         select('#DrawTabber').listen('close',function(e){this.ignore('close'); Anon.Draw.shut(e.detail.driver,e.detail.target)});
+         select('#DrawTabber').listen('close',function(e)
+         {
+            let drv=e.detail.driver; let tgt=e.detail.target; tgt.head.hijacked=1;
+            Anon.Draw.shut(drv,tgt);
+         });
 
-         select('#DrawTreeMenu').insert
+         select('#DrawTreePanl').insert
          ([
             {treeview:'', source:'/Draw/treeMenu', uproot:true, draggable:true, listen:
             {
@@ -93,7 +103,7 @@ extend(Anon)
                select('#DrawToolPanl').insert({butn:('#AnonDrawButn'+k+' .AnonToolButn .icon-'+v.icon), title:swap(k,'_',' ')});
             });
 
-            select('#DrawBodyPanl').listen(['keydown','keyup','mousewheel','mousemove','click'],function(evnt)
+            select('#DrawBodyPanl').listen(['keydown','keyup','mousewheel','mousemove','wheel','click'],function(evnt)
             {
                let tpe,sig,pck,cmd,btn,tgt,tnn; tpe=(isin(evnt.type,'down')?'dn':(isin(evnt.type,'up')?'up':'mv')); sig=evnt.signal;
                pck=Anon.Draw.vars.keys; if(tpe=='up'){sig=pck}; cmd=Anon.Draw.vars.cmnd[sig]; tgt=evnt.target; tnn=(nodeName(tgt));
@@ -150,6 +160,7 @@ extend(Anon)
                ]}
             ]};
 
+            tgt.vars.saved=1;
             slf.deja.pick(tgt,0); //tgt.vars.canvas.find('Transformer').destroy();
 
             tgt.onFeed(function(d,n, s)
@@ -313,10 +324,18 @@ extend(Anon)
 
 
 
-      shut:function(drv,ttl)
+      shut:function(drv,tab, bfr,dne)
       {
-         // TODO :: promt unsaved
-         drv.delete(ttl,true); // delete with `No Signal Intercept`
+         bfr=tab.body.select('.DrawViewWrap'); dne=(bfr?bfr[0].vars.saved:1);
+
+         if(!dne){dne=confirm('Discard unsaved changes?')};
+
+         if(dne)
+         {
+            drv.delete(tab.head.title,true); // delete with `No Signal Intercept`
+            // tick.after(60,()=>{select('#DrawInfoPanl').innerHTML='';}); // wait for `select` info update, then vacuum
+            return;
+         };
       },
    }
 });

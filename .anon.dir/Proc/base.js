@@ -186,7 +186,7 @@
             if(obst&&(e=='dragstart')){obst.draggable=true; obst.setAttribute('draggable',true);};
             if(obst&&((e=='drop')||(e=='feed'))){obst.onFeed(cbf);return};
 
-            if(isin(e,['down','up','key','click','Click','contextmenu','mouse','Mouse']))
+            if(isin(e,['down','up','key','click','Click','contextmenu','mouse','Mouse','wheel']))
             {
                let kpr; if(isin(e,'key')&&isin(e,':')){kpr=stub(e,':'); e=kpr[0]; kpr=kpr[2]; if(e=='key'){e='keydown'}};
                if(e=='LeftClick'){e='click';}else if(e=='RightClick'){e='contextmenu'};
@@ -195,7 +195,7 @@
                {
                   let evn,btn,tgt,kcl,hcn,cmb,dev,crd,rpt,pvk,rkc,rsp,grb,key; evn=evnt.type; tgt=evnt.target; cmb=[];
                   dev=(isin(evn,'key')?'keyboard':'pointer'); pvk=this.pvk; rpt=evnt.repeat; key=this.kpr;
-                  if((evnt instanceof MouseEvent)){dev='pointer'};
+                  if((evnt instanceof MouseEvent)||(evnt instanceof WheelEvent)){dev='pointer'};
 
                   if(dev=='keyboard')
                   {
@@ -205,13 +205,15 @@
                   }
                   else
                   {
+                     // if(evnt.ctrlKey){grb=1};
                      if(evnt.which==null){btn=((evnt.button<2)?"LeftClick":((event.button==4)?"MiddleClick":"RightClick"))}
                      else{(btn=(evnt.which<2)?"LeftClick":((evnt.which==2)?"MiddleClick":"RightClick"))};
-                     if(evnt.type=='mousewheel'){btn='MouseWheel'}else if(evnt.type=='mousemove'){btn='MouseMove'};
+                     if((evnt.type=='mousewheel')||(evnt.type=='wheel')){btn='MouseWheel'}else if(evnt.type=='mousemove'){btn='MouseMove'};
                      crd=[evnt.clientX,evnt.clientY]; if(btn=='MouseWheel')
                      {
-                        let x=(evnt.deltaX+''); let y=(evnt.deltaY+''); if(x=='-0'){x='0'}; if(y=='-0'){y='0'};
-                        x=(x.split('.')[0]*1); y=(y.split('.')[0]*1); crd=[x,y];
+                        // dump(evnt);
+                        let x=(Math.round(evnt.deltaX)||0); let y=(Math.round(evnt.deltaY)||0); if(!x){x=0;}; if(!y){y=0;};
+                        if(evnt.deltaMode==1){x*=12; y*=12}; crd=[x,y];
                      };
                   };
 
@@ -222,14 +224,15 @@
 
                   cmb=cmb.join(' ').trim(); if(!isin(cmb,' ')){cmb=VOID}; if(!cmb){this.pvk=[];}; if(cmb&&rpt){return};
                   evnt.device=dev; evnt.signal=(cmb||btn); evnt.coords=crd;
-                  if(!this.ice){this.run(evnt,grb); return};
-                  if(cmb&&(this.ice==cmb)){grb=1; this.run(evnt,grb); return};
+                  if(!this.ice){this.run(evnt,grb); return false};
+                  if(cmb&&(this.ice==cmb)){grb=1; this.run(evnt,grb); return false};
                   return false;
                }
                .bind({tgt:self,cbf:cbf,ice:ice,pvk:[],kpr:kpr,run:function(fe,ge)
                {
                   if(ge){fe.preventDefault(); fe.stopPropagation();};
                   fe.Target=fe.currentTarget; this.cbf.apply(this.tgt,[fe]);
+                  return false;
                }});
             };
 
@@ -527,9 +530,16 @@
 
 // func :: remove : deletes element from DOM
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   const remove = function(n)
+   const remove = function(q, x,d)
    {
-      if(!isNode(n)||!n.parentNode){return}; n.parentNode.removeChild(n); return true;
+      if(isText(q))
+      {
+         try{x=select(q);if(!x){return}}catch(e){return;}; d=VOID;
+         if(isNode(x)){if(!x.parentNode){return}; x.parentNode.removeChild(x); return true;};
+         if(!x){return}; x.forEach((n)=>{if(!!n.parentNode){n.parentNode.removeChild(n); d=true}}); return d;
+      };
+
+      if(!isNode(q)||!q.parentNode){return}; q.parentNode.removeChild(q); return true;
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -1103,6 +1113,30 @@
       if(!a.parentNode){fail('node is not attached to the DOM .. yet');return};
       let r=a.getBoundingClientRect(); return r;
    };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+// tool :: dropMenu
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   extend(MAIN)
+   ({
+      dropMenu:function(a)
+      {
+         remove('#AnonDropMenu'); if(isList(a)){return this.make(a)};
+         if(isKnob(a)){return function(l){return this.fnc(l,this.atr)}.bind({fnc:this.make,atr:a});};
+         fail('expecting list or knob');
+      }
+      .bind({make:function(l,a, r,c)
+      {
+         if(!isKnob(l[0])){return}; r=create('dropmenu'); if(!isKnob(a)){a={}}; a.id='AnonDropMenu';
+         c=a.context; delete a.context; r.modify(a); r.setStyle({left:cursor.posx,top:cursor.posy});
+         l.forEach((i)=>{i.context=c; r.insert(i)}); document.body.insert(r);
+      }}),
+   });
+
+   document.body.addEventListener('click',function(){remove('#AnonDropMenu');},false);
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 

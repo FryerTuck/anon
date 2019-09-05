@@ -447,7 +447,11 @@ namespace Anon;
             $c=conf('Proc/httpCode'); $m=$c->$a; if(!$m){$a=501; $m=$c->$a;}; $hs=headers_sent();
             if(!$hs){header_remove();}; while(ob_get_level()){ob_end_clean();}; self::$stat=1;
 
-            if(facing('SSE')){Proc::emit('status',"$a - $m"); if($nx){return;}; done();};
+            if(facing('SSE'))
+            {
+               if(!is_method('Proc::emit')){require_once(path('/Proc/aard.php'));};
+               Proc::emit('status',"$a - $m"); if($nx){return;}; done();
+            };
 
             header("HTTP/1.1 $a $m");
 
