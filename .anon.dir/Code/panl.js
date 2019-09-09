@@ -124,12 +124,6 @@ extend(Anon)
             {
                let tvrw=select('#CodeToolView'); if(isin(tvrw.className,'show')){tvrw.declan('show');return}; tvrw.enclan('show'); // togl
                let tlbx=select('#CodeToolPanl');
-               // evnt.preventDefault(); evnt.stopPropagation(); evnt.stopImmediatePropagation(); let od=rectOf(select('#CodeBodyPanl'));
-               // let vg,bv,tv,gs,bs,ts,hd; vg=select('#CodeBodyView'); bv=select('#CodeBodyView'); tv=select('#CodeToolView');
-               // if(isin(tv.className,'show')){tv.declan('show'); bv.setStyle({height:od.height}); holdSpanSize(); return};
-               // gs=rectOf(vg); bs=rectOf(bv); tv.enclan('show'); ts=rectOf(tv); hd=(bs.height-ts.height);
-               // bv.setStyle({height:hd}); bv.childNodes[0].setStyle({height:hd}); holdSpanSize();
-               // return;
             });
 
             select('#CodePanlSlab').listen('Control Shift S',()=>
@@ -281,7 +275,7 @@ extend(Anon)
 
          purl('/Code/openFile',{path:pth,plug:plg,view:1},(r)=>
          {
-            r=r.body; drv.create({title:pth, contents:[{panl:'.CodeSeeOther .holdSpanSize', contents:
+            r=r.body; drv.create({title:pth, contents:[{panl:'.CodeSeeOther', contents:
             [{img:'.CodeViewBufr', style:'display:block', src:r, info:nfo, vars:{}, listen:
             {
                ready:function(){this.vars={line:0,char:0, pick:{line:this.width,char:this.height}, dime:rectOf(this)}},

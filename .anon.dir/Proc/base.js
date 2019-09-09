@@ -123,7 +123,7 @@
 
       cb=o.listen.loadend; delete o.listen.loadend; o.listen.loadend=function() // event done
       {
-         let h=dval(this.getAllResponseHeaders()); if(h.Cookies){h.Cookies=decode.jso(decode.b64(h.Cookies))};
+         let h=dval(this.getAllResponseHeaders()); if((h!=null)&&h.Cookies){h.Cookies=decode.jso(decode.b64(h.Cookies))};
          let r={path:this.purl,head:h,body:this.response}; if(!this.done){this.done=0};
          if((this.status==200)&&(this.done<100)){pe(100,this.purl);if(this.busy){Busy.edit(this.purl,100)};};
          if(x.silent){tick.after(250,()=>{delete server.silent.busy})};
@@ -196,7 +196,6 @@
                   let evn,btn,tgt,kcl,hcn,cmb,dev,crd,rpt,pvk,rkc,rsp,grb,key; evn=evnt.type; tgt=evnt.target; cmb=[];
                   dev=(isin(evn,'key')?'keyboard':'pointer'); pvk=this.pvk; rpt=evnt.repeat; key=this.kpr;
                   if((evnt instanceof MouseEvent)||(evnt instanceof WheelEvent)){dev='pointer'};
-
                   if(dev=='keyboard')
                   {
                      btn=evnt.key; if(btn==' '){btn='Space'};
@@ -224,9 +223,9 @@
 
                   cmb=cmb.join(' ').trim(); if(!isin(cmb,' ')){cmb=VOID}; if(!cmb){this.pvk=[];}; if(cmb&&rpt){return};
                   evnt.device=dev; evnt.signal=(cmb||btn); evnt.coords=crd;
-                  if(!this.ice){this.run(evnt,grb); return false};
-                  if(cmb&&(this.ice==cmb)){grb=1; this.run(evnt,grb); return false};
-                  return false;
+                  if(!this.ice){this.run(evnt,grb); return};
+                  if(cmb&&(this.ice==cmb)){grb=1; this.run(evnt,grb); return};
+                  return;
                }
                .bind({tgt:self,cbf:cbf,ice:ice,pvk:[],kpr:kpr,run:function(fe,ge)
                {
@@ -549,8 +548,7 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const newGui = function(p, t)
    {
-      server.stream.close();
-      if(isPath(p)){t=(location.protocol+'//'+location.host+p)}else{t=location.href};
+      server.stream.close(); if(isPath(p)){t=(location.protocol+'//'+location.host+p)}else{t=location.href};
       document.body.insert
       ([
          {form:'#anonReboot', action:t, method:'POST', style:'position:absolute;opacity:0', contents:
@@ -753,7 +751,6 @@
             v=ltrim(v,'.'); if(!isin(l,v))
             {
                l.push(v);
-               // if(v=='holdSpanSize'){slf.parentNode.style.position='relative'; slf.style.position='absolute'; slf.resizeTo(slf.parentNode)};
             }
          });
          this.className=l.join(' ');
@@ -907,17 +904,6 @@
 
 
 
-// func :: holdSpanSize : computed-style of elements
-// --------------------------------------------------------------------------------------------------------------------------------------------
-   const holdSpanSize = function(h, l)
-   {
-      // l=select('.holdSpanSize',h); if(!l){return};
-      // l.forEach((n)=>{let p=n.parentNode; p.style.position='relative'; n.style.position='absolute'; n.resizeTo(p)});
-   };
-// --------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
 // func :: popModal : opens a modal dialogue
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const popModal = function(a1,a2)
@@ -948,7 +934,7 @@
             box=create({grid:'.cenmid .modalBox', contents:
             [
                {row:[{col:'.head', contents:[{div:[{span:ttl},{icon:'.shut', face:'cross', onclick:function(){this.root.exit()}}]}]}]},
-               {row:[{col:'.body', contents:[{grid:'.holdSpanSize', contents:[{row:
+               {row:[{col:'.body', contents:[{grid:[{row:
                [
                   {col:'.view', contents:[{panl:txt}]},
                   {col:'.side ', contents:[{div:'.xbar'}]},
@@ -987,8 +973,8 @@
          if(!isText(obj.body,1)&&!isList(obj.body,1)&&!isKnob(obj.body,1)){fail('invalid modal body');};
          if((obj.info!=VOID)&&!isText(obj.info,1)&&!isList(obj.info,1)&&!isKnob(obj.info,1)){fail('invalid modal info');};
 
-         if(!atr){atr={}}; var mid,box,inf,rsl; atr.id=(atr.id||('MDL'+hash())); mid=atr.id; if(!atr.class){atr.class='';};
-         atr.class=atr.class.split(' '); radd(atr.class,'modalBox'); radd(atr.class,'cenmid'); atr.class=atr.class.join(' ');
+         if(!atr){atr={}}; var mid,thm,box,inf,rsl; mid=('MDL'+hash()); if(!atr.class){atr.class='';}; atr.class=atr.class.trim().split(' ');
+         ladd(atr.class,'modalBox'); ladd(atr.class,'cenmid'); thm=atr.theme; if(thm){radd(atr.class,thm)}; atr.class=atr.class.join(' ');
 
          if(isText(obj.head)){obj.head={span:obj.head}}; let fiob,liob,pagr;
          if(!isList(obj.head)){obj.head=[obj.head]}; radd(obj.head,{icon:'.shut', face:'cross', onclick:function(){this.root.exit()}});
@@ -1016,13 +1002,13 @@
             [
                {col:'.footLeft', contents:
                [
-                  {butn:'.info', contents:'Back', onclick:function(){this.root.page('<')}},
-                  {butn:'.info', contents:'Next', onclick:function(){this.root.page('>')}},
+                  {butn:'', contents:'Back', onclick:function(){this.root.page('<')}},
+                  {butn:'', contents:'Next', onclick:function(){this.root.page('>')}},
                ]},
                {col:'.footRait', contents:
                [
-                  {butn:'.auto', contents:'Done', onclick:function(){this.root.done()}},
-                  {butn:'.auto', contents:'Cancel', onclick:function(){this.root.exit()}},
+                  {butn:'', contents:'Done', onclick:function(){this.root.done()}},
+                  {butn:'', contents:'Cancel', onclick:function(){this.root.exit()}},
                ]},
             ]}]}];
          };
@@ -1030,12 +1016,16 @@
          box=create({grid:'', contents:
          [
             {row:[{col:'.head', contents:[{div:obj.head}]}]},
-            {row:[{col:'.body', contents:[{grid:'.holdSpanSize', contents:[{row:
+            {row:[{col:'.body', contents:[{panl:'.wrap', contents:[{grid:[{row:
             [
                (obj.info?{col:'.info', contents:obj.info}:VOID),{col:'.view', contents:obj.body}
-            ]}]}]}]},
+            ]}]}]}]}]},
             {row:[{col:'.foot', contents:obj.foot}]},
          ]});
+
+         let sze=atr.size; if(sze){delete atr.size}; if(isText(sze)){sze=stub(sze,['x',',',' ',':']); if(sze){sze=[(sze[0]*1),(sze[2]*1)]}};
+         if(isList(sze)&&((span(sze)<2)||!isNumr(sze[0])||!isNumr(sze[1]))){sze=VOID};
+         if(sze){if(!isKnob(atr.style)){atr.style={}}; atr.style.width=sze[0]; atr.style.height=sze[1];};
          box.modify(atr);
 
          rsl=create({modal:mid, contents:[{wrap:[box]}]});
@@ -1070,8 +1060,8 @@
          };
 
          rsl.exit=function(){if(this.ticker){clearInterval(this.ticker)}; this.signal('exit'); tick.after(60,()=>{this.remove()})};
-         document.body.appendChild(rsl); (rsl.select('butn')||[]).forEach((b)=>{b.root=rsl}); rsl.select('.shut')[0].root=rsl;
-         (rsl.select('treeview')||[]).forEach((b)=>{b.main=rsl});
+         document.body.appendChild(rsl); (rsl.select('butn')||[]).forEach((b)=>{b.root=rsl; b.dbox=box; b.enclan(thm)});
+         rsl.select('.shut')[0].root=rsl; (rsl.select('treeview')||[]).forEach((b)=>{b.main=rsl});
       },
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------
@@ -1162,7 +1152,6 @@
       {
          p=path(n.src||n.href); if((!p&&(t!='script'))||(t=='a')){tick.after(10,()=>
          {n.signal('ready')});return}; // nodes without a path
-         // {let q='holdSpanSize'; if(isin(n.className,q)){tick.after(160,()=>{n.declan(q); n.enclan(q)})}; n.signal('ready')});return}; // nodes without a path
          n.purl=p; n.listen('load',ONCE,function(){this.done=100; tick.after(50,()=>{n.signal('ready')});}); // emit `ready` after onload
          n.listen('error',function(){this.fail=1; if(!this.done){return}; Busy.tint('red'); Busy.edit(this.purl,100);}); // onfail
          tick.after(750,()=>{if(n.done||Busy.jobs[p]){return}; n.waiting=function(j,s,t){this.done=1; s=this; t=setInterval(()=> // wait
@@ -1172,17 +1161,6 @@
          },50);}; n.waiting(p);});
       }
    }));
-// --------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-
-// evnt :: resize : listen on window resize
-// --------------------------------------------------------------------------------------------------------------------------------------------
-   // window.listen('resize',function()
-   // {
-   //    holdSpanSize();
-   // });
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 

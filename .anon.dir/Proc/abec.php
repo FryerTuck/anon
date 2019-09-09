@@ -30,6 +30,7 @@ namespace Anon;
    function isDeep($d){return (is_array($d)&&!isFlat($d));}
    function isVoid($d){return ($d===null);}
 
+   function isBool($d){return is_bool($d);}
    function isText($d,$g=null,$l=null){$r=is_string($d); if(!$r){return false;}; return (!is_int($g)?$r:spanIs($d,$g,$l));}
    function isWord($d){return test($d,'/^([a-zA-Z])([a-zA-Z0-9_]){1,36}$/');}
    function isMail($d){return test($d,'/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/');}
@@ -900,7 +901,7 @@ $zz=(($h==="seen")&&($n==="*seen*"));
 
       static function void($p)
       {
-         return void($p);
+         if(!path($p)){return;}; lock::awaits($p); $r=void($p); lock::remove($p); return $r;
       }
 
 

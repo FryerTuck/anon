@@ -604,6 +604,7 @@ namespace Anon;
       public $fail;
       public $host;
       public $fold;
+      private $lock;
 
 
       function __construct($hn,$pn=null,$un=null,$pw=null)
@@ -639,16 +640,116 @@ namespace Anon;
       }
 
 
+      public function rdel($p)
+      {
+         $h=$this->host; $d=$this->fold; if(!isPath($p)){if(!isPath("/$p")){$this->fail='invalid filename';return false;}; $p="$d/$p";};
+         $l=$this->lock; $m=0; if(!$l){$l=sha1("$h/$p"); $l="/Proc/temp/file/$l"; lock::awaits($l); $this->lock=$l; $m=1;}; // lock master
+         $r=$this->delete($p); $e=$this->fail; if($r){if($m){lock::remove($l); $this->lock=null;}; return $r;}; // first was success
+         if(!isin($e,'s a directory')){if($m){lock::remove($l); $this->lock=null;}; return false;}; // not a folder, some other issue
+         $this->fail=null; $k=$this->nlist($p); if($k){foreach($k as $i){$this->rdel($i);}; $r=$this->rmdir($p); return $r;}; // done
+      }
+
+
       public function __call($n,$a)
       {
          if(is_string($n)){$n=trim($n); if(strlen($n)<1){return;}}; $f="ftp_$n"; $r=null; $fa=(isset($a[0])?$a[0]:null);
          if(!function_exists($f)){fail("call to undefined method ftp::$n");}; array_unshift($a,$this->link);
          deFail(); $HF=null; $SF=null; try{$r=call_user_func_array($f,$a);}catch(\Exception $e){$HF=$e->getMessage();}; $SF=enFail();
-         $E=trim(($HF?$HF:($SF?$SF:null)).''); if(!$E){$E=null;}; $this->fail=$E; if(!$E)
+         $E=trim(($HF?$HF:($SF?$SF:null)).''); if(!$E){$E=null;}; $this->fail=$E;
+         if(!$E)
          {
             if($n==='chdir'){$this->fold=path::fuse($this->fold,$fa);};
          };
          return $r;
       }
+   }
+
+
+// function ftp_rdel ($handle, $path)
+// {
+//
+//   if (@ftp_delete ($handle, $path) === false)
+//   {
+//
+//     if($children = @ftp_nlist ($handle, $path))
+//     {
+//       foreach($children as $p){ftp_rdel($handle,$p);};
+//     }
+//
+//     @ftp_rmdir ($handle, $path);
+//   }
+// }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+# func :: frst/last : first/last item in string, array or object
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   function frst($d)
+   {
+      if(is_bool($d)||(span($d)<1)){return;}; if(is_string($d)){return mb_substr($d,0,1);};
+      $v=vals($d,0); return $v;
+   }
+
+   function last($d)
+   {
+      if(is_bool($d)||(span($d)<1)){return;}; if(is_string($d)){return mb_substr($d,-1,1);};
+      $v=vals($d,-1); return $v;
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+# tool :: arg : returns object with methods that are both grammatical and functional .. e.g.  arg($a)->endsWith($b);
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   class arg
+   {
+      private $xarg;
+
+      function __construct($a){$this->xarg=$a;}
+
+      public function endsWith($b)
+      {
+         $a=$this->xarg; if(!is_string($a)||!is_string($b)){return;}; $s=strlen($b); if(strlen($a)<$s){return false;};
+         return (substr($a,(0-$s),$s)===$b);
+      }
+
+      public function startsWith($b)
+      {
+         $a=$this->xarg; if(!is_string($a)||!is_string($b)){return;}; $s=strlen($b); if(strlen($a)<$s){return false;};
+         return (substr($a,0,$s)===$b);
+      }
+   }
+
+
+   function arg($a){return (new arg($a));}
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+# func :: lshave/rshave : alternative to ltrim/rtrim -which f*cks up with slashes .. this plays nice .. default is once .. bool(true) recurs
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   function lshave($a,$b=null,$r=false)
+   {
+      if(!is_string($a)){return;}; if(!is_string($b)){return ltrim($a);}; $s=strlen($b); if(!$s||(strlen($a)<$s)){return $a;};
+      if(substr($a,0,$s)!==$b){return $a;}; do{$a=substr($a,$s);}while($r&&(substr($a,0,$s)===$b));
+      return $a;
+   }
+
+   function rshave($a,$b=null,$r=false)
+   {
+      if(!is_string($a)){return;}; if(!is_string($b)){return rtrim($a);}; $s=strlen($b); if(!$s||(strlen($a)<$s)){return $a;};
+      if(substr($a,(0-$s),$s)!==$b){return $a;}; do{$a=substr($a,0,(strlen($a)-$s));}while($r&&(substr($a,(0-$s),$s)===$b));
+      return $a;
+   }
+
+   function ashave($a,$b=null,$r=false)
+   {
+      if(!is_string($a)){return;}; if(!is_string($b)){return trim($a);};
+      $z=lshave($a,$b,$r); $z=rshave($z,$b,$r);
+      return $z;
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------

@@ -14,9 +14,10 @@ extend(custom.domtag)
 
 
 
-   butn:function(n,a,c)
+   butn:function(n,a,c, i)
    {
-      n.setAttribute('tabindex',-1); n.tabindex=-1; if(!a.icon){return}; let i=a.icon; delete a.icon; n.modify(a);
+      n.setAttribute('tabindex',-1); n.tabindex=-1; if(!c){c=a.text; delete a.text}; i=a.icon; delete a.icon;
+      if(!c&&!i&&!isin(a.class,'icon-')){c='?'}; n.modify(a); n.insert(c); if(!i){return DONE;};
       n.insert([{grid:[{row:
       [
          {col:'.butnIcon',contents:[{icon:i}]},
@@ -76,7 +77,7 @@ extend(custom.domtag)
 
       if((n.events.RightClick===VOID)&&(n.events.contextmenu===VOID)){n.listen('RightClick',function(e, x,m,t,w,l)
       {
-         x=VOID; x=((nodeName(e.path[0])=='treeview')?e.path[0]:((nodeName(e.path[3])=='treetwig')?e.path[3]:e.path[4]));
+         x=VOID; x=e.srcElement; if(nodeName(x)!='treeview'){x=x.lookup('^',3); if(nodeName(x)!='treetwig'){x=x.parentNode}};
          m=VOID; if(!x.info.root){x.info.root=x;}; m=x.info.mime.split('/')[0]; t=x.info.type; w=t; if(t=='fold'){w='folder'};
          if(x.info.repo&&x.info.repo.fork&&x.info.repo.head&&x.info.repo.host){t='repoMain'; w='repo';};
 
@@ -84,24 +85,13 @@ extend(custom.domtag)
          [
             {h1:[{icon:x.info.root.status.mime[m]},{div:(w+' options')}]},
             {div:'.panlHorzDlim', contents:[{hdiv:[]}]},
+            {item:'$plus', text:'create folder', onclick:function(){this.context.info.root.adjure('create','fold',this.context)}},
+            {item:'$plus', text:'create file', onclick:function(){this.context.info.root.adjure('create','file',this.context)}},
+            {item:'$plus', text:'create plug', onclick:function(){this.context.info.root.adjure('create','plug',this.context)}},
          ];
 
-         if(x.info.path!='~')
-         {
-            radd(l,{item:'$plus', text:'create sibling folder', onclick:function(){this.context.info.root.adjure('create','fold',this.context)}});
-            radd(l,{item:'$plus', text:'create sibling file', onclick:function(){this.context.info.root.adjure('create','file',this.context)}});
-            radd(l,{item:'$plus', text:'create sibling plug', onclick:function(){this.context.info.root.adjure('create','plug',this.context)}});
-         };
-
-         if((t=='fold')||isin(t,'repo'))
-         {
-            if(x.info.path!='~'){radd(l,{line:[]})};
-            radd(l,{item:'$box-add', text:'insert new folder', onclick:function(){this.context.info.root.adjure('insert','fold',this.context)}});
-            radd(l,{item:'$box-add', text:'insert new file', onclick:function(){this.context.info.root.adjure('insert','file',this.context)}});
-            radd(l,{item:'$box-add', text:'insert new plug', onclick:function(){this.context.info.root.adjure('insert','plug',this.context)}});
-            if(t=='fold')
-            {radd(l,{item:'$repo-clone', text:'import new repo', onclick:function(){this.context.info.root.adjure('insert','repo',this.context)}});};
-         };
+         if(t=='fold')
+         {radd(l,{item:'$repo-clone', text:'import git repo', onclick:function(){this.context.info.root.adjure('create','repo',this.context)}});};
 
          if(isin(t,'repo'))
          {
@@ -121,8 +111,8 @@ extend(custom.domtag)
          if(x.info.path!='~')
          {
             radd(l,{line:[]}),
-            radd(l,{item:'$spell-check', text:('rename this '+w), onclick:function(){this.context.info.root.adjure('rename',t,this.context)}});
-            radd(l,{line:[]}),
+            radd(l,{item:'$copy', text:('clone this '+w), onclick:function(){this.context.info.root.adjure('cloned',t,this.context)}});
+            radd(l,{item:'$tag', text:('rename this '+w), onclick:function(){this.context.info.root.adjure('rename',t,this.context)}});
             radd(l,{item:'$trashcan', text:('delete this '+w), onclick:function(){this.context.info.root.adjure('delete',t,this.context)}});
          };
 
@@ -130,18 +120,114 @@ extend(custom.domtag)
       })};
 
 
-      n.adjure = function(a,t,x)
+      n.adjure = function(a,t,x,p)
       {
-         return this[a](t,x);
+         if(!p){p=(x.info.path||x.info.purl)};
+         return this[a](a,t,p,x);
       }
       .bind
       ({
-         insert:function(t,x){dump('insert '+t);},
-         update:function(t,x){dump('update '+t);},
-         modify:function(t,x){dump('modify '+t);},
-         rename:function(t,x){dump('rename '+t);},
-         delete:function(t,x){dump('delete '+t);},
+         create:function(a,t,p,x, b)
+         {
+            if(isin(['file'],x.info.type)){p=twig(p);};
+            b=//list
+            [
+               {row:[{col:'.text', contents:'in'},{col:[{input:'', name:'path', placeholder:'folder path', value:p}]}]},
+               {row:[{col:'.text', contents:'as'},{col:[{input:'', name:'args', placeholder:('new '+t+' name')}]}]},
+            ];
+            if((t=='plug')||(t=='repo'))
+            {radd(b,{row:[{col:'.text', contents:'to'},{col:[{input:'', name:'link', placeholder:(t+' source URL')}]}]});};
+            popModal({class:'AnonTreeModl', theme:'dark', size:'360x190'})
+            ({
+               head:[{icon:'plus'},{span:`create ${t}`}],
+               body:[{grid:'.noSpanVert', contents:[b]},{small:[{i:'TIP : see the manual for "legal" characters'}]}],
+               foot:
+               [
+                  {butn:'.cool', contents:'create', from:x, make:t, onclick:function()
+                  {
+                     let d={exec:'create',type:this.make}; (this.dbox.select('input')).forEach((i)=>{d[i.name]=i.value});
+                     purl('/User/treeExec',d,(r)=>{if(r.body!=OK){fail(r.body);return}; this.from.info.root.update(); this.root.exit();});
+                  }},
+                  {butn:'', contents:'cancel', onclick:function(){this.root.exit();}},
+               ]
+            });
+         },
+
+         update:function(a,t,p,x){dump('update '+t);},
+
+         modify:function(a,t,p,x)
+         {
+            purl('/User/treeExec',{exec:'descry', type:t, path:p},(ld)=>
+            {
+               ld=ld.body; if(!isPath(ld)&&!isin(ld,'://')&&(ld!='')){alert(ld); return};
+               popModal({class:'AnonTreeModl', theme:'dark', size:'400x130'})
+               ({
+                  head:[{icon:'tag'},{span:`modify ${t} link`}],
+                  body:
+                  [
+                     {input:'',name:'path',type:'hidden',value:p},{input:'',name:'args',placeholder:`${t} link`,value:ld},
+                  ],
+                  foot:
+                  [
+                     {butn:'.warn', contents:'modify', from:x, make:t, onclick:function()
+                     {
+                        let d={exec:'modify',type:this.make}; (this.dbox.select('input')).forEach((i)=>{d[i.name]=i.value});
+                        purl('/User/treeExec',d,(r)=>{if(r.body!=OK){fail(r.body);return}; this.from.info.root.update(); this.root.exit();});
+                     }},
+                     {butn:'', contents:'cancel', onclick:function(){this.root.exit();}},
+                  ]
+               });
+            });
+         },
+
+         cloned:function(a,t,p,x)
+         {
+            dump('cloned '+t);
+         },
+
+         rename:function(a,t,p,x)
+         {
+            popModal({class:'AnonTreeModl', theme:'dark'})
+            ({
+               head:[{icon:'tag'},{span:`rename ${t}`}],
+               body:
+               [
+                  {input:'',name:'path',type:'hidden',value:p},{input:'',name:'args',placeholder:`${t} name`,value:x.info.name},
+               ],
+               foot:
+               [
+                  {butn:'.warn', contents:'rename', from:x, make:t, onclick:function()
+                  {
+                     let d={exec:'rename',type:this.make}; (this.dbox.select('input')).forEach((i)=>{d[i.name]=i.value});
+                     purl('/User/treeExec',d,(r)=>{if(r.body!=OK){fail(r.body);return}; this.from.info.root.update(); this.root.exit();});
+                  }},
+                  {butn:'', contents:'cancel', onclick:function(){this.root.exit();}},
+               ]
+            });
+         },
+
+         delete:function(a,t,p,x)
+         {
+            popModal({class:'AnonTreeModl', theme:'dark', size:'320x190'})
+            ({
+               head:[{icon:'trashcan'},{span:`delete ${t}`}],
+               body:
+               [
+                  {b:`Confirm deletion of:`},{pre:p},{span:'WARNING - this action cannot be undone'}
+               ],
+               foot:
+               [
+                  {butn:'.harm', contents:'delete', from:x, make:t, onclick:function()
+                  {
+                     let d={exec:'delete',type:this.make,path:x.info.path};
+                     purl('/User/treeExec',d,(r)=>{if(r.body!=OK){fail(r.body);return}; this.from.info.root.update(); this.root.exit();});
+                  }},
+                  {butn:'', contents:'cancel', onclick:function(){this.root.exit();}},
+               ]
+            });
+         },
       });
+
 
       n.status= // object
       {
@@ -162,7 +248,7 @@ extend(custom.domtag)
             {
                r=decode.jso(r.body,1); if(!r){return}; r.each((v)=>
                {
-                  v.path=(n.info.path+v.path); v.root=n.info.root;
+                  v.path=(n.info.path+'/'+v.path); v.root=n.info.root;
                   f.insert(n.info.root.sprout(v,l,d,r));
                });
                Busy.edit('/User/plugMenu',100);
@@ -206,10 +292,13 @@ extend(custom.domtag)
          let ico = (lib[ext]?lib[ext]:lib.auto); let isr=(isin(['repoMain','repoFork'],ext)?' .isRepo':'');
          let txt = {input:'',type:'text',disabled:true,value:val,tabindex:null};
          let tid = (into.path||into.purl); if(!tid&&!!into.root&&!!into.root.initVars){tid=into.root.initVars.purl};
-                   if(!tid){fail('treeview item info-data is invalid');return}; tid=('#Path'+sha1(tid));
 
+         if(!tid){fail('treeview item info-data is invalid');return}; tid=('#Path'+sha1(tid));
          if(!fork&&!!rpo&&!!rpo.head){fork=rpo.head.fork;}; if(fork&&into.repo){into.repo.fork=fork};
-         into.levl=levl;
+         let flt=(slf.filter||{}); let fxt=fext(into.name); into.fext=((into.type=='fold')?'dir':(fxt||'none'));
+
+         if(flt.type&&!isin(flt.type,into.type)){return};
+         if(flt.fext&&!isin(flt.fext,into.fext)){return};
 
          let twg = create({treetwig:(tid+isr), info:into, tabindex:-1, listen:slf.events, contents:
          [
@@ -244,18 +333,19 @@ extend(custom.domtag)
       n.vivify = function(slnt, self,drgs,vars)
       {
          if(!isPath(this.source)){fail('expecting `source` attribute in treeview as path');return};
-         self=this; vars=(self.initVars||{});
+         self=this; vars=(self.initVars||{}); if(self.filter){vars.filter=self.filter;};
          if(self.draggable){drgs=TRUE; delete self.draggable}else{drgs=FALS};
          purl({target:this.source,convey:vars,silent:slnt},(r)=>
          {
             r=r.body; if((span(r)<1)||(r=='null')){return};
             if(!isJson(r)){fail('expecting json');return}; r=decode.JSON(r); if(span(r)<1){return};
+
             self.repo=r.repo; r.root=self; delete r.repo; self.info={path:(r.path),type:r.type,mime:r.mime,time:r.time,repo:self.repo};
             if(isList(r)){self.uproot=1; r={name:'void',path:'/',mime:'inode/directory',type:'fold',data:r}};
             let rsl=self.sprout(r,(self.uproot?-32:-16),drgs);
             if(self.uproot){rsl=listOf(rsl.select('treefork')[0].childNodes);};
-            self.innerHTML=''; self.insert(rsl);
-            tick.after(250,()=>
+
+            self.innerHTML=''; self.insert(rsl); tick.after(60,()=>
             {
                self.select('treetwig').forEach((rn)=>
                {

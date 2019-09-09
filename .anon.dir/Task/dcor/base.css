@@ -221,15 +221,24 @@ jobcard
 }
 
 
-.AnonTaskDokt
+modal .modalBox.AnonTaskDokt
 {
-   min-width:860px !important;
-   min-height:520px !important;
+   width:860px !important;
+   height:520px !important;
+}
+
+
+modal .TaskDoktPage
+{
+   position:relative;
+   width:100% !important;
+   height:100% !important;
 }
 
 
 .TaskDoktPage>panl
 {
+   position:absolute;
    padding:1rem;
 }
 
@@ -294,6 +303,7 @@ jobcard
 {
    font-size:13px;
 }
+
 
 .DoktCmntWrap
 {
@@ -414,18 +424,30 @@ jobcard
    margin-bottom:10px !important;
 }
 
-
-.CmntAtchPanl
+modal .modalBox.DoktCmntModl.dark .body input
 {
-   min-width:600px !important;
-   min-height:300px !important;
+   background:transparent !important;
+   width:97%;
+}
+
+/* modal .modalBox.DoktCmntModl panl
+{
+   width:200px !important;
+   height:60px !important;
+   overflow:scroll !important;
+} */
+
+modal .modalBox.DoktCmntModl.CmntAtchPanl
+{
+   width:600px !important;
+   height:300px !important;
 }
 
 .CmntAtchMenu
 {
    width:200px;
    min-width:200px !important;
-   border-right:1px solid hsla(0,0%,85%,1);
+   border-right:1px solid hsla(0,0%,22%,1);
 }
 
 .CmntAtchView
@@ -437,7 +459,7 @@ jobcard
 {
    width:200px;
    min-width:200px !important;
-   border-left:1px solid hsla(0,0%,85%,1);
+   border-left:1px solid hsla(0,0%,22%,1);
    padding:10px;
 }
 .CmntAtchList b
@@ -452,10 +474,10 @@ jobcard
 }
 
 
-.AtchSavePanl
+modal .modalBox.DoktCmntModl.AtchSavePanl
 {
-   width:400px !important; min-width:400px !important; max-width:400px !important;
-   min-height:400px !important;
+   width:360px !important;
+   height:300px !important;
 }
 
 .AtchSaveTree
@@ -467,8 +489,10 @@ jobcard
 {
    height:1px;
    padding:6px !important;
+   border-bottom:1px solid hsla(0,0%,22%,1) !important;
 }
 
+/*
 .AtchSavePath>input
 {
    display:block;
@@ -482,4 +506,4 @@ jobcard
    background:none;
    outline:none;
    padding:3px;
-}
+} */

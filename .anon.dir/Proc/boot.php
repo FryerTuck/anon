@@ -73,7 +73,7 @@ namespace Anon;
    defn('A B C D E F G H I J K L M N O P Q R S T U V W X Y Z');
    defn('count fetch using alter write claim touch where group order limit parse shape apply erase purge debug dbase table field sproc funct after basis named param parts');
    defn('NATIVE REMOTE ORIGIN ALL');
-   defn('ASC DSC');
+   defn('ASC DSC API BOT DPI GUI SSE');
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -341,13 +341,24 @@ namespace Anon;
 
 
 
-# func :: done : exit process
+# func :: done : exit process .. if bool is given then output-buffer is sent or destroyed .. if text given then output buffer becomes the text
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function done($sb=true)
    {
       defn(['HALT'=>1]); if($sb===true){bufrSend(); die();}; if(($sb===null)||($sb===false)||($sb==='')){bufrVoid(); die();};
-      if(!is_string($sb)){$sb=tval($sb);}; if(!headers_sent()){header('Content-Type: text/plain');};
-      echo $sb; bufrSend(); die();
+
+      if(!headers_sent())
+      {
+         header("HTTP/1.1 200 OK");
+         header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
+         header("Cache-Control: post-check=0, pre-check=0",false);
+         header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
+         header("Pragma: no-cache"); // HTTP/1.0
+         header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
+         header('Content-Type: text/plain');
+      };
+
+      if(!is_string($sb)){$sb=tval($sb);}; bufrVoid(); echo $sb; bufrSend(); die();
    };
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -370,7 +381,8 @@ namespace Anon;
       static function exists($p)
       {
          if(!is_string($p)){return;}; $d=self::$dir; $h=sha1($p); $p=path("$d/$h"); if(!is_link($p)){return false;};
-         $a=aged($p); if($a<self::$max){return true;}; if(!is_link($p)){return false;}; unlink($p); return false;
+         $a=aged($p); if($a<self::$max){return true;}; if(!is_link($p)){return false;};
+         try{deFail(); unlink($p); enFail();}catch(\Exception $e){return false;}; return false;
       }
 
 

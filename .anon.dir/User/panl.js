@@ -57,7 +57,7 @@
                   {panl:'#AnonReplPanl', onmouseup:function(){select('#AnonReplFeed').focus()}, contents:
                   [
                      {pre:'#AnonReplFlog'},
-                     {grid:
+                     {grid:'.noSpan', contents:
                      [
                         {row:
                         [
@@ -101,9 +101,9 @@
             this.vars.active=ns;
 
             ob=select(('#'+os+'MenuKnob')); if(ob){ob.declan('AnonActvKnob')}; // de-focus old-button
-            op=select(('#'+os+'PanlSlab')); if(op){op.view('none')}; // hide old-panel
+            op=select(('#'+os+'PanlSlab')); if(op){op.declan('show'); op.enclan('hide');}; // hide old-panel
             nb=select(('#'+ns+'MenuKnob')); if(nb){nb.enclan('AnonActvKnob')}; // en-focus new-button
-            np=select(('#'+ns+'PanlSlab')); if(np){np.view('block')}; // show new-panel
+            np=select(('#'+ns+'PanlSlab')); if(np){np.declan('hide'); np.enclan('show');}; // show new-panel
 
             if(np&&!ea){return};
             if(np&&ea&&!dj&&!!Anon[ns]&&isFunc(Anon[ns].anew)){Anon[ns].anew(()=>{AnonMenu.init(id,ea,1)});return};

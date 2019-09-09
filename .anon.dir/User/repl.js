@@ -113,7 +113,14 @@ extend(MAIN)
       exit:function()
       {
          server.stream.close(); window.onbeforeunload=null; navigator.sendBeacon('/User/doLogout','1');
-         repl.mumble('bye'); tick.after(750,()=>{newGui();});
+
+         tick.after(250,()=>
+         {
+            (cookie.select('*')||{}).each((v,k)=>{if(test(k,/^[a-z0-9]{40}$/)){cookie.delete(k)}});
+            repl.mumble('bye'); tick.after(250,()=>{newGui();});
+         });
+
+
       },
 
 

@@ -17,6 +17,12 @@ namespace Anon;
    {
       static $meta;
 
+      static function __init()
+      {
+         permit::fubu();
+      }
+
+
 
       static function getPanel()
       {
@@ -33,6 +39,7 @@ namespace Anon;
       }
 
 
+
       static function getRepel()
       {
          $r=''; $h='/User/tool'; $l=pget($h); $uc=explode(',',sesn('CLAN')); foreach($l as $i)
@@ -44,12 +51,14 @@ namespace Anon;
       }
 
 
+
       static function replHelp($f)
       {
          if(!isWord($f)){ekko(' ..huh?');}; $r=import("/User/tool/$f/help.md"); if($r){$r=trim($r);}; // validate
          if($r){ekko($r);}; // done
          ekko("no help available for `$f` :("); // help file is undefined/empty
       }
+
 
 
       static function runRepel($c)
@@ -69,15 +78,12 @@ namespace Anon;
       }
 
 
-      static function getModal()
-      {
-      }
-
 
       static function readNote($n)
       {
          $r=import("/User/note/$n.md"); ekko($r);
       }
+
 
 
       static function doLogout()
@@ -89,10 +95,12 @@ namespace Anon;
       }
 
 
+
       static function isActive()
       {
          ekko(OK);
       }
+
 
 
       static function readFace($u)
@@ -102,11 +110,13 @@ namespace Anon;
       }
 
 
+
       static function ratingOf($m)
       {
          expect::mail($m,1); $p="/User/vote/$m"; $r=pget($p); if(span($r)<1){path::make($p,'0'); $r='0';};
          $r=($r*1); return $r;
       }
+
 
 
       static function voteMail($m=null,$v=null,$b=null)
@@ -118,6 +128,7 @@ namespace Anon;
       }
 
 
+
       static function initBoot($a)
       {
          $u=sesn('USER'); $p="/User/data/$u/home/boot/$a";
@@ -126,9 +137,10 @@ namespace Anon;
       }
 
 
+
       static function treeMenu()
       {
-         $u=user('name'); $h="/User/data/$u/home";
+         $u=user('name'); $h="/User/data/$u/home"; //$q=knob($_POST); $f=$q->filter;
 
          if(!isee("$h/root"))
          {
@@ -140,14 +152,15 @@ namespace Anon;
       }
 
 
+
       static function plugMenu()
       {
          $v=knob($_POST); $l=xeno::showHyperConduit($v->path,parts); $p=$l->plug;
-         if($l->path){$p="$p/$l->path";}; $i=path::info($l->plug); $r=crud($p)->select('*');
+         if($l->path){$p="$p/$l->path";}; $i=path::info($l->plug); $r=crud($p)->select('*'); unset($p);
 
          if(isin(['ftp','ftps'],$i->plug))
          {
-            foreach($r as $x => $o){if($i->path&&!$l->path&&(strpos($o->path,$i->path)===0)){$r[$x]->path=stub($o->path,$i->path)[2];};};
+            foreach($r as $x => $o){$s=rstub($o->path,'/'); if($s){$r[$x]->path=$s[2];}; unset($s);};
             ekko($r);
          };
 
@@ -174,6 +187,88 @@ namespace Anon;
          };
 
          dump($rsl);
+      }
+
+
+
+      static function treeExec()
+      {
+         permit::face(API); $q=knob($_POST); $h=$q->path; if(!isPath($h)||isin($h,['..','./'])){done('invalid path');};
+         $h=crop($h); if(strpos($h,'~')!==0){done(wack());}; $a=$q->args; $t=$q->type;
+         $X=xeno::showHyperConduit($h); $XI=(!$X?null:path::info($X)); $XP=(!$XI?null:$XI->plug);
+
+
+         if($q->exec==='create')
+         {
+            if(is_string($a)){$a=trim($a); $a=trim("$a",'/');}; $l=$q->link;
+            if(!isText($a,1)||isin($a,['..','/'])||!isPath("$h/$a")){done("invalid $t name");}; $p="$h/$a"; $f="failed to create $t `$p`";
+            if(($t==='fold')||($t==='repo')){$p="$p/";}; if(($t==='plug')&&(fext($p)!=='url')){$p="$p.url";};
+
+            if(!$X) // local
+            {
+               if(isee($p)){done("`$p` already exists");}; if((($t==='plug')||($t==='repo'))&&!isPurl($l)){fail("invalid $t link");};
+               if($t!=='repo'){$r=path::make($p,$l); if(!$r){done($f);}; done(OK);};
+               $r=repo::cloned($p); if(!$r){done($f);}; done(OK);
+            };
+
+            if(isin(['ftp','ftps'],$XP))
+            {
+               if($t==='fold'){$a="$a/";}; $v=(($t==='plug')?"$l":'');
+               if($t!=='repo'){$r=crud($X)->insert([$a=>$v]); if($r){done(OK);}; fail($f);};
+            };
+
+            done("TODO :: create remote $t");
+         };
+
+
+         if($q->exec==='rename')
+         {
+            if(isText($a)){$a=trim($a); $a=trim("$a",'/');}; if(!isText($a,1)||isin($a,['..','/'])||!isPath("/$a")){done("invalid $t name");};
+            $s="$h"; $h=path::twig($h); $d="$h/$a"; if(($t==='plug')&&(fext($d)!=='url')){$d="$d.url";}; $f="failed to rename $t";
+
+            if(!$X) // local
+            {$r=path::move($s,$d); if($r){done(OK);}; fail($f);};
+
+            if(isin(['ftp','ftps'],$XP))
+            {
+               $s=path::leaf($s); $d=path::leaf($d); if(arg($X)->endsWith("/$s")){$X=rshave($X,"/$s");};
+               $r=crud($X)->rename([$s=>$d]); if($r){done(OK);}; fail($f);
+            };
+
+            done("TODO :: rename remote $t over $XP");
+         };
+
+
+         if($q->exec==='descry')
+         {
+            permit::clan('geek'); $r=self::ratingOf(user('mail'));
+            if(($r<12)&&!isin(user('clan'),'sudo')){done("this feature is not available for rookies\n.. unless you know sudo-fu");};
+            done(pget($h));
+         };
+
+
+         if($q->exec==='modify')
+         {
+            permit::clan('geek'); permit::rank(12); if(!isPath($a)&&!isPurl($a)){done("invalid $t link .. expecting `path` or `url`");};
+            $r=path::make($h,$a); if(!$r){done("failed to modify `$h`");}; done(OK);
+         };
+
+
+         if($q->exec==='delete')
+         {
+            if(!$X) // local
+            {$r=path::void($h); if($r){done(OK);}; fail("failed to delete $t");};
+
+            if(isin(['ftp','ftps'],$XP))
+            {
+               $n=path::leaf($h); if(arg($X)->endsWith("/$n")){$X=rshave($X,"/$n");};
+               $r=crud($X)->delete($n); if($r){done(OK);}; fail("failed to delete $t");
+            };
+
+            done("TODO :: delete remote $t over $XP");
+         };
+
+         fail("undefined action `$q->exec`");
       }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------

@@ -145,7 +145,7 @@ extend(Anon)
 
       open:function(pth, drv,tab,ttl,tgt,slf,mim)
       {
-         slf=this; select('#DrawBodyPanl').enclan('holdSpanSize'); drv=select('#DrawTabber').driver; ttl=(pth+''); tab=drv.select(ttl);
+         slf=this; drv=select('#DrawTabber').driver; ttl=(pth+''); tab=drv.select(ttl);
          if(!!tab){return}; this.load(pth,(img,nic)=>
          {
             drv.create({title:ttl, contents:[{panl:'.DrawViewPanl', contents:[{div:'.DrawViewWrap', canFocus:1}]}]});

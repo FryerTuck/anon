@@ -76,6 +76,7 @@
    {
       if(!is_string($p)){return;}; if(!test($p,'/^[a-zA-Z0-9-\/\.\$~@_]{1,432}$/')){return;}; $p=str_replace('//','/',$p);
       $r=envi('ROOTPATH'); $c=envi('COREPATH'); $u=envi('USERPATH'); if(($p==='/')||($p==='.')){return $r;}; $p=rtrim($p,'/');
+      if(substr($p,-1,1)==='.'){return;};
       if(!$r||!$c||!$u){return $p;}; if($p===''){return $r;}; if($p==='$'){return $c;}; if($p==='~'){return $u;}; // works for: ./  $/  ~/
       if((strpos($p,$u)===0)||(strpos($p,$c)===0)||(strpos($p,$r)===0)){return $p;}; $s=substr($p,0,1); $p=ltrim($p,'$/'); $p=ltrim($p,'~/');
       if($s==='$'){return "$c/$p";}; if($s==='~'){return "$u/$p";}; if($s!=='/'){return;}; $p=ltrim($p,'/'); $t=explode('/',$p); $t=$t[0];
@@ -89,8 +90,8 @@
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function fext($p)
    {
-      $p=path($p); if(!$p||($p&&($p==='/'))){return;}; $b=explode('/',$p); $b=array_pop($b); if(strpos($b,'.')===FALSE){return;};
-      $r=explode('.',$b); $r=array_pop($r); if(test($r,'/^[a-zA-Z0-9]{1,8}$/')){return $r;};
+      $p=path($p); if(!$p&&is_string($p)){$p="/$p";}; if(!$p||($p&&($p==='/'))){return;}; $b=explode('/',$p); $b=array_pop($b);
+      if(strpos($b,'.')===FALSE){return;}; $r=explode('.',$b); $r=array_pop($r); if(test($r,'/^[a-zA-Z0-9]{1,8}$/')){return $r;};
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 

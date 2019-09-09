@@ -312,7 +312,7 @@ extend(Anon)
                ({
                   head:('Docket #'+i.docketID+' - '+i.mesgHead),
 
-                  body:[{grid:[{row:
+                  body:[{grid:'', contents:[{row:
                   [
                      {col:'.TaskDoktPage', contents:[{panl:d}]},
                      {col:'.TaskDoktFlap', contents:[{flap:'', goal:L, size:12, open:false, shut:true, togl:function(v)
@@ -377,21 +377,36 @@ extend(Anon)
                ad.dest=sp; purl('/Task/saveAtch',ad,(r)=>{r=r.body; if(r!=OK){alert(r);return};mo.exit()});
             };
 
-            popModal({class:'AtchSavePanl'})
+            popModal({class:'DoktCmntModl AtchSavePanl',theme:'dark'})
             ({
                head:'Save attachments',
-               body:[{grid:
+               body:[{slab:[{grid:
                [
-                  {row:[{col:'.AtchSavePath', contents:[{input:'', type:'text', value:'~'}]}]},
-                  {row:[{col:'.AtchSaveTree', contents:[{panl:[{treeview:'', source:'/User/treeMenu', uproot:true, listen:
-                  {
-                     'LeftClick':function()
-                     {
-                        if(!this.info.kids){return}; let i=this.info; let v=i.path;
-                        this.info.root.main.select('.AtchSavePath>input')[0].value=v;
-                     },
-                  }}]}]}]},
-               ]}],
+                  {row:[{col:'.AtchSavePath', style:{height:1}, contents:[{input:'', type:'text', value:'~'}]}]},
+                  {row:[{col:
+                  [
+                     {panl:
+                     [
+                        {treeview:'.noSpan', source:'/User/treeMenu', filter:{type:'fold,plug'}, uproot:true, listen:
+                        {
+                           'LeftClick':function()
+                           {
+                              if(!this.info.kids){return}; let i=this.info; let v=i.path;
+                              this.info.root.main.select('.AtchSavePath>input')[0].value=v;
+                           },
+                        }}
+                     ]}
+                  ]}]}
+               ]}]}],
+
+
+               // body:[{grid:
+               // [
+               //    {row:[{col:'.AtchSavePath', contents:[{input:'', type:'text', value:'~'}]}]},
+               //    {row:[{col:'.AtchSaveTree', contents:[{panl:[]}]}]},
+               // ]}],
+
+
                foot:[{butn:'', contents:'Done', onclick:function()
                {
                   cb(this.root.select('.AtchSavePath>input')[0].value,this.root);
@@ -402,14 +417,14 @@ extend(Anon)
 
          attach:function(cb)
          {
-            popModal({class:'CmntAtchPanl'})
+            popModal({class:'DoktCmntModl CmntAtchPanl',theme:'dark'})
             ({
                head:'Attach files to comment',
                body:[{grid:[{row:
                [
-                  {col:'.CmntAtchMenu', contents:[{panl:'.treeMenuView', contents:
+                  {col:'.CmntAtchMenu', contents:[{panl:
                   [
-                     {treeview:'', source:'/User/treeMenu', uproot:true, draggable:true},
+                     {treeview:'.noSpan', source:'/User/treeMenu', uproot:true, draggable:true},
                   ]}]},
                   {col:'.CmntAtchView', contents:[{panl:
                   [

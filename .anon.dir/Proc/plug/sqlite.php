@@ -36,6 +36,7 @@ namespace Anon;
       {
          if($this->link){return $this->link;}; $p=path($this->mean->path); if(!isFile($p)||(path::size($p)<1)){$this->create();};
          // $this->link=(new \SQLite3($p, SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE));
+         lock::awaits($this->mean->path);
          $this->link=(new \SQLite3($p, SQLITE3_OPEN_READWRITE));
          $this->link->busyTimeout(6); $this->link->enableExceptions(true);
          return $this->link;
@@ -44,7 +45,8 @@ namespace Anon;
 
       function pacify()
       {
-         if($this->link){$this->link->close(); $this->link=null; return true;};
+         if(!$this->link){return true;}; $this->link->close(); lock::remove($this->mean->path);
+         $this->link=null; return true;
       }
 
 

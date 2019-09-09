@@ -78,8 +78,8 @@
       {
          if(!Busy.dead){clearInterval(t); p.style.opacity=1; return}; Busy.signal(w,ONCE); o-=f; if(o>0){p.style.opacity=o; return};
          clearInterval(t); p.style.opacity=0; p=document.getElementById('busyPane'); if(p&&p.parentNode){p.parentNode.removeChild(p)};
-         Busy.fail=false; Busy.node=null; n=null; p=null; Busy.data=0; tick.after(50,()=>{Busy.actv=0});
-      },5);},250);
+         Busy.fail=false; Busy.node=null; n=null; p=null; Busy.data=0; tick.after(150,()=>{Busy.actv=0});
+      },5);},260);
    };
 
 

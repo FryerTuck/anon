@@ -96,7 +96,7 @@
          .listen
          ({
             gone:function(){repl.exit();},
-            exit:function(){navigator.sendBeacon('/User/isActive','1');},
+            exit:function(){Cookies.set(sesn('HASH'),'...'); navigator.sendBeacon('/User/isActive','1');},
          });
       });
 
@@ -104,16 +104,16 @@
    }
    else
    {
-      (function(t,h,s,p)
-      {
-         t=tick.every(1000,()=>
-         {
-            h=window.location.hash; if(!h){return;}; h=h.slice(1); if(!isin(['panlOpen','panlShut'],h)||(s==h)){return;};
-            p=((typeof AnonPanl)!='undefined'); if((h=='panlOpen')&&!p){s=h; initPanl(); return;};
-            if((h=='panlOpen')&&p&&!AnonPanl.actv){s=h;AnonPanl.show();return};
-            if((h=='panlShut')&&p&&AnonPanl.actv){s=h;AnonPanl.hide();return};
-         });
-      }());
+      // (function(t,h,s,p)
+      // {
+      //    t=tick.every(1000,()=>
+      //    {
+      //       h=window.location.hash; if(!h){return;}; h=h.slice(1); if(!isin(['panlOpen','panlShut'],h)||(s==h)){return;};
+      //       p=((typeof AnonPanl)!='undefined'); if((h=='panlOpen')&&!p){s=h; initPanl(); return;};
+      //       if((h=='panlOpen')&&p&&!AnonPanl.actv){s=h;AnonPanl.show();return};
+      //       if((h=='panlShut')&&p&&AnonPanl.actv){s=h;AnonPanl.hide();return};
+      //    });
+      // }());
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -123,8 +123,8 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    window.onbeforeunload=function(e)
    {
-      navigator.sendBeacon('/User/doLogout','1');
-      server.stream.close(); cookie.delete(sesn('HASH'));
+      // Cookies.set(sesn('HASH'),'...'); navigator.sendBeacon('/User/doLogout','1');
+      server.stream.close();
       return true;
    };
 

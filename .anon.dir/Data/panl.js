@@ -143,7 +143,7 @@ extend(Anon)
          slf=this; vrs=(vrs||{}); drv=select('#DataTabber').driver; tpe=vrs.type; ttl=(tpe+' '+this.repl.vars.path);
          tab=drv.select(ttl); if(!!tab){return};
 
-         drv.create({title:ttl, contents:[{panl:'.DataViewPanl .holdSpanSize', contents:
+         drv.create({title:ttl, contents:[{panl:'.DataViewPanl', contents:
          [
             {datagrid:'.darkSide', contents:{live:false,from:pth,vars:vrs}, listen:
             {
