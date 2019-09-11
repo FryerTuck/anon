@@ -95,10 +95,10 @@
             n.addEventListener('blur',function()
             {
                let x,s; x=this.pattern; if(isText(x)){x=(new RegExp(unwrap(x)));}; let f=(!x.test(this.value+'')); this.fail=f; this.pass=(!f);
-               s=(f?'fail':'pass'); let o=(isText(this.target)?this.Select(this.target):this); o.style.outline=(f?'#ff0000 solid 1px':'none');
+               s=(f?'fail':'pass'); let o=(isText(this.target)?this.select(this.target):this); o.style.outline=(f?'#ff0000 solid 1px':'none');
                this.Signal(s);
             });
-            n.addEventListener('focus',function(){let o=(isText(this.target)?this.Select(this.target):this); o.style.outline='auto';});
+            n.addEventListener('focus',function(){let o=(isText(this.target)?this.select(this.target):this); o.style.outline='auto';});
          };
 
          if(isFunc(d.onfeed))
@@ -130,7 +130,7 @@
             d.onmousedown=function(e)
             {
                let cn,mx,my,te; cn=this.className; if(cn.hasAny('moveBoth','moveHorz')){mx=1};  if(cn.hasAny('moveBoth','moveVert')){my=1};
-               if((!mx&&!my)||!isText(this.target)){return}; te=this.target; te=((te[0]=='^')?this.Select(te):Select(te));
+               if((!mx&&!my)||!isText(this.target)){return}; te=this.target; te=((te[0]=='^')?this.select(te):Select(te));
                if(te&&!isList(te)){te=[te]}; if(!te||te.length<1){fail('target selection `'+this.target+'` yielded nothing');return};
                te.Each((el)=>{el.m3ta={lw:cStyle(el,'width'),lh:cStyle(el,'height')}}); this.m3ta={}; this.m3ta.move=function(e)
                {
@@ -246,7 +246,7 @@
                {
                   if(e){throw (e); return}; var n=document.createElement('div'); n.setAttribute('class','markdown-view');
                   r=('<div class="markdown-body">'+r+'</div>'); if(head.page!==false){r=('<div class="markdown-page">'+r+'</div>');};
-                  n.innerHTML=r; trgt.appendChild(n); var l=n.Select('[class^="language-"], [class*=" language-"]').forEach((i)=>
+                  n.innerHTML=r; trgt.appendChild(n); var l=n.select('[class^="language-"], [class*=" language-"]').forEach((i)=>
                   {var c=i.className; if(!c.locate('line-numbers')){i.className = (c+' line-numbers');}; Prism.highlightAllUnder(n);});
                   if(isFunc(cbfn)){cbfn();};
                });
@@ -260,7 +260,7 @@
             b='<!--'; e='-->'; l=body.expose(b,e); if(l){l.forEach((i)=>{let f=(b+i+e); body=body.split(f).join('');})};
             b='<script'; e='</script>'; l=body.expose(b,e); if(l){l.forEach((i)=>
             {
-               let f=(b+i+e); body=body.split(f).join(''); f=dval(f)[0].Select('script')[0]; i=Create('script');
+               let f=(b+i+e); body=body.split(f).join(''); f=dval(f)[0].select('script')[0]; i=Create('script');
                if(!!f.src){i.src=f.src}else{i.innerHTML=f.innerHTML}; document.head.appendChild(i);
             })};
             l=undefined; l=Create('div'); l.innerHTML=body; l=list(l.childNodes); l.forEach((n)=>{trgt.appendChild(n)});
@@ -323,9 +323,9 @@
          var s,b,h,n; s=this; if(!v||!v.forEach){v=[v]}; v.forEach((n)=>
          {
             if(n==VOID){return};if(isText(n)||!(n instanceof Element)){if(isText(n)&&(wrapOf(n)!='<>')){n=('<span>'+n+'</span>');}; n=Create(n)};
-            if((p===VOID)||(p===-1)){s.appendChild(n);return}; if((typeof p)=='number'){b=s.Select(p); s.insertBefore(n,b);return};
+            if((p===VOID)||(p===-1)){s.appendChild(n);return}; if((typeof p)=='number'){b=s.select(p); s.insertBefore(n,b);return};
             if(!(['<<','>>','<','>']).hasAny(p)){return}; h=s.parentNode; if(p=='>>'){h.appendChild(n);return};
-            if(p=='<'){h.insertBefore(n,s);return}; b=s.Select(p); h.insertBefore(n,b);
+            if(p=='<'){h.insertBefore(n,s);return}; b=s.select(p); h.insertBefore(n,b);
          });
          return s;
       },
@@ -340,7 +340,7 @@
       Delete:function()
       {
          var s,l; s=this; l=list(arguments); if(isList(l[0])){l=l[0]}; if(span(l)<1){s.Signal('delete'); s.parentNode.removeChild(s)};
-         l.Each((a)=>{if(isText(a)){a=s.Select(a)}; if(!isList(a)){a=[a]}; a.Each((n)=>
+         l.Each((a)=>{if(isText(a)){a=s.select(a)}; if(!isList(a)){a=[a]}; a.Each((n)=>
          {if(n&&n.parentNode){n.Signal('delete'); n.parentNode.removeChild(n)}})});
       },
 

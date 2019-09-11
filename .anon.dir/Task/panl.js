@@ -387,7 +387,7 @@ extend(Anon)
                   [
                      {panl:
                      [
-                        {treeview:'.noSpan', source:'/User/treeMenu', filter:{type:'fold,plug'}, uproot:true, listen:
+                        {treeview:'', source:'/User/treeMenu', filter:{type:'fold,plug'}, uproot:true, listen:
                         {
                            'LeftClick':function()
                            {
@@ -424,7 +424,7 @@ extend(Anon)
                [
                   {col:'.CmntAtchMenu', contents:[{panl:
                   [
-                     {treeview:'.noSpan', source:'/User/treeMenu', uproot:true, draggable:true},
+                     {treeview:'', source:'/User/treeMenu', uproot:true, draggable:true},
                   ]}]},
                   {col:'.CmntAtchView', contents:[{panl:
                   [

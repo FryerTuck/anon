@@ -21,14 +21,30 @@ select('#AnonAppsView').insert
                   {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
                   {row:[{col:'#TimeTreeView .slabMenuBody', contents:[{panl:'#TimeTreePanl', contents:
                   [
-                     {treeview:'', source:'/User/treeMenu', uproot:true, listen:
-                     {
-                        'LeftClick':function()
+                     {treeview:'', source:'/User/treeMenu', uproot:true, filter:{file_name:'*.flt.php'}, hideFext:'php',
+                        fextIcon:{php:'filter'},
+                        listen:
                         {
-                           if(this.info.type=='fold'){return};
-                           Anon.Time.open(this.info.path);
-                        },
-                     }}
+                           'LeftClick':function(evnt)
+                           {
+                              if(this.info.type=='fold'){return}; let ctrl=evnt.ctrlKey; let shft=evnt.shiftKey;
+                              if(ctrl||shft){evnt.stopImmediatePropagation(); evnt.preventDefault(); evnt.stopPropagation();};
+                              Anon.Time.open(this.info.path,this.info.type,(ctrl?'ctrl':(shft?'shft':VOID)));
+                           },
+
+                           'mouseover,mouseout':function(evnt)
+                           {
+                              if(evnt.type=='mouseout'){this.declan('treeItemCtrl'); this.declan('treeItemShft'); this.blur(); return};
+                              this.focus(); if(evnt.ctrlKey){this.enclan('treeItemCtrl')}else if(evnt.shiftKey){this.enclan('treeItemShft')};
+                           },
+
+                           'keydown,keyup':function(evnt)
+                           {
+                              let k=evnt.signal; if((k!='Control')&&(k!='Shift')){return}; k=((k=='Control')?'Ctrl':'Shft');
+                              if(evnt.type=='keydown'){this.enclan('treeItem'+k);return}; this.declan('treeItem'+k);
+                           },
+                        }
+                     }
                   ]}]}]},
                ]}
             ]},
@@ -86,8 +102,24 @@ extend(Anon)
 
 
 
-      open:function(pth)
+      open:function(pth,tpe,alt)
       {
+         if(alt=='ctrl')
+         {
+            let ea={filter:{file_name:'*.flt.php'}, hideFext:'php', fextIcon:{php:'filter'}, events:{RightClick:false}};
+            ea.openItem={path:pth,type:tpe};
+            ea.saveBack=function(bfr,cbf){Anon.Time.save(bfr.path,bfr.info.type,bfr.value, cbf);};
+            AnonMenu.init('CodeMenuKnob',ea); return;
+         };
+
+         dump('Time .. open this');
+      },
+
+
+
+      save:function(pth,tpe,bfr,cbf)
+      {
+         dump('Time .. save this'); cbf(OK);
       },
 
 

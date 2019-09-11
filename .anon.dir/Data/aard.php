@@ -45,7 +45,7 @@ class Data
 
    static function treeMenu()
    {
-      $r=path::tree('/Data/link'); dump($r);
+      $r=path::tree('/Data/link'); ekko($r);
 
       // Proc::signal('busy',['with'=>"repo",'done'=>11]); wait(150); $v=knob($_POST);
       // if($v->purl){$r=self::dataTree($v->purl,$v->fltr); Proc::signal('busy',['with'=>"repo",'done'=>100]); dump(['data'=>$r]);};
@@ -64,7 +64,7 @@ class Data
 
    static function openItem()
    {
-      $vrs=knob($_POST); $tpe=$vrs->type; $dbc=crud($vrs->purl); $lmt=500; $qry=null; $rsl=null;
+      $vrs=knob($_POST); $tpe=$vrs->type; $prl=xeno::showHyperConduit($vrs->path); $dbc=crud($prl); $lmt=500; $qry=null; $rsl=null;
       $rsl=$dbc->select([fetch=>'*',limit=>$lmt]);
       dump($rsl);
 
@@ -88,11 +88,13 @@ class Data
 
    static function saveItem()
    {
-      $vrs=knob($_POST); $prl=$vrs->purl; $tpe=$vrs->type; $dta=decode::b64($vrs->data); $dbc=crud($prl); $rfs=$dbc->mean->refs;
+      $vrs=knob($_POST); $prl=xeno::showHyperConduit($vrs->path); $tpe=$vrs->type; $dta=decode::b64($vrs->data);
+      $dbc=crud($prl); $rfs=$dbc->mean->refs;
 
       if(isin(['sproc','funct'],$tpe))
       {
-         $nic=$dbc->mean->leaf; $rsl=$dbc->delete([sproc=>$nic]); $rsl=$dbc->adjure($dta); ekko(($rsl?OK:FAIL));
+         $nic=$dbc->mean->leaf;
+         $rsl=$dbc->delete([sproc=>$nic]); $rsl=$dbc->adjure($dta); done(($rsl?OK:FAIL));
       };
 
       if($tpe=='table')
@@ -107,7 +109,7 @@ class Data
                write => ["$vrs->col"=>$dta],
                limit => 1,
             ]);
-            dump(($rsl===true)?OK:FAIL);
+            done(($rsl===true)?OK:FAIL);
          };
       };
    }

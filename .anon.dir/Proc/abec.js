@@ -128,7 +128,7 @@
                if(!d.hasOwnProperty(p)){continue;};  var v=d[p];  var c={enumerable:FALS,configurable:FALS,writable:FALS};
                t=(typeof v)[0];if(v&&m&&((t=='f')||(t=='o'))){try{Object.defineProperty(v,'INTRINSIC',o)}catch(e){r=FALS;return}};
                c.value=v; if(t=='f'){Object.defineProperty(v,'name',{writable:FALS,enumerable:FALS,configurable:FALS,value:p})};
-               try{Object.defineProperty(i,p,c)}catch(e){r=FALS;};
+               if(p=='each'){c.writable=TRUE}; try{Object.defineProperty(i,p,c)}catch(e){r=FALS;};
             };
             return r;
          });
@@ -304,11 +304,10 @@
 
 // func :: padded : add left and right padding to text, or to text in a list, or to keys in an object
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   const padded = function(v, pl,pr)
+   const padded = function(d, pl,pr)
    {
-      if(!isText(pl)){pl=(pl+'')}; if(!isText(pr)){pr=(pr+'')}; if(isText(v)){return (pl+v+pr);};
-      if(isList(v)){let r=[]; for(let i in v){if(!v.hasOwnproperty(i)||!isText(v[i])){continue}; r[i]=(pl+v[i]+pr)}; return r};
-      if(isKnob(v)){let r={}; for(let i in v){if(!v.hasOwnproperty(i)||!isText(i)){continue}; r[i]=(pl+i+pr)}; return r};
+      if(!isText(pl)){pl=(pl+'')}; if(!isText(pr)){pr=(pr+'')}; if(isText(d)){return (pl+d+pr);}; if(!isList(d)&&!isKnob(d)){return};
+      let r=[]; d.each((v,k)=>{if(!isText(v)){return}; radd(r,(pl+v+pr))}); return r;
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -587,7 +586,7 @@
          var e,m,f,l,s,i,n,o; event.preventDefault(); event.stopPropagation(); if(MAIN.HALT){return}; MAIN.HALT=1; e=event.error;
          f=event.filename; l=event.lineno; if(!e||isText(e)||((e.stack+'').indexOf('\n')<0)){e=(new Error((e+'')))}; n=(e.name||'usage');
          m=e.message; if(!f){f=fail.maybe;}; if(!l){l=0;}; s=getStack(e); o={name:n, mesg:m, file:f, line:l};
-         console.error(n+' :: '+m+' '+f+' ('+l+')');
+         console.error((n+' :: '+m+' '+f+' ('+l+')'),s);
       });
    }());
 // --------------------------------------------------------------------------------------------------------------------------------------------

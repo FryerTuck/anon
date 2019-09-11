@@ -1,8 +1,12 @@
 
+// incl :: abec : tools
+// --------------------------------------------------------------------------------------------------------------------------------------------
 {:'/Proc/abec.js':}
+// --------------------------------------------------------------------------------------------------------------------------------------------
 
 
-// "use strict";
+
+// "use strict"; .. already defined in abec.js
 
 
 // shiv :: Cookies : https://github.com/js-cookie/js-cookie
@@ -24,6 +28,13 @@
          },
       }
    });
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// incl :: RequireJS : dynamic dependency loader
+// --------------------------------------------------------------------------------------------------------------------------------------------
+// '/Proc/libs/require/require.js'
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -248,7 +259,7 @@
                      {
                         if(!this.flt){this.tgt.signal(this.evt,{detail:m});continue};
                         k=keys(this.flt)[0]; v=this.flt[k]; h=m[k]; r=[]; if(!h||(h.length<1)){continue}; h=listOf(h);
-                        h.each((n)=>{let x=n.Select(v); if(!isList(x)){x=[x]}; r=r.concat(x)}); if(r.length<1){continue};
+                        h.each((n)=>{let x=n.select(v); if(!isList(x)){x=[x]}; r=r.concat(x)}); if(r.length<1){continue};
                         this.tgt.signal(this.evt,{detail:r});
                      };
                   }.bind({tgt:(obst||self),evt:e,flt:fltr})));
@@ -360,43 +371,50 @@
 
 // func :: requires : versatile preloader
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   const requires = function(l,f, s,d,slf)
+   const requires = function(l,f, s,a,slf)
    {
-      if(MAIN.HALT){return}; addStack(); if(!isList(l)){l=[l]}; if(!isFunc(f)){f=function(){}}; slf=this; d=span(l);
+      if(MAIN.HALT){return}; addStack(); if(!isFunc(f)){f=function(){}}; slf=this; a={};
+      if(!l||(span(l)<1)){f();return}; if(!isList(l)){l=[l]}; //dump(`${this.decr} ${s}`,'\n');
       l.each((i)=>
       {
-         let x=fext(i); if(x=='fnt'){x='css'}; if(!x){fail('expecting valid path');return STOP}; // validate
-         if(slf.done[i]){d--;return};
+         let p=stub(i,':'); if(p){i=p[2]; p=p[0]; a[p]=VOID}; let x=fext(i);
+         if(x=='fnt'){x='css'}; if(!x){fail('expecting valid path');return STOP}; // validate
+         this.decr++; if(slf.done[i]){slf.decr--; return}; let t=VOID;
 
          if(x=='js')
          {
-            let n=create('script'); n.purl=i; n.listen('ready',function(){d--; slf.done[this.purl]=1});
+            if(p)
+            {
+               // require.config({paths:{[p]:i}});
+               // require([i],function(m){extend(MAIN)({[(this.nick)]:m}); d--; slf.done[this.purl]=1; a[this.nick]=m}.bind({nick:p,purl:i}));
+            };
+            let n=create('script'); n.purl=i; n.listen('ready',function(){slf.decr--; slf.done[this.purl]=1});
             n.modify({src:i}); document.head.insert(n); return;
          };
 
          if(x=='css')
          {
-            let n=create('link'); n.purl=i; n.listen('ready',function(){d--; slf.done[this.purl]=1});
+            let n=create('link'); n.purl=i; n.listen('ready',function(){slf.decr--; slf.done[this.purl]=1});
             n.modify({rel:'stylesheet',href:i}); document.head.insert(n); return;
          };
 
          if((x=='htm')||(x=='html'))
          {
-            purl(i,(r)=>
+            purl(i,(r,d)=>
             {
-               r=(xdom(r.body)||[]); r.forEach((n)=> // html - apply each element to the dom
+               d=(xdom(r.body)||[]); d.forEach((n)=> // html - insert each element into its implied DOM parent
                {document[(isin(['script','style'],nodeName(n))?'head':'body')].insert(n);});
-               tick.after(10,()=>{d--; slf.done[r.path]=1})
+               tick.after(50,()=>{slf.decr--; slf.done[r.path]=1})
             }); return NEXT;
          };
 
          fail('unsupported file-extension `'+x+'`'); return STOP; // loop must not reach here
       });
 
-      if(d<1){f();return}; // if already loaded before - no need to wait any longer
-      wait.until(()=>{return (d<1)},f);
+      // if(slf.decr<1){f();return}; // if already loaded before - no need to wait any longer
+      wait.until(()=>{return (slf.decr<1)},()=>{f();});
    }
-   .bind({call:{},done:{}});
+   .bind({call:{},done:{},decr:0});
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -668,8 +686,10 @@
 
    extend(Element.prototype)
    ({
+      Select:Element.prototype.select,
       select:function(x)
       {
+         if(isin('textarea,input',nodeName(this))){return this.Select.apply(this,listOf(arguments))};
          return select(x,this);
       },
 
@@ -1150,15 +1170,14 @@
 
       fire:function(n,t, p)
       {
-         p=path(n.src||n.href); if((!p&&(t!='script'))||(t=='a')){tick.after(10,()=>
-         {n.signal('ready')});return}; // nodes without a path
-         n.purl=p; n.listen('load',ONCE,function(){this.done=100; tick.after(50,()=>{n.signal('ready')});}); // emit `ready` after onload
+         p=path(n.src||n.href); if((!p&&(t!='script'))||(t=='a')){tick.after(1,()=>{n.signal('ready')});return}; // nodes without a path
+         n.purl=p; n.listen('load',ONCE,function(){this.done=100; tick.after(1,()=>{n.signal('ready')});}); // emit `ready` after onload
          n.listen('error',function(){this.fail=1; if(!this.done){return}; Busy.tint('red'); Busy.edit(this.purl,100);}); // onfail
          tick.after(750,()=>{if(n.done||Busy.jobs[p]){return}; n.waiting=function(j,s,t){this.done=1; s=this; t=setInterval(()=> // wait
          {
             if(Busy.jobs[j]){s.done=Busy.jobs[j];s.fail=1}; Busy.edit(j,s.done);
             if(s.fail||(s.done>99)){clearInterval(t); delete s.waiting; return}; s.done++;
-         },50);}; n.waiting(p);});
+         },10);}; n.waiting(p);});
       }
    }));
 // --------------------------------------------------------------------------------------------------------------------------------------------

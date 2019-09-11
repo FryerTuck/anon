@@ -296,9 +296,16 @@ extend(custom.domtag)
          if(!tid){fail('treeview item info-data is invalid');return}; tid=('#Path'+sha1(tid));
          if(!fork&&!!rpo&&!!rpo.head){fork=rpo.head.fork;}; if(fork&&into.repo){into.repo.fork=fork};
          let flt=(slf.filter||{}); let fxt=fext(into.name); into.fext=((into.type=='fold')?'dir':(fxt||'none'));
-
-         if(flt.type&&!isin(flt.type,into.type)){return};
-         if(flt.fext&&!isin(flt.fext,into.fext)){return};
+         let fbc=0; flt.each((fv,fn)=>
+         {
+            if((fn=='type')&&!isin(fv,into.type)){fbc=1; return}; if((fn=='fext')&&!isin(fv,into.fext)){fbc=1; return};
+            let fp=stub(fn,'_'); if(!fp){return};  let it=fp[0]; fn=fp[2]; if(into[fn]==VOID){return};
+            if(into.type!=it){return}; if(isin(fv,'*')){let fr=akin(into[fn],fv); if(!fr){fbc=1}; return};
+         });
+         if(fbc){return};
+         if(txt.value.endsWith('.url')){txt.value=rtrim(txt.value,`.url`);}
+         else if(isin(slf.hideFext,fxt)){txt.value=rtrim(txt.value,`.${fxt}`);};
+         if(isKnob(slf.fextIcon)&&!!slf.fextIcon[fxt]){ico=slf.fextIcon[fxt]};
 
          let twg = create({treetwig:(tid+isr), info:into, tabindex:-1, listen:slf.events, contents:
          [

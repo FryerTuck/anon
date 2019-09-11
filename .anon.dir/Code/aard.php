@@ -39,16 +39,18 @@ namespace Anon;
 
       static function saveFile()
       {
-         $v=knob($_POST); $p=$v->path; $x=$v->plug; $b=$v->bufr;
+         $v=knob($_POST); $p=$v->path; $x=xeno::showHyperConduit($p); $b=$v->bufr;
 
          if(!$x)
          {
-            expect::path($p,[W,F]); path::make($p,$b);
-            $b=repo::branch($p); if($b){repo::commit(repoOf($p),"saved '$p'");}
-            elseif($p[0]!=='~'){Proc::signal('pathUpdate',['path'=>path::stem($p)],'.work');}; ekko(OK);
+            expect::path($p,[W,F]); $r=path::make($p,$b); if(!$r){ekko(FAIL);}; $b=repo::branch($p);
+            if($b){repo::commit(repoOf($p),"saved '$p'");}elseif($p[0]!=='~'){Proc::signal('pathUpdate',['path'=>$p],'.work');};
+            ekko(OK);
          };
 
-         $r=crud($x)->update($b); ekko(($r?OK:FAIL));
+         lock::create($p); try{$r=crud($x)->update($b);}catch(\Exception $e){$r=null;}; lock::remove($p);
+         if($r){Proc::signal('pathUpdate',['path'=>$p],'.work');};
+         ekko(($r?OK:FAIL));
       }
 
 

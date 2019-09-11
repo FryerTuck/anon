@@ -54,6 +54,7 @@
 
 #DrawToolView
 {
+   position:relative;
    width:64px; min-width:64px; height:100%;
    background:hsla(0,0%,0%,0.1);
    padding:2px;
@@ -61,6 +62,7 @@
 
 #DrawToolPanl
 {
+   position:absolute;
    overflow:hidden !important;
 }
 

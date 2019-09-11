@@ -19,7 +19,17 @@ select('#AnonAppsView').insert
                [
                   {row:[{col:'.slabMenuHead', contents:'draw'}]},
                   {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
-                  {row:[{col:'#DrawTreeView .slabMenuBody', contents:[{panl:'#DrawTreePanl'}]}]},
+                  {row:[{col:'#DrawTreeView .slabMenuBody', contents:[{panl:'#DrawTreePanl', contents:
+                  [
+                     {treeview:'', source:'/User/treeMenu', uproot:true, draggable:true, listen:
+                     {
+                        'LeftClick':function()
+                        {
+                           if(this.info.type=='fold'){return};
+                           Anon.Draw.open(this.info.path);
+                        },
+                     }}
+                  ]}]}]},
                ]}
             ]},
             {col:'.panlVertDlim', role:'gridFlex', axis:X, target:'<', contents:{vdiv:''}},
@@ -77,18 +87,6 @@ extend(Anon)
             let drv=e.detail.driver; let tgt=e.detail.target; tgt.head.hijacked=1;
             Anon.Draw.shut(drv,tgt);
          });
-
-         select('#DrawTreePanl').insert
-         ([
-            {treeview:'', source:'/Draw/treeMenu', uproot:true, draggable:true, listen:
-            {
-               'LeftClick':function()
-               {
-                  if(this.info.type=='fold'){return};
-                  Anon.Draw.open(this.info.path);
-               },
-            }}
-         ]);
 
          slf=this; requires('/Draw/getTools.js',()=>
          {

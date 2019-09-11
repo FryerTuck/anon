@@ -21,10 +21,11 @@
       {
          requires
          ([
-            '/User/dcor/icon.fnt','/Proc/libs/marked/marked.js','/Proc/libs/marked/marked.css',
+            '/User/dcor/icon.fnt','marked:/Proc/libs/marked/marked.js','/Proc/libs/marked/marked.css',
             '/Proc/libs/prism/prism.js','/Proc/libs/prism/prism.css'
-         ],()=>
+         ],(args)=>
          {
+            // dump(args);
             d=d.split('\n...\n').join('\n<br><br><br>\n');
             d=d.split('\n..\n').join('\n<br><br>\n');
             d=d.split('\n.\n').join('\n<br>\n');

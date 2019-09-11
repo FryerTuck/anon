@@ -156,7 +156,7 @@ namespace Anon;
       static function plugMenu()
       {
          $v=knob($_POST); $l=xeno::showHyperConduit($v->path,parts); $p=$l->plug;
-         if($l->path){$p="$p/$l->path";}; $i=path::info($l->plug); $r=crud($p)->select('*'); unset($p);
+         if($l->path){$p="$p/$l->path";}; $i=path::info($l->plug); $D=crud($p); $r=$D->select('*');
 
          if(isin(['ftp','ftps'],$i->plug))
          {
@@ -172,11 +172,10 @@ namespace Anon;
             $dat=knob
             ([
                "repo"=>null,
-               "purl"=>"$prl/$itm",
-               "path"=>swap("$pth/$itm",'//','/'),
+               "path"=>$itm,
                "levl"=>($lvl+1),
                "name"=>$itm,
-               "mime"=>null,
+               "mime"=>$D->mean->mime,
                "type"=>$tpe,
                "size"=>0,
                "time"=>0,
@@ -194,7 +193,7 @@ namespace Anon;
       static function treeExec()
       {
          permit::face(API); $q=knob($_POST); $h=$q->path; if(!isPath($h)||isin($h,['..','./'])){done('invalid path');};
-         $h=crop($h); if(strpos($h,'~')!==0){done(wack());}; $a=$q->args; $t=$q->type;
+         $h=crop($h); $a=$q->args; $t=$q->type;
          $X=xeno::showHyperConduit($h); $XI=(!$X?null:path::info($X)); $XP=(!$XI?null:$XI->plug);
 
 

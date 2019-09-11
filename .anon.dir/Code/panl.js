@@ -1,7 +1,12 @@
 "use strict";
 
-
-requires(['/Code/dcor/aard.css','/Proc/libs/prism/prism.js','/Proc/libs/prism/prism.css']);
+requires
+([
+   '/Code/dcor/aard.css',
+   '/Code/libs/codemirror/lib/codemirror.js',
+   '/Code/libs/codemirror/lib/codemirror.css',
+   '/Code/libs/codemirror/theme/seti.css',
+]);
 
 
 
@@ -63,13 +68,52 @@ extend(Anon)
 ({
    Code:
    {
-      vars:{},
+      vars:
+      {
+         extNeeds:
+         {
+            css:['css/css'],
+            html:['xml/xml','javascript/javascript','css/css','htmlmixed/htmlmixed'],
+            js:['javascript/javascript'],
+            md:['xml/xml','markdown/markdown'],
+            php:['xml/xml','javascript/javascript','css/css','htmlmixed/htmlmixed','clike/clike','php/php'],
+            sql:['sql/sql'],
+            xml:['xml/xml'],
+         }
+      },
+
+
+
+      keys:
+      {
+         'Control s':function(inst, ev)
+         {
+            if(inst.saved){return}; inst.value=inst.mytab.editor.getValue(); ev=Anon.Code.vars.external;
+
+            if(isFunc(ev.saveBack)){ev.saveBack(inst,(sb)=>
+            {
+               if(sb==OK){inst.ohash=md5(inst.value);inst.check(inst.value);return};
+               alert("failed saving: "+inst.ipath);
+            });return};
+
+            purl('/Code/saveFile',{path:inst.ipath,bufr:inst.value},function(rsp)
+            {
+               rsp=rsp.body; if(rsp!=OK){alert("failed saving: "+inst.ipath);return};
+               inst.ohash=md5(inst.value); inst.check(inst.value);
+               // select('#CodeTreeMenu').update();
+            });
+         }
+      },
+
+
 
       conf:
       {
          tabSpace:(("{:/Code/conf/tabSpace:}"||3)*1),
          beatTime:(("{:/Code/conf/beatTime:}"||360)*1),
       },
+
+
 
       anew:function(cbf)
       {
@@ -82,187 +126,65 @@ extend(Anon)
 
 
 
-      init:function(ea, dir,tmr)
+      init:function(ini, mnu)
       {
-         ea=(ea||{}); this.vars.external=ea; dir=(ea.treePath||'/User/treeMenu'); tmr=Anon.Code.conf.beatTime;
-         if(!isNumr(tmr)||isFrac(tmr)||(tmr<100)){fail('invalid beatTime .. expecting INT >= 100');return};
-
-
-         select('#CodeTreePanl').insert
-         ([
-            {treeview:'#CodeTreeMenu', source:dir, uproot:true, initVars:ea.initVars, listen:
-            {
-               'LeftClick':function()
-               {
-                  if(this.info.kids){return};
-                  Anon.Code.open(this.info);
-               },
-               'drop':function(data,file, inf,dir,pth)
-               {
-                  this.declan('dragOver'); inf=this.info; dir=((inf.type=='fold')?inf.path:twig(inf.path));
-                  pth=(dir+'/'+file); Anon.Code.feed({from:'menu',path:pth,data:data});
-               },
-            }}
-         ]);
-
-
-         select('#CodeTreeMenu').listen('loaded',ONCE,()=>
+         ini=(ini||{}); this.vars.external=ini;
+         mnu={treeview:'#CodeTreeMenu', source:'/User/treeMenu', uproot:true, listen:
          {
-            select('#CodeTreeMenu').listen('loaded',function()
+            'LeftClick':function()
             {
-               let rpo=select('#CodeTreeMenu').select('.isRepo'); if(!rpo){return};
-               rpo=rpo[0].info.repo.head; Anon.Code.pull(rpo);
-            });
-
-            if(!select('#CodeTreeMenu').select('.isRepo')){server.listen('pathChange',(v)=>
+               if(this.info.kids){return};
+               Anon.Code.open(this.info);
+            },
+            'drop':function(data,file, inf,dir,pth)
             {
-               let upd=0; if(rm.select('#Path'+sha1(v.path))){upd=1};
-               if(upd){select('#CodeTreeMenu').update();};
-            })};
+               this.declan('dragOver'); inf=this.info; dir=((inf.type=='fold')?inf.path:twig(inf.path));
+               pth=(dir+'/'+file); Anon.Code.feed({from:'menu',path:pth,data:data});
+            },
+         }};
+         ini.each((v,k)=>{mnu[k]=v}); select('#CodeTreePanl').insert(mnu);
 
-            select('#CodePanlSlab').listen('Control f',(evnt)=>
-            {
-               let tvrw=select('#CodeToolView'); if(isin(tvrw.className,'show')){tvrw.declan('show');return}; tvrw.enclan('show'); // togl
-               let tlbx=select('#CodeToolPanl');
-            });
-
-            select('#CodePanlSlab').listen('Control Shift S',()=>
-            {
-               let inf=select('#CodeTreeMenu').select('.isRepo')[0]; if(!inf){return}; inf=inf.info;
-               let drv=select('#CodeTabber').driver; let tab=drv.active; let bfr={saved:1};
-               if(tab){bfr=tab.body.select('.CodeEditBufr')[0]}; let nfo=encode.jso((bfr.info||{}));
-               Anon.Code.save(bfr,()=>
-               {
-                  purl('/Code/pushRepo',{path:inf.path,fork:inf.repo.fork},(rsp)=>
-                  {
-                     rsp=rsp.body; if(rsp==OK){return};
-                     if(!isin(rsp,'CONFLICT')){console.error(rsp.body); repl.mumble('something went wrong, try again?'); return};
-                     repl.mumble('merge conflict .. have a look?'); if(!nfo){return};
-                     Anon.Code.shut(drv,tab); nfo=decode.jso(nfo); tick.after(250,()=>{Anon.Code.open(nfo);});
-                  });
-               });
-            });
-
-            server.listen('repoUpdate',(v)=>
-            {
-               let upd=0; (select('#CodeTreeMenu').select('.isRepo')||[]).each((n)=>
-               {if(n.info.repo.head.fork==v.fork){upd=1; return STOP}}); if(!upd){return};
-               select('#CodeTreeMenu').update();
-            });
-         });
-
-
-         select('#CodeTabber').listen('close',function(e)
+         select('#CodeTreePanl').select('treeview')[0].listen('loaded',ONCE,()=>
          {
-            let drv=e.detail.driver; let tgt=e.detail.target; tgt.head.hijacked=1;
-            Anon.Code.shut(drv,tgt);
+
+            if(!!ini.openItem){Anon.Code.open(ini.openItem);};
          });
-
-
-         select('#CodeTabber').listen('focus',function(e, bfr)
-         {
-            bfr=VOID; wait.until
-            (
-               ()=>
-               {
-                  bfr=(e.detail.target.body.select('.CodeEditBufr')||e.detail.target.body.select('.CodeViewBufr'));
-                  return ((span(bfr)>0)&&(span(bfr[0].vars)>0))
-               },
-               ()=>{Anon.Code.info(bfr[0])}
-            );
-         });
-
-
-         if(ea.openItem){this.open(ea.openItem);};
       },
 
 
 
-      open:function(nfo, vrs,p,tpe,tabr,tab,code,info,file,mime,extn,spel,bfr,box,bin,eav,ofp,ttl,beat,plg)
+      open:function(nfo, drv,pth,tpe,ttl,tab,eav,ofp,ext,lng,wrp,opt,mim)
       {
-         vrs=this.vars; beat=Anon.Code.conf.beatTime;
+         drv=select('#CodeTabber').driver; pth=nfo.path; tpe=nfo.type; ttl=`${pth}`;
+         tab=drv.select(ttl); if(!!tab){return}; eav=this.vars.external; ofp=(eav.readPath||'/Code/openFile');
+         ext=nfo.fext; if(ext=='htm'){ext='html'}; if(isin('gif,jpg,jpeg,png,svg,webp',ext)){this.view(nfo);return};
+         lng=this.vars.extNeeds[ext]; drv.create({title:ttl, contents:[{div:'.CodeEditWrap'}]});
 
-         p=(nfo.purl||nfo.path); tpe=nfo.type; ttl=((tpe=='file')?nfo.path:(tpe+' '+nfo.path)); plg=nfo.plug;
-         eav=(this.vars.external||{}); ofp=(eav.openPath||'/Code/openFile');
-         tabr=select('#CodeTabber').driver; tab=tabr.select(ttl,0); if(!!tab){return}; file=p.split('/').pop();
-         extn=(fext(p)||'txt'); if(eav.fileType){extn=eav.fileType};
-         if(!isin(['htm','html','xml','css','js','json','php','md','sql','txt','inf'],extn)){this.view(nfo);return};
-         spel=isin(['txt','md'],extn);
-         purl(ofp,{path:p,purl:p,type:tpe,plug:plg},function(r)
+         if(lng){lng=padded(lng,'/Code/libs/codemirror/mode/','.js')};
+
+         requires(lng,()=>
          {
-            mime=mimeName(r.head.ContentType); if(eav.mimeType){mime=eav.mimeType};
-            tabr.create({title:ttl, contents:[{grid:
-            [
-               {row:[{col:'.CodeEditView', contents:[{grid:[{row:
-               [
-                  {col:'.CodeGutrView', contents:[{div:'.CodeGutrPanl', contents:[{grid:'.CodeGutrBase',contents:[{row:
-                     [{col:'.CodeGutrNumr',contents:[]},{col:'.CodeGutrTint',contents:[]}]}]}
-                  ]}]},
-                  {col:'.CodeEditHpad'},
-                  {col:'.CodeEditHold', contents:[{panl:'.CodeEditWrap', contents:[{panl:'.CodeEditPanl', contents:
-                  [
-                     {pre:('.CodeEditBase .language-'+mime), contents:[{code:('.CodeEditDeck .language-'+mime)}]},
-                     {div:'.CodeEditCrsr'},
-                     {textarea:'.CodeEditBufr', tab:ttl, path:p, info:nfo, hash:sha1(r.body), value:r.body, spelling:spel,
-                        time:(beat*3), typing:FALS,
-                     },
-                  ]}]}]},
-               ]}]}]}]},
-            ]}]});
-
-            tab=tabr.select(ttl,0); bfr=tab.body.select('.CodeEditBufr')[0]; bin=bfr.parentNode; bin.dime=rectOf(bin);
-            tab.body.select('.CodeEditPanl')[0].listen('scroll',function()
+            purl(ofp,{path:pth,type:tpe},(r)=>
             {
-               this.select('^3').select('.CodeGutrBase')[0].style.top=((0-this.scrollTop)+'px');
+               tab=drv.select(ttl,0); wrp=tab.body.select('.CodeEditWrap')[0];
+               lng=(lng||['/default.']).pop().split('/').pop().split('.')[0];
+               opt={mode:lng, lineNumbers:true, theme:'seti', value:r.body};
+               tab.editor=CodeMirror(wrp,opt); wrp.childNodes[0].setStyle({height:'100%'});
+               tab.editor.anon=//object
+               {
+                  mytab:tab,
+                  ipath:pth,
+                  itype:tpe,
+                  saved:true,
+                  ohash:md5(r.body),
+                  check:function(hsh)
+                  {hsh=md5(hsh); this.saved=(hsh==this.ohash); select('#CodeTabber').driver.edited(this.mytab.head.title,(!this.saved));},
+               };
+               tab.editor.on('change',function(cmi){cmi.anon.check(cmi.doc.getValue());});
+               tab.editor.on('keydown',function(cmi,evt)
+               {if(!Anon.Code.keys[evt.signal]){return}; Anon.Code.keys[evt.signal](cmi.anon);});
+               // mim=eav.mimeName; if(!mim){mim=mimeName(r.head.ContentType)};
             });
-
-            bfr.base=select('<<',bfr); bfr.seek=select('<',bfr);
-            bfr.gutr={numr:tab.body.select('.CodeGutrNumr')[0],tint:tab.body.select('.CodeGutrTint')[0]};
-            bfr.vars={}; bfr.saved=TRUE;
-
-            bfr.listen(['keydown','keyup'],function(evnt)
-            {
-               if((evnt.type=='keyup')&&!isin(['Control','Shift','Meta','Alt'],evnt.signal))
-               {this.time=0;};
-
-               if((evnt.signal=='Tab')&&(evnt.type=='keydown'))
-               {
-                  evnt.preventDefault(); evnt.stopPropagation(); evnt.stopImmediatePropagation(); this.focus();
-                  let stab=dupe(' ',Anon.Code.conf.tabSpace); this.insertAtCaret(stab);
-               }
-               else if((evnt.signal=='Enter')&&(evnt.type=='keyup'))
-               {
-                  this.insertAtCaret(this.vars.dent);
-               }
-               Anon.Code.draw(this);
-            });
-
-            bfr.listen(['mousedown','mouseup'],function(){Anon.Code.seek(this)});
-            bfr.listen('Control s',function(){Anon.Code.save(this)});
-            bfr.listen('focus',function(){this.hasFocus=1});
-            bfr.listen('blur',function(){this.hasFocus=0});
-
-            bfr.focus(); Anon.Code.draw(bfr);
-            tick.after(250,()=>{Anon.Code.tint();});
-
-            if(!vrs.tikr)
-            {
-               vrs.tikr=tick.every(beat,function()
-               {
-                  let lst=select('#CodeBodyPanl').select('.CodeEditCrsr');
-                  if(span(lst)<1){clearInterval(vrs.tikr); vrs.tikr=VOID; return};
-
-                  lst.forEach((itm)=>
-                  {
-                     let dsp=itm.style.display; dsp=((dsp=='inline-block')?'none':'inline-block');
-                     let bfr=itm.select('>'); if(!bfr.hasFocus){dsp='none'}; itm.style.display=dsp;
-                     bfr.time+=beat; if(bfr.time<(beat*2)){bfr.typing=TRUE; bfr.saved=FALS; return};
-                     bfr.typing=FALS; if(bfr.time>(beat*3)){bfr.time=(beat*3);return}; // prevent overflow
-                     if(bfr.time>beat){let hsh=sha1(bfr.value); bfr.saved=(hsh==bfr.hash)};
-                     select('#CodeTabber').driver.edited(bfr.tab,(!bfr.saved));
-                  });
-               });
-            };
          });
       },
 
@@ -287,36 +209,6 @@ extend(Anon)
                },
             }}]}]});
          });
-      },
-
-
-
-      draw:function(bfr, sho,lns,dim)
-      {
-         // if(!(bfr.value+'').endsWith('\n')){bfr.value=(bfr.value+'\n');};
-         // dim=bfr.getBoundingClientRect();
-         // bfr.setStyle({width:dim.width,height:dim.height});
-         bfr.setStyle({width:(bfr.scrollWidth+1),height:(bfr.scrollHeight+1)});
-         sho=bfr.base.childNodes[0]; sho.textContent=bfr.value; Prism.highlightAllUnder(bfr.base);
-         lns=bfr.value.split('\n'); bfr.gutr.numr.innerHTML='';
-         lns.forEach((v,k)=>{bfr.gutr.numr.insert({span:('.ln'+(k+1)),contents:((k+1)+'')})});
-         this.seek(bfr);
-      },
-
-
-      seek:function(bfr, crs,pos,pts,row,col,pvl,pvc,tmp,dnt,inf,lno,lnl)
-      {
-         bfr.focus(); crs=bfr.seek; crs.style.display='inline-block';
-         pos=bfr.selectionStart; pts=bfr.value.substr(0,pos).split('\n');
-         row=pts.length; col=(pts[(row-1)].length+1); row-=1; col-=1;
-         crs.style.top=((row*14)+'px'); crs.style.left=((col*6)+'px');
-
-         pvl=(pts[row]||''); pvc=((col<1)?'':pvl.slice((col-1),col));
-         tmp=ltrim(pvl); dnt=(pvl.length-tmp.length); dnt=((dnt<1)?'':dupe(' ',dnt)); row+=1; col+=1;
-         bfr.vars.dent=dnt; bfr.vars.line=row; bfr.vars.char=col;
-         lnl=bfr.gutr.numr.select('span'); if(lnl){lnl.forEach((n)=>{n.declan('crntLine')})};
-         lno=bfr.gutr.numr.select('.ln'+row); if(lno){lno[0].enclan('crntLine')};
-         inf=select('#CodeInfoPosi'); if(inf){inf.innerHTML=(row+':'+col)};
       },
 
 

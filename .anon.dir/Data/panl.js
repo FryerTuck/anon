@@ -78,12 +78,7 @@ extend(Anon)
                   let ctrl=evnt.ctrlKey; let meta=evnt.shiftKey;
                   if((this.info.kids&&!ctrl&&!meta)||(this.info.levl<1)){return};
                   if(ctrl||meta){evnt.stopImmediatePropagation(); evnt.preventDefault(); evnt.stopPropagation();};
-                  Anon.Data.open(this.info.purl,this.info.type,ctrl);
-               },
-
-               'RightClick':function()
-               {
-                  dump('yo');
+                  Anon.Data.open(this.info.path,this.info.type,ctrl);
                },
 
                'mouseover,mouseout':function(evnt)
@@ -109,28 +104,25 @@ extend(Anon)
 
          if(isin(['sproc','funct'],tpe))
          {
-            let iv=this.repl.vars; let ih=(iv.plug+iv.path);
-            let ea={treePath:'/Data/treeMenu', initVars:{purl:ih,fltr:'sproc,funct'}, fileType:'sql', mimeType:'sql', openPath:'/Data/openItem'};
-            ea.openItem={path:iv.fpth,purl:prl,type:tpe};
-            ea.saveBack=function(bfr,cbf){Anon.Data.save(bfr.path,bfr.info.type,bfr.value, cbf);};
+            let ea={source:'/Data/treeMenu', readPath:'/Data/openItem'};
+            ea.openItem={path:prl,type:tpe,mime:'application/sql',fext:'sql'};
+            ea.saveBack=function(inst,cbfn){Anon.Data.save(inst.ipath,inst.itype,inst.value, cbfn);};
             AnonMenu.init('CodeMenuKnob',ea); return;
          };
 
-
          Anon.Data.show('/Data/openItem',{purl:prl,type:tpe,ctrl:alt});
 
-
-         // purl('/Data/openItem',{purl:prl,type:tpe,ctrl:alt},(rsp)=>
-         // {
-         //    Anon.Data.show(rsp.body,prl,tpe,alt);
-         // });
+         purl('/Data/openItem',{purl:prl,type:tpe,ctrl:alt},(rsp)=>
+         {
+            Anon.Data.show(rsp.body,prl,tpe,alt);
+         });
       },
 
 
 
       save:function(prl,tpe,val,cbf)
       {
-         purl('/Data/saveItem',{purl:prl,type:tpe,data:btoa(val)},(rsp)=>
+         purl('/Data/saveItem',{path:prl,type:tpe,data:btoa(val)},(rsp)=>
          {
             if(isFunc(cbf)){cbf(rsp.body)};
          });
@@ -207,15 +199,12 @@ extend(Anon)
       {
          vars:{},
 
-         init:function(prl,tpe, pts,ptc,usr,dom,pth)
+         init:function(pth,tpe, pts,plg,dir)
          {
-            pts=stub(prl,'://'); ptc=pts[0]; pts=stub(pts[2],'@');
-            usr=stub(pts[0],':')[0]; pts=stub(pts[2],'/'); dom=pts[0]; pth=('/'+(pts[2]||''));
-            this.vars.plug=swap(prl,('@'+dom+pth),('@'+dom)); this.vars.fpth=pth;
-            if(isin(['sproc','funct'],tpe)){pth=rstub(pth,'/')[0];}; this.vars.path=pth;
-            this.vars.purl=prl; this.vars.prom=(ptc+' '+usr+'@'+dom+' '+pth);
+            if(isin(['sproc','funct'],tpe)){pth=rstub(pth,'/')[0];};
+            this.vars.path=pth; this.vars.prom=pth;
 
-            repl.runsql=function(a){Anon.Data.repl.exec(a);};
+            repl.runsql=Anon.Data.repl.exec;
             repl.ENV.target='runsql'; this.prom();
          },
 

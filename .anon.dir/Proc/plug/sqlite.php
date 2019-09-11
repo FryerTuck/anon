@@ -13,7 +13,7 @@ namespace Anon;
       function __construct($x)
       {
          $p=$x->path; $t=path::type($p); if($t==='none'){$x->path="$p.sdb";}elseif($t==='fold'){$x->path="$p/base.sdb";}; $p=$x->path;
-         $this->mean=$x;
+         $this->mean=$x; $this->mean->mime='application/sql';
          // if(!isee($p)||(path::size($p)<1)){$this->create();};
          // $td="$h/cols.php"; expect::path($td,[R,F]); $this->{':defn:'}=import($td);
          // $td=expect("$h/cols.php")->as(['path'=>[R,F]]); $this->{':defn:'}=import($td);
