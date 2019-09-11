@@ -6,11 +6,11 @@
 /Mail/link/*
 /Mail/data/*
 /Mail/conf/autoMail
-# /Mail/vars/lastRead
+/Mail/vars/lastRead
 /Proc/temp/*
 /Proc/conf/autoMail
 /Proc/conf/hostName
-# /Proc/vars/lastDbug
+/Proc/vars/lastDbug
 /Task/data/*
 /Task/vars/*
 /Task/conf/autoMail
