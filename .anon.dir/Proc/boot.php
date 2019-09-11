@@ -502,7 +502,7 @@ namespace Anon;
 # dbug :: keep : housekeeping
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    $dbs=(pget('/User/conf/inactive')*1); $ldb=(pget('/Proc/vars/lastDbug')*1); $tmn=time();
-   if(($tmn-$ldb)>$dbs){require(path('/Proc/keep.php'));}; unset($dbs,$ldb,$tmn);
+   if(($tmn-$ldb)>$dbs){require(path('/Proc/keep.php')); upkeep($dbs,$ldb,$tmn);}; unset($dbs,$ldb,$tmn);
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 

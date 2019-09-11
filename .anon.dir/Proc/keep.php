@@ -3,7 +3,7 @@ namespace Anon;
 
 # func :: upkeep : delete old temp-files .. create temp folders if undefined .. remove stale sessions, locks, refs, etc.
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   function upkeep()
+   function upkeep($dbs,$ldb,$tmn)
    {
       $h='/Proc/temp'; $x=['file','kban','lock','refs','sesn'];  $cln=user('clan'); $hsh=sesn('HASH');
 
@@ -38,6 +38,4 @@ namespace Anon;
 
       path::make('/Proc/vars/lastDbug',$tmn);
    }
-
-   upkeep();
 # ---------------------------------------------------------------------------------------------------------------------------------------------
