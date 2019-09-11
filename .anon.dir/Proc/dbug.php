@@ -12,7 +12,7 @@ namespace Anon;
 
 # dbug :: path : expected files
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   if(!isee('/Proc/dbug.htm')||!isee('/Proc/dbug.inf')||!is_writable(path('/Proc/dbug.inf'))){halt(424,'Failed Dependency - dbug');}; // NB
+   if(!isee('/Proc/dbug.htm')||!isee('/Proc/vars/lastDbug')||!is_writable(path('/Proc/vars/lastDbug'))){halt(424,'Failed Dependency - dbug');};
    if(!isee('/User/conf/inactive')){halt(424,'Failed Dependency - dbug');}; // NB
    if(NAVIPATH===DBUGPATH){$r=pget(DBUGPATH); $r=str_replace('{:(TECHMAIL):}',TECHMAIL,$r); print_r($r); flush(); die();}; // must fail nicely
 # ---------------------------------------------------------------------------------------------------------------------------------------------
