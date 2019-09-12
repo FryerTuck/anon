@@ -43,7 +43,15 @@ namespace Anon;
 
       static function openFltr()
       {
-         $v=knob($_POST); $p=$v->path; ekko::path("/Time/menu/$p");
+         $v=knob($_POST); $p=$v->path; import($p,['PATH'=>$p]);
+         done(FAIL);
+      }
+
+
+      static function execFltr()
+      {
+         $v=knob($_POST); $p=$v->path; $v=$v->data; $v->PATH=$p; import($p,$v);
+         done(FAIL);
       }
 
 

@@ -863,8 +863,8 @@
       return function(o)
       {
          if(!isKnob(o)){fail('expecting 1st argument as object');return}; let ot,oi; ot=this.target;
-         oi=ot.replace(/[^A-Za-z0-9]/g,''); if(span(oi)<1){fail('invalid CSS selector');return}; oi=('#ORDAINED_'+oi);
-         if(o.ornate){document.head.insert([{style:oi,innerHTML:(ot+'\n{\n'+o.ornate+'\n}\n')}])};
+         oi=ot.replace(/[^A-Za-z0-9]/g,''); if(span(oi)<1){fail('invalid CSS selector');return}; // oi=('#ORDAINED_'+oi);
+         // if(isText(o.style)){document.head.insert([{style:oi,innerHTML:(ot+'\n{\n'+o.ornate+'\n}\n')}])};
          ordained.chosen[ot]=o; ordained.vivify();
       }
       .bind({target:a});
@@ -879,9 +879,11 @@
       {
          this.chosen.each((v,k)=>
          {
-            if(!isKnob(v.listen)||(span(v.listen)<1)){return NEXT};
-            let l=select(k); if(!l){return NEXT}; if(!isList(l)){l=[l]};
-            l.forEach((n)=>{if(n.anointed){return}; n.modify({anointed:true,listen:v.listen});});
+            let l=select(k); if(!l){return NEXT}; // nobody to anoint
+            if(!isList(l)){l=[l]}; l.forEach((n)=>
+            {
+               if(n.anointed){return}; n.modify(v); n.anointed=true;
+            });
          });
       },
    };
@@ -1159,6 +1161,7 @@
       if(MAIN.HALT){return}; if(!e.detail){return};
       l=e.detail.addedNodes; if(isList(l)){l=listOf(l);}else{return}; // validate
       this.walk(l); // check all new nodes - including their children
+      tick.after(50,()=>{ordained.vivify()}); // anoint the ordained ones (if any)
    }
    .bind
    ({

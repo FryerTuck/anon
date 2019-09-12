@@ -725,8 +725,8 @@
    {
       position:relative !important;
       box-sizing:border-box !important;
-      width:100% !important;
-      display:block !important;
+      width:100%;
+      display:block;
       font-family:'code';
       font-size:16px !important; line-height:16px !important;
       padding:4px;

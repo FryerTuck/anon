@@ -106,13 +106,39 @@ extend(Anon)
       {
          if(alt=='ctrl')
          {
-            let ea={filter:{file_name:'*.flt.php'}, hideFext:'php', fextIcon:{php:'filter'}, events:{RightClick:false}};
-            ea.openItem={path:pth,type:tpe};
-            ea.saveBack=function(bfr,cbf){Anon.Time.save(bfr.path,bfr.info.type,bfr.value, cbf);};
+            let ea={filter:{file_name:'*.flt.php'}, hideFext:'php', fextIcon:{php:'filter'}};
+            ea.openItem={path:pth,type:tpe,mime:'application/x-httpd-php',fext:'php'};
+            // ea.saveBack=function(bfr,cbf){Anon.Time.save(bfr.path,bfr.info.type,bfr.value, cbf);};
             AnonMenu.init('CodeMenuKnob',ea); return;
          };
 
-         dump('Time .. open this');
+         purl('/Time/openFltr',{path:pth},(r)=>
+         {
+            r=r.body; if(isJson(r)){this.view(r);return};
+            r=Function(`${r}`); r();
+         });
+      },
+
+
+
+      exec:function(vrs)
+      {
+         if(!isKnob(vrs)){fail('expecting object');return};
+         if(!isPath(vrs.path)&&!isPath(`/${vrs.path}`)){fail('invalid argumentObject.path .. expecting path');return};
+         if(!isKnob(vrs.data)){fail('invalid argumentObject.data .. expecting object');return};
+
+         purl('/Time/execFltr',vrs,(r)=>
+         {
+            this.view(r.body);
+         });
+      },
+
+
+
+      view:function(txt)
+      {
+         dump(txt);
+         if(!isJson(txt)){fail('expecting JSON (text)');return};
       },
 
 

@@ -116,3 +116,10 @@
 
 #CodeInfoRepo
 {width:20px;}
+
+
+.CodeMirror-matchingbracket
+{
+   text-decoration:none !important;
+   border-bottom:1px solid hsla(35,100%,70%,1) !important;
+}

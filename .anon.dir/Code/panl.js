@@ -6,7 +6,10 @@ requires
    '/Code/libs/codemirror/lib/codemirror.js',
    '/Code/libs/codemirror/lib/codemirror.css',
    '/Code/libs/codemirror/theme/seti.css',
-]);
+],()=>
+{
+   requires('/Code/libs/codemirror/addon/edit/matchbrackets.js');
+});
 
 
 
@@ -168,7 +171,7 @@ extend(Anon)
             {
                tab=drv.select(ttl,0); wrp=tab.body.select('.CodeEditWrap')[0];
                lng=(lng||['/default.']).pop().split('/').pop().split('.')[0];
-               opt={mode:lng, lineNumbers:true, theme:'seti', value:r.body};
+               opt={mode:lng, lineNumbers:true, theme:'seti', indentUnit:3, tabSize:3, matchBrackets:true, value:r.body};
                tab.editor=CodeMirror(wrp,opt); wrp.childNodes[0].setStyle({height:'100%'});
                tab.editor.anon=//object
                {
