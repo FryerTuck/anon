@@ -23,6 +23,12 @@ namespace Anon;
       }
 
 
+      static function exists($d)
+      {
+         if(!isWord($d)){return;}; return (isee("/User/data/$d")?true:false);
+      }
+
+
 
       static function getPanel()
       {
@@ -88,10 +94,10 @@ namespace Anon;
 
       static function doLogout()
       {
-         $l=array_keys($_COOKIE); if(count($l)<1){ekko(OK);}; $t='/^[a-z0-9]{40}$/'; $h='/Proc/temp/sesn';
-         Time::logEvent(user('name'),$c=user('clan'),'API');
-         foreach($l as $i){if(!test($i,$t)){continue;}; kuki($i,null); unset($_COOKIE[$i]); void("/Proc/temp/sesn/$i");};
-         done(OK);
+         $l=array_keys($_COOKIE); if(count($l)<1){ekko(OK);}; $t='/^[a-z0-9]{40}$/'; $u=user('name'); $h=sesn('HASH');
+         Time::logEvent($u,$c=user('clan'),'API');
+         foreach($l as $i){if(!test($i,$t)||($i===$h)){continue;}; kuki($i,null); unset($_COOKIE[$i]); void("/Proc/temp/sesn/$i");};
+         path::make("/Proc/temp/sesn/$h/USER",$u); done(OK);
       }
 
 
@@ -156,7 +162,7 @@ namespace Anon;
       static function plugMenu()
       {
          $v=knob($_POST); $l=xeno::showHyperConduit($v->path,parts); $p=$l->plug;
-         if($l->path){$p="$p/$l->path";}; $i=path::info($l->plug); $D=crud($p); $r=$D->select('*');
+         if($l->path){$p=($p.$l->path);}; $i=path::info($l->plug); $D=crud($p); $r=$D->select('*');
 
          if(isin(['ftp','ftps'],$i->plug))
          {

@@ -1,2 +1,3 @@
 toggleUserPanl: 'Control `',
-toggleMakeDokt: 'Control Enter',
+toggleReplView: 'Meta `',
+toggleMakeDokt: 'Alt Enter',

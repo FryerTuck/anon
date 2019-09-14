@@ -9,6 +9,12 @@ extend(custom.attrib)
    data:function(v,n,a, r)
    {r=(isPath(v)?r=(v+'?n='+nodeName(n)):(v+'')); n.setAttribute('data',r); n.src=r; return TRUE;},
 
+   demo:function(v,n,a, r)
+   {if(!isin('input,textarea',nodeName(n))){return}; n.setAttribute('placeholder',v); n.placeholder=v;},
+
+   regx:function(v,n,a, r)
+   {if(!isin('input,textarea',nodeName(n))){return}; if(isFunc(v)){return}; n.pattern=v; n.setAttribute('pattern',v); },
+
 
 
    role:function(v,n,a, f)

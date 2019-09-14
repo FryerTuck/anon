@@ -41,6 +41,32 @@
 
 
 
+# func :: lshave/rshave : alternative to ltrim/rtrim -which f*cks up with slashes .. this plays nice .. default is once .. bool(true) recurs
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   function lshave($a,$b=null,$r=false)
+   {
+      if(!is_string($a)){return;}; if(!is_string($b)){return ltrim($a);}; $s=strlen($b); if(!$s||(strlen($a)<$s)){return $a;};
+      if(substr($a,0,$s)!==$b){return $a;}; do{$a=substr($a,$s);}while($r&&(substr($a,0,$s)===$b));
+      return $a;
+   }
+
+   function rshave($a,$b=null,$r=false)
+   {
+      if(!is_string($a)){return;}; if(!is_string($b)){return rtrim($a);}; $s=strlen($b); if(!$s||(strlen($a)<$s)){return $a;};
+      if(substr($a,(0-$s),$s)!==$b){return $a;}; do{$a=substr($a,0,(strlen($a)-$s));}while($r&&(substr($a,(0-$s),$s)===$b));
+      return $a;
+   }
+
+   function ashave($a,$b=null,$r=false)
+   {
+      if(!is_string($a)){return;}; if(!is_string($b)){return trim($a);};
+      $z=lshave($a,$b,$r); $z=rshave($z,$b,$r);
+      return $z;
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 # func :: envi : server variables .. prefix-free
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function envi($d)
@@ -75,7 +101,7 @@
    function path($p)
    {
       if(!is_string($p)){return;}; if(!test($p,'/^[a-zA-Z0-9-\/\.\$~@_]{1,432}$/')){return;}; $p=str_replace('//','/',$p);
-      $r=envi('ROOTPATH'); $c=envi('COREPATH'); $u=envi('USERPATH'); if(($p==='/')||($p==='.')){return $r;}; $p=rtrim($p,'/');
+      $r=envi('ROOTPATH'); $c=envi('COREPATH'); $u=envi('USERPATH'); if(($p==='/')||($p==='.')){return $r;}; $p=rshave($p,'/');
       if(substr($p,-1,1)==='.'){return;};
       if(!$r||!$c||!$u){return $p;}; if($p===''){return $r;}; if($p==='$'){return $c;}; if($p==='~'){return $u;}; // works for: ./  $/  ~/
       if((strpos($p,$u)===0)||(strpos($p,$c)===0)||(strpos($p,$r)===0)){return $p;}; $s=substr($p,0,1); $p=ltrim($p,'$/'); $p=ltrim($p,'~/');
@@ -134,7 +160,7 @@
    function pset($p,$v='')
    {
       if(!is_string($p)){return;}; if(strlen($p)<2){return;}; $d=0; if(substr($p,-1,1)==='/'){$d=1;}; $p=path($p); if(!$p){return;};
-      if($d&&is_dir($p)){return true;}; $h=rtrim($p,'/'); $h=explode('/',$h); $b=array_pop($h); $h=implode('/',$h); $u=umask(); umask(0);
+      if($d&&is_dir($p)){return true;}; $h=rshave($p,'/'); $h=explode('/',$h); $b=array_pop($h); $h=implode('/',$h); $u=umask(); umask(0);
       if(!isee($h)){$r=explode('/',$h); array_pop($r); $r=implode('/',$r); if(!is_writable($r)){return;}; mkdir($h,0777,true);};
       if($d){$r=mkdir($p,0777,true);}else{$r=file_put_contents($p,$v);}; umask($u); return $r;
    };

@@ -1,7 +1,16 @@
 "use strict";
 
 
-requires(['/Time/dcor/aard.css','/Proc/libs/chartist/chartist.css','/Proc/libs/chartist/chartist.js']);
+requires
+([
+   '/Time/dcor/aard.css',
+   '/Proc/libs/chartist/chartist.css',
+   '/Proc/libs/chartist/chartist.js'
+],
+()=>
+{
+   // requires('/Proc/libs/chartist/legend.js');
+});
 
 
 
@@ -114,7 +123,7 @@ extend(Anon)
 
          purl('/Time/openFltr',{path:pth},(r)=>
          {
-            r=r.body; if(isJson(r)){this.view(r);return};
+            r=r.body; if(isJson(r)){this.view(r,pth);return};
             r=Function(`${r}`); r();
          });
       },
@@ -129,16 +138,30 @@ extend(Anon)
 
          purl('/Time/execFltr',vrs,(r)=>
          {
-            this.view(r.body);
+            this.view(r.body,vrs.path);
          });
       },
 
 
 
-      view:function(txt)
+      view:function(txt,pth, dta,drv,tab,ttl,tpe,opt,tgt,box,lgn)
       {
-         dump(txt);
-         if(!isJson(txt)){fail('expecting JSON (text)');return};
+         if(!isJson(txt)){fail('expecting JSON (text)');return}; dta=decode.jso(txt,1); if(span(dta)<1){alert('no data for graph');return};
+         if(!isList(dta.labels)||!isList(dta.series)){fail('invalid graph data');return}; if(!dta.layout){dta.layout={}};
+         if(!isKnob(dta.layout)){fail('expecting `layout` as object');}; if(!dta.layout.type){dta.layout.type='Line'}; tpe=dta.layout.type;
+         if(!Chartist[tpe]){fail('graph type `'+tpe+'` is undefined');return}; opt=dta.layout; delete dta.layout;
+
+         drv=select('#TimeTabber').driver; ttl=stub(pth,'.flt.')[0]; tab=drv.select(ttl); if(!!tab){return};
+         drv.create({title:ttl, contents:[{panl:'.TimeViewPanl'}]}); tab=drv.select(ttl); tgt=tab.body.select('.TimeViewPanl')[0];
+
+         tpe=`${opt.type}`; delete opt.type; if(!isInum(opt.width)||!isInum(opt.height))
+         {box=rectOf(tgt); opt.width=(box.width-6); opt.height=(box.height-6);};
+         opt.high=24; opt.low=0; opt.axisY={onlyInteger:true,offset:20};
+
+         // lgn=[]; dta.series.forEach((o,i)=>{radd(lgn,{name:o.name,series:i})});
+         // opt.plugins=[Chartist.plugins.legend({legendNames:lgn})];
+
+         new Chartist[tpe](tgt,dta,opt);
       },
 
 

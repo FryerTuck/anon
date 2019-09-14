@@ -786,7 +786,7 @@
 
 
 
-/* node :: AnonTreeModl
+/* clan :: AnonTreeModl
 /* ----------------------------------------------------------------------------------------------- */
    .AnonTreeModl .body .view
    {
@@ -812,5 +812,35 @@
    .AnonTreeModl .body small
    {
       opacity:0.6 !important;
+   }
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* clan :: validate : Good, Warn, Fail
+/* ----------------------------------------------------------------------------------------------- */
+   .validateGood
+   {
+      outline:auto !important;
+      outline-color:hsla(120,100%,60%,1) !important;
+   }
+
+   .validateNeed
+   {
+      outline:auto !important;
+      outline-color:hsla(295,100%,55%,1) !important;
+   }
+
+   .validateWarn
+   {
+      outline:auto !important;
+      outline-color:hsla(35,100%,60%,1) !important;
+   }
+
+   .validateFail
+   {
+      outline:auto !important;
+      outline-color:hsla(0,100%,60%,1) !important;
    }
 /* ----------------------------------------------------------------------------------------------- */

@@ -531,7 +531,7 @@ extend(custom.domtag)
             {
                let ri=rsp.shift(); let rb={row:'', canFocus:true, contents:[]}; let rx=VOID; ri.each((rv,rc)=>
                {
-                  let xw=((span(rv)*6)+8); if(xw>120){xw=120}; if(!rx){rx=(rc+':'+rv);};
+                  let xw=((span(rv)*7)+8); if(xw>120){xw=120}; if(!rx){rx=(rc+':'+rv);};
                   rb.contents.radd({col:('.body'),contents:
                   [{input:'', field:rc, style:('min-width:'+xw+'px'), readonly:true, contents:rv, listen:
                   {

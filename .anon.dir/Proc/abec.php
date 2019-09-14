@@ -257,8 +257,6 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function akin($h,$n)
    {
-$zz=(($h==="seen")&&($n==="*seen*"));
-
       if(!is_string($h)||!is_string($n)){return;}; if((strlen($h)<1)||(strlen($n)<1)){return;}; if(strpos($n,'*')===false){return ($h===$n);};
       if(strpos($n,'**')!==false){if((substr($n,0,2)==='**')||(substr($n,-2,2)==='**')){return;}};
       if($n==='*'){return true;};if((strlen($n)<2)||($n==='**')){return;}; if(wrapOf($n)==='**'){$n=unwrap($n);return (strpos($h,$n)!==false);};
@@ -695,7 +693,7 @@ $zz=(($h==="seen")&&($n==="*seen*"));
 
       static function ignore($h,$a,$i)
       {
-         expect::repo($h); $h=rtrim($h,'/'); $p="$h/.git/info/exclude"; expect::path($p,[W,F]);
+         expect::repo($h); $h=rshave($h,'/'); $p="$h/.git/info/exclude"; expect::path($p,[W,F]);
          if(($a!==write)&&($a!==erase)){fail('expecting 2nd arg as either :write: or :erase:');};
          expect::text($i,2); $r=pget($p); $q="\n$i"; if((($a===write)&&isin($r,$q))||(($a===erase)&&!isin($r,$q))){return OK;};
          if($a===write){$r.=$q;}else{$r=swap($r,$q,'');}; path::make($p,$r); return OK;
@@ -867,7 +865,7 @@ $zz=(($h==="seen")&&($n==="*seen*"));
          $x=self::ctrl($p,$o); if(!$x){return;}; if(is_string($o)){$o=[$o];}; if(!is_array($o)){$o=[];}; $o=crop($o); // get controller path
          if(!is_array($a))
          {
-            $y=rtrim(stub($x,['aard.php','index.php','auto.php'])[0],'/'); $a=trim(str_replace($y,'',$p),'/'); // filter arguments
+            $y=rshave(stub($x,['aard.php','index.php','auto.php'])[0],'/'); $a=trim(str_replace($y,'',$p),'/'); // filter arguments
             $a=((strlen($a)<1)?[]:explode('/',$a)); // make arguments array
          };
          $r=import($x); if(is_closure($r)){return call($r,$a);}; if(!isset($a[0])){return $r;}; // load controller
@@ -886,7 +884,7 @@ $zz=(($h==="seen")&&($n==="*seen*"));
       static function move($pf,$pt)
       {
          $pf=path($pf); $pt=path($pt); if(!$pf||!$pt){fail('expecting 2 paths');}; if(!isee($pf)){fail("`$pf` is undefined");};
-         if(isee($pt)){if(!isPath($pt,[D,W])){fail("`$pt` exists and is not a writable folder");}; $pt=rtrim($pt,'/'); $pt="$pt/";};
+         if(isee($pt)){if(!isPath($pt,[D,W])){fail("`$pt` exists and is not a writable folder");}; $pt=rshave($pt,'/'); $pt="$pt/";};
          $r=rename($pf,$pt); return $r;
       }
 
@@ -894,7 +892,7 @@ $zz=(($h==="seen")&&($n==="*seen*"));
       static function copy($pf,$pt)
       {
          $pf=path($pf); $pt=path($pt); if(!$pf||!$pt){fail('expecting 2 paths');}; if(!isee($pf)){fail("`$pf` is undefined");};
-         if(isee($pt)){if(!isPath($pt,[D,W])){fail("`$pt` exists and is not a writable folder");}; $pt=rtrim($pt,'/'); $pt="$pt/";};
+         if(isee($pt)){if(!isPath($pt,[D,W])){fail("`$pt` exists and is not a writable folder");}; $pt=rshave($pt,'/'); $pt="$pt/";};
          exec::{"cp -R $pf $pt"}(); return true; // will fail if not OK
       }
 
@@ -909,6 +907,46 @@ $zz=(($h==="seen")&&($n==="*seen*"));
       {
          $r=['repo','path','name','mime','type','size','time','mode','levl','data'];
          return $r;
+      }
+
+
+      static function scan($q,$gr=null)
+      {
+         if(isAssa($q)){$q=knob($q,U);}; if(!isKnob($q)){fail('expecting assoc-array or object');}; $qu=$q->using; expect::path($qu,[D,R]);
+         $qf=$q->fetch; if(span($qf)<1){return;}; $xc=self::cols(); if($qf==='*'){$qf=vals($xc);}
+         elseif(isText($qf)){$qf=swap($qf,' ',''); if(isin($qf,',')){$qf=frag($qf,',');}else{$qf=[$qf];}};
+         if(isNuma($qf)){$q->fetch=$qf; unset($qf); $qf=knob(); $em='invalid `fetch`'; foreach($q->fetch as $fi)
+         {
+            if(is_string($fi)){$fi=swap($fi,' ','');}; if(!isText($fi,1)){fail("$em column name");}; if(!isin($fi,':')){$fi="$fi:$fi";};
+            $fp=explode(':',$fi); if(!$fp[0]||!$fp[1]){fail("$em column reference");}; $qf->{"$fp[0]"}=$fp[1];
+         }};
+         if(!isKnob($qf)){fail("$em parameter");}; $fc=keys($qf); foreach($fc as $cn){if(!isin($xc,$cn)){fail("$em column name");}};
+
+         $qw=$q->where; if($qw&&is_string($qw)){$qw=[$qw];}; $ql=$q->limit;
+         if($ql&&(!is_int($ql)||($ql<0))){fail('invalid `limit` parameter');};
+         $dl=[]; $fl=[]; $l=pget($qu); if(count($l)<1){return $rl;}; $qu=crop($qu); if(!$gr&&isin($fc,'repo')){$gr=repo::status($qu);};
+
+         if($gr&&!isKnob($gr)){$gr=null;}; if($qu==='/'){$qu='';}; unset($cn); $stop=0; foreach($l as $i)
+         {
+            if($stop){break;}; $p="$qu/$i"; $o=knob(); $t=(isFile($p)?'file':(isFold($p)?'fold':'link')); foreach($fc as $cn)
+            {
+               $cv=$qf->$cn; $ok="$cn"; if(is_string($cv)){$ok="$cv";$cv=null;}; $ov=null;
+               if($cn==='repo'){$ov=($gr?$gr->$p:null);}elseif($cn==='path'){$ov="$p";}elseif($cn==='name'){$ov="$i";}
+               elseif($cn==='type'){$ov=$t;}elseif($cn==='size'){$ov=self::size($p);}
+               elseif($cn==='time'){$ii=info($p); $ov=$ii->mtime; unset($ii);}
+               elseif($cn==='mode'){$ov=substr(sprintf('%o',fileperms(path($p))),-4);}elseif($cn==='levl'){$ov=lshave($p,'/');}
+               elseif($cn==='data'){if(isFile($p)){$ov=pget($p);}elseif(isLink($p)){$ov=readlink(path($p));}else
+               {
+                  $dd=[]; $df=[]; $dc=pget($p); foreach($dc as $di){if(isFold("$p/$di")){$dd[]=$di;}else{$df[]=$di;}};
+                  sort($dd); sort($df); $ov=array_merge($dd,$df); unset($dd,$df,$dc,$di);
+               }};
+               if(isFunc($cv)){$ov=$cv($ov);}; $o->$ok=$ov;
+            };
+            $ao=1; if($qw){foreach($qw as $wx){if(!reckon($wx,$o)){$ao=0;break;}};}; if($ql&&(count($rl)>$ql)){$ao=0; $stop=1;};
+            if(!$ao){continue;}; if($t=='fold'){$dl[]=$o;}else{$fl[]=$o;};
+         };
+
+         $rl=array_merge($dl,$fl); return $rl;
       }
 
 
@@ -1125,7 +1163,7 @@ $zz=(($h==="seen")&&($n==="*seen*"));
       },[$p,$v]);
 
       if($x['T']){return $x['T'];}; // the PHP script printed some stuff, it probably wanted to do that, we're done then
-      $a=ltrim($a,'/'); $a=rtrim($a,'/aard.php'); if(isin($a,'/')){$a=rtrim($a,'/index.php');}; $c="Anon\\$a"; if(!is_class($c)){$c=null;};
+      $a=lshave($a,'/'); $a=rshave($a,'/aard.php'); if(isin($a,'/')){$a=rshave($a,'/index.php');}; $c="Anon\\$a"; if(!is_class($c)){$c=null;};
 
       if(isset($x['V']['export'])){$r=$x['V']['export']; if(is_class($r)&&!$c){$c="Anon\\$r"; unset($x['V']['export']);}else{return $r;};};
       if($c){if(isin($c,'meta')&&!$c::$meta){$c::$meta=knob();}; if(is_method("$c::__init")&&!$ni){call("$c::__init");}; return $c;};

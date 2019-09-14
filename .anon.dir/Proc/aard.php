@@ -22,11 +22,11 @@ namespace Anon;
 
       static function init()
       {
-         self::$meta->hush=knob(); self::$meta->hook=knob(); self::$meta->wait=250;
+         self::$meta->hush=knob(); self::$meta->hook=knob(); self::$meta->wait=500;
          $p=NAVIPATH; Time::logEvent(); if(strpos($p,'/~/')===0){$p=ltrim($p,'/~/'); $u=user('name'); $p="/User/data/$u/home/$p";};
          $r=path::call($p,__FILE__); // run PHP controller found in path .. this should exit here - else we handle it below:
          if(($r!==null)&&($r!==true)){ekko($r);}; // there was a PHP controller, it returned something, so we respond with that
-         if(is_dir(path($p))){$i=path::indx($p); if($i){$p=(rtrim($p,'/')."/$i");}}; // if folder, check for index-file
+         if(is_dir(path($p))){$i=path::indx($p); if($i){$p=(rshave($p,'/')."/$i");}}; // if folder, check for index-file
          finish($p); // handle regular path
       }
 

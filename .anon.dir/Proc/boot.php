@@ -47,7 +47,7 @@ namespace Anon;
    function isProprCase($d){return (ucwords($d)===$d);}
 
    function is_number($d){return (is_int($d)||is_float($d)||is_real($d));};
-   function is_funnic($d){if(!test($d,'/^([a-zA-Z0-9_]){2,48}$/')){return;}; return test(trim($d,'_'),'/^([a-zA-Z])([a-zA-Z0-9_]){1,48}$/');};
+   function is_funnic($d){if(!is_string($d)){return;}; return test(trim($d,'_'),'/^([a-zA-Z])([a-zA-Z0-9_]){1,48}$/');};
    function is_class($d){return (is_string($d)&&(class_exists($d,false)||class_exists("Anon\\$d",false)));};
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -191,7 +191,7 @@ namespace Anon;
    {
       if(is_array($v)){$v=array_values($v); foreach($v as $x => $i){$v[$x]=crop($i,$l);}; return $v;}; if(!is_string($v)){return;};
       $rup=envi('USERPATH'); $cup=USERPATH; if((strpos($v,$rup)===0)||(strpos($v,$cup)===0)){$v=str_replace([$rup,$cup],'~',$v);};
-      if(path($v)){$v=rtrim($v,'/'); $c=COREPATH; $r=ROOTPATH; if(!$v||($v===$r)){$v='/';}elseif($v===$c){$v='$';}
+      if(path($v)){$v=rshave($v,'/'); $c=COREPATH; $r=ROOTPATH; if(!$v||($v===$r)){$v='/';}elseif($v===$c){$v='$';}
       else{$v=str_replace([$c,$r],'',$v);}; $v=str_replace('//','/',$v); if(strpos($v,'/~')===0){$v=substr($v,1);}};
       $s=strlen($v); if($s<4){return $v;}; if(!is_int($l)){return $v;};
       if(($l<1)||($s<$l)){return $v;}; $v=substr($v,0,$l); return "$v...";
@@ -246,24 +246,29 @@ namespace Anon;
    {
       if(!headers_sent()){header_remove();}; while(ob_get_level()){ob_end_clean();};
       $r=''; $l=func_get_args(); foreach($l as $i){$r.=tval($i,DUMP);};
-      if(facing('BOT')||facing('SYS')){header('HTTP/1.1 503 Service Unavailable'); die();}; // crawler
+      if(facing('BOT')||facing('SYS')){if(!headers_sent()){header('HTTP/1.1 503 Service Unavailable');}; die();}; // crawler
 
       if(facing('SSE')&&envi('SSEREADY')){$r=base64_encode($r); print_r("event: dump\ndata: $r\n\n"); flush(); return;}; // server-side event
 
-      header('HTTP/1.1 200 OK'); if(facing('GUI')){sesn('USER');};
+      if(!headers_sent()){header('HTTP/1.1 200 OK');};
+      if(facing('GUI')){sesn('USER');};
 
       if(envi('ACCEPT')==='application/json')
       {
-         header('Content-Type: application/json');
+         if(!headers_sent()){header('Content-Type: application/json');};
          if((strpos($r,'data:')!==0)&&(strpos($r,';base64,')!==false)){$r=base64_encode($r); $r="data:text/plain;base64,$r";};
          $r=json_encode(knob(['name'=>'dump', 'data'=>$r])); print_r($r); flush(); die();
       };
 
       if(facing('DPR')&&(knob($_GET)->n==='script'))
-      {header('Content-Type: application/javascript'); $r=str_replace("'","\'",$r); $r=str_replace("\n",'\n',$r); $r="dump('$r');";}
-      else{header('Content-Type: text/plain');};
+      {
+         if(!headers_sent()){header('Content-Type: application/javascript');};
+         $r=str_replace("'","\'",$r); $r=str_replace("\n",'\n',$r); $r="dump('$r');";
+      }
+      else{if(!headers_sent()){header('Content-Type: text/plain');}};
 
-      header('Content-Type: text/plain'); print_r($r); flush(); die(); // DPR, GUI, API:text/plain
+      if(!headers_sent()){header('Content-Type: text/plain');};
+      print_r($r); flush(); die(); // DPR, GUI, API:text/plain
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 

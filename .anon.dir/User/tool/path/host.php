@@ -84,7 +84,7 @@ $export=function($x,$a,$h)
    {
       if($s<2){return 'expecting 2 arguments';}; $pf=path(path::fuse($h,$a[0])); $pt=path(path::fuse($h,$a[1]));
       if(!$pf||!$pt){return 'expecting 2 paths';}; if(!isee($pf)){return "`$a[0]` is undefined";};
-      if(isee($pt)){if(!isPath($pt,[D,W])){return "`$a[1]` exists and is not a writable folder";}; $pt=rtrim($pt,'/'); $pt="$pt/";};
+      if(isee($pt)){if(!isPath($pt,[D,W])){return "`$a[1]` exists and is not a writable folder";}; $pt=rshave($pt,'/'); $pt="$pt/";};
       $r=OK; try{exec::{"cp -R $pf $pt"}($h);}catch(\Exception $e){$r=$e->getMessage();};
       Proc::signal('replPath',['action'=>$x,'target'=>crop($pt)]);
       return $r;
@@ -95,7 +95,7 @@ $export=function($x,$a,$h)
    {
       if($s<2){return 'expecting 2 arguments';}; $pf=path(path::fuse($h,$a[0])); $pt=path(path::fuse($h,$a[1]));
       if(!$pf||!$pt){fail('expecting 2 paths');}; if(!isee($pf)){return "`$a[0]` is undefined";};
-      if(isee($pt)){if(!isPath($pt,[D,W])){return "`$a[1]` exists and is not a writable folder";}; $pt=rtrim($pt,'/'); $pt="$pt/";};
+      if(isee($pt)){if(!isPath($pt,[D,W])){return "`$a[1]` exists and is not a writable folder";}; $pt=rshave($pt,'/'); $pt="$pt/";};
       $r=rename($pf,$pt);
       Proc::signal('replPath',['action'=>$x,'target'=>crop($pt)]);
       return ($r?OK:FAIL);

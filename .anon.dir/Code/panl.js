@@ -9,6 +9,7 @@ requires
 ],()=>
 {
    requires('/Code/libs/codemirror/addon/edit/matchbrackets.js');
+   requires('/Code/libs/codemirror/addon/comment/comment.js');
 });
 
 
@@ -105,7 +106,13 @@ extend(Anon)
                inst.ohash=md5(inst.value); inst.check(inst.value);
                // select('#CodeTreeMenu').update();
             });
-         }
+         },
+
+
+         'Control /':function(inst, ev)
+         {
+            inst.mytab.editor.toggleComment();
+         },
       },
 
 
@@ -149,7 +156,7 @@ extend(Anon)
 
          select('#CodeTreePanl').select('treeview')[0].listen('loaded',ONCE,()=>
          {
-
+            // TODO .. repo stuff here
             if(!!ini.openItem){Anon.Code.open(ini.openItem);};
          });
       },

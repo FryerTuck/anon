@@ -65,8 +65,9 @@ class Data
    static function openItem()
    {
       $vrs=knob($_POST); $tpe=$vrs->type; $prl=xeno::showHyperConduit($vrs->path); $dbc=crud($prl); $lmt=500; $qry=null; $rsl=null;
-      $rsl=$dbc->select([fetch=>'*',limit=>$lmt]);
-      dump($rsl);
+
+      if($tpe!=='field'){$rsl=$dbc->select([fetch=>'*',limit=>$lmt]); done($rsl);};
+      $rsl=$dbc->descry('*'); done([$rsl]);
 
       // if($tpe==='dbase')
       // {};

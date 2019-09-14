@@ -68,3 +68,15 @@
 {
    overflow:hidden !important;
 }
+
+
+
+.TimeViewPanl
+{
+   background:hsla(0,0%,70%,1);
+}
+
+.ct-label
+{
+   color:hsla(0,0%,20%,1) !important;
+}

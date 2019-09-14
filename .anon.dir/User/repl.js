@@ -114,10 +114,10 @@ extend(MAIN)
       {
          server.stream.close(); window.onbeforeunload=null; navigator.sendBeacon('/User/doLogout','1');
 
-         tick.after(250,()=>
+         tick.after(250,(h)=>
          {
-            (cookie.select('*')||{}).each((v,k)=>{if(test(k,/^[a-z0-9]{40}$/)){cookie.delete(k)}});
-            repl.mumble('bye'); tick.after(250,()=>{newGui();});
+            h=sesn('HASH'); (cookie.select('*')||{}).each((v,k)=>{if(test(k,/^[a-z0-9]{40}$/)&&(k!=h)){cookie.delete(k)}});
+            cookie.update(h,'...'); repl.mumble('bye'); tick.after(250,()=>{newGui();});
          });
 
 

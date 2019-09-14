@@ -20,6 +20,7 @@
       {
          exists:function(b,v){v=Cookies.get(b); return isVoid(v);},
          create:function(b,a,c,d){Cookies.set(b,btoa(JSON.stringify(a)),{expires:c||null,path:d||"/"}); return true;},
+         update:function(b,a,c,d){Cookies.set(b,a,{expires:c||null,path:d||"/"}); return true;},
          delete:function(b,a){return Cookies.remove(b,{path:a||"/"})},
          select:function(b, r,v,t)
          {
@@ -138,7 +139,7 @@
          let r={path:this.purl,head:h,body:this.response}; if(!this.done){this.done=0};
          if((this.status==200)&&(this.done<100)){pe(100,this.purl);if(this.busy){Busy.edit(this.purl,100)};};
          if(x.silent){tick.after(250,()=>{delete server.silent.busy})};
-         cb(r);
+         if(MAIN.HALT){return}; cb(r);
       };
 
       if(o.silent){server.silent.busy=1};
@@ -910,6 +911,44 @@
    {
       if(!isText(v,3)||!isin(trim(v,'/'),'/')){return}; r=v.split(';')[0].split('/')[1].split('-').pop();
       return r;
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: validate : validates form(ish) elements according to their attributes .. expects an array of elements
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const validate = function(l, f,d,r)
+   {
+      f='expecting array of elements'; if(!isList(l)){fail(f);return}; d={}, r={}; l.each((n)=> // first pass .. check geek-fail .. register
+      {
+         if(!isNode(n)){fail(f);return STOP}; if(!isWord(n.name)){fail('expecting element.name as :word:');return STOP}; // geek-fail
+         if(isin(keys(d),n.name)){fail(`duplicate element name '${n.name}'`); return STOP}; // geek-fail
+         if(!n.required&&!n.optional&&!n.pattern){return NEXT}; // nothing to validate .. move along
+         n.listen('focus',function(){this.declan('validateFail','validateNeed')}); // when user attemps change then "de-fail" this temporarily
+         let vp=TRUE; if(n.required&&(span(n.value)<1)){vp=FALS}; // check required
+         if((n.pattern||n.regx)&&!test(n.value,(n.pattern||n.regx))){vp=FALS}; // test value on regx/function
+         n.validatePass=vp; d[n.name]=n; // record this as a dependant ..we need to have a temporary node registry for "optional:dep" cases
+      });
+
+      if(MAIN.HALT){return}; f=VOID; r={}; d.each((n,k)=>
+      {
+         r[k]=n.value; if(n.validatePass==TRUE){return NEXT}; // it's good! .. move along
+         let nm,nv,fc,od; nm=(n.placeholder||n.title||k); nv=n.value; fc='validateFail'; od=(n.optional+''); od=(od?od.split(','):VOID);
+         if(n.required){n.enclan(fc); f=((span(nv)<1)?`"${nm}" is required`:`"${nm}" is invalid`); return STOP};  // validate required + regx
+         if(!od||isin(od,['true','1'])){return NEXT}; // optional with no dependecies .. move along
+         od.each((rd)=>
+         {
+            if(!d[rd]){fail(`optional dependency '${rd}' is invalid`);return STOP}; // geek-fail .. invalid dependency
+            if(!d[rd].validatePass)
+            {
+               nm=(d[rd].placeholder||d[rd].title||r); f=((span(d[rd].value)<1)?`"${nm}" is required`:`"${nm}" is invalid`);
+               d[rd].enclan('validateNeed'); return STOP
+            }
+         });
+      });
+
+      if(MAIN.HALT){return}; return (f||r);
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 

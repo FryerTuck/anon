@@ -29,7 +29,7 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const span = function(d,x)
    {
-      if(!d&&isNaN(d)){return 0};  if(!isNaN(d)){d=(d+'')};
+      if((d===null)||(d===VOID)||(!d&&isNaN(d))){return 0};  if(!isNaN(d)){d=(d+'')};
       if(x&&((typeof x)=='string')&&((typeof d)=='string')){d=(d.split(x).length-1); return d};
       let s = d.length; if(!isNaN(s)){return s;}; try{s=Object.getOwnPropertyNames(d).length; return s;}catch(e){return 0;}
    };
@@ -59,8 +59,9 @@
    const test = function(v,x)
    {
       if(((typeof v)!='string')||(v.length<1)){return FALS}; if(!x){return};
-      if((typeof x)=='string'){if(wrapOf(x)!=='//'){return}; x=(new RegExp(x));};
-      if(!x.constructor||(x.constructor.name!='RegExp')){return}; return (x.test(v)?TRUE:FALS);
+      if((typeof x)=='string'){if(wrapOf(x)!=='//'){return}; x=(new RegExp(x));}; if(!x){return};
+      if(x.constructor&&(x.constructor.name=='RegExp')){return (x.test(v)?TRUE:FALS)};
+      if(isFunc(x)){return x(v)};
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -76,7 +77,7 @@
    const isInum = function(v,g,l){if(!isNumr(v)||isFrac(v)){return FALS}; return (isVoid(g)||spanIs(v,g,l))};
 
    const isText = function(v,g,l){if(!((typeof v)==='string')){return FALS}; return (isVoid(g)||spanIs(v,g,l))};
-   const isWord = function(v,g,l){if(!test(v,/^([a-zA-Z_])([a-zA-Z0-9_]){2,36}$/)){return}; return (isVoid(g)||spanIs(v,g,l))};
+   const isWord = function(v,g,l){if(!test(trim(v,'_'),/^([a-zA-Z])([a-zA-Z0-9_]{1,35})+$/)){return}; return (isVoid(g)||spanIs(v,g,l))};
    const isPath = function(v,g,l){if(!test(v,/^([a-zA-Z0-9-\/\._@~]){1,432}$/)){return FALS}; return ((v[0]=='/')&&(isVoid(g)||spanIs(v,g,l)))};
    const isJson = function(v,g,l){return (isin(['[]','{}','""'],wrapOf(v))?TRUE:FALS);};
 
@@ -240,7 +241,7 @@
    {
       if(!isin(m,' :: ')){}; m=('Usage :: '+m); t=stub(m,' :: '); m=t[0]; t=t[2];
       o=(new Error((m+''))); o.name=t; MAIN.dispatchEvent((new CustomEvent('fail',{detail:o})));
-      console.error(o);
+      MAIN.HALT=1; console.error(o);
       // throw o;
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------

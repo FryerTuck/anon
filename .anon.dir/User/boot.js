@@ -68,21 +68,6 @@
 
 
 
-// evnt :: keyboard : toggle worker-panel upon keyboard shortcut
-// --------------------------------------------------------------------------------------------------------------------------------------------
-   listen(conf.toggleUserPanl,function()
-   {
-      initPanl();
-   });
-
-   document.body.addEventListener('keydown',function(e)
-   {
-      if(e.ctrlKey&&(e.key=='s')){e.preventDefault(); e.stopPropagation()};
-   });
-// --------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
 // cond :: clan : if user is logged in and is worker -then show the panel
 // --------------------------------------------------------------------------------------------------------------------------------------------
    if(userDoes('work','sudo'))
@@ -143,6 +128,19 @@
 
 // evnt :: (keys) : hotkeys
 // --------------------------------------------------------------------------------------------------------------------------------------------
+   listen(conf.toggleUserPanl,function()
+   {
+      initPanl();
+   });
+
+
+   listen(conf.toggleReplView,function()
+   {
+      let rpl,max,min,hgt; rpl=select('#MainGridCol3'); if(!rpl){return}; max=100; min=1; hgt=rectOf(rpl).height;
+      rpl.setStyle({height:((hgt>=max)?min:max)});
+   });
+
+
    listen('Control r',function()
    {
       window.onbeforeunload=null; newGui();
@@ -153,5 +151,11 @@
    {
       if(e.signal=='Control F5'){return;}; e.preventDefault(); e.stopPropagation();
       window.onbeforeunload=null; newGui();
+   });
+
+
+   document.body.addEventListener('keydown',function(e)
+   {
+      if(e.ctrlKey&&(e.key=='s')){e.preventDefault(); e.stopPropagation()};
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------

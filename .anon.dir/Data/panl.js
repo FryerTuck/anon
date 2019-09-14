@@ -110,12 +110,12 @@ extend(Anon)
             AnonMenu.init('CodeMenuKnob',ea); return;
          };
 
-         Anon.Data.show('/Data/openItem',{purl:prl,type:tpe,ctrl:alt});
+         Anon.Data.show('/Data/openItem',{path:prl,type:tpe,ctrl:alt});
 
-         purl('/Data/openItem',{purl:prl,type:tpe,ctrl:alt},(rsp)=>
-         {
-            Anon.Data.show(rsp.body,prl,tpe,alt);
-         });
+         // purl('/Data/openItem',{purl:prl,type:tpe,ctrl:alt},(rsp)=>
+         // {
+         //    Anon.Data.show(rsp.body,prl,tpe,alt);
+         // });
       },
 
 
@@ -158,7 +158,7 @@ extend(Anon)
                         if((sig=='Enter')&&(evnt.type=='keyup')&&edt)
                         {
                            tgt.readonly=true; tgt.setAttribute('readonly','true');
-                           Anon.Data.edit({purl:inf.purl, type:inf.type, data:val, row:row, col:col},(rsp)=>
+                           Anon.Data.edit({path:inf.path, type:inf.type, data:val, row:row, col:col},(rsp)=>
                            {
                               if(rsp==OK){tgt.declan('ctrlWarn'); tgt.enclan('ctrlGood'); return};
                               tgt.value=tgt.oval;

@@ -53,6 +53,33 @@ namespace Anon;
 
 
 
+# xeno :: showHyperConduit : reveal contents of 1st plug in path, e.g. `/path/to/some.url/file.ext` returns `ftp://example.com/file.ext`
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   xeno::learns('showHyperConduit',function($v,$w=null)
+   {
+      if(!isPath($v)){return;}; $v=crop($v); if(strlen($v)<5){return;}; if((substr($v,-4,4)!=='.url')&&!strpos($v,'.url/')){return;};
+      $s=stub($v,'.url'); $c="$s[0].url"; $p=$s[2]; if(!isee($c)){return;}; $c=rshave(pget($c),'/'); if(!isPurl($c)){return;};
+      if(!isPath($p)){$p=null;}; $r=knob(['plug'=>$c,'path'=>$p]); if($w){return $r;}; if(!$p){return $c;}; return ($c.$p);
+   });
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+# tool :: Clan : clan tools
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   class Clan
+   {
+      static function exists($d)
+      {
+         if(!isWord($d)){return;}; return (isee("/User/clan/$d")?true:false);
+      }
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
 # func :: reckon : assert on property values by using string as expression .. for use in `where` crud-filters that don't use database
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function reckon($expr,$vars)
@@ -74,19 +101,6 @@ namespace Anon;
 
    function any(){return knob(['any'=>func_get_args()]);};
    function all(){return knob(['all'=>func_get_args()]);};
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-
-# xeno :: showHyperConduit : reveal contents of 1st plug in path, e.g. `/path/to/some.url/file.ext` returns `ftp://example.com/file.ext`
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-   xeno::learns('showHyperConduit',function($v,$w=null)
-   {
-      if(!isPath($v)){return;}; $v=crop($v); if(strlen($v)<5){return;}; if((substr($v,-4,4)!=='.url')&&!strpos($v,'.url/')){return;};
-      $s=stub($v,'.url'); $c="$s[0].url"; $p=$s[2]; if(!isee($c)){return;}; $c=rtrim(pget($c),'/'); if(!isPurl($c)){return;};
-      if(!isPath($p)){$p=null;}; $r=knob(['plug'=>$c,'path'=>$p]); if($w){return $r;}; if(!$p){return $c;}; return ($c.$p);
-   });
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -730,26 +744,13 @@ namespace Anon;
 
 
 
-# func :: lshave/rshave : alternative to ltrim/rtrim -which f*cks up with slashes .. this plays nice .. default is once .. bool(true) recurs
+# func :: numr : turn any numeric(ish) text into a number .. returns unchanged-number if number given .. returns null if number not found
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   function lshave($a,$b=null,$r=false)
+   function numr($d)
    {
-      if(!is_string($a)){return;}; if(!is_string($b)){return ltrim($a);}; $s=strlen($b); if(!$s||(strlen($a)<$s)){return $a;};
-      if(substr($a,0,$s)!==$b){return $a;}; do{$a=substr($a,$s);}while($r&&(substr($a,0,$s)===$b));
-      return $a;
-   }
-
-   function rshave($a,$b=null,$r=false)
-   {
-      if(!is_string($a)){return;}; if(!is_string($b)){return rtrim($a);}; $s=strlen($b); if(!$s||(strlen($a)<$s)){return $a;};
-      if(substr($a,(0-$s),$s)!==$b){return $a;}; do{$a=substr($a,0,(strlen($a)-$s));}while($r&&(substr($a,(0-$s),$s)===$b));
-      return $a;
-   }
-
-   function ashave($a,$b=null,$r=false)
-   {
-      if(!is_string($a)){return;}; if(!is_string($b)){return trim($a);};
-      $z=lshave($a,$b,$r); $z=rshave($z,$b,$r);
-      return $z;
+      if(isNumr($d)){return $d;}; if(!is_string($d)){return;}; $d=trim($d); if(strlen($d)<1){return;}; $r=''; if($d[0]==='-'){$r='-';};
+      $n='0.123456789'; $l=str_split($d); foreach($l as $i){if(strpos($n,$i)===false){continue;}; 
+      if(($i==='.')&&(strpos($r,'.')!==false)){continue;}; $r.=$i;}; $r=ashave($r,'.'); if(strlen($r)<1){return;};
+      if(!is_numeric($r)){return;}; $r=($r*1); return $r;
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------

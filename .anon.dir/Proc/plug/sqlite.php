@@ -192,7 +192,8 @@ namespace Anon;
             };
             $x=$q->fetch; foreach($x as $k => $v)
             {
-               if(pick($v,[':','@','.'],XACT)){$v=explode(':',$v); $alt[(isset($v[2])?$v[2]:$v[0])]=$v[1];unset($v[1]);$v=fuse($v,':');};
+               // if(isin($v,':')){$zoo=$v;};
+               // if(pick($v,[':','@','.'],XACT)){$v=explode(':',$v); $alt[(isset($v[2])?$v[2]:$v[0])]=$v[1];unset($v[1]);$v=fuse($v,':');};
                $x[$k]=swap($v,':',' AS ');
             };
             $sql.=fuse($x,', '); unset($x,$k,$v);
