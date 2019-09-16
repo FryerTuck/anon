@@ -16,6 +16,7 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    (function(c,h,m)
    {
+      Busy.kill();
       c={ {:'/User/conf/viewConf':} }; c.each((v,k)=>{if(conf[k]){fail('`conf.'+k+'` is already defined');return}; conf[k]=v});
 
       c=getBadConf(); if(!c){return}; // check for bad config, if none then all is good
@@ -48,8 +49,10 @@
                Busy.edit('initPanl',81); requires(['/User/initBoot/skin.css','/User/initBoot/hack.js'],()=>
                {
                   Busy.edit('initPanl',100); AnonPanl.show(); // finish up as expected
-                  tick.after(1250,()=> // force Busy to close after 1 second
-                  {if(!select('#busyPane')){return}; dump(Busy.jobs); Busy.tint('yellow'); Busy.done()}); // but show that+why it was forced
+                  tick.after(50,()=> // force Busy to close after 1 second
+                  {
+                     if(!select('#busyPane')){return}; if(span(Busy.jobs)>0){Busy.tint('yellow'); dump(Busy.jobs)}; Busy.kill();
+                  }); // but show that+why it was forced
 
                   if(!isin(sesn('CLAN',1),'work')){return}; // we want to do something (next) that requires privileges
                   let c=getBadConf(); if(!c){return}; // check for bad config, if none then all is good
@@ -110,7 +113,7 @@
    {
       // Cookies.set(sesn('HASH'),'...'); navigator.sendBeacon('/User/doLogout','1');
       server.stream.close();
-      return true;
+      // return true;
    };
 
    // document.addEventListener('visibilitychange',function()
@@ -143,14 +146,16 @@
 
    listen('Control r',function()
    {
-      window.onbeforeunload=null; newGui();
+      newGui({APIKEY:sesn('HASH')});
    });
 
 
    listen('key:F5',function(e)
    {
-      if(e.signal=='Control F5'){return;}; e.preventDefault(); e.stopPropagation();
-      window.onbeforeunload=null; newGui();
+      // if(e.signal=='Control F5'){return;};
+      e.preventDefault(); e.stopPropagation();
+      // window.onbeforeunload=null;
+      newGui({APIKEY:sesn('HASH')});
    });
 
 

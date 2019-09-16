@@ -53,7 +53,7 @@ namespace Anon;
          if(!path($p)){fail::hooker('invalid path');}; $r=path::call($p,__FILE__); // call a closure or method by path
          if($r===null){fail::hooker("expecting `$p` as path-ref to an existing method -or closure");}; // path::call failed
 
-         $s=acid(); $h="/Proc/temp/sesn/$s/hook/$e"; $x=sha1(tval($r)); $o=['emit'=>$e,'purl'=>$p,'uniq'=>$x];
+         $s=sesn('HASH'); $h="/Proc/temp/sesn/$s/hook/$e"; $x=sha1(tval($r)); $o=['emit'=>$e,'purl'=>$p,'uniq'=>$x];
          path::make($h,encode::jso($o)); if(!$u||($u&&($u!==$x))){self::signal($e,$r);};
          if($fc){ekko(OK);};
       }
@@ -63,7 +63,7 @@ namespace Anon;
       static function dehook($e=null,$p=null)
       {
          $fc=0; if(!$e){$v=vars('client'); $e=$v->emit; $p=$v->purl;}; if(!is_funnic($e)){fail::hooker('invalid event name');};
-         if(!path($p)){fail::hooker('invalid path');}; $s=acid(); path::void("/Proc/temp/sesn/$s/hook/$e");
+         if(!path($p)){fail::hooker('invalid path');}; $s=sesn('HASH'); path::void("/Proc/temp/sesn/$s/hook/$e");
          if($fc){ekko(OK);};
       }
 
@@ -93,7 +93,7 @@ namespace Anon;
          {header_remove(); header("Content-Type: text/event-stream\n\n"); header('Cache-Control: no-cache, must-revalidate'); flush();};
 
          $wait=self::$meta->wait; $rtmx=(ini_get('max_execution_time')*1); $utmx=conf('User/inactive'); $utxs=$utmx; $tout=0; $fade=12;
-         $sesn=('/Proc/temp/sesn/'.acid()); $epth="$sesn/emit"; $tbgn=time(); $tlst=$tbgn; $cntr=0;
+         $sesn=('/Proc/temp/sesn/'.sesn('HASH')); $epth="$sesn/emit"; $tbgn=time(); $tlst=$tbgn; $cntr=0;
          $sxed=encode::jso(['time'=>$fade]); $fapi=facing('API'); $lost=0; $fint=$fade; $lstn=knob();
 
          $stms=fuse(pget('$'),pget('/'));
@@ -138,8 +138,7 @@ namespace Anon;
          if(!is_funnic($e)||self::$meta->hush->$e){return;}; // silence!!
          if($d===null){$d='!';}elseif(isAssa($d)||isKnob($d)){$d=knob($d);};
          if(($e==='busy')&&self::$meta->hush->{"$e.$d->with"}){return;}; // silence!! i keel yoo
-         $h='/Proc/temp/sesn'; if($t==='*'){$t=pget($h);}elseif($t===null){$t=[acid()];}; $c=0; $f=0;
-         // if($d===null){$sn=acid(); $hp="$h/$sn/hook/$e"; if(isee($hp)){$hd=decode::jso($hp); self::enhook($e,$hd->purl,$hd->uniq);return;}};
+         $h='/Proc/temp/sesn'; if($t==='*'){$t=pget($h);}elseif($t===null){$t=[sesn('HASH')];}; $c=0; $f=0;
          if(is_string($t)&&(strlen($t)>1)){$c=$t[0]; $f=substr($t,1);}; if(($c!=='#')&&($c!=='.')){$c=0;}; $w=self::$meta->wait;
 
          if($c!==0){$l=pget($h); $t=[]; foreach($l as $i)

@@ -40,14 +40,9 @@ const badCfg='{:badCfg:}';
 (function(a,b,s,c)
 {
    s=HOSTNAME; c=location.host.split('.'); c.shift(); c=c.join('.');
-   if((location.host!=s)&&(c!=s)){wack();return}; a=document.createElement('script'); a.src='/Proc/base.js'; a.onload=function()
+   if((location.host!=s)&&(c!=s)){wack();return}; a=document.createElement('script'); a.src='/Proc/base/base.js'; a.onload=function()
    {
       extend(window)({eval:function(s){return proc('evl',s,window)}});
-      requires(['/Proc/busy.htm','/Proc/dcor/aard.css','/Proc/boot.js'],()=>
-      {
-         select('script').forEach((n)=>{n.remove()}); extend(Element.prototype)
-         ({appendChild:function(n){proc('add',n,this)}, setAttribute:function(k,v){proc('mod',[k,v],this)}});
-         extend(XMLHttpRequest.prototype)({open:function(m,u){proc('xhr',[m,u],this)}});
-      })
+      requires(['/Proc/base/busy.htm','/Proc/dcor/aard.css','/Proc/base/boot.js']);
    };document.head.appendChild(a);
 }());

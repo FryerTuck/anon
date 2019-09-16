@@ -1,7 +1,7 @@
 
 // incl :: abec : tools
 // --------------------------------------------------------------------------------------------------------------------------------------------
-{:'/Proc/abec.js':}
+{:'/Proc/base/abec.js':}
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -130,14 +130,14 @@
       o.listen.progress=function(b)
       {
          if(!this.done){this.done=0}; let q=(Math.floor(b.loaded/b.total)*100);
-         if(this.done<q){this.done=q};pe(q,this.purl); if(this.busy){Busy.edit(this.purl,q)};
+         if(this.done<q){this.done=q};pe(q,this.purl); if(this.busy&&!!MAIN.Busy){Busy.edit(this.purl,q)};
       };
 
       cb=o.listen.loadend; delete o.listen.loadend; o.listen.loadend=function() // event done
       {
          let h=dval(this.getAllResponseHeaders()); if((h!=null)&&h.Cookies){h.Cookies=decode.jso(decode.b64(h.Cookies))};
          let r={path:this.purl,head:h,body:this.response}; if(!this.done){this.done=0};
-         if((this.status==200)&&(this.done<100)){pe(100,this.purl);if(this.busy){Busy.edit(this.purl,100)};};
+         if((this.status==200)&&(this.done<100)){pe(100,this.purl);if(this.busy&&!!MAIN.Busy){Busy.edit(this.purl,100)};};
          if(x.silent){tick.after(250,()=>{delete server.silent.busy})};
          if(MAIN.HALT){return}; cb(r);
       };
@@ -372,15 +372,15 @@
 
 // func :: requires : versatile preloader
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   const requires = function(l,f, s,a,slf)
+   const requires = function(l,cbfn, s,a,slf,d)
    {
-      if(MAIN.HALT){return}; addStack(); if(!isFunc(f)){f=function(){}}; slf=this; a={};
+      if(MAIN.HALT){return}; addStack(); if(!isFunc(cbfn)){cbfn=function(){}}; slf=this; a={}; d=0;
       if(!l||(span(l)<1)){f();return}; if(!isList(l)){l=[l]}; //dump(`${this.decr} ${s}`,'\n');
       l.each((i)=>
       {
          let p=stub(i,':'); if(p){i=p[2]; p=p[0]; a[p]=VOID}; let x=fext(i);
          if(x=='fnt'){x='css'}; if(!x){fail('expecting valid path');return STOP}; // validate
-         this.decr++; if(slf.done[i]){slf.decr--; return}; let t=VOID;
+         if(slf.done[i]){return}; d++; let t=VOID;
 
          if(x=='js')
          {
@@ -389,13 +389,13 @@
                // require.config({paths:{[p]:i}});
                // require([i],function(m){extend(MAIN)({[(this.nick)]:m}); d--; slf.done[this.purl]=1; a[this.nick]=m}.bind({nick:p,purl:i}));
             };
-            let n=create('script'); n.purl=i; n.listen('ready',function(){slf.decr--; slf.done[this.purl]=1});
+            let n=create('script'); n.purl=i; n.listen('ready',function(){d--; slf.done[this.purl]=1;});
             n.modify({src:i}); document.head.insert(n); return;
          };
 
          if(x=='css')
          {
-            let n=create('link'); n.purl=i; n.listen('ready',function(){slf.decr--; slf.done[this.purl]=1});
+            let n=create('link'); n.purl=i; n.listen('ready',function(){d--; slf.done[this.purl]=1});
             n.modify({rel:'stylesheet',href:i}); document.head.insert(n); return;
          };
 
@@ -405,7 +405,7 @@
             {
                d=(xdom(r.body)||[]); d.forEach((n)=> // html - insert each element into its implied DOM parent
                {document[(isin(['script','style'],nodeName(n))?'head':'body')].insert(n);});
-               tick.after(50,()=>{slf.decr--; slf.done[r.path]=1})
+               tick.after(50,()=>{d--; slf.done[r.path]=1})
             }); return NEXT;
          };
 
@@ -413,9 +413,9 @@
       });
 
       // if(slf.decr<1){f();return}; // if already loaded before - no need to wait any longer
-      wait.until(()=>{return (slf.decr<1)},()=>{f();});
+      wait.until(()=>{return (d<1)},()=>{tick.after(250,()=>{cbfn()})});
    }
-   .bind({call:{},done:{},decr:0});
+   .bind({call:{},done:{}});
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -424,14 +424,14 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const custom = {domtag:{},attrib:{}};
 
-   {:'/Proc/xtag.js':}
+   {:'/Proc/base/xtag.js':}
 
-   {:'/Proc/xatr.js':}
+   {:'/Proc/base/xatr.js':}
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
-// func :: create : create DOM nodes from string, list, object .. custom nodes are defined in `/Proc/xtag.js`
+// func :: create : create DOM nodes from string, list, object .. custom nodes are defined in `/Proc/base/xtag.js`
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const create = function(t,a,c, r,x,n)
    {
@@ -463,7 +463,7 @@
 
 
 
-// func :: modify : define -or update exising DOM-node-attributes .. custom attributes are defined in `/Proc/xatr.js`
+// func :: modify : define -or update exising DOM-node-attributes .. custom attributes are defined in `/Proc/base/xatr.js`
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const modify = function(n,a,c)
    {
@@ -565,16 +565,12 @@
 
 // func :: newGui : reboots the gui .. if path given it does a relocate, else reload
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   const newGui = function(p, t)
+   const newGui = function(p,v, t,b)
    {
       server.stream.close(); if(isPath(p)){t=(location.protocol+'//'+location.host+p)}else{t=location.href};
-      document.body.insert
-      ([
-         {form:'#anonReboot', action:t, method:'POST', style:'position:absolute;opacity:0', contents:
-         [
-            {input:'#INTRFACE', type:'hidden', value:'GUI'}
-         ]}
-      ]);
+      b=[{input:'#INTRFACE', type:'hidden', value:'GUI'}]; if(isKnob(p)){v=p};
+      if(isKnob(v)){v.each((vd,vn)=>{radd(b,{input:`#${vn}`, type:'hidden', value:vd})})};
+      document.body.insert([{form:'#anonReboot', action:t, method:'POST', style:'position:absolute;opacity:0', contents:b}]);
       select('#anonReboot').submit();
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
@@ -720,7 +716,7 @@
 
    const parser = {};
 
-   {:'/Proc/ximp.js':}
+   {:'/Proc/base/ximp.js':}
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -736,11 +732,8 @@
          let m,q,t,x; m=r.head.ContentType.split(';')[0].split('/x-').join('/'); q=m.split('/'); t=q[0]; x=q[1];
          if(!isin(parser,t)){t=x}; parsed(r.body,t,(z)=>
          {
+
             if(t=='markdown'){z=create({div:'.markdown-page',contents:[z]})}; f(z);
-            tick.after(3000,()=>
-            {
-               Busy.done();
-            });
          });
       });
    }
@@ -1188,40 +1181,6 @@
    });
 
    document.body.addEventListener('click',function(){remove('#AnonDropMenu');},false);
-// --------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-
-// evnt :: mutation : enables new nodes with src/href attributes to emit `ready` when true .. emits progress if loading takes longer than 1sec
-// --------------------------------------------------------------------------------------------------------------------------------------------
-   listen('mutation',function(e, l)
-   {
-      if(MAIN.HALT){return}; if(!e.detail){return};
-      l=e.detail.addedNodes; if(isList(l)){l=listOf(l);}else{return}; // validate
-      this.walk(l); // check all new nodes - including their children
-      tick.after(50,()=>{ordained.vivify()}); // anoint the ordained ones (if any)
-   }
-   .bind
-   ({
-      walk:function(l,p, s,k)
-      {
-         s=this; l.forEach((n)=>{let t=nodeName(n); if(!t||(p=='svg')){return}; s.fire(n,t);
-         k=listOf(n.childNodes); if(k.length>0){s.walk(k,t)}});
-      },
-
-      fire:function(n,t, p)
-      {
-         p=path(n.src||n.href); if((!p&&(t!='script'))||(t=='a')){tick.after(1,()=>{n.signal('ready')});return}; // nodes without a path
-         n.purl=p; n.listen('load',ONCE,function(){this.done=100; tick.after(1,()=>{n.signal('ready')});}); // emit `ready` after onload
-         n.listen('error',function(){this.fail=1; if(!this.done){return}; Busy.tint('red'); Busy.edit(this.purl,100);}); // onfail
-         tick.after(750,()=>{if(n.done||Busy.jobs[p]){return}; n.waiting=function(j,s,t){this.done=1; s=this; t=setInterval(()=> // wait
-         {
-            if(Busy.jobs[j]){s.done=Busy.jobs[j];s.fail=1}; Busy.edit(j,s.done);
-            if(s.fail||(s.done>99)){clearInterval(t); delete s.waiting; return}; s.done++;
-         },10);}; n.waiting(p);});
-      }
-   }));
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 

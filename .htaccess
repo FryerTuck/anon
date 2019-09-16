@@ -1,9 +1,13 @@
 
 # note :: important : read this
 # -----------------------------------------------------------------------------------------------------------------------------
-# the directives expressed in this file are compatible with shared hosting and crucial to security -and framework integrity
-# the objective is to provide a fast/solid/stable runtime environment that compliments the designated PHP framework
-# here we are in "the mud" .. we don't even know if we can get out of here, keep calm, let's see if PHP is enabled
+# the directives expressed in this file are compatible with shared hosting and crucial to security and Anon framework integrity
+# the objective is to provide a fast/solid/stable runtime environment that compliments the designated PHP framework.. elegantly
+# ...
+# THE METAPHORICAL CHRONICLE
+# these are the memoirs of Anon "the legendary server", who lives and dies to serve others and yet always manages to stay alive
+# waking up, finding yourself trapped inside dark muddy pit, with only a few options available to survive .. but i won't flinch
+# here we are in "the pit" .. we don't even know if we can get out of here, keep calm, let's see if PHP is available, may it be
 # -----------------------------------------------------------------------------------------------------------------------------
 
 
@@ -14,7 +18,7 @@
    ServerSignature   Off
    DefaultLanguage   en-US
    AddDefaultCharset UTF-8
-   # ServerTokens      Prod   # set this in the apache/vhost config
+   # ServerTokens      Prod   # set this in the apache/vhost config .. it won't work here
 # -----------------------------------------------------------------------------------------------------------------------------
 
 
@@ -31,7 +35,7 @@
 
 
 
-# cond :: flow : detect Apache 2.4 and detect PHP, if found then redirect all requests to the PHP handler, else fail gracefully
+# cond :: flow : detect Apache 2.4 and detect PHP, if found then redirect all requests to the PHP handler, else die gracefully
 # -----------------------------------------------------------------------------------------------------------------------------
    <IfModule mod_rewrite.c>
       RewriteEngine On
@@ -40,7 +44,7 @@
       RewriteCond %{HTTP_HOST} ^[^.]+\.[^.]+$
       RewriteRule ^ %{REQUEST_SCHEME}://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
-      RewriteRule .* - [E=DBUGPATH:.anon.dir/Proc/dbug.htm]
+      RewriteRule .* - [E=DBUGPATH:.anon.dir/Proc/base/dbug.htm]
       RewriteRule .* - [E=BOTMATCH:bot|crawl|fetch|find|grab|scan|search|site|slurp|spider|wget|curl]
 
       <IfModule mod_php_null.c>
@@ -65,20 +69,20 @@
          RewriteCond %{ENV:MODPHP} ^1$
          RewriteCond %{DOCUMENT_ROOT}/.anon.php -f
          RewriteRule ^(.*)$ .anon.php [L]
+#        we made it out of "the pit" .. now we trudge forward through "the mud"
       </IfModule>
 
       RewriteCond %{HTTP_USER_AGENT} %{ENV:BOTMATCH} [NC,OR]
       RewriteCond %{DOCUMENT_ROOT}/%{ENV:DBUGPATH} !-f
       RewriteRule ^ - [R=503,L,S=1]
       RewriteRule ^(.*)$ %{ENV:DBUGPATH} [L]
+#     ... YOU HAVE DIED ... let's be discreet about it; world does not need to know our shame
    </IfModule>
 # -----------------------------------------------------------------------------------------------------------------------------
-# if the above conditions and redirects worked, then we are out of "the mud" now we proceed through "the swamp"
-# -----------------------------------------------------------------------------------------------------------------------------
 
 
 
-# cond :: dbug : if the above code failed, then we don't want to expose anything
+# cond :: dbug : YOU HAVE DIED ... we don't want to expose the remains to prying eyes .. our worrior deserves to be buried
 # -----------------------------------------------------------------------------------------------------------------------------
    <IfModule !mod_rewrite.c>
       <IfModule mod_authz_core.c>

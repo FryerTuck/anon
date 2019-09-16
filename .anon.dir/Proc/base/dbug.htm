@@ -286,9 +286,6 @@
                </div>
             </div>
 
-            <div id="dump" class="dbug dump">
-            </div>
-
          </div>
       </div>
 
@@ -311,18 +308,6 @@
             <div class="dbug slog"></div>
          </div>
       </noscript>
-
-
-      <table class="repl" id="replPanl" style="height:25%">
-         <tr style="height:2px">
-            <td id="replDragSize" style="background:hsla(0,0%,25%,1); cursor:row-resize"></td>
-         </tr>
-         <tr id="devlReplVrow">
-            <td style="">
-               <div id="slogView" class="slog"></div>
-            </td>
-         </tr>
-      </table>
 
 
       <script>
@@ -352,23 +337,11 @@
             setTimeout(function(){document.body.style.backgroundImage=('url("'+w+'")');},Math.rand(600,3000));
          };
 
-         function resizeSlog(e)
-         {
-            var n,p,l,y,d; n=Select('#replDragSize'); p=n.vpos; l=n.vlen; y=e.clientY;
-            d=((y<p)?(p-y):(0-(y-p))); Select('#devlReplVrow').style.height=((l+d)+'px');
-         };
-
-         var drg=Select('#replDragSize'); drg.addEventListener('mousedown',function(md)
-         {
-            this.vpos=md.clientY; this.vlen=(getComputedStyle(Select('#devlReplVrow')).getPropertyValue('height').split('px')[0]*1);
-            document.addEventListener('mousemove',resizeSlog,true);
-            document.addEventListener('mouseup',function(){document.removeEventListener('mousemove',resizeSlog,true);});
-         });
-
 
          window.dbug = // object
          {
             data:'{:(DBUGDATA):}',
+            dump:'{:(DUMPMESG):}',
 
             fail:function(n, dd)
             {
@@ -386,6 +359,7 @@
 
             init:function(dd,dk,df)
             {
+               if(dbug.dump!=('{'+':(DUMPMESG):'+'}')){console.log(atob(dbug.dump));};
                if((location.href+'').indexOf('?#')>-1){dk=(location.href+'').split('?')[1]; df=Select(dk);}; // check fail from URL
                if(df){dbug.fail(dk.substr(1));return}; // direct fail from URL
                if(dbug.data==('{'+':(DBUGDATA):'+'}')){dbug.fail('epic');return}; // direct fail from .htaccess .. no PHP

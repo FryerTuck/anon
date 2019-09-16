@@ -8,13 +8,12 @@ $export=function($td,$un,$pw)
 
    if($td==='login')
    {
-      $h=pget("$h/pass"); $r=password_verify($pw,$h); if(!$r){ekko('invalid password');}; // RTFC
+      $r=password_verify($pw,pget("$h/pass")); if(!$r){ekko('invalid password');}; // RTFC
       $k=sesn('HASH'); path::make("/Proc/temp/sesn/$k/USER",$un); // update session server side
       Time::logEvent($un,pget("/User/data/$un/clan"),'API');
-      $l=array_keys($_COOKIE); $t='/^[a-z0-9]{40}$/';
-      foreach($l as $i){if(!test($i,$t)||($i===$h)){continue;}; kuki($i,null); unset($_COOKIE[$i]); void("/Proc/temp/sesn/$i");};
-      $cv=guiStrap($un,0); $_COOKIE[$k]=$cv;
-      ekko(OK); // update session client side .. the client must refresh upon OK response
+// done('testing host');
+      // $cv=guiStrap($un,0); $_COOKIE[$k]=$cv;
+      done(OK); // update session client side .. the client must refresh upon OK response
    };
 
 

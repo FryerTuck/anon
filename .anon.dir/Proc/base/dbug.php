@@ -12,8 +12,9 @@ namespace Anon;
 
 # dbug :: path : expected files
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   if(!isee('/Proc/dbug.htm')||!isee('/Proc/vars/lastDbug')||!is_writable(path('/Proc/vars/lastDbug'))){halt(424,'Failed Dependency - dbug');};
-   if(!isee('/User/conf/inactive')){halt(424,'Failed Dependency - dbug');}; // NB
+   depend('F:/Proc/base/dbug.htm','WF:/Proc/vars/lastDbug','WF:/User/conf/inactive','F:/Proc/base/abec.php','F:/Proc/base/base.php');
+   // if(!isee('/Proc/dbug.htm')||!isee('/Proc/vars/lastDbug')||!is_writable(path('/Proc/vars/lastDbug'))){halt(424,'Failed Dependency - dbug');};
+   // if(!isee('/User/conf/inactive')){halt(424,'Failed Dependency - dbug');}; // NB
    if(NAVIPATH===DBUGPATH){$r=pget(DBUGPATH); $r=str_replace('{:(TECHMAIL):}',TECHMAIL,$r); print_r($r); flush(); die();}; // must fail nicely
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -35,21 +36,6 @@ namespace Anon;
       );
 
 
-      static function stak($n=null,$x=null)
-      {
-         $s=self::$meta['stak']; if(!$s){$e=(new \Exception); $s=$e->getTraceAsString();}; $s=explode("\n",$s); $b=[]; $r=[];
-         foreach($s as $i)
-         {
-            if(!strpos($i,'.php(')){continue;}; $y=explode('.php(',$i); $p=crop($y[0]); $p=(explode(' ',$p)[1].'.php'); $y=$y[1];
-            $y=explode('): ',$y); $l=($y[0]*1); $y=crop($y[1]); $y=explode('(',$y); $f=$y[0]; $f=ltrim($f,'Anon\\');
-            if(($p[0]==='.')||(in_array($f,['{closure}','call_user_func_array','dbug::stak']))){continue;};
-            $b[]=json_decode(json_encode(['func'=>$f,'file'=>crop($p),'line'=>$l])); $y=null;
-         };
-         if(($n===null)&&($x===null)){return $b;}; $y=0;
-         foreach($b as $i => $o){if(($i===$x)||($o->func===$n)){$y=1; continue;}; if($y){$r[]=$o;};}; if(count($r)>0){return $r;}; return $b;
-      }
-
-
       static function name($d=0)
       {
          if(!is_int($d)){$d=0;}; if(isset(self::$code[$d])){return self::$code[$d];};
@@ -59,7 +45,8 @@ namespace Anon;
 
       static function view($o)
       {
-         $o->mesg=crop($o->mesg); $o->file=crop($o->file); if($o->file==='/Proc/boot.php'){$q=$o->stak[0]; $o->file=$q->file; $o->line=$q->line;};
+         $o->mesg=str_replace([COREPATH,ROOTPATH],'',$o->mesg);
+         $o->file=crop($o->file); if($o->file==='/Proc/base.php'){$q=$o->stak[0]; $o->file=$q->file; $o->line=$q->line;};
          if(facing('BOT')||facing('SYS')){finish(503);}; $n=$o->name; $m=$o->mesg; $f=$o->file; $l=$o->line; $j=JSON_UNESCAPED_SLASHES;
          if(facing('DPR')){$m=str_replace(["\n",'"'],['',"`"],$m); $m=crop($m,64); halt(500,"$n - $m - $f - $l",$f,$l,tval($o));};
          if(facing('SSE')&&envi('SSEREADY')){$r=base64_encode(tval($o)); print_r("event: fail\ndata: $r\n\n"); flush(); return;};
@@ -73,7 +60,7 @@ namespace Anon;
          // if($_SERVER['nofail']){return;};
          $f=$_SERVER['LASTFAIL']; if($f){self::view($f); die();}; defn(['HALT'=>1]); $m=str_replace('Anon\\','',$m);
          if($n!==null){$n=((is_numeric($n))?self::name(($n*1)):$n); $m="{$n}Error: $m";}; $p=stub($m,'Error: '); $x=self::$meta;
-         $n=$p[0]; $m=$p[2]; $f=$x['file']; $l=$x['line']; $s=self::stak(); $u=sesn('USER'); $c=sesn('CLAN');
+         $n=$p[0]; $m=$p[2]; $f=$x['file']; $l=$x['line']; $s=stak(dbug::$meta['stak']); $u=sesn('USER'); $c=sesn('CLAN');
          if(strpos($f,'dbug.php')&&isset($s[0])){$f=$s[0]->file; $l=$s[0]->line;}; $m=trim($m);
          $o=knob(['name'=>$n, 'mesg'=>$m, 'file'=>$f, 'line'=>$l, 'stak'=>$s, 'user'=>$u, 'clan'=>$c]); $_SERVER['LASTFAIL']=$o;
          $m=str_replace([COREPATH,ROOTPATH],'',$m); $f=crop($f);
@@ -94,7 +81,7 @@ namespace Anon;
          $n=trim($n); if(strlen($n)<1){$n='Undefined';}; $n=ucwords($n);
          $m=(isset($a[0])?$a[0]:'undefined'); $s=(isset($a[1])?$a[1]:null); $y=(isset($a[2])?$a[2]:'dbug::fail');
          if(!dbug::$meta['stak']){$e=(new \Exception); dbug::$meta['stak']=$e->getTraceAsString();};
-         $s=dbug::stak()[0]; dbug::$meta['file']=$s->file; dbug::$meta['line']=$s->line; dbug::fail("{$n}Error: $m",null,$s,$y);
+         $s=stak(dbug::$meta['stak'])[0]; dbug::$meta['file']=$s->file; dbug::$meta['line']=$s->line; dbug::fail("{$n}Error: $m",null,$s,$y);
       }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------

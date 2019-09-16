@@ -11,61 +11,6 @@ namespace Anon;
 
 
 
-# conf :: proc : these settings solve a lot of problems .. we don't want to ignore warnings and notices, but we also want to be discreet
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-   ini_set('display_errors',true); error_reporting(E_ALL); // anon handles errors .. it won't spill guts in public
-   ini_set('default_charset','UTF-8'); ini_set('input_encoding','UTF-8'); // force utf8 everywhere
-   ini_set('output_encoding','UTF-8'); mb_internal_encoding('UTF-8'); mb_http_output('UTF-8'); // force utf8
-   ini_set("precision",16); // accuracy matters .. to get accurate decimal value from float, use: number_format($number,$precision);
-   set_time_limit(60); // max execution time from here on
-   // ini_set('auto_detect_line_endings',1); // just to be sure
-   $z=pget('/Proc/conf/timeZone'); if(is_string($z)&&(strpos($z,'/'))){date_default_timezone_set("$z");}; unset($z); // set server time zone
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-# shiv :: tools : provide expected functionality
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-   function is_nokey_array($d){if(!is_array($d)){return false;}; return (empty($d)||(array_keys($d)===range(0,(count($d)-1))));} // numeric
-   function is_assoc_array($d){return (is_array($d)&&!empty($d)&&(count(array_filter(array_keys($d),'is_string'))>0));} // associative
-
-   function is_closure($d){if(is_object($d)){return (($d instanceof \Closure));}; return false;}; // function
-   function facing($a){return (envi('INTRFACE')===$a);} // assert interface .. like: if(facing('BOT')){};
-
-   function fractime($p=3) // precision time .. default is milliseconds
-   {
-      if(!is_int($p)||($p<1)){return time();};
-      $r=microtime(true); $r=round($r,$p); return $r;
-   };
-
-   function lowerCase($d){if(is_string($d)){return strtolower($d);};}
-   function upperCase($d){if(is_string($d)){return strtoupper($d);};}
-   function proprCase($d){if(is_string($d)){return ucwords(strtolower($d));};}
-
-   function isLowerCase($d){return (strtolower($d)===$d);}
-   function isUpperCase($d){return (strtoupper($d)===$d);}
-   function isProprCase($d){return (ucwords($d)===$d);}
-
-   function is_number($d){return (is_int($d)||is_float($d)||is_real($d));};
-   function is_funnic($d){if(!is_string($d)){return;}; return test(trim($d,'_'),'/^([a-zA-Z])([a-zA-Z0-9_]){1,48}$/');};
-   function is_class($d){return (is_string($d)&&(class_exists($d,false)||class_exists("Anon\\$d",false)));};
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-# func :: defn : define/retrieve Anon constants .. string with no spaces gets .. string with spaces -or is_assoc_array/is_object sets multiple
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-   function defn($a)
-   {
-      if(is_string($a)&&(strpos($a,' ')===false)){if(defined("Anon\\$a")){return constant("Anon\\$a");}; return;}; // get
-      if(is_string($a)){$l=explode(' ',$a); foreach($l as $i){define("Anon\\$i",":$i:");}; return true;}; // set multiple as word/flag
-      if(!is_assoc_array($a)&&!is_object($a)){return;}; foreach($a as $k => $v){define("Anon\\$k",$v);}; // set multiple
-      return true; // would have failed if anything went wrong
-   }
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
 # refs :: constants : these help us express specific directives .. they all have the value of the word wrapped in `:` .. like :AUTO:
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    defn('AUTO KEYS VALS WORD XACT VOID NONE STEM TOOL FUNC PATH FOLD FILE LINK DUMP DONE GOOD INFO WARN FAIL MINI MIDI MAXI SKIP STOP TODO');
@@ -165,36 +110,6 @@ namespace Anon;
          $r[]=dval($i);
       };
       return $r;
-   }
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-# func :: tval : de-parse .. visible text-value of anything
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-   function tval($d,$o=null)
-   {
-      if(is_string($d))
-      {$v=trim($d); if($d===''){return '""';}; if($v!==''){return $d;}; $r=str_replace(["\n",' ',"\t"],['↵','␣','⇥'],$d); return $r;};
-      if(is_nokey_array($d)){$d=array_values($d);}; //if($pp){$pp=JSON_PRETTY_PRINT;};
-      if(is_closure($d)){$r=var_export($d,true);}elseif($o===DUMP){$r=json_encode($d,JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);}
-      else{$r=json_encode($d,JSON_UNESCAPED_SLASHES);};
-      if(!is_string($r)){$r=print_r($d,true);}; return trim($r);
-   }
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-# func :: crop : minifi text
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-   function crop($v,$l=null)
-   {
-      if(is_array($v)){$v=array_values($v); foreach($v as $x => $i){$v[$x]=crop($i,$l);}; return $v;}; if(!is_string($v)){return;};
-      $rup=envi('USERPATH'); $cup=USERPATH; if((strpos($v,$rup)===0)||(strpos($v,$cup)===0)){$v=str_replace([$rup,$cup],'~',$v);};
-      if(path($v)){$v=rshave($v,'/'); $c=COREPATH; $r=ROOTPATH; if(!$v||($v===$r)){$v='/';}elseif($v===$c){$v='$';}
-      else{$v=str_replace([$c,$r],'',$v);}; $v=str_replace('//','/',$v); if(strpos($v,'/~')===0){$v=substr($v,1);}};
-      $s=strlen($v); if($s<4){return $v;}; if(!is_int($l)){return $v;};
-      if(($l<1)||($s<$l)){return $v;}; $v=substr($v,0,$l); return "$v...";
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -320,50 +235,9 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function tref($h,$x=null)
    {
-      if(!test($h,'/[a-z0-9]{40,64}/')){return;}; $p=path("/Proc/temp/refs/$h"); $e=null; if(is_link($p)){$e=(readlink($p)*1);};
+      if(!test($h,'/^[a-z0-9]{40,64}$/')){return;}; $p=path("/Proc/temp/refs/$h"); $e=null; if(is_link($p)){$e=(readlink($p)*1);};
       if($e){$a=aged($p); if($a>=$e){unlink($p);return;}; return ($e-$a);}; if(!$x||($x<1)){return;};
       lock::create($p); $m=umask(); umask(0); symlink("$x",$p); umask($m); lock::remove($p); return true;
-   };
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-# func :: (buffer) : shorthands to manage output buffer
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-   function bufrVoid()
-   {
-      if(ob_get_level()<1){return;};
-      while(ob_get_level()>0){ob_end_clean();};
-   }
-
-   function bufrSend()
-   {
-      if(ob_get_level()<1){return;};
-      while(ob_get_level()>0){ob_end_flush();};
-      flush();
-   }
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-# func :: done : exit process .. if bool is given then output-buffer is sent or destroyed .. if text given then output buffer becomes the text
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-   function done($sb=true)
-   {
-      defn(['HALT'=>1]); if($sb===true){bufrSend(); die();}; if(($sb===null)||($sb===false)||($sb==='')){bufrVoid(); die();};
-
-      if(!headers_sent())
-      {
-         header("HTTP/1.1 200 OK");
-         header("Cache-Control: no-store, no-cache, must-revalidate"); // HTTP/1.1
-         header("Cache-Control: post-check=0, pre-check=0",false);
-         header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
-         header("Pragma: no-cache"); // HTTP/1.0
-         header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
-         header('Content-Type: text/plain');
-      };
-
-      if(!is_string($sb)){$sb=tval($sb);}; bufrVoid(); echo $sb; bufrSend(); die();
    };
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -443,7 +317,7 @@ namespace Anon;
       $d="/Proc/temp/sesn"; $l=pget($d); if(count($l)>9999){defn('HALT',1); header('HTTP/1.1 429 Too Many Sessions'); done();}; // flooding
       $t=time(); if(!$h) // new -or resume session
       {
-         $h=acid(); $ns=0; if(!$h){$ns=1; $h=sha1(random(6).microtime(true).envi('USERADDR').getmypid().random(6));}; $p="$d/$h";
+         $h=skey(); $ns=0; if(!$h){$ns=1; $h=mksesn('anonymous');}; $p="$d/$h";
          if(!isee($p)){pset("$p/USER",'anonymous');}; $u=pget("$p/USER");
          $c=pget("/User/data/$u/clan"); defn(['SESNHASH'=>$h, 'SESNUSER'=>$u, 'SESNCLAN'=>$c]); $i=envi('INTRFACE');
          if(($u!=='anonymous')&&($i!=='SSE')&&($i!=='DPR'))
@@ -480,26 +354,25 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function guiStrap($u=null,$sc=1)
    {
-      $h=sesn('HASH'); $v=knob(['WACKMESG'=>base64_encode(pget('/Proc/hack.inf'))]); $p='/Proc/aard.js'; $d=[]; if(!$u){$u=sesn('USER');};
-      $v->SESNUSER=$u; $v->SESNCLAN=pget("/User/data/$u/clan");
+      $h=sesn('HASH'); $v=knob(['WACKMESG'=>base64_encode(pget('/Proc/info/hack.inf'))]); $p='/Proc/base/aard.js'; $d=[];
+      if(!$u){$u=sesn('USER');}; $v->SESNUSER=$u; $v->SESNCLAN=pget("/User/data/$u/clan");
       foreach($_COOKIE as $cn => $cv){if(test($cn,'/^[a-z0-9]{40}$/')&&($cn!==$h)){kuki($cn,VOID);}};
       $c=pget('/User/data/master/pass'); if(!$c){wack();}; if(password_verify('0m1cr0n!',$c)){$d[]='editRootPass';};
       $c=pget('/Proc/conf/autoMail'); if(!isin($c,'mail://')||!isin($c,'@')||!isin($c,'.')){$d[]='confAutoMail';}; // debug automail
-      $r=base64_encode(tval($d)); $v->badCfg=$r; $c=import($p,$v); $c=base64_encode(strrev($c)); $m=4093;
-      $f="after encoding, `$p` exceeds maximum cookie size of $m bytes"; if(span($c)>$m){fail::usage($f);};
-      // if(facing('GUI')&&MADEFUBU){ekko('gotcha bitch');};
-      if($sc){kuki($h,$c);return true;}; return $c;
+      $r=base64_encode(tval($d)); $v->badCfg=$r; $c=import($p,$v); $c=base64_encode(strrev($c)); $m=4000;
+      $f="after encoding, `$p` exceeds maximum cookie size of $m bytes .. technically, it's 4096, but there are overhead issues"; 
+      if(span($c)>$m){fail::usage($f);}; if($sc){kuki($h,$c);return true;}; return $c;
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
-# need :: tools : check if dbug & abec is available, if not -then halt, else load them
+# need :: tools : load dependencies
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   if(!isee('/Proc/dbug.php')){halt(424,'Failed Dependency - dbug');}; if(!isee('/Proc/abec.php')){halt(424,'Failed Dependency - abec');};
-   require(path('/Proc/dbug.php')); // this will take care of any further issues with the framework and any subsequent runtime errors
-   require(path('/Proc/abec.php')); // basic tools for heavy lifting .. if anything goes wrong in here, dbug will handle it .. awesomeness
-   require(path('/Proc/base.php')); // ABEC is full .. extend any other essential functions in here
+   depend('F:/Proc/base/dbug.php');   // check if dbug exists .. with fail if not
+   require(path('/Proc/base/dbug.php')); // this will take care of any further issues with the framework and any subsequent runtime errors
+   require(path('/Proc/base/abec.php')); // basic tools for heavy lifting .. if anything goes wrong in here, dbug will handle it .. awesomeness
+   require(path('/Proc/base/base.php')); // ABEC is full .. extend any other essential functions in here
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -507,20 +380,20 @@ namespace Anon;
 # dbug :: keep : housekeeping
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    $dbs=(pget('/User/conf/inactive')*1); $ldb=(pget('/Proc/vars/lastDbug')*1); $tmn=time();
-   if(($tmn-$ldb)>$dbs){require(path('/Proc/keep.php')); upkeep($dbs,$ldb,$tmn);}; unset($dbs,$ldb,$tmn);
+   if(($tmn-$ldb)>$dbs){require(path('/Proc/base/keep.php')); upkeep($dbs,$ldb,$tmn);}; unset($dbs,$ldb,$tmn);
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
 # cond :: flow : serve configured shortcuts .. tighten security .. if facing GUI -then boot the GUI
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   require(path('/Proc/fwal.php')); // essential security .. right of passage through "the pass"
+   require(path('/Proc/base/fwal.php')); // essential security .. right of passage through "the pass"
 
    if(facing('GUI'))
    {
       guiStrap();
       //ekko::head(['Referrer-Policy'=>'origin','cache'=>false,'cookies'=>true]); // send bootStrap headers
-      $r=import('/Proc/aard.htm',['botHoney'=>conf('Proc/badRobot')->lure]); echo($r); done(); // send BootStrap GUI keeping headers intact
+      $r=import('/Proc/base/aard.htm',['botHoney'=>conf('Proc/badRobot')->lure]); echo($r); done(); // send BootStrap GUI keeping headers intact
    };
 
    if((envi('METHOD')==='POST')&&facing('API')){$d=file_get_contents('php://input'); if(wrapOf($d)==='{}')
@@ -533,7 +406,7 @@ namespace Anon;
 
 # cond :: flow : boot client - which in turn loads the client-boot-files of every STEM's config/autoboot
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   if(facing('DPR')&&(NAVIPATH==='/Proc/boot.js'))
+   if(facing('DPR')&&(NAVIPATH==='/Proc/base/boot.js'))
    {
       $a=scan('$'); $b=scan('/',FOLD); $l=concat($a,$b); $r=[]; foreach($l as $i)
       {

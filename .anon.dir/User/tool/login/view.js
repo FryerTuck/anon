@@ -20,14 +20,10 @@ extend(repl)
             p.modify({innerHTML:('['+sesn('USER')+'&nbsp;'+repl.PWD+']')}); return;  // reset mechanism
          };
 
-         let sh=sesn('HASH'); let cv=r.head.Cookies[sh]; Cookies.set(sh,cv,{path:'/'});
+         var sh=sesn('HASH'); cookie.delete(sh);
          repl.noprom(); repl.mumble('access granted'); repl.mumble('refreshing ...'); // notify the user what's happening
-         window.onbeforeunload=null;
-
-         tick.after(500,()=> // wait for DOM to settle then reboot GUI
-         {
-            newGui();
-         });
+         window.onbeforeunload=null; tick.after(150,()=> // wait for DOM to settle then reboot GUI
+         {newGui({APIKEY:sh});});
       });
    },
 

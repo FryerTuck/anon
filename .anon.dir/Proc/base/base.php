@@ -584,18 +584,6 @@ namespace Anon;
 
 
 
-# func :: args : get args as numeric_array from `func_get_args()` .. if the first argument is a numeric_array then it is returned as the args
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-   function args($a)
-   {
-      if($a===null){return [];}; if(!isNuma($a)){return [$a];}; if(!isset($a[0])){return [];};
-      if(isNuma($a[0])){return $a[0];}; return $a;
-   };
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-
 # func :: crud : standard interface for many URL schemas
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function crud($d)
@@ -749,7 +737,7 @@ namespace Anon;
    function numr($d)
    {
       if(isNumr($d)){return $d;}; if(!is_string($d)){return;}; $d=trim($d); if(strlen($d)<1){return;}; $r=''; if($d[0]==='-'){$r='-';};
-      $n='0.123456789'; $l=str_split($d); foreach($l as $i){if(strpos($n,$i)===false){continue;}; 
+      $n='0.123456789'; $l=str_split($d); foreach($l as $i){if(strpos($n,$i)===false){continue;};
       if(($i==='.')&&(strpos($r,'.')!==false)){continue;}; $r.=$i;}; $r=ashave($r,'.'); if(strlen($r)<1){return;};
       if(!is_numeric($r)){return;}; $r=($r*1); return $r;
    }
