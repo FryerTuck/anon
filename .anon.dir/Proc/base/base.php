@@ -738,7 +738,7 @@ namespace Anon;
    {
       if(isNumr($d)){return $d;}; if(!is_string($d)){return;}; $d=trim($d); if(strlen($d)<1){return;}; $r=''; if($d[0]==='-'){$r='-';};
       $n='0.123456789'; $l=str_split($d); foreach($l as $i){if(strpos($n,$i)===false){continue;};
-      if(($i==='.')&&(strpos($r,'.')!==false)){continue;}; $r.=$i;}; $r=ashave($r,'.'); if(strlen($r)<1){return;};
+      if(($i==='.')&&(strpos($r,'.')!==false)){continue;}; $r.=$i;}; $r=shaved($r,'.'); if(strlen($r)<1){return;};
       if(!is_numeric($r)){return;}; $r=($r*1); return $r;
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
