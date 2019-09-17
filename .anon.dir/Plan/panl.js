@@ -46,26 +46,10 @@ extend(Anon)
    {
       anew:function(cbf)
       {
-         select('#PlanTabber').closeAll((tv)=>
-         {
-            tv=select('#PlanTreeView').select('treeview');
-            if(tv){tv[0].remove()}; tick.after(60,cbf);
-         });
       },
 
       init:function()
       {
-         select('#PlanTreeMenu').insert
-         ([
-            {treeview:'', source:'/Plan/treeMenu', uproot:true, listen:
-            {
-               'LeftClick':function()
-               {
-                  if(this.info.type=='fold'){return};
-                  Anon.Plan.open(this.info.path);
-               },
-            }}
-         ]);
       },
 
 

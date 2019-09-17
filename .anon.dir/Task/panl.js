@@ -298,7 +298,7 @@ extend(Anon)
                let c=[{h4:'Docket Config'}]; let q=keys(i).sort(); q.forEach((k)=>
                {
                   // dump(k);
-                  if(isin(['docketID','editTime','initTime','comments','editLogs','workPath','tagIcons'],k)){return};
+                  if(isin(['docketID','editTime','initTime','comments','editLogs','tagIcons'],k)){return};
                   let v=i[k]; radd(c,{input:'', type:'text', placeholder:k, title:k, inival:v, value:v});
                });
 

@@ -1,13 +1,13 @@
 <?
 namespace Anon;
 
-$export=function($w,$c,$h)
+$export=function($a,$c,$h)
 {
    if(!userDoes('sudo')){ekko(wack());}; $c=trim($c); if(!isText($c,1)){ekko('nothing to do');};
 
-   if($w==='php')
+   if($a==='php')
    {
-      $c=trim($c); $x=stub($c,['(','::']); if($x&&(is_funnic($x[0]))){$c=('$_RSL'." = $c");};
+      $x=stub($c,['(','::']); if($x&&(is_funnic($x[0]))){$c=('$_RSL'." = $c");};
       if(substr($c,-1,1)!==';'){$c="$c;";}; $r=call(function($_CMD)
       {
          $_RSL=VOID; ob_start(); eval("namespace Anon;\n$_CMD"); if($_RSL!==VOID){ekko($_RSL);};
@@ -17,5 +17,8 @@ $export=function($w,$c,$h)
    };
 
    if($w==='sh'){$r=exec::{"$c"}($h); ekko($r);};
+
+   if($w==='git'){$r=exec::{"$c"}($h); ekko($r);};
+
    fail("command `$w` is not supported, yet");
 };
