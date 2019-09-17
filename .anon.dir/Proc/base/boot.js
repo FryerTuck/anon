@@ -71,12 +71,12 @@
                   if(!p||(t=='a')){tick.after(1,()=>{s.signal('ready')}); delete s._waiting; return};
                   s.listen('error',function(){this.failed=1; Busy.tint('red'); this.signal('load')}); // onfail
                   s.listen('load',ONCE,function()
-                  {this.done=100; delete this._waiting; this.loaded=1; if(!this.failed){tick.after(300,()=>{this.signal('ready')})}});
-                  let tmo,itv; tmo=tick.after(900,()=>{clearInterval(itv); delete s._waiting; dump(`delayed: ${p}`);});
+                  {this.done=100; delete this._waiting; this.loaded=1; if(!this.failed){tick.after(120,()=>{this.signal('ready')})}});
+                  let tmo,itv; tmo=tick.after(360,()=>{clearInterval(itv); delete s._waiting; dump(`delayed: ${p}`);});
                   itv=tick.every(10,()=>
                   {
                      if(s.done<100){return}; clearInterval(itv); clearTimeout(tmo); delete s._waiting;
-                     if(s.loaded){return;}; tick.after(300,()=>{if(s.loaded){return}; s.signal('ready')});
+                     if(s.loaded){return;}; tick.after(120,()=>{if(s.loaded){return}; s.signal('ready')});
                   });
                };
                n._waiting(tn);

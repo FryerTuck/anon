@@ -97,4 +97,7 @@
       Busy.jobs={}; Busy.dead=true; Busy.fail=false; Busy.node=VOID;
       let p=document.getElementById('busyPane'); if(!p){return}; p.parentNode.removeChild(p);
    };
+
+   Busy.kill();
+   Busy.init();
 </script>

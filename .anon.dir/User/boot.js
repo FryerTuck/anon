@@ -16,7 +16,7 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    (function(c,h,m)
    {
-      Busy.kill();
+      // Busy.kill();
       c={ {:'/User/conf/viewConf':} }; c.each((v,k)=>{if(conf[k]){fail('`conf.'+k+'` is already defined');return}; conf[k]=v});
 
       c=getBadConf(); if(!c){return}; // check for bad config, if none then all is good

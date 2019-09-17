@@ -23,24 +23,26 @@
          ([
             '/User/dcor/icon.fnt','marked:/Proc/libs/marked/marked.js','/Proc/libs/marked/marked.css',
             '/Proc/libs/prism/prism.js','/Proc/libs/prism/prism.css'
-         ],(args)=>
+         ],()=>
          {
-            // dump(args);
-            d=d.split('\n...\n').join('\n<br><br><br>\n');
-            d=d.split('\n..\n').join('\n<br><br>\n');
-            d=d.split('\n.\n').join('\n<br>\n');
-            marked(d,{gfm:true,breaks:true},function(e,r)
+            wait.until(()=>{return (((typeof marked)!='undefined')&&((typeof Prism)!='undefined'))},()=>
             {
-               if(e){throw (e); return}; let n,p,c,h; h=('#MD'+hash());
-               let el=expose(r,':',':',/^[a-z]+$/);
-               (el||[]).forEach((en)=> // check for emoji
-               {let ef=(':'+en+':'); let er=('<i class="icon-'+en+'"></i>'); r=r.split(ef).join(er);}); // implement emoji
+               d=d.split('\n...\n').join('\n<br><br><br>\n');
+               d=d.split('\n..\n').join('\n<br><br>\n');
+               d=d.split('\n.\n').join('\n<br>\n');
+               marked(d,{gfm:true,breaks:true},function(e,r)
+               {
+                  if(e){throw (e); return}; let n,p,c,h; h=('#MD'+hash());
+                  let el=expose(r,':',':',/^[a-z]+$/);
+                  (el||[]).forEach((en)=> // check for emoji
+                  {let ef=(':'+en+':'); let er=('<i class="icon-'+en+'"></i>'); r=r.split(ef).join(er);}); // implement emoji
 
-               n=create({div:(h+' .markdown-body'),contents:r});
+                  n=create({div:(h+' .markdown-body'),contents:r});
 
-               (n.select('[class^="language-"], [class*=" language-"]')||[]).forEach((i)=>
-               {p=(i.className+'').trim(); c='line-numbers'; if(!isin(p,c)){i.className=(p+' '+c).trim();};});
-               Prism.highlightAllUnder(n); f(n);
+                  (n.select('[class^="language-"], [class*=" language-"]')||[]).forEach((i)=>
+                  {p=(i.className+'').trim(); c='line-numbers'; if(!isin(p,c)){i.className=(p+' '+c).trim();};});
+                  Prism.highlightAllUnder(n); f(n);
+               });
             });
          });
       },
