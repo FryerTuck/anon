@@ -413,7 +413,7 @@
       });
 
       // if(slf.decr<1){f();return}; // if already loaded before - no need to wait any longer
-      wait.until(()=>{return (d<1)},()=>{tick.after(300,()=>{cbfn()})});
+      wait.until(()=>{return (d<1)},()=>{tick.after(500,()=>{cbfn()})});
    }
    .bind({call:{},done:{}});
 // --------------------------------------------------------------------------------------------------------------------------------------------
