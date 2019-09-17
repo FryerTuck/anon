@@ -117,7 +117,7 @@ extend(MAIN)
          tick.after(250,(h)=>
          {
             h=sesn('HASH'); (cookie.select('*')||{}).each((v,k)=>{if(test(k,/^[a-z0-9]{40}$/)&&(k!=h)){cookie.delete(k)}});
-            cookie.update(h,'...'); repl.mumble('bye'); tick.after(500,()=>{newGui({APIKEY:h});});
+            cookie.delete(h); repl.mumble('bye'); tick.after(500,()=>{newGui({APIKEY:h});});
          });
 
 
