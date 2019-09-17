@@ -141,12 +141,13 @@ namespace Anon;
    function knob($d=[],$unwrap=null)
    {
       if(is_string($d)){$d=trim($d); if(($d==='')||(!strpos($d,':')&&!isee($d))){return (new knob([]));}};
+      if(is_object($d)&&($d instanceof knob)){return $d;};
       if(is_array($d)||is_object($d)){return (new knob($d,$unwrap));}; if(!is_string($d)){return (new knob([]));};
       if(strpos($d,':')){$d=str_replace('; ',';',$d); $d=str_replace(';',"\n",$d); $d=dval($d); return (new knob($d));};
       $p=isee($d); if(!$p){return (new knob([]));};$x=pget($d);if(is_string($x)){$x=dval($x); return (new knob((is_assoc_array($x)?$x:[])));};
       $r=(new knob([])); foreach($x as $i)
       {
-         $p=isee("$d/$i"); if(is_dir($p)){$r->$i=knob("$d/$i");}elseif(is_link("$d/$i")){$r->$i=readlink("$d/$i");}else
+         $p=isee("$d/$i"); if(is_dir($p)){$r->$i=[];}elseif(is_link("$d/$i")){$r->$i=readlink("$d/$i");}else
          {$m=fext("$d/$i"); if($m&&!in_array($m,['inf','json'])){continue;}; $v=dval(pget("$d/$i")); $r->$i=(is_array($v)?knob($v):$v);};
       };
       return $r;
@@ -313,23 +314,25 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function sesn($a=null)
    {
-      $u=defn('SESNUSER'); $h=defn('SESNHASH'); if(($a==='USER')&&$u){return $u;};  if(($a==='HASH')&&$h){return $h;};
-      $d="/Proc/temp/sesn"; $l=pget($d); if(count($l)>9999){defn('HALT',1); header('HTTP/1.1 429 Too Many Sessions'); done();}; // flooding
-      $t=time(); if(!$h) // new -or resume session
+      $h=envi('SESNHASH'); $u=envi('SESNUSER'); $c=envi('SESNCLAN');
+      if(($a==='HASH')&&$h){return $h;}; if(($a==='USER')&&$u){return $u;}; if(($a==='CLAN')&&$c){return $c;};
+      $d="/Proc/temp/sesn"; $t=time();
+
+      if($h){$p="$d/$h";} // current session
+      else // new -r resume session
       {
-         $h=skey(); $ns=0; if(!$h){$ns=1; $h=mksesn('anonymous');}; $p="$d/$h";
-         if(!isee($p)){pset("$p/USER",'anonymous');}; $u=pget("$p/USER");
-         $c=pget("/User/data/$u/clan"); defn(['SESNHASH'=>$h, 'SESNUSER'=>$u, 'SESNCLAN'=>$c]); $i=envi('INTRFACE');
+         $l=pget($d); if(count($l)>9999){header('HTTP/1.1 429 Too Many Sessions'); done();};
+         $h=skey(); $ns=0; if(!$h){$ns=1; $h=mksesn('anonymous');};
+         $p="$d/$h"; if(!isee($p)){pset("$p/USER",'anonymous');}; $u=pget("$p/USER"); $c=pget("/User/data/$u/clan");
+         $i=envi('INTRFACE'); $_SERVER['SESNHASH']=$h; $_SERVER['SESNUSER']=$u; $_SERVER['SESNCLAN']=$c;
          if(($u!=='anonymous')&&($i!=='SSE')&&($i!=='DPR'))
          {$o=pget("$p/TIME"); if(!$o){$o=$t;}; $y=($t-$o); pset("$p/TIME",$t); if(!$ns){pset("$p/BSEC",$y);}};
-      }
-      else
-      {$u=defn('SESNUSER'); $c=defn('SESNCLAN'); $p="$d/$h";}; // current session
+      };
 
       if(is_string($a)){$a=trim($a); if(strlen($a)<1){$a=null;}}elseif(is_assoc_array($a)){$a=knob($a);};
       if($a===null){$r=knob($p); $r->CLAN=$c; return $r;}; // get all data
       if(!is_string($a)&&!is_array($a)&&!is_object($a)){return;}; // invalid -return nothing
-      if(is_string($a)){return (($a==='HASH')?$h:(($a==='CLAN')?$c:pget("$p/$a")));}; // get session item-value by name
+      if(is_string($a)){return (($a==='HASH')?$h:(($a==='USER')?$u:(($a==='CLAN')?$c:pget("$p/$a"))));}; // get session item-value by name
 
       foreach($a as $k => $v){lock::awaits("$p/$k"); pset("$p/$k",$v); lock::remove("$p/$k");}; // set session item(s)
    }
@@ -360,7 +363,7 @@ namespace Anon;
       $c=pget('/User/data/master/pass'); if(!$c){wack();}; if(password_verify('0m1cr0n!',$c)){$d[]='editRootPass';};
       $c=pget('/Proc/conf/autoMail'); if(!isin($c,'mail://')||!isin($c,'@')||!isin($c,'.')){$d[]='confAutoMail';}; // debug automail
       $r=base64_encode(tval($d)); $v->badCfg=$r; $c=import($p,$v); $c=base64_encode(strrev($c)); $m=4000;
-      $f="after encoding, `$p` exceeds maximum cookie size of $m bytes .. technically, it's 4096, but there are overhead issues"; 
+      $f="after encoding, `$p` exceeds maximum cookie size of $m bytes .. technically, it's 4096, but there are overhead issues";
       if(span($c)>$m){fail::usage($f);}; if($sc){kuki($h,$c);return true;}; return $c;
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------

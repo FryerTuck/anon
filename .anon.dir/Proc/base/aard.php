@@ -8,8 +8,8 @@ namespace Anon;
 # ...
 # THE CHRONICLE
 # here we are in "the swamp"; we need to strap our sturdy boots on, but there may be critters inside we got from the mud; let's wash them first
-# this place gives me the creeps; there be deamons here posing as us - making us question our own validity ... cookie crumbs could help us here
-# let us consume our cookies, so when we meet ourselves and the face-crumbs don't match what we have in our pockets, we know deception is afoot
+# this place gives me the creeps; there may be deamons here posing as us -making us question our own validity; cookie crumbs could help us here
+# we've baked and branded our own cookies for the journey ... so we consume them and lure the deamons away from our path, with honey and crumbs
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -23,6 +23,7 @@ namespace Anon;
    set_time_limit(60); // max execution time from here on
    $z=pget('/Proc/conf/timeZone'); if(is_string($z)&&(strpos($z,'/'))){date_default_timezone_set("$z");}; unset($z); // set server time zone
    $_SERVER['oblevl']=0; $_SERVER['obfail']=''; $_SERVER['cbfail']=null; // for deFail & enFail
+   $_SERVER['SESNHASH']=null; $_SERVER['SESNUSER']=null; $_SERVER['SESNCLAN']=null; // for security .. bite me
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 

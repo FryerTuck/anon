@@ -94,9 +94,10 @@ namespace Anon;
 
       static function doLogout()
       {
-         $l=array_keys($_COOKIE); if(count($l)<1){ekko(OK);}; $t='/^[a-z0-9]{40}$/'; $u=user('name'); $h=sesn('HASH');
-         Time::logEvent($u,$c=user('clan'),'API');
+         $l=array_keys($_COOKIE); if(count($l)<1){done(OK);}; $t='/^[a-z0-9]{40}$/'; $h=sesn('HASH');
+         Time::logEvent(user('name'),user('clan'),'API');
          foreach($l as $i){if(!test($i,$t)||($i===$h)){continue;}; kuki($i,null); unset($_COOKIE[$i]); void("/Proc/temp/sesn/$i");};
+         $u='anonymous'; $_SERVER['SESNUSER']=$u; $_SERVER['SESNCLAN']='surf';
          path::make("/Proc/temp/sesn/$h/USER",$u); done(OK);
       }
 

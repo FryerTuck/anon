@@ -386,9 +386,9 @@ namespace Anon;
       $l=expose($z,$b,$e); if(!$l){return $z;}; if(!isKnob($v)){$v=knob();}; foreach($l as $i)
       {
          $f="{$b}{$i}{$e}"; if($u){$i=unwrap($i);}; $vn=is_funnic($i); $pn=isee($i);
-         if($pn){$r=import($i,$v); if(isVoid($r)&&isFile($i)){$r=pget($i);};}
-         elseif($vn){$r=$v->$i; if($r===null){$r=defn($i); if($r===null){$r=envi($i);}}}else{$r='';};
-         $z=str_replace($f,"$r",$z);
+         if($pn){$r=import($i,$v); if(isVoid($r)&&isFile($i)){$r=pget($i);}}
+         elseif($vn){$r=$v->$i; if($r===null){$r=envi($i); if($r===''){$r=defn($i);}}}else{$r='';};
+         if(!is_string($r)){$r=tval($r);}; $z=str_replace($f,$r,$z);
       };
       return $z;
    }

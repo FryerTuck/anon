@@ -10,7 +10,8 @@ $export=function($td,$un,$pw)
    {
       $r=password_verify($pw,pget("$h/pass")); if(!$r){ekko('invalid password');}; // RTFC
       $k=sesn('HASH'); path::make("/Proc/temp/sesn/$k/USER",$un); // update session server side
-      Time::logEvent($un,pget("/User/data/$un/clan"),'API');
+      $c=pget("/User/data/$un/clan"); $_SERVER['SESNUSER']=$un; $_SERVER['SESNCLAN']=$c;
+      Time::logEvent($un,$c,'API');
 // done('testing host');
       // $cv=guiStrap($un,0); $_COOKIE[$k]=$cv;
       done(OK); // update session client side .. the client must refresh upon OK response

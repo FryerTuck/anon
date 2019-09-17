@@ -154,10 +154,31 @@ extend(Anon)
          }};
          ini.each((v,k)=>{mnu[k]=v}); select('#CodeTreePanl').insert(mnu);
 
+
          select('#CodeTreePanl').select('treeview')[0].listen('loaded',ONCE,()=>
          {
             // TODO .. repo stuff here
             if(!!ini.openItem){Anon.Code.open(ini.openItem);};
+         });
+
+
+         select('#CodeTabber').listen('focus',function(e, wrp)
+         {
+            wrp=VOID; wait.until
+            (
+               ()=>
+               {
+                  wrp=(e.detail.target.body.select('.CodeEditWrap')||e.detail.target.body.select('.CodeViewWrap'));
+                  return ((span(wrp)>0)&&(!!e.detail.target.head.editor)&&(!!e.detail.target.head.editor.anon));
+               },
+               ()=>{Anon.Code.info(e.detail.target.head.editor.anon)}
+            );
+         });
+
+         select('#CodeTabber').listen('close',function(e)
+         {
+            let drv=e.detail.driver; let tgt=e.detail.target; tgt.head.hijacked=1;
+            Anon.Code.shut(drv,tgt);
          });
       },
 
@@ -179,20 +200,34 @@ extend(Anon)
                tab=drv.select(ttl,0); wrp=tab.body.select('.CodeEditWrap')[0];
                lng=(lng||['/default.']).pop().split('/').pop().split('.')[0];
                opt={mode:lng, lineNumbers:true, theme:'seti', indentUnit:3, tabSize:3, matchBrackets:true, value:r.body};
-               tab.editor=CodeMirror(wrp,opt); wrp.childNodes[0].setStyle({height:'100%'});
-               tab.editor.anon=//object
+               tab.head.editor=CodeMirror(wrp,opt); wrp.childNodes[0].setStyle({height:'100%'});
+
+               tab.head.editor.anon=//object
                {
                   mytab:tab,
                   ipath:pth,
                   itype:tpe,
+                  imime:r.head.ContentType.split(';charset=').join(' '),
+                  iposi:[1,1],
+                  ipick:[0,0],
+                  irepo:nfo.repo,
                   saved:true,
                   ohash:md5(r.body),
                   check:function(hsh)
                   {hsh=md5(hsh); this.saved=(hsh==this.ohash); select('#CodeTabber').driver.edited(this.mytab.head.title,(!this.saved));},
                };
-               tab.editor.on('change',function(cmi){cmi.anon.check(cmi.doc.getValue());});
-               tab.editor.on('keydown',function(cmi,evt)
+               tab.head.editor.on('change',function(cmi){cmi.anon.check(cmi.doc.getValue());});
+               tab.head.editor.on('keydown',function(cmi,evt)
                {if(!Anon.Code.keys[evt.signal]){return}; Anon.Code.keys[evt.signal](cmi.anon);});
+               tab.head.editor.on('cursorActivity',function(cmi)
+               {
+                  let kb,sd,cs; kb=cmi.doc.getCursor(); cmi.anon.iposi=[(kb.line+1),(kb.ch+1)]; sd='~(//*\\)~'; cs=cmi.doc.getSelection(sd);
+                  let sc,cl,ll; sc=(cs||'').split(sd).pop(); cl=sc.length; ll=(cl?sc.split('\n').length:0); cmi.anon.ipick=[ll,cl];
+                  Anon.Code.info(cmi.anon);
+               });
+               Anon.Code.info(tab.head.editor.anon);
+               // doc.getSelection
+               // tab.editor.execCommand('goDocStart');
                // mim=eav.mimeName; if(!mim){mim=mimeName(r.head.ContentType)};
             });
          });
@@ -200,46 +235,63 @@ extend(Anon)
 
 
 
-      view:function(nfo, pth,drv,ext,img,plg)
+      view:function(nfo, pth,ttl,tpe,drv,tab,ext,wrp)
       {
-         pth=nfo.path; drv=select('#CodeTabber').driver; ext=fext(pth); if(pth[0]=='~'){pth=('/'+pth);}; plg=nfo.plug;
+         pth=nfo.path; ttl=pth; tpe=nfo.type; drv=select('#CodeTabber').driver; ext=fext(pth); //if(pth[0]=='~'){pth=('/'+pth);};
          if(!isin(['jpg','jpeg','png','svg','gif'],ext)){alert('previewing file type `'+ext+'` is not supported .. yet');return};
 
-         purl('/Code/openFile',{path:pth,plug:plg,view:1},(r)=>
+         purl('/Code/openFile',{path:pth,view:1},(r)=>
          {
-            r=r.body; drv.create({title:pth, contents:[{panl:'.CodeSeeOther', contents:
-            [{img:'.CodeViewBufr', style:'display:block', src:r, info:nfo, vars:{}, listen:
+            drv.create({title:ttl, contents:[{panl:'.CodeViewWrap', contents:
+            [{img:'.CodeViewBufr', style:'display:block', src:r.body, listen:
             {
-               ready:function(){this.vars={line:0,char:0, pick:{line:this.width,char:this.height}, dime:rectOf(this)}},
+               ready:function()
+               {
+                  let bx=rectOf(this); this.dime=bx; this.editor.anon.ipick=[bx.width,bx.height];
+                  Anon.Code.info(this.editor.anon);
+               },
                mousemove:function()
                {
-                  let bi,cp,pn,sd,ci; bi=this.vars.dime; cp={x:(cursor.posx-bi.x),y:(cursor.posy-bi.y)}; pn=this.parentNode;
-                  sd={x:pn.scrollLeft,y:pn.scrollTop}; ci=select('#CodeInfoPosi'); if(!ci){return};
-                  ci.innerHTML=(((cp.x+sd.x)+1)+':'+((cp.y+sd.y)+1));
+                  let bi,cp,pn,sd,ci,px,py; bi=this.dime; cp={x:(cursor.posx-bi.x),y:(cursor.posy-bi.y)}; pn=this.parentNode;
+                  sd={x:pn.scrollLeft,y:pn.scrollTop}; px=((cp.x+sd.x)+1); py=((cp.y+sd.y)+1); this.editor.anon.iposi=[px,py];
+                  ci=select('#CodeInfoPosi'); if(!ci){return}; ci.innerHTML=(px+':'+py);
                },
             }}]}]});
+            tab=drv.select(ttl,0);
+            tab.head.editor={anon:
+            {
+               mytab:tab,
+               ipath:pth,
+               itype:tpe,
+               imime:nfo.mime,
+               iposi:[1,1],
+               ipick:[0,0],
+               irepo:nfo.repo,
+               saved:true,
+            }};
+            tab.body.select('.CodeViewBufr')[0].editor=tab.head.editor;
          });
       },
 
 
-      info:function(bfr)
+      info:function(inf)
       {
-         let disp,info,vars; disp=select('#CodeInfoPanl'); info=bfr.info; vars=bfr.vars; disp.innerHTML='';
+         let disp; disp=select('#CodeInfoPanl'); disp.innerHTML='';
          disp.insert
          ([
             {grid:[{row:
             [
                {col:'#CodeInfoBufr', contents:[{grid:[{row:
                [
-                  {col:'.CodeInfoPadn'},{col:[{icon:'hubot'}]},{col:[{div:info.mime}]},{col:'.CodeInfoPadn'},
-                  {col:[{icon:'location'}]},{col:[{div:'#CodeInfoPosi', contents:(vars.line+':'+vars.char)}]}, {col:'.CodeInfoPadn'},
-                  {col:[{div:(vars.pick?('('+vars.pick.line+','+vars.pick.char+')'):'')}]},
+                  {col:'.CodeInfoPadn'},{col:[{icon:'hubot'}]},{col:[{div:inf.imime}]},{col:'.CodeInfoPadn'},
+                  {col:[{icon:'location'}]},{col:[{div:'#CodeInfoPosi', contents:inf.iposi.join(':')}]}, {col:'.CodeInfoPadn'},
+                  {col:[{div:(inf.ipick&&inf.ipick[0]?('('+inf.ipick.join(',')+')'):'')}]},
                ]}]}]},
                {col:'#CodeInfoMisc', contents:[]},
                {col:'#CodeInfoRepo', contents:[{grid:[{row:
                [
-                  (info.repo?{col:[{icon:'git-branch'}]}:VOID),
-                  (info.repo?{col:[{div:(info.repo.fork)}]}:VOID),
+                  (inf.irepo?{col:[{icon:'git-branch'}]}:VOID),
+                  (inf.irepo?{col:[{div:(inf.irepo.fork)}]}:VOID),
                   {col:'.CodeInfoPadn'},
                ]}]}]},
             ]}]}
@@ -323,15 +375,15 @@ extend(Anon)
       },
 
 
-      shut:function(drv,tgt, bfr,dne)
+      shut:function(drv,tgt, inf,dne)
       {
-         bfr=tgt.body.select('.CodeEditBufr'); dne=(bfr?bfr[0].saved:1);
+         inf=tgt.head.editor.anon; dne=inf.saved;
          if(!dne){dne=confirm('Discard unsaved changes?')};
 
          if(dne)
          {
             drv.delete(tgt.head.title,true); // delete with `No Signal Intercept`
-            tick.after(60,()=>{select('#CodeInfoPanl').innerHTML='';}); // wait for `select` info update, then vacuum
+            select('#CodeInfoPanl').innerHTML='';
             return;
          };
       },
