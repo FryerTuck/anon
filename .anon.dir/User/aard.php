@@ -85,6 +85,15 @@ namespace Anon;
 
 
 
+      static function authSudo()
+      {
+         $un=sesn('USER'); $pw=post('pw');
+         $r=password_verify($pw,pget("/User/data/$un/pass")); if(!$r){ekko('nope, sorry');}; // RTFC
+         done(OK);
+      }
+
+
+
       static function readNote($n)
       {
          $r=import("/User/note/$n.md"); ekko($r);

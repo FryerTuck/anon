@@ -16,9 +16,11 @@ $export=function($a,$c,$h)
       },[$c]);
    };
 
-   if($w==='sh'){$r=exec::{"$c"}($h); ekko($r);};
+   if($a==='sh')
+   {
+      $f=0; try{$r=exec::{"$c"}($h);}catch(\Exception $e){$f=1; $r=$e->getMessage();};
+      if(!$r){$r=($f?FAIL:OK);}; ekko($r);
+   };
 
-   if($w==='git'){$r=exec::{"$c"}($h); ekko($r);};
-
-   fail("command `$w` is not supported, yet");
+   fail("command `$a` is not supported, yet");
 };

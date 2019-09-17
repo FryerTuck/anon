@@ -57,7 +57,7 @@
                   {panl:'#AnonReplPanl', onmouseup:function(){select('#AnonReplFeed').focus()}, contents:
                   [
                      {pre:'#AnonReplFlog'},
-                     {grid:'.noSpan', contents:
+                     {grid:'.noSpanVert', contents:
                      [
                         {row:
                         [
