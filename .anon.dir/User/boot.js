@@ -157,10 +157,4 @@
       // window.onbeforeunload=null;
       newGui({APIKEY:sesn('HASH')});
    });
-
-
-   document.body.addEventListener('keydown',function(e)
-   {
-      if(e.ctrlKey&&(e.key=='s')){e.preventDefault(); e.stopPropagation()};
-   });
 // --------------------------------------------------------------------------------------------------------------------------------------------

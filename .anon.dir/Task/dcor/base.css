@@ -9,7 +9,7 @@
 #TaskPanlSlab .slabMenuBody
 {
    position:relative;
-   min-width:320px;
+   min-width:260px;
 }
 
 #TaskPanlSlab .slabMenuBody>panl
@@ -272,14 +272,14 @@ modal .TaskDoktPage
    overflow:hidden !important;
 }
 
-.TaskDoktConf>panl>input
+.TaskDoktConf input
 {
    display:block;
    width:186px;
    border:1px solid hsla(0,0%,65%,1);
    border-radius:2px;
    font-size:12px; line-height:12px;
-   padding:2px;
+   padding:2px !important;
    background:hsla(0,0%,95%,1);
    /* margin:4px; */
    margin-bottom:4px;

@@ -165,6 +165,38 @@
 
 // tool :: (events)
 // --------------------------------------------------------------------------------------------------------------------------------------------
+   extend(MAIN)
+   ({
+      Listen:
+      {
+         jobs:{},
+         hash:function(f,x){this.x+=1; return sha1(this.x+f.toString())}.bind({x:0}),
+         keys:
+         {
+            from:function(e, r)
+            {
+               r=e.key; if(e.keyCode==91){r='Meta';}else if(r==' '){r='Space'};
+               return r;
+            },
+            down:{},
+         },
+      },
+   });
+
+
+   document.body.addEventListener('keydown',function(evnt)
+   {
+      if(evnt.ctrlKey&&(evnt.key=='s')){evnt.preventDefault(); evnt.stopPropagation()};
+      let butn=Listen.keys.from(evnt); Listen.keys.down[butn]=1;
+   });
+
+
+   document.body.addEventListener('keyup',function(evnt)
+   {
+      let butn=Listen.keys.from(evnt); delete Listen.keys.down[butn];
+   });
+
+
    extend(EventTarget.prototype)
    ({
       signal:function(e,d,o, n,self,evnt)
@@ -172,12 +204,12 @@
          self=(this||MAIN); expect.word(e); n=('on'+e); if(isText(d)&&isin([ONCE,EVRY],d)){o=d;d=VOID};
          if(o!=EVRY){o=ONCE}; if((d!==VOID)&&!d.detail){d={detail:d}}; evnt=(d?(new CustomEvent(e,d)):(new Event(e)));
          if(self[n]&&isFunc(self[n])){self[n].apply(self,[evnt]);
-         if(o==ONCE){if(self[n].__evntID){delete listen.jobs[self[n].__evntID]};self[n]=null}; return;};
+         if(o==ONCE){if(self[n].__evntID){delete Listen.jobs[self[n].__evntID]};self[n]=null}; return;};
          self.dispatchEvent(evnt);
       },
 
 
-      listen:function(evt,opt,hash,cbf, self,obst,fltr)
+      listen:function(evt,opt,hash,cbf, self,obst,fltr,once)
       {
          if(isNode(this)&&isKnob(evt))
          {
@@ -185,18 +217,18 @@
          };
 
          if(isFunc(evt)){cbf=evt;evt=VOID}; if(isFunc(opt)){cbf=opt;opt=EVRY}else if(isKnob(opt)){fltr=opt; opt=EVRY};
-         if(!listen.jobs){extend(listen)({jobs:{},hash:function(f,x){this.x+=1; return sha1(this.x+cbf.toString())}.bind({x:0})})};
-         if(isFunc(hash)){cbf=hash;hash=VOID}; self=(this||MAIN); if(!isText(hash)){hash=listen.hash(cbf)}else{cbf=listen.jobs[hash]};
+         if(isFunc(hash)){cbf=hash;hash=VOID}; self=(this||MAIN); if(!isText(hash)){hash=Listen.hash(cbf)}else{cbf=Listen.jobs[hash]};
          if(!opt){opt=EVRY}else if(!isin([ONCE,EVRY],opt)){opt=EVRY}; expect.func(cbf); if(evt==VOID){evt=AUTO}; let ice;
          if(evt==AUTO){evt=keys(self,AUTO,'on*');}; if(!isList(evt)){if(isin(evt,' ')){ice=evt; evt=['keydown','mousedown']}else{evt=[evt]}};
-         if(!self.events){self.events={}}; obst=this; if(!!obst&&!obst.listensFor){obst.listensFor=[]};
+         if(!self.events){self.events={}}; obst=this; if(!!obst&&!obst.listensFor){obst.listensFor=[]}; once=['ready','idle'];
          if(!!obst&&!!ice){radd(obst.listensFor,ice)}; evt.forEach((e)=>
          {
             if(e.slice(0,2)=='on'){e=e.slice(2)}; self.events[e]=hash; if(!!obst&&!!ice){radd(obst.listensFor,e)};
-            listen.jobs[hash]=[e,cbf]; let alt=VOID;
+            Listen.jobs[hash]=[e,cbf]; let alt=VOID;
 
             if(obst&&(e=='dragstart')){obst.draggable=true; obst.setAttribute('draggable',true);};
             if(obst&&((e=='drop')||(e=='feed'))){obst.onFeed(cbf);return};
+            if(isin(once,e)){opt=ONCE};
 
             if(isin(e,['down','up','key','click','Click','contextmenu','mouse','Mouse','wheel']))
             {
@@ -205,12 +237,12 @@
 
                alt=function(evnt)
                {
-                  let evn,btn,tgt,kcl,hcn,cmb,dev,crd,rpt,pvk,rkc,rsp,grb,key; evn=evnt.type; tgt=evnt.target; cmb=[];
+                  let evn,btn,tgt,kcl,hcn,cmb,dev,crd,rpt,pvk,rkc,rsp,grb,key,ffmeta; evn=evnt.type; tgt=evnt.target; cmb=[];
                   dev=(isin(evn,'key')?'keyboard':'pointer'); pvk=this.pvk; rpt=evnt.repeat; key=this.kpr;
                   if((evnt instanceof MouseEvent)||(evnt instanceof WheelEvent)){dev='pointer'};
                   if(dev=='keyboard')
                   {
-                     btn=evnt.key; if(btn==' '){btn='Space'};
+                     btn=Listen.keys.from(evnt);
                      if(key&&(btn.slice(0,key.length)==key)){key=btn}else{key=VOID};
                      if(!this.ice&&this.kpr){if(key==btn){this.run(evnt);};return};
                   }
@@ -228,11 +260,10 @@
                      };
                   };
 
-                  if((btn=='RightClick')){grb=1;};
-                  kcl={ctrlKey:'Control',shiftKey:'Shift',metaKey:'Meta',altKey:'Alt'};
-                  kcl.each((v,k)=>{if(evnt[k]||isin(btn,v)){cmb.push(v)}; if(isin(btn,v)){hcn=1}});
-                  if((span(cmb)>0)&&!rpt&&!hcn){if(!isin(pvk,btn)){pvk.push(btn)}; this.pvk=pvk; cmb=cmb.concat(pvk);};
-
+                  if((btn=='RightClick')){grb=1;}; kcl={ctrlKey:'Control',shiftKey:'Shift',metaKey:'Meta',altKey:'Alt'};
+                  // if(ffmeta){pvk.push(btn); hcn=1}else{kcl.each((v,k)=>{if(evnt[k]){cmb.push(v)}; if(isin(btn,v)){hcn=1}})};
+                  // if((span(cmb)>0)&&!rpt&&!hcn&&!isin(pvk,btn)){pvk.push(btn); this.pvk=pvk; cmb=cmb.concat(pvk);};
+                  cmb=keys(Listen.keys.down); if(!isin(cmb,btn)){cmb.push(btn);};
                   cmb=cmb.join(' ').trim(); if(!isin(cmb,' ')){cmb=VOID}; if(!cmb){this.pvk=[];}; if(cmb&&rpt){return};
                   evnt.device=dev; evnt.signal=(cmb||btn); evnt.coords=crd;
                   if(!this.ice){this.run(evnt,grb); return};
@@ -250,7 +281,7 @@
             if(!alt)
             {
                alt=function(evnt){evnt.Target=evnt.currentTarget; this.cbf.apply(this.tgt,[evnt]);}.bind({tgt:self,cbf:cbf});
-               if(isin(e,'mutation'))
+               if(e=='mutation')
                {
                   alt.worker=(new MutationObserver(function(l)
                   {
@@ -268,10 +299,10 @@
                };
             };
 
-            listen.jobs[hash][1]=alt;
+            Listen.jobs[hash][1]=alt;
 
-            if(opt==EVRY){self.addEventListener(e,listen.jobs[hash][1],true);return};
-            if(opt==ONCE){self[('on'+e)]=listen.jobs[hash][1]; self[('on'+e)].__evntID=hash;return};
+            if(opt==EVRY){self.addEventListener(e,Listen.jobs[hash][1],true);return};
+            if(opt==ONCE){self[('on'+e)]=Listen.jobs[hash][1]; self[('on'+e)].__evntID=hash;return};
          });
          return hash;
       },
@@ -280,10 +311,10 @@
       ignore:function(e,f, n,self,hash,x)
       {
          expect.text(e); self=(this||MAIN); if(!self.events){self.events={}};
-         if(isFunc(f)){hash=sha1(f.toString());}else{hash=(!!listen.jobs[e]?e:self.events[e])};
-         x=listen.jobs[hash]; if(!x){fail('event hash `'+hash+'` is undefined');return};
+         if(isFunc(f)){hash=sha1(f.toString());}else{hash=(!!Listen.jobs[e]?e:self.events[e])};
+         x=Listen.jobs[hash]; if(!x){fail('event hash `'+hash+'` is undefined');return};
          if(f===VOID){e=x[0]; f=x[1]}; expect.word(e); expect.func(f); n=('on'+e);
-         if(self[n]===f){self[n]=VOID}else{self.removeEventListener(e,f,true);}; delete listen.jobs[hash];
+         if(self[n]===f){self[n]=VOID}else{self.removeEventListener(e,f,true);}; delete Listen.jobs[hash];
          if(!self.seized){self.seized={}}; self.seized[e]=1; return true;
       },
    });
@@ -569,9 +600,10 @@
    {
       server.stream.close(); if(isPath(p)){t=(location.protocol+'//'+location.host+p)}else{t=location.href};
       b=[{input:'#INTRFACE', type:'hidden', value:'GUI'}]; if(isKnob(p)){v=p};
+      (cookie.select('*')||{}).each((cv,cn)=>{if(test(cn,/^[a-z0-9]{40}$/)){cookie.delete(cn)}});
       if(isKnob(v)){v.each((vd,vn)=>{radd(b,{input:`#${vn}`, type:'hidden', value:vd})})};
       document.body.insert([{form:'#anonReboot', action:t, method:'POST', style:'position:absolute;opacity:0', contents:b}]);
-      select('#anonReboot').submit();
+      tick.after(50,()=>{select('#anonReboot').submit()});
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -775,6 +807,15 @@
          var c,l,a,x; c=(this.className||'').trim(); l=(c?c.split(' '):[]); a=listOf(arguments);
          a.forEach((i)=>{x=l.indexOf(ltrim(i,'.')); if(x>-1){l.splice(x,1)}}); this.className=l.join(' ');
       },
+
+      reclan:function()
+      {
+         var a; a=listOf(arguments); a.forEach((i)=>
+         {
+            if(!isText(i)||!isin(i,':')){return}; let p=i.split(':'); let f=p[0].trim(); let t=p[1].trim();
+            if(!f||!t){return}; this.declan(f); this.enclan(t);
+         });
+      },
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -874,6 +915,7 @@
          this.chosen.each((v,k)=>
          {
             let l=select(k); if(!l){return NEXT}; // nobody to anoint
+
             if(!isList(l)){l=[l]}; l.forEach((n)=>
             {
                if(n.anointed){return}; n.modify(v); n.anointed=true;
@@ -1134,20 +1176,16 @@
          {
             let i=this.getBoundingClientRect(); this.parentNode.removeChild(this); this.style.position=p; this.style.opacity=o; f(i);
          });
-         // tick.after(10,()=>
-         // {
-         //    let i=this.getBoundingClientRect(); this.parentNode.removeChild(this); this.style.position=p; this.style.opacity=o; f(i);
-         // });
       },
 
       resizeTo:function(tgt, slf)
       {
-         // slf=this; if(isText(tgt)){tgt=select(tgt,slf);}; expect({node:tgt});
-         // wait.until(()=>{return (!!tgt.parentNode)},()=>
-         // {
-         //    let i,w,h; i=tgt.getBoundingClientRect(); w=Math.ceil(i.width); h=Math.ceil(i.height); slf.width=w; slf.height=h;
-         //    slf.setStyle({width:w, height:h, minWidth:w, minHeight:h, maxWidth:w, maxHeight:h});
-         // });
+         slf=this; if(isText(tgt)){tgt=select(tgt,slf);}; expect({node:tgt});
+         wait.until(()=>{return (!!tgt.parentNode)},()=>
+         {
+            let i,w,h; i=tgt.getBoundingClientRect(); w=Math.ceil(i.width); h=Math.ceil(i.height); slf.width=w; slf.height=h;
+            slf.setStyle({width:w, height:h, minWidth:w, minHeight:h, maxWidth:w, maxHeight:h});
+         });
       },
    });
 

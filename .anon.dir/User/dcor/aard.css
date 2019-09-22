@@ -24,7 +24,7 @@
 /* ----------------------------------------------------------------------------------------------------------------------------------------- */
    #AnonMainGrid
    {
-      position:relative;
+      /* position:relative; */
       width:100%; height:100%;
       background:hsla(210,3%,16%,1);
       user-select:none;
@@ -33,7 +33,7 @@
    #MainGridRow1 {}
    #MainGridCol1
    {
-      position:relative;
+      /* position:relative; */
    }
 
    /* #MainGridRow2 {height:5px;} */
@@ -42,8 +42,8 @@
    /* #MainGridRow3 {height:100px;} */
    #MainGridCol3
    {
-      position:relative;
-      height:100px; min-height:0.1px;
+      /* position:relative; */
+      height:100px; min-height:1px;
       vertical-align:top;
    }
 
@@ -57,7 +57,7 @@
 
    #AnonAppsGrid
    {
-      position:relative;
+      /* position:relative; */
       width:100% !important; height:100% !important;
    }
 /* ----------------------------------------------------------------------------------------------------------------------------------------- */
@@ -69,7 +69,7 @@
 /* ----------------------------------------------------------------------------------------------------------------------------------------- */
    #AnonAppsMenu
    {
-      position:relative;
+      /* position:relative; */
       width:46px; height:100%;
       user-select:none;
    }
@@ -88,7 +88,7 @@
 /* ----------------------------------------------------------------------------------------------------------------------------------------- */
    #AnonAppsDeck
    {
-      position:relative;
+      /* position:relative; */
    }
 
    #AnonAppsView

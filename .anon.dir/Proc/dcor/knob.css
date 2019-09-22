@@ -664,12 +664,6 @@
       border-right:1px solid hsla(0,0%,85%,1);
    }
 
-   /* modal>wrap>grid .body>grid
-   {
-      width:100%;
-      height:100%;
-   } */
-
    modal .modalBox .body .view
    {position:relative !important;}
 

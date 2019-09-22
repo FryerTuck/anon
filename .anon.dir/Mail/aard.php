@@ -195,7 +195,6 @@ namespace Anon;
       if(!userDoes('work','lead','sudo')){return;};
       $ri=conf('Mail/checkSec'); if(!is_int($ri)||($ri<5)){fail('invalid `checkSec` config in Mail .. expecting int > 4');}; // validate
       $tn=time(); $lr=pget('/Mail/vars/lastRead'); if(!$lr){$lr=($tn-($ri+1));}; $td=($tn-$lr); if($td<$ri){return;}; // read later
-
       $l=fuse(pget('$'),pget('/')); $pl=[]; // $a=args(func_get_args());
       foreach($l as $i){if(!isFold("/$i")){continue;}; $x=path::conf("/$i"); $c=pget("$x/autoMail"); if($x&&$c&&!isin($pl,$c)){$pl[]=$c;}};
       if(!online()){fail('`'.HOSTNAME.'` is offline');};

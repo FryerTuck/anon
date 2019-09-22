@@ -240,6 +240,19 @@ namespace Anon;
          return $r;
       }
 
+      static function clanByUser($a)
+      {
+         if(!isWord($a)){return;}; $r=pget("/User/data/$a/clan"); if($r){$r=explode(',',$r);};
+         return $r;
+      }
+
+      static function userByClan($a)
+      {
+         if(isText($a,1)){$a=explode(',',$a);}; if(!isNuma($a)){return;}; $l=pget('/User/data'); $r=[];
+         foreach($l as $u){$c=pget("/User/data/$u/clan"); if(isin($c,$a)){$r[]=$u;}}; if(count($r)<1){$r=null;};
+         return $r;
+      }
+
       static function taskByPath($a)
       {
          if(!isPath($a)){return;}; $h='/Task/data'; $l=pget($h); $r=null;

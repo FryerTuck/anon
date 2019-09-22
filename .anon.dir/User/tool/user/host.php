@@ -25,7 +25,7 @@ $export=function($a,$u,$d)
       $cl=[]; foreach($co as $cn => $cv){$cl[]="- **$cn** - $cv";}; $cl=implode("\n",$cl); $vc=knob(dval(pget('/User/conf/viewConf')));
       $ck=$vc->toggleUserPanl; if(isin($ck,'`')){$ck="` $ck `";};
 
-      Proc::signal('busy',['with'=>"mail",'done'=>1]); wait(260);
+      Proc::signal('busy',['with'=>"mail",'done'=>1]); wait(510);
       xeno::sendMarkDownMail
       ([
          'destAddy'=>$m, 'mesgBody'=>'/User/note/userMadeMail.md',

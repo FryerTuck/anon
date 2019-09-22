@@ -29,38 +29,42 @@ namespace Anon;
 
 
 
-   # func :: dispense : check for tasks, from both email and existing .. to be used with event-hook
+   # func :: dispense : returns card-data of tasks
    # ------------------------------------------------------------------------------------------------------------------------------------------
-      static function dispense()
+      static function dispense($l=null)
       {
-         Proc::signal('busy',['with'=>'/Task/dispense','done'=>rand(11,81)]);
-         $r=knob(); $uc=sesn('CLAN'); $un=sesn('USER'); $l=path::ogle
-         ([
-            using => '/Task/data',
-            fetch => '*',
-            order => 'time:asc',
-            limit => 'levl:3',
-            shape => 'name:data',
-         ]);
+         if(!isNuma($l)){$l=pget('/Task/data');}; $uc=sesn('CLAN'); $un=sesn('USER'); $r=knob();
+         Proc::signal('busy',['with'=>'/Task/dispense','done'=>11]);
 
-         foreach($l as $tr => $td)
+         foreach($l as $q)
          {
-            $bn=$td->business; if(!$bn){$bn=find::firmByMail($td->fromAddy); $td->business=$bn;};
-            $wc=$td->withClan; if(!is_array($wc)){$wc=explode(',',$wc);}; if(!isin($uc,$wc)){continue;}; $tt=isin($wc,'test');
-            $wu=$td->withUser; $rc=pick($wc,['geek','draw','mind']);
-            if(!$tt&&($un!==$wu)&&($wu!=='')){continue;}; // jobcard is work in progress with another user
-            if($tt&&(!isin($uc,'test')||!$rc||!isin($uc,$rc))){continue;}; // jobcard is to be tested but current user cannot test
-            if($tt&&($wu!==$un)){$l->$tr->inColumn='todo';}; // jobcard placed in both current user's `test` and in test-user's `todo`
+            $td=path::ogle
+            ([
+               using => "/Task/data/$q",
+               fetch => '*',
+               order => 'time:asc',
+               limit => 'levl:2',
+               shape => 'name:data',
+            ]);
+
+            $bn=$td->business; if(!$bn){$bn=find::firmByMail($td->fromAddy); $td->business=$bn;}; // get business name
+            $wc=$td->withClan; if(!is_array($wc)){$wc=explode(',',$wc);}; //if(!isin($uc,$wc)){continue;}; // not meant for current user's clan
+            $wu=$td->withUser; $fu=$td->fromUser; $fc=find::clanByUser($fu); if($fc)
+            {xpop($fc,'work'); xpop($fc,'sort'); xpop($fc,'test'); xpop($fc,'gang'); xpop($fc,'lead'); xpop($fc,'sudo'); xpop($fc,'surf');}
+            if(!$fc||(span($fc)<1)){$fc=['sort'];}; $rc=pick($uc,$fc);
+            if($wu&&($un!==$wu)){continue;}; // jobcard is work in progress with another user
+            if(!$wu&&($fu!==$un)&&!$rc){continue;}; // jobcard is to be tested, but current user is not releated in any way
+            if(!$wu&&($fu===$un)){$td->inColumn='test';}; // jobcard is seen in both the from user's `test` and in target-user's `todo`
 
             $f=$td->flagTags; if(!$f){$f='';}; $f=frag($f,','); foreach($f as $x => $n)
-            {$i=pget("/Task/tags/$n"); if(!$i){fail("undefined task-tag `$n`");}; $f[$x]=$i;}; $l->$tr->tagIcons=$f; unset($f,$x,$n,$i);
+            {$i=pget("/Task/tags/$n"); if(!$i){fail("undefined task-tag `$n`");}; $f[$x]=$i;}; $td->tagIcons=$f; unset($f,$x,$n,$i);
 
             unset($cl,$cn,$cd); $cl=keys($td->comments); $cn=rpop($cl); $cd=dupe($td->comments->$cn); unset($td->comments);
             $cd->user=knob(['rate'=>User::ratingOf($cd->mail)]); $f=$cd->tags; if(!$f){$f='';};
             $f=frag($f,','); foreach($f as $x => $n){$i=pget("/Task/tags/$n"); if(!$i){fail("undefined task-tag `$n`");}; $f[$x]=$i;};
-            $cd->tico=$f; $l->$tr->comments=knob([$cn=>$cd]);
-            $r->$tr=$l->$tr;
+            $cd->tico=$f; $td->comments=knob([$cn=>$cd]); $r->$q=$td;
          };
+
          Proc::signal('busy',['with'=>'/Task/dispense','done'=>100]);
          return $r;
       }
@@ -72,21 +76,22 @@ namespace Anon;
    # ------------------------------------------------------------------------------------------------------------------------------------------
       static function moveCard()
       {
-         $pv=knob($_POST); $un=sesn('USER'); $cn=sesn('CLAN'); $tn=time(); $dr=$pv->dref; $dp="/Task/data/$dr";
-         $mt=$pv->mvto; $mf=pget("$dp/inColumn"); if(!$mf){ekko(GONE);}; $wu=pget("$dp/withUser"); path::make("$dp/withUser",$un);
-         path::make("$dp/editTime",$tn); path::make("$dp/inColumn",$mt);
-         flog::{"$dp/editLogs"}("moved from $mf to $mt by $un"); $dd=self::dispense();
+         $pv=knob($_POST); $dr=$pv->dref; $mt=$pv->mvto; $dp="/Task/data/$dr"; if(lock::exists($dp)){ekko(GONE);}; lock::create($dp);
+         $el=pget("$dp/editLogs"); $tn=time(); path::make("$dp/editTime",$tn); $un=sesn('USER'); $cn=sesn('CLAN');
+         $mf=pget("$dp/inColumn"); flog::{"$dp/editLogs"}("moved from $mf to $mt by $un"); $wf=conf('Task/workFlow'); $pc=pick($cn,keys($wf));
 
          if($mt!=='test')
          {
-            $wc=pget("$dp/withClan"); $wc=swap($wc,',test',''); path::make("$dp/withClan",$wc);
-            // if($wu!==$un){$cf=decode::jso("$dp/cameFrom");};
-            proc::signal('docketUpdate',$dd,'.work'); ekko(OK);
+            path::make("$dp/fromUser",''); path::make("$dp/withClan",$pc); path::make("$dp/withUser",$un); path::make("$dp/inColumn",$mt);
+            lock::remove($dp); $dd=self::dispense([$dr]); proc::signal('docketUpdate',$dd,'.work'); ekko(OK);
          };
 
-         $wf=conf('Task/workFlow'); $pc=pick($cn,keys($wf)); if(!$pc){ekko("no workflow destination for `$mf`");};
-         $nc=$wf->$pc; if(is_array($nc)){$nc=fuse($nc,',');}; path::make("$dp/withClan",$nc);
-         proc::signal('docketUpdate',$dd,'.work'); ekko(OK);
+         if(!$pc){ekko("no workflow destination from `$mf`");}; $nc=$wf->$pc;
+         if(is_array($nc)){$nc=fuse($nc,',');}; $nu=find::userByClan($nc);
+         if(!$nu){fail::workflow("next clan `$nc` has no members; nobody to receive this job");};
+
+         path::make("$dp/fromUser",$un); path::make("$dp/withClan",$nc); path::make("$dp/withUser",''); path::make("$dp/inColumn",'todo');
+         lock::remove($dp); $dd=self::dispense([$dr]); proc::signal('docketUpdate',$dd,'.work'); ekko(OK);
       }
    # ------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -208,8 +213,9 @@ namespace Anon;
    # ------------------------------------------------------------------------------------------------------------------------------------------
       static function saveConf()
       {
-         $o=knob($_POST); $h="/Task/data/$o->dref"; unset($o->dref);
+         $o=knob($_POST); $dr=$o->dref; $h="/Task/data/$dr"; unset($o->dref);
          foreach($o as $k => $v){if(!isee("$h/$k")){continue;}; path::make("$h/$k",$v);};
+         $dd=self::dispense([$dr]); proc::signal('docketUpdate',$dd,'.work');
          if($o->business===null){return OK;}; $m=pget("$h/fromAddy"); path::make("/Bill/data/contacts/.index/$m",$o->business);
          return OK;
       }
