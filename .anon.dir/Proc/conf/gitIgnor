@@ -16,6 +16,7 @@
 /Task/conf/autoMail
 /Time/data/*
 /User/data/*
+/User/vote/*
 !/User/data/anonymous/*
 !/User/data/master/*
 /User/conf/autoMail
