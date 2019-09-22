@@ -368,6 +368,13 @@
          if(!o||!isNumr(o)){o=v;}; if(v===o){return [v]}; var r = [];
          if(v<o){for(v; v<=o; v++){r.push(v);}}else{for(o; o<=v; v--){r.push(v);}};  return r;
       };
+
+      if(isKnob(v)&&!isNode(v))
+      {
+         if(span(v)<1){return []}; let k,f,l; k=keys(v); f=lpop(dupe(k)); l=rpop(dupe(k));
+         if(!isNaN(f)&&!isNaN(l)){return (Object.entries(v).reduce((i,[k,v])=>(i[k]=v,i),[]))};
+      };
+
       return [v];
    };
 

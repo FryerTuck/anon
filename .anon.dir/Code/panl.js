@@ -157,6 +157,7 @@ extend(Anon)
 
          select('#CodeTreePanl').select('treeview')[0].listen('loaded',ONCE,()=>
          {
+            Busy.edit('/Code/panl.js',100);
             // TODO .. repo stuff here
             if(!!ini.openItem){Anon.Code.open(ini.openItem);};
          });

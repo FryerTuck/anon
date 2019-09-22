@@ -81,11 +81,6 @@ extend(Anon)
    {
       anew:function(cbf)
       {
-         select('#TaskTabber').closeAll((tv)=>
-         {
-            tv=select('#TaskTreeView').select('treeview');
-            if(tv){tv[0].remove()}; tick.after(60,cbf);
-         });
       },
 
       vars:
@@ -118,11 +113,10 @@ extend(Anon)
 
       init:function()
       {
-         Busy.init();
          purl('/Task/dispense',(r)=>
          {
             Anon.Task.jobCards.prerun(decode.jso(r.body));
-            // tick.after(250,()=>{Busy.done();});
+            Busy.edit('/Task/panl.js',100);
          });
 
          server.listen('docketUpdate',(d)=>

@@ -19,7 +19,7 @@ select('#AnonAppsView').insert
                [
                   {row:[{col:'.slabMenuHead', contents:'help'}]},
                   {row:[{col:'.panlHorzLine', contents:{hdiv:''}}]},
-                  {row:[{col:'.slabMenuBody', contents:{panl:'#HelpTreeMenu'}}]},
+                  {row:[{col:'.slabMenuBody', contents:{panl:'#HelpTreePanl'}}]},
                ]}
             ]},
             {col:'.panlVertDlim', role:'gridFlex', axis:X, target:'<', contents:{vdiv:''}},
@@ -57,8 +57,7 @@ extend(Anon)
 
       init:function()
       {
-         Busy.edit('/Help/treeMenu',0);
-         select('#HelpTreeMenu').insert
+         select('#HelpTreePanl').insert
          ([
             {treeview:'#HelpTreeMenu', source:'/Help/treeMenu', listen:
             {
@@ -69,9 +68,10 @@ extend(Anon)
                },
             }}
          ]);
-         select('#HelpTreeMenu').listen('loaded',()=>
+
+         select('#HelpTreePanl').select('treeview')[0].listen('loaded',ONCE,()=>
          {
-            Busy.edit('/Help/treeMenu',100);
+            Busy.edit('/Help/panl.js',100);
          });
       },
 

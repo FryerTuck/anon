@@ -50,6 +50,7 @@ extend(Anon)
 
       init:function()
       {
+         Busy.edit('/Plan/panl.js',100);
       },
 
 

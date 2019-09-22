@@ -114,7 +114,11 @@ extend(Anon)
             select('#DrawBodyPanl').focus();
          });
 
-         select('#DrawBodyPanl').focus();
+         select('#DrawTreePanl').select('treeview')[0].listen('loaded',ONCE,()=>
+         {
+            Busy.edit('/Draw/panl.js',100);
+            select('#DrawBodyPanl').focus();
+         });
       },
 
 

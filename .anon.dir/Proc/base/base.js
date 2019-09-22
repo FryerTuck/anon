@@ -129,15 +129,15 @@
 
       o.listen.progress=function(b)
       {
-         if(!this.done){this.done=0}; let q=(Math.floor(b.loaded/b.total)*100);
-         if(this.done<q){this.done=q};pe(q,this.purl); if(this.busy&&!!MAIN.Busy){Busy.edit(this.purl,q)};
+         let q=(Math.floor(b.loaded/b.total)*100); if(this.done<q){this.done=q};pe(q,this.purl);
+         if(this.busy&&!!MAIN.Busy){Busy.edit(this.purl,q)};
       };
 
       cb=o.listen.loadend; delete o.listen.loadend; o.listen.loadend=function() // event done
       {
          let h=dval(this.getAllResponseHeaders()); if((h!=null)&&h.Cookies){h.Cookies=decode.jso(decode.b64(h.Cookies))};
-         let r={path:this.purl,head:h,body:this.response}; if(!this.done){this.done=0};
-         if((this.status==200)&&(this.done<100)){pe(100,this.purl);if(this.busy&&!!MAIN.Busy){Busy.edit(this.purl,100)};};
+         let r={path:this.purl,head:h,body:this.response}; this.done=100;
+         if(this.status==200){pe(100,this.purl);if(this.busy&&!!MAIN.Busy){Busy.edit(this.purl,100)};};
          if(x.silent){tick.after(250,()=>{delete server.silent.busy})};
          if(MAIN.HALT){return}; cb(r);
       };
@@ -146,9 +146,9 @@
       if(!o.method){o.method='POST'}; if(!o.expect){o.expect='text'}; if(!isKnob(o.header)){o.header={}}; // method, responseType, headerOBJ
       if(!o.header.INTRFACE){o.header.INTRFACE='API'}; x=(new XMLHttpRequest()); x.open(o.method,o.target);
       // x.withCredentials=true;
-      x.responseType=o.expect;
+      x.responseType=o.expect; x.done=0;
       x.purl=o.target; o.listen.each((v,k)=>{x.addEventListener(k,v)}); o.header.each((v,k)=>{x.setRequestHeader(k,v)}); // events, headers
-      x.silent=o.silent; tick.after(500,()=>{if(x.done&&(x.done>99)){return}; x.busy=(x.silent?0:1)}); // show busy if true
+      x.silent=o.silent; tick.after(750,()=>{if(x.done&&(x.done>99)){return}; x.busy=(x.silent?0:1)}); // show busy if true
       x.send((isKnob(o.convey)?encode.JSON(o.convey):VOID)); // dispatch request
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
@@ -1056,7 +1056,10 @@
             };
 
             document.body.appendChild(rsl); (rsl.select('butn')||[]).forEach((b)=>{b.root=rsl}); rsl.select('.shut')[0].root=rsl;
-            if(tmo){tick.after(60,()=>{rsl.gone(tmo)})}; rsl.focus(); return rsl;
+            if(tmo){tick.after(60,()=>{rsl.gone(tmo)})}; rsl.focus();
+            box=rsl.select('.modalBox')[0]; let bxd=rectOf(box); box.declan('cenmid');
+            box.setStyle({position:'absolute',left:Math.floor(bxd.left),top:Math.floor(bxd.top)});
+            return rsl;
          }
          .bind({txt:a1,tmo:a2});
       },
@@ -1158,6 +1161,9 @@
          rsl.exit=function(){if(this.ticker){clearInterval(this.ticker)}; this.signal('exit'); tick.after(60,()=>{this.remove()})};
          document.body.appendChild(rsl); (rsl.select('butn')||[]).forEach((b)=>{b.root=rsl; b.dbox=box; b.enclan(thm)});
          rsl.select('.shut')[0].root=rsl; (rsl.select('treeview')||[]).forEach((b)=>{b.main=rsl});
+         box=rsl.select('.modalBox')[0]; let bxd=rectOf(box); box.declan('cenmid');
+         box.setStyle({position:'absolute',left:Math.floor(bxd.left),top:Math.floor(bxd.top)});
+         return rsl;
       },
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------

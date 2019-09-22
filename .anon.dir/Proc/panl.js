@@ -72,6 +72,7 @@ extend(Anon)
                   }
                }]);
             });
+            Busy.edit('/Proc/panl.js',100);
          });
       },
 

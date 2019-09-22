@@ -20,7 +20,7 @@ select('#AnonAppsView').insert
                [
                   {row:[{col:'.slabMenuHead', contents:'data'}]},
                   {row:[{col:'.panlHorzLine', contents:{hdiv:''}}]},
-                  {row:[{col:'.slabMenuBody', contents:{panl:'#DataTreeMenu'}}]},
+                  {row:[{col:'.slabMenuBody', contents:{panl:'#DataTreePanl'}}]},
                ]}
             ]},
             {col:'.panlVertDlim', role:'gridFlex', axis:X, target:'<', contents:{vdiv:''}},
@@ -69,7 +69,7 @@ extend(Anon)
 
       init:function()
       {
-         select('#DataTreeMenu').insert
+         select('#DataTreePanl').insert
          ([
             {treeview:'', source:'/Data/treeMenu', uproot:true, draggable:true, listen:
             {
@@ -94,6 +94,11 @@ extend(Anon)
                },
             }}
          ]);
+
+         select('#DataTreePanl').select('treeview')[0].listen('loaded',ONCE,()=>
+         {
+            Busy.edit('/Data/panl.js',100);
+         });
       },
 
 

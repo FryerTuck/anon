@@ -97,6 +97,8 @@ extend(Anon)
                   }
                }]);
             });
+
+            Busy.edit('/Mail/panl.js',100);
          });
       },
 

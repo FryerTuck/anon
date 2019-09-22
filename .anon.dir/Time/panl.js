@@ -107,6 +107,10 @@ extend(Anon)
 
       init:function(slf)
       {
+         select('#TimeTreePanl').select('treeview')[0].listen('loaded',ONCE,()=>
+         {
+            Busy.edit('/Time/panl.js',100);
+         });
       },
 
 
@@ -144,7 +148,7 @@ extend(Anon)
 
 
 
-      view:function(txt,pth, dta,drv,tab,ttl,tpe,opt,tgt,box,lgn)
+      view:function(txt,pth, dta,drv,tab,ttl,tpe,opt,tgt,box,lgn,usr,mda)
       {
          if(!isJson(txt)){fail('expecting JSON (text)');return}; dta=decode.jso(txt,1); if(span(dta)<1){alert('no data for graph');return};
          if(!isList(dta.labels)||!isList(dta.series)){fail('invalid graph data');return}; if(!dta.layout){dta.layout={}};
@@ -158,9 +162,15 @@ extend(Anon)
          {box=rectOf(tgt); opt.width=(box.width-6); opt.height=(box.height-6);};
          opt.high=24; opt.low=0; opt.axisY={onlyInteger:true,offset:20};
 
+         dta.series.forEach((o,i)=>{dta.series[i].data=listOf(o.data)});
+
+         // usr=[]; mda=[]; dta.series.forEach((o)=>{radd(usr,o.name); radd(mda,vals(o.data));});
+         // delete dta.series; dta.series=mda;
+         // dump(dta); return;
+         // opt.lineSmooth=Chartist.Interpolation.cardinal({fillHoles:true,});
+
          // lgn=[]; dta.series.forEach((o,i)=>{radd(lgn,{name:o.name,series:i})});
          // opt.plugins=[Chartist.plugins.legend({legendNames:lgn})];
-
          new Chartist[tpe](tgt,dta,opt);
       },
 
