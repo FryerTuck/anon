@@ -118,7 +118,8 @@ namespace Anon;
 
             $scan=pget($epth); if(isset($scan[0])){foreach($scan as $indx) // scan for events
             {
-               $evnt=decode::jso("$epth/$indx"); void("$epth/$indx"); $en=$evnt->name; $ed=$evnt->data; // emit this event only once
+               $evnt=decode::jso("$epth/$indx"); void("$epth/$indx"); // emit this event only once
+               if(!is_object($evnt)){continue;}; $en=$evnt->name; $ed=$evnt->data; // validate event object
                $hook=$lstn->$en; if($hook){foreach($hook as $sn => $fn){$fn($ed); unset($sn,$fn);}}; // call this event's hooks
                self::emit($en,$ed); unset($evnt,$en,$ed,$hook);  // emit this event to front-end .. clean up each iteration
             }};

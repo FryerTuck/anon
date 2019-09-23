@@ -838,3 +838,93 @@
       outline-color:hsla(0,100%,60%,1) !important;
    }
 /* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* clan :: note
+/* ------------------------------------------------------------------------------------------------------------- */
+   notedeck
+   {
+      display:inline-block; position:absolute; box-sizing:border-box;
+      z-index:9999;
+      text-align:left; color:#BBB;
+   }
+
+   notedeck.show{display:inline-block !important;}
+   notedeck.hide{display:none !important;}
+
+   noteface
+   {
+      display:inline-block; position:relative; box-sizing:border-box;
+      border:1px solid hsla(0,0%,30%,1);
+      background-color:#2e3133;
+      border:1px solid #5e6163; border-radius:2px;
+      box-shadow:0px 0px 12px hsla(0,0%,0%,0.2);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size:12px; line-height:14px; color:#FFF;
+      padding:6px;
+   }
+
+   notedeck.hintPeek noteface
+   {
+      padding:0px !important;
+   }
+
+   notedeck.hintPeek .hintWrap
+   {
+      width:128px !important; height:128px !important;
+   }
+
+   notedeck.hintPeek .hintDeck
+   {
+      position:absolute !important;
+      width:100% !important; height:100% !important;
+      background-size:cover !important;
+   }
+
+   notedeck.hintPeek .hintText
+   {
+      position:absolute !important; bottom:0px;
+      width:100% !important; height:20px !important;
+      background:hsla(0,0%,0%,0.7);
+      padding:2px !important; overflow:hidden;
+   }
+
+   notedeck.dark>noteface,notedeck.good>notearro>div{background-color:hsla(210,3%,12%,1); border:1px solid hsla(210,3%,22%,1);}
+   notedeck.good>noteface,notedeck.good>notearro>div{background-color:hsla(140,60%,20%,1); border:1px solid hsla(140,60%,40%,1);}
+   notedeck.cool>noteface,notedeck.cool>notearro>div{background-color:hsla(210,60%,20%,1); border:1px solid hsla(210,60%,40%,1);}
+   notedeck.need>noteface,notedeck.need>notearro>div{background-color:hsla(280,60%,20%,1); border:1px solid hsla(280,60%,40%,1);}
+   notedeck.warn>noteface,notedeck.warn>notearro>div{background-color:hsla(40,60%,20%,1); border:1px solid hsla(40,60%,40%,1);}
+   notedeck.fail>noteface,notedeck.fail>notearro>div{background-color:hsla(0,60%,20%,1); border:1px solid hsla(0,60%,40%,1);}
+
+   notearro
+   {
+      display:inline-block; position:absolute; box-sizing:border-box;
+      width:12px; height:6px; overflow:hidden; margin-top:-5px;
+   }
+
+   notearro div
+   {
+      display:inline-block; position:relative; box-sizing:border-box;
+      width:12px; height:12px; margin-top:2px; overflow:hidden; transform:rotate(45deg);
+      background-color:#2e3133;
+      border:1px solid #5e6163;
+   }
+
+   notearro.TL {left:0px;  top:0px;}
+   notearro.TM {left:50%;  top:0px; transform:translate(-50%,0%);}
+   notearro.TR {right:0px; top:0px;}
+
+   notearro.RT {transform:rotate(90deg);  right:0px; top:0px;}
+   notearro.RM {transform:rotate(90deg);  right:0px; top:50%; transform:translate(0%,-50%);}
+   notearro.RB {transform:rotate(90deg);  right:0px; bottom:0px;}
+
+   notearro.BR {transform:rotate(180deg); right:0px; bottom:0px;}
+   notearro.BM {transform:rotate(180deg); left:50%;  transform:translate(50%,0%); bottom:0px;}
+   notearro.BL {transform:rotate(180deg); left:0px;  bottom:0px;}
+
+   notearro.LB {transform:rotate(270deg); left:0px;  bottom:0px;}
+   notearro.LM {transform:rotate(270deg); left:0px;  top:50%; transform:translate(0%,-50%);}
+   notearro.LT {transform:rotate(270deg); left:-8px;  top:6px;}
+/* ------------------------------------------------------------------------------------------------------------- */

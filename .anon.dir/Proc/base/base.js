@@ -1230,6 +1230,42 @@
 
 
 
+// tool :: dropMenu
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   extend(MAIN)
+   ({
+      notify:function(mesg,tone,arro,attr,tout)
+      {
+
+         if(isText(mesg)){mesg=swap((mesg.trim()||'example mesg'),'\n','<br>')}; if(!isList(mesg)){mesg=[mesg];};
+         if(isin(this.arro,tone)){let t=[arro,tone]; tone=VOID;arro=VOID; tone=lpop(t);arro=rpop(t)};
+         if(!tone||!isin(this.tone,tone)){tone=LITE};tone=lowerCase(unwrap(tone)); if(!arro||!isin(this.arro,arro)){arro=TM};arro=unwrap(arro);
+
+         let note=create({notedeck:`.${tone}`, contents:[{noteface:mesg},{notearro:`.${arro}`, contents:[{div:''}]}]});
+         if(isKnob(attr)){note.modify(attr)};
+         if((tout===VOID)||(isNumr(tout)&&(tout>0))){note.expire=tick.after((isInum(tout)?tout:6000),()=>{remove(note)})};
+         return note;
+      }
+      .bind
+      ({
+         tone:[DARK,LITE,GOOD,COOL,NEED,WARN,FAIL],
+         arro:[TL,TM,TR,RT,RM,RB,BR,BM,BL,LB,LM,LT],
+      }),
+   });
+
+   extend(Element.prototype)
+   ({
+      notify:function(mesg,tone,arro,attr,tout)
+      {
+         let note=notify(mesg,tone,arro,attr,tout); this.appendChild(note);
+         return note;
+      },
+   });
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
 // glob :: prop : CURSOR
 // --------------------------------------------------------------------------------------------------------------------------------------------
    extend(MAIN)

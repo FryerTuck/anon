@@ -41,7 +41,7 @@ namespace Anon;
       'DBUGPATH' => envi('DBUGPATH'),
       'BOOTTIME' => envi('TIME_FLOAT'),
       'HOSTADDR' => envi('SERVER_ADDR'),
-      'USERDEED' => envi('CLIENT_METHOD'),
+      'USERDEED' => envi('USERDEED'),
       'NAVIPURL' => envi('URI'),
       'NAVIPATH' => envi('URL'),
       'MADEFUBU' => envi('MADEFUBU'),

@@ -306,67 +306,6 @@
 
 
 
-/* clan :: note
-/* ------------------------------------------------------------------------------------------------------------- */
-   notedeck
-   {
-      display:inline-block; position:absolute; box-sizing:border-box;
-      z-index:99999998;
-      text-align:left; color:#BBB;
-   }
-
-   noteface
-   {
-      display:inline-block; position:relative; box-sizing:border-box;
-      border:1px solid hsla(0,0%,30%,1);
-      background-color:#2e3133;
-      border:1px solid #5e6163; border-radius:2px;
-      box-shadow:0px 0px 12px hsla(0,0%,0%,0.2);
-      font-family: Arial, Helvetica, sans-serif;
-      font-size:12px; line-height:14px; color:#FFF;
-      padding:6px;
-   }
-
-   notedeck.Good>noteface,notedeck.Good>notearro>div{background-color:hsla(140,60%,20%,1); border:1px solid hsla(140,60%,40%,1);}
-   notedeck.Info>noteface,notedeck.Info>notearro>div{background-color:hsla(210,60%,20%,1); border:1px solid hsla(210,60%,40%,1);}
-   notedeck.Need>noteface,notedeck.Need>notearro>div{background-color:hsla(280,60%,20%,1); border:1px solid hsla(280,60%,40%,1);}
-   notedeck.Warn>noteface,notedeck.Warn>notearro>div{background-color:hsla(40,60%,20%,1); border:1px solid hsla(40,60%,40%,1);}
-   notedeck.Fail>noteface,notedeck.Fail>notearro>div{background-color:hsla(0,60%,20%,1); border:1px solid hsla(0,60%,40%,1);}
-
-   notearro
-   {
-      display:inline-block; position:absolute; box-sizing:border-box;
-      width:12px; height:6px; overflow:hidden;
-   }
-
-   notearro div
-   {
-      display:inline-block; position:relative; box-sizing:border-box;
-      width:12px; height:12px; margin-top:2px; overflow:hidden; transform:rotate(45deg);
-      background-color:#2e3133;
-      border:1px solid #5e6163;
-   }
-
-   notearro.TL {left:0px;  top:0px;}
-   notearro.TM {left:50%;  top:0px; transform:translate(-50%,0%);}
-   notearro.TR {right:0px; top:0px;}
-
-   notearro.RT {transform:rotate(90deg);  right:0px; top:0px;}
-   notearro.RM {transform:rotate(90deg);  right:0px; top:50%; transform:translate(0%,-50%);}
-   notearro.RB {transform:rotate(90deg);  right:0px; bottom:0px;}
-
-   notearro.BR {transform:rotate(180deg); right:0px; bottom:0px;}
-   notearro.BM {transform:rotate(180deg); left:50%;  transform:translate(50%,0%); bottom:0px;}
-   notearro.BL {transform:rotate(180deg); left:0px;  bottom:0px;}
-
-   notearro.LB {transform:rotate(270deg); left:0px;  bottom:0px;}
-   notearro.LM {transform:rotate(270deg); left:0px;  top:50%; transform:translate(0%,-50%);}
-   notearro.LT {transform:rotate(270deg); left:-8px;  top:6px;}
-/* ------------------------------------------------------------------------------------------------------------- */
-
-
-
-
 /* bots :: trap : only bots can see the element
 /* ------------------------------------------------------------------------------------------------------------- */
    .nonhuman

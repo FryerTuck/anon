@@ -196,6 +196,16 @@
 
 
 
+// func :: leaf : base-name from path
+// ---------------------------------------------------------------------------------------------------------------------------------------------
+   const leaf = function(p)
+   {
+      let r=pathOf(p); if(!r){r=pathOf('/'+p); if(!r){return}}; let b=r.split('/').pop(); return b;
+   };
+// ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 // func :: fext : get valid file extension from path
 // ---------------------------------------------------------------------------------------------------------------------------------------------
    const fext = function(p)
@@ -295,7 +305,7 @@
 
 // defn :: flag : words .. do NOT define these earlier (up) .. defn() needs all the above
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   defn('AUTO INFO GOOD NEED WARN FAIL NEXT SKIP STOP DONE ACTV NONE BUSY KEYS VALS ONCE EVRY BFOR AFTR UNTL EVNT FILL TILE SPAN OPEN SHUT');
+   defn('AUTO COOL DARK LITE INFO GOOD NEED WARN FAIL NEXT SKIP STOP DONE ACTV NONE BUSY KEYS VALS ONCE EVRY BFOR AFTR UNTL EVNT FILL TILE SPAN OPEN SHUT');
    defn('TL TM TR RT RM RB BR BM BL LB LM LT');
    defn('A B C D E F G H I J K L M N O P Q R S T U V W X Y Z');
    defn('OK NA');
@@ -699,6 +709,19 @@
       };
    };
    extend(Number.prototype,String.prototype,Array.prototype,Object.prototype)({each:function(f){return each(this,f);}});
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// tool :: concat : Object
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   extend(Object.prototype)
+   ({
+      concat:function(a)
+      {
+         let r=dupe(this); if(!isKnob(a)&&!isList(a)){return r}; a.each((v,k)=>{r[k]=v}); return r;
+      },
+   });
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 

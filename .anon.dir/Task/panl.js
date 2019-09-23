@@ -234,8 +234,7 @@ extend(Anon)
                   v.atch.forEach((f)=>
                   {
                      let x=fext(f); if(!x){x='auto'}; x=Anon.Task.vars.icon[x]; if(!x){x=Anon.Task.vars.icon.auto};
-                     radd(a,{icon:'', face:x, size:16, title:f, path:`/Task/data/${i.docketID}/comments/${v.cref}/${f}`, onclick:function()
-                     {Anon.Task.jobCards.viuAtc(this.path)}});
+                     radd(a,{icon:'', face:x, size:16, hint:{peek:`/Task/data/${i.docketID}/comments/${v.cref}/atch/${f}`}});
                   });
                   let p=v.mesg.split('\n'); (['# ','## ','### ','#### ']).forEach((h)=>{if(p[0].startsWith(h+i.mesgHead)){lpop(p)}});
                   v.mesg=p.join('\n');
@@ -340,12 +339,6 @@ extend(Anon)
                   ],
                });
             });
-         },
-
-
-         viuAtc:function(p)
-         {
-            dump(`popModal for '${p}'`);
          },
 
 

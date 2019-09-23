@@ -24,6 +24,10 @@ namespace Anon;
 
       static function __init()
       {
+         if((USERDEED==='select')&&that(NAVIPATH)->startsWith('/Task/data/'))
+         {
+            ekko::path(NAVIPATH);
+         };
       }
    # ------------------------------------------------------------------------------------------------------------------------------------------
 

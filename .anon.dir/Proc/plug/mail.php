@@ -211,7 +211,8 @@ namespace Anon;
 
             if(isin($fltr,'mesgBody')||isin($fltr,'textBody')||isin($fltr,'attached'))
             {
-               $s=imap_fetchstructure($L,$x); $used=[]; if(isset($s->parts)){$s=flattenParts($s->parts);};
+               $s=imap_fetchstructure($L,$x); $used=[];
+               if(isset($s->parts)){$s=flattenParts($s->parts);}else{$s=knob(['1'=>$s]);};
             };
 
 
@@ -219,11 +220,12 @@ namespace Anon;
             {
                $bl=[]; $il=[]; foreach($s as $sn => $so)
                {
-                  $bo=getMailPart($L,$x,$sn,$so,false); $bo->numr=$sn; $bo->part=$so;
+                  $bo=getMailPart($L,$x,$sn,$so,false);
+                  $bo->numr=$sn; $bo->part=$so;
                   if($so->type<1)
                   {
-                     // if($o->mesgBody){continue;};
-                     if($sn[0]==='3'){continue;}; $bt=getMailPart($L,$x,$sn,$so,true)->data; $bt=trim($bt.'');
+                     if($sn[0]==='3'){continue;};
+                     $bt=getMailPart($L,$x,$sn,$so,true)->data; $bt=trim($bt.'');
                      if(($bo->type==='html')&&(wrapOf($bt)==='<>')){$o->mesgBody=$bt;continue;}
                      elseif(($bo->type==='plain')||($bo->type==='text')){$o->textBody=$bt;continue;}else{$bl[]=$bt;};
                   }
@@ -237,6 +239,7 @@ namespace Anon;
                }};
                if(isText($o->textBody)&&(strpos($o->textBody,'data:inode/directory;base64,')===0)){$o->textBody=furl($o->textBody)->data;};
                if(isText($o->mesgBody)&&(strpos($o->mesgBody,'data:inode/directory;base64,')===0)){$o->mesgBody=furl($o->mesgBody)->data;};
+               if($o->mesgBody===''){$o->mesgBody=$o->textBody;};
                unset($sn,$so,$bo,$ri,$bt);
             };
 

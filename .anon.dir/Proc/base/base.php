@@ -523,7 +523,7 @@ namespace Anon;
       static function path($a,$nx=null)
       {
          $p=expect::path($a,R); $x=path::type($p); $m=mime($x); if(!$m){fail("no mime-type configured for extension `$x`");};
-         if($x!=='fold'){self::head(['Content-Type'=>$m]); readfile($p); done();}; // regular file
+         if($x!=='fold'){self::head(['Content-Type'=>$m]); readfile($p); flush(); done();}; // regular file
          todo('ekko.path :: serve folders');
       }
 
@@ -740,6 +740,7 @@ namespace Anon;
 
 
    function arg($a){return (new arg($a));}
+   function that($a){return (new arg($a));}
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
