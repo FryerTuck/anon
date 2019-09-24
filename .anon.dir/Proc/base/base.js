@@ -406,7 +406,7 @@
    const requires = function(l,cbfn, s,a,slf,d)
    {
       if(MAIN.HALT){return}; addStack(); if(!isFunc(cbfn)){cbfn=function(){}}; slf=this; a={}; d=0;
-      if(!l||(span(l)<1)){f();return}; if(!isList(l)){l=[l]}; //dump(`${this.decr} ${s}`,'\n');
+      if(!l||(span(l)<1)){cbfn();return}; if(!isList(l)){l=[l]}; //dump(`${this.decr} ${s}`,'\n');
       l.each((i)=>
       {
          let p=stub(i,':'); if(p){i=p[2]; p=p[0]; a[p]=VOID}; let x=fext(i);
@@ -443,8 +443,7 @@
          fail('unsupported file-extension `'+x+'`'); return STOP; // loop must not reach here
       });
 
-      // if(slf.decr<1){f();return}; // if already loaded before - no need to wait any longer
-      wait.until(()=>{return (d<1)},()=>{tick.after(500,()=>{cbfn()})});
+      wait.until(()=>{return (d<1)},()=>{tick.after(150,()=>{cbfn()})});
    }
    .bind({call:{},done:{}});
 // --------------------------------------------------------------------------------------------------------------------------------------------
@@ -1166,6 +1165,36 @@
          return rsl;
       },
    });
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: popAlert : opens a pre-formatted modal dialogue .. requires a heading
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const popAlert = function(titl,skin,tone,icon,size)
+   {
+      return function(mesg)
+      {
+         mesg=trim(mesg); mesg=mesg.split('\n'); mesg.forEach((l,x)=>{mesg[x]=l.trim()}); mesg=mesg.join('\n');
+         parsed(mesg,'markdown',(msg)=>
+         {
+            popModal({class:'AnonPopAlert', theme:this.skn, size:this.sze})
+            ({
+               head:this.ttl,
+               body:
+               [
+                  {layr:'.bodyicon', contents:[{icon:`.${this.tne}`,face:this.ico}]},
+                  {panl:'.bodymesg', contents:[msg]},
+               ],
+               foot:
+               [
+                  {butn:'',contents:'Ok', onclick:function(){this.root.exit()}},
+               ],
+            });
+         });
+      }
+      .bind({ttl:titl,skn:(skin||'lite'),tne:(tone||'auto'),ico:(icon||'warning'),sze:(size||'400x220')});
+   };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 

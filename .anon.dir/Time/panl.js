@@ -36,7 +36,7 @@ select('#AnonAppsView').insert
                         {
                            'LeftClick':function(evnt)
                            {
-                              if(this.info.type=='fold'){return}; let ctrl=evnt.ctrlKey; let shft=evnt.shiftKey;
+                              if(isin(['fold','plug'],this.info.type)){return}; let ctrl=evnt.ctrlKey; let shft=evnt.shiftKey;
                               if(ctrl||shft){evnt.stopImmediatePropagation(); evnt.preventDefault(); evnt.stopPropagation();};
                               Anon.Time.open(this.info.path,this.info.type,(ctrl?'ctrl':(shft?'shft':VOID)));
                            },

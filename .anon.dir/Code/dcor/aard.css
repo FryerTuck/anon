@@ -61,11 +61,12 @@
 
 #CodeToolView
 {
-   height:0.1px !important;
    background:hsla(0,0%,0%,0.1);
 }
 
-#CodeToolView.show {height:60px !important;}
+/* #CodeToolView.show {height:98px !important;} */
+#CodeToolView.show {height:90px !important;}
+#CodeToolView.hide {height:0.1px !important;}
 #CodeToolView>col {position:relative;}
 
 #CodeToolWrap {position:absolute;}

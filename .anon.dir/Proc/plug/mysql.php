@@ -261,17 +261,17 @@ namespace Anon;
          };
 
 
-         if(($arg->fetch==='*')&&($lvl<2)&&($arg->limit!==null))
-         {
-            $q=(($lvl<1)?'SHOW DATABASES':'SHOW TABLES'); $z=$this->adjure($q);
-            $rsl=filter($z,$arg); return $rsl;
-         };
-
-
          if(($arg->fetch==='*')&&(($tpe==='sproc')||($tpe==='funct')))
          {
             $nic=$rfs->$tpe; $ucw=(($tpe==='sproc')?'PROCEDURE':'FUNCTION'); $pcw=proprCase($ucw);
             $z=$this->adjure("SHOW CREATE $ucw $nic")[0]->{"Create $pcw"}; return $z;
+         };
+
+
+         if(($arg->fetch==='*')&&($lvl<2)&&($arg->limit!==null))
+         {
+            $q=(($lvl<1)?'SHOW DATABASES':'SHOW TABLES'); $z=$this->adjure($q);
+            $rsl=filter($z,$arg); return $rsl;
          };
 
 
@@ -417,7 +417,7 @@ namespace Anon;
 
       function delete($a=null)
       {
-         $i=$this->mean; $l=$i->levl; $r=$i->refs; if(isAsso($a)){$a=knob($a,1);}; // prep
+         $i=$this->mean; $l=$i->levl; $r=$i->refs; if(isAsso($a)){$a=knob($a,U);}; // prep
 
          if(isKnob($a))
          {

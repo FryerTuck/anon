@@ -347,7 +347,7 @@ namespace Anon;
    {
       static function __callStatic($ttl,$arg)
       {
-         $stk=dbug::stak(); if(isset($stk[1])&&($stk[1]->func=='todo')){$stk=$stk[1];}else{$stk=$stk[0];};
+         $stk=stak(); if(isset($stk[1])&&($stk[1]->func=='todo')){$stk=$stk[1];}else{$stk=$stk[0];};
          $ttl=trim($ttl); expect::text($ttl,2); expect::flat($arg,1); if(!isset($arg[1])){radd($arg,NOEXIT);};
          $msg=$arg[0]; $opt=$arg[1]; $f=crop($stk->file); $l=$stk->line; $hsh=sha1("$ttl:$f"); requires::stem('Task');
          $tdp="/Task/vars/geekTodo/$hsh"; $usr=sesn('USER'); $eml=pget("/User/data/$usr/mail");

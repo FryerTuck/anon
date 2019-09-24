@@ -713,11 +713,11 @@
 
 
 
-// tool :: concat : Object
+// tool :: fuse : concat Object
 // --------------------------------------------------------------------------------------------------------------------------------------------
    extend(Object.prototype)
    ({
-      concat:function(a)
+      fuse:function(a)
       {
          let r=dupe(this); if(!isKnob(a)&&!isList(a)){return r}; a.each((v,k)=>{r[k]=v}); return r;
       },

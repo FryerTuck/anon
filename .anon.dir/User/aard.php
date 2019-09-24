@@ -209,7 +209,7 @@ namespace Anon;
       static function treeExec()
       {
          permit::face(API); $q=knob($_POST); $h=$q->path; if(!isPath($h)||isin($h,['..','./'])){done('invalid path');};
-         $h=crop($h); $a=$q->args; $t=$q->type;
+         $h=crop($h); $a=$q->args; $t=$q->type; $XO=xeno::showHyperConduit($h,parts);
          $X=xeno::showHyperConduit($h); $XI=(!$X?null:path::info($X)); $XP=(!$XI?null:$XI->plug);
 
 
@@ -271,7 +271,7 @@ namespace Anon;
 
          if($q->exec==='delete')
          {
-            if(!$X) // local
+            if(!$X||($XO&&(!$XO->path||($XO->path==='/')))) // local
             {$r=path::void($h); if($r){done(OK);}; fail("failed to delete $t");};
 
             if(isin(['ftp','ftps'],$XP))

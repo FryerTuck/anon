@@ -129,7 +129,15 @@ extend(Anon)
       {
          purl('/Data/saveItem',{path:prl,type:tpe,data:btoa(val)},(rsp)=>
          {
-            if(isFunc(cbf)){cbf(rsp.body)};
+            if(isFunc(cbf)){cbf(rsp.body)}; if((rsp.body!=OK)||!isin(['sproc','funct'],tpe)){return}; let pts,tmp;
+            pts=stub(val,"\nBEGIN\n"); tmp=pts[0]; if(!tmp.endsWith(' ')&&!tmp.endsWith('\n')&&!isin(tmp,'--')){return}; // all is well
+
+            popAlert('Attention!','dark','auto','bug')
+            (`
+               Your ***${tpe}*** was saved, however:
+               - any **comments** -or extra **whitespace** before \`BEGIN\` will be ignored!\n
+               <tiny>This is a database concern and not in our control, so if these vanish, stay calm .. sweet screams.</tiny>
+            `);
          });
       },
 

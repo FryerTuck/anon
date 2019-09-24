@@ -10,6 +10,9 @@ requires
 {
    requires('/Code/libs/codemirror/addon/edit/matchbrackets.js');
    requires('/Code/libs/codemirror/addon/comment/comment.js');
+   requires('/Code/libs/codemirror/addon/search/searchcursor.js');
+   requires('/Code/libs/codemirror/addon/search/search.js');
+   requires('/Code/libs/codemirror/addon/search/jump-to-line.js');
 });
 
 
@@ -46,12 +49,52 @@ select('#AnonAppsView').insert
                      {grid:'#CodeViewGrid', contents:
                      [
                         {row:'#CodeBodyView', contents:[{col:[{panl:'#CodeBodyPanl'}]}]},
-                        {row:'#CodeToolView', contents:[{col:[{panl:'#CodeToolWrap', contents:
+                        {row:'#CodeToolView .hide', contents:[{col:[{panl:'#CodeToolWrap', contents:
                         [
                            {grid:
                            [
                               {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
-                              {row:[{col:[{panl:'#CodeToolPanl'}]}]}
+                              {row:[{col:[{panl:'#CodeToolPanl', contents:
+                              [
+                                 {grid:'#CodeToolFind .toolFormGrid', contents:
+                                 [
+                                    {row:
+                                    [
+                                       {col:'.toolFeedCell', contents:[{input:'.toolTextFeed .dark', name:'findText', demo:'what to find',
+                                          listen:{'key:Enter':function(){Anon.Code.find.exec('bufr','seek');}},
+                                       }]},
+                                       {col:'.toolButnCell', contents:[{butn:'.toolButnDubl .dark',contents:'find in buffer',
+                                          listen:{'click':function(){Anon.Code.find.exec('bufr','seek');}},
+                                       }]},
+                                    ]},
+                                    {row:
+                                    [
+                                       {col:'.toolFeedCell', contents:[{input:'.toolTextFeed .dark', name:'swapText', demo:'replace with',
+                                          listen:{'key:Enter':function(){Anon.Code.find.exec('bufr','swap');}},
+                                       }]},
+                                       {col:'.toolButnCell', contents:[{butn:'.toolButnDubl .dark', contents:'replace in buffer',
+                                          listen:{'click':function(){Anon.Code.find.exec('bufr','swap');}},
+                                       }]},
+                                    ]},
+                                    // {row:[{col:'.horzSpacer', contents:[{hdiv:''}]},{col:'.horzSpacer', contents:[{hdiv:''}]},]},
+                                    // {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]},{col:'.panlHorzLine', contents:[{hdiv:''}]},]},
+                                    {row:
+                                    [
+                                       {col:'.toolFeedCell', contents:[{input:'.toolTextFeed .dark', name:'searchIn', demo:'look in here',
+                                          listen:{'key:Enter':function(){Anon.Code.find.exec('bulk','seek');}},
+                                       }]},
+                                       {col:'.toolButnCell', contents:
+                                       [
+                                          {butn:'.toolButnSngl .hovrCool .dark', contents:'find all',
+                                             listen:{'click':function(){Anon.Code.find.exec('bulk','seek');}},
+                                          },
+                                          {butn:'.toolButnSngl .hovrWarn .dark', contents:'replace all',
+                                             listen:{'click':function(){Anon.Code.find.exec('bulk','swap');}},
+                                          },
+                                       ]},
+                                    ]},
+                                 ]},
+                              ]}]}]}
                            ]}
                         ]}]}]},
                         {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
@@ -83,7 +126,9 @@ extend(Anon)
             php:['xml/xml','javascript/javascript','css/css','htmlmixed/htmlmixed','clike/clike','php/php'],
             sql:['sql/sql'],
             xml:['xml/xml'],
-         }
+         },
+
+         activeInst:VOID,
       },
 
 
@@ -92,7 +137,7 @@ extend(Anon)
       {
          'Control s':function(inst, ev)
          {
-            if(inst.saved){return}; inst.value=inst.mytab.editor.getValue(); ev=Anon.Code.vars.external;
+            if(inst.saved){return}; inst.value=inst.mytab.head.editor.getValue(); ev=Anon.Code.vars.external;
 
             if(isFunc(ev.saveBack)){ev.saveBack(inst,(sb)=>
             {
@@ -111,7 +156,13 @@ extend(Anon)
 
          'Control /':function(inst, ev)
          {
-            inst.mytab.editor.toggleComment();
+            inst.mytab.head.editor.toggleComment();
+         },
+
+
+         'Control f':function(inst, ev)
+         {
+            let tv=select('#CodeToolView'); tv.reclan((isin(tv.className,'hide')?'hide:show':'show:hide'));
          },
       },
 
@@ -172,7 +223,11 @@ extend(Anon)
                   wrp=(e.detail.target.body.select('.CodeEditWrap')||e.detail.target.body.select('.CodeViewWrap'));
                   return ((span(wrp)>0)&&(!!e.detail.target.head.editor)&&(!!e.detail.target.head.editor.anon));
                },
-               ()=>{Anon.Code.info(e.detail.target.head.editor.anon)}
+               ()=>
+               {
+                  Anon.Code.vars.activeInst=e.detail.target.head.editor;
+                  Anon.Code.info(e.detail.target.head.editor.anon);
+               }
             );
          });
 
@@ -219,7 +274,10 @@ extend(Anon)
                };
                tab.head.editor.on('change',function(cmi){cmi.anon.check(cmi.doc.getValue());});
                tab.head.editor.on('keydown',function(cmi,evt)
-               {if(!Anon.Code.keys[evt.signal]){return}; Anon.Code.keys[evt.signal](cmi.anon);});
+               {
+                  if(!Anon.Code.keys[evt.signal]){return}; evt.stopImmediatePropagation(); evt.stopPropagation(); evt.preventDefault();
+                  Anon.Code.keys[evt.signal](cmi.anon,evt);
+               });
                tab.head.editor.on('cursorActivity',function(cmi)
                {
                   let kb,sd,cs; kb=cmi.doc.getCursor(); cmi.anon.iposi=[(kb.line+1),(kb.ch+1)]; sd='~(//*\\)~'; cs=cmi.doc.getSelection(sd);
@@ -336,6 +394,37 @@ extend(Anon)
             Anon.Code.shut(drv,o.tab); tick.after(250,()=>{Anon.Code.open(o.nfo)}); if((span(otl)>0)||!cat){return};
             tick.after(500,()=>{drv.select(cat.head.title)});
          },500);
+      },
+
+
+      find:
+      {
+         exec:function(op,fn)
+         {
+            let iv={}; select('#CodeToolFind').select('input').forEach((n)=>{iv[n.name]=n.value});
+            this[op][fn](iv);
+         },
+
+         bufr:
+         {
+            seek:function(qry, cmi,pos,cur)
+            {
+               cmi=Anon.Code.vars.activeInst; pos={line:(cmi.anon.iposi[0]-1),ch:(cmi.anon.iposi[1]-1)};
+               if(!qry.findText){return}; cur=cmi.getSearchCursor(qry.findText,pos);
+               console.log(cur.findNext());
+            },
+            next:function(){},
+            prev:function(){},
+            swap:function(){},
+            done:function(){},
+         },
+
+         bulk:
+         {
+            seek:function(){},
+            swap:function(){},
+            done:function(){},
+         },
       },
 
 

@@ -78,7 +78,7 @@
                   s.listen('load',ONCE,function()
                   {
                      this.done=100; delete this._waiting; this.loaded=1; if(this.failed){return};
-                     tick.after(250,()=>{this.signal('ready'); tick.after(10,()=>{this.signal('idle')});});
+                     tick.after(50,()=>{this.signal('ready'); tick.after(10,()=>{this.signal('idle')});});
                   });
 
                   // let tmo,itv; tmo=tick.after(750,()=>{clearInterval(itv); delete s._waiting; dump(`delayed: ${p}`);});

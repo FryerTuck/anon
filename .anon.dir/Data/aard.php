@@ -90,12 +90,14 @@ class Data
    static function saveItem()
    {
       $vrs=knob($_POST); $prl=xeno::showHyperConduit($vrs->path); $tpe=$vrs->type; $dta=decode::b64($vrs->data);
-      $dbc=crud($prl); $rfs=$dbc->mean->refs;
+      $dbc=crud($prl); $rfs=$dbc->mean->refs; $nic=$dbc->mean->leaf;
 
       if(isin(['sproc','funct'],$tpe))
       {
-         $nic=$dbc->mean->leaf;
-         $rsl=$dbc->delete([sproc=>$nic]); $rsl=$dbc->adjure($dta); done(($rsl?OK:FAIL));
+         $wrd=(($tpe==='sproc')?sproc:funct); $bdy=expose($dta,"\nBEGIN\n","\nEND");
+         if(!$bdy){fail("invalid $wrd syntax .. expecting `BEGIN` and `END` each on their own line");};
+         $rsl=$dbc->delete([$wrd=>$nic]); $rsl=$dbc->adjure($dta);
+         done(($rsl?OK:FAIL));
       };
 
       if($tpe=='table')
