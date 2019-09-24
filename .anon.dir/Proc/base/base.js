@@ -1271,8 +1271,8 @@
          if(!tone||!isin(this.tone,tone)){tone=LITE};tone=lowerCase(unwrap(tone)); if(!arro||!isin(this.arro,arro)){arro=TM};arro=unwrap(arro);
 
          let note=create({notedeck:`.${tone}`, contents:[{noteface:mesg},{notearro:`.${arro}`, contents:[{div:''}]}]});
-         if(isKnob(attr)){note.modify(attr)};
-         if((tout===VOID)||(isNumr(tout)&&(tout>0))){note.expire=tick.after((isInum(tout)?tout:6000),()=>{remove(note)})};
+         if(isList(attr)&&isNumr(attr[0])&&isNumr(attr[1])){attr={style:{left:attr[0],top:attr[1]}}}; if(isKnob(attr)){note.modify(attr)};
+         if((tout===VOID)||(isNumr(tout)&&(tout>0))){note.expire=tick.after((isInum(tout)?tout:3000),()=>{remove(note)})};
          return note;
       }
       .bind

@@ -23,6 +23,12 @@
       border:1px solid hsla(0,0%,80%,1);
    }
 
+   butn.subfocus
+   {
+      outline:auto !important;
+      outline-color:hsla(200,100%,70%,0.4) !important;
+   }
+
 
    butn .butnIcon
    {
@@ -1000,7 +1006,7 @@
       padding:2px !important; overflow:hidden;
    }
 
-   notedeck.dark>noteface,notedeck.good>notearro>div{background-color:hsla(210,3%,12%,1); border:1px solid hsla(210,3%,22%,1);}
+   notedeck.dark>noteface,notedeck.dark>notearro>div{background-color:hsla(210,3%,16%,1); border:1px solid hsla(210,3%,22%,1);}
    notedeck.good>noteface,notedeck.good>notearro>div{background-color:hsla(140,60%,20%,1); border:1px solid hsla(140,60%,40%,1);}
    notedeck.cool>noteface,notedeck.cool>notearro>div{background-color:hsla(210,60%,20%,1); border:1px solid hsla(210,60%,40%,1);}
    notedeck.need>noteface,notedeck.need>notearro>div{background-color:hsla(280,60%,20%,1); border:1px solid hsla(280,60%,40%,1);}
@@ -1017,7 +1023,7 @@
    {
       display:inline-block; position:relative; box-sizing:border-box;
       width:12px; height:12px; margin-top:2px; overflow:hidden; transform:rotate(45deg);
-      background-color:#2e3133;
+      background-color:hsla(210,3%,16%,1);
       border:1px solid #5e6163;
    }
 
@@ -1031,7 +1037,7 @@
 
    notearro.BR {transform:rotate(180deg); right:0px; bottom:0px;}
    notearro.BM {transform:rotate(180deg); left:50%;  transform:translate(50%,0%); bottom:0px;}
-   notearro.BL {transform:rotate(180deg); left:0px;  bottom:0px;}
+   notearro.BL {transform:rotate(180deg); left:0px;  bottom:-5px;}
 
    notearro.LB {transform:rotate(270deg); left:0px;  bottom:0px;}
    notearro.LM {transform:rotate(270deg); left:0px;  top:50%; transform:translate(0%,-50%);}
@@ -1089,8 +1095,8 @@
 /* ------------------------------------------------------------------------------------------------------------- */
    .toolButnCell
    {
-      width:180px !important;
-      min-width:180px !important;
+      width:194px !important;
+      min-width:194px !important;
       padding-left:6px;
    }
 
@@ -1113,7 +1119,7 @@
    butn.toolButnSngl
    {
       margin-right:0px !important;
-      min-width:80px !important;
-      width:80px !important;
+      min-width:85px !important;
+      width:85px !important;
    }
 /* ------------------------------------------------------------------------------------------------------------- */

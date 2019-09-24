@@ -3,16 +3,13 @@
 requires
 ([
    '/Code/dcor/aard.css',
-   '/Code/libs/codemirror/lib/codemirror.js',
-   '/Code/libs/codemirror/lib/codemirror.css',
-   '/Code/libs/codemirror/theme/seti.css',
+   '/Code/libs/ace/ace.js',
 ],()=>
 {
-   requires('/Code/libs/codemirror/addon/edit/matchbrackets.js');
-   requires('/Code/libs/codemirror/addon/comment/comment.js');
-   requires('/Code/libs/codemirror/addon/search/searchcursor.js');
-   requires('/Code/libs/codemirror/addon/search/search.js');
-   requires('/Code/libs/codemirror/addon/search/jump-to-line.js');
+   requires('/Code/libs/ace/theme-tomorrow_night.js');
+   // requires('/Code/libs/ace/ext-error_marker.js');
+   // requires('/Code/libs/ace/ext-spellcheck.js');
+   // requires('/Code/libs/ace/ext-static_highlight.js');
 });
 
 
@@ -61,34 +58,59 @@ select('#AnonAppsView').insert
                                     {row:
                                     [
                                        {col:'.toolFeedCell', contents:[{input:'.toolTextFeed .dark', name:'findText', demo:'what to find',
-                                          listen:{'key:Enter':function(){Anon.Code.find.exec('bufr','seek');}},
+                                          listen:
+                                          {
+                                             'key:Enter':function(){Anon.Code.find.exec('bufr','seek');},
+                                             'focus':function(){this.parentNode.select('> butn')[0].enclan('subfocus')},
+                                             'blur':function(){this.parentNode.select('> butn')[0].declan('subfocus')},
+                                          },
                                        }]},
-                                       {col:'.toolButnCell', contents:[{butn:'.toolButnDubl .dark',contents:'find in buffer',
-                                          listen:{'click':function(){Anon.Code.find.exec('bufr','seek');}},
-                                       }]},
+                                       {col:'.toolButnCell', contents:
+                                       [
+                                          {butn:'.toolButnSngl .dark', contents:'find one',
+                                             listen:{'click':function(){Anon.Code.find.exec('bufr','seek',0);}},
+                                          },
+                                          {butn:'.toolButnSngl .dark', contents:'find all',
+                                             listen:{'click':function(){Anon.Code.find.exec('bufr','seek',1);}},
+                                          },
+                                       ]},
                                     ]},
                                     {row:
                                     [
                                        {col:'.toolFeedCell', contents:[{input:'.toolTextFeed .dark', name:'swapText', demo:'replace with',
-                                          listen:{'key:Enter':function(){Anon.Code.find.exec('bufr','swap');}},
-                                       }]},
-                                       {col:'.toolButnCell', contents:[{butn:'.toolButnDubl .dark', contents:'replace in buffer',
-                                          listen:{'click':function(){Anon.Code.find.exec('bufr','swap');}},
-                                       }]},
-                                    ]},
-                                    // {row:[{col:'.horzSpacer', contents:[{hdiv:''}]},{col:'.horzSpacer', contents:[{hdiv:''}]},]},
-                                    // {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]},{col:'.panlHorzLine', contents:[{hdiv:''}]},]},
-                                    {row:
-                                    [
-                                       {col:'.toolFeedCell', contents:[{input:'.toolTextFeed .dark', name:'searchIn', demo:'look in here',
-                                          listen:{'key:Enter':function(){Anon.Code.find.exec('bulk','seek');}},
+                                          listen:
+                                          {
+                                             'key:Enter':function(){Anon.Code.find.exec('bufr','swap');},
+                                             'focus':function(){this.parentNode.select('> butn')[0].enclan('subfocus')},
+                                             'blur':function(){this.parentNode.select('> butn')[0].declan('subfocus')},
+                                          },
                                        }]},
                                        {col:'.toolButnCell', contents:
                                        [
-                                          {butn:'.toolButnSngl .hovrCool .dark', contents:'find all',
+                                          {butn:'.toolButnSngl .dark', contents:'swap one',
+                                             listen:{'click':function(){Anon.Code.find.exec('bufr','swap',0);}},
+                                          },
+                                          {butn:'.toolButnSngl .dark', contents:'swap all',
+                                             listen:{'click':function(){Anon.Code.find.exec('bufr','swap',1);}},
+                                          },
+                                       ]},
+                                    ]},
+                                    {row:
+                                    [
+                                       {col:'.toolFeedCell', contents:[{input:'.toolTextFeed .dark', name:'searchIn', demo:'look in here',
+                                          listen:
+                                          {
+                                             'key:Enter':function(){Anon.Code.find.exec('bulk','seek');},
+                                             'focus':function(){this.parentNode.select('> butn')[0].enclan('subfocus')},
+                                             'blur':function(){this.parentNode.select('> butn')[0].declan('subfocus')},
+                                          },
+                                       }]},
+                                       {col:'.toolButnCell', contents:
+                                       [
+                                          {butn:'.toolButnSngl .hovrCool .dark', contents:'BULK FIND',
                                              listen:{'click':function(){Anon.Code.find.exec('bulk','seek');}},
                                           },
-                                          {butn:'.toolButnSngl .hovrWarn .dark', contents:'replace all',
+                                          {butn:'.toolButnSngl .hovrWarn .dark', contents:'BULK SWAP',
                                              listen:{'click':function(){Anon.Code.find.exec('bulk','swap');}},
                                           },
                                        ]},
@@ -119,13 +141,17 @@ extend(Anon)
       {
          extNeeds:
          {
-            css:['css/css'],
-            html:['xml/xml','javascript/javascript','css/css','htmlmixed/htmlmixed'],
-            js:['javascript/javascript'],
-            md:['xml/xml','markdown/markdown'],
-            php:['xml/xml','javascript/javascript','css/css','htmlmixed/htmlmixed','clike/clike','php/php'],
-            sql:['sql/sql'],
-            xml:['xml/xml'],
+            css:'css',
+            html:'html',
+            ini:'ini',
+            js:'javascript',
+            json:'json',
+            md:'markdown',
+            php:'php',
+            sql:'sql',
+            svg:'svg',
+            txt:'plain_text',
+            xml:'xml',
          },
 
          activeInst:VOID,
@@ -134,37 +160,32 @@ extend(Anon)
 
 
       keys:
-      {
-         'Control s':function(inst, ev)
+      [
+         {name:'save', bindKey:{win:'Ctrl-S',mac:'Ctrl-S'}, exec:function(inst, ev)
          {
-            if(inst.saved){return}; inst.value=inst.mytab.head.editor.getValue(); ev=Anon.Code.vars.external;
+            if(inst.anon.saved){return}; inst.anon.value=inst.getValue(); ev=Anon.Code.vars.external;
 
-            if(isFunc(ev.saveBack)){ev.saveBack(inst,(sb)=>
+            if(isFunc(ev.saveBack)){ev.saveBack(inst.anon,(sb)=>
             {
-               if(sb==OK){inst.ohash=md5(inst.value);inst.check(inst.value);return};
-               alert("failed saving: "+inst.ipath);
+               if(sb==OK){inst.anon.ohash=md5(inst.anon.value);inst.anon.check(inst.anon.value);return};
+               popAlert(`Attention!`,`dark`,`harm`,`bug`)(`failed saving: \`${inst.anon.ipath}\``);
             });return};
 
-            purl('/Code/saveFile',{path:inst.ipath,bufr:inst.value},function(rsp)
+            purl('/Code/saveFile',{path:inst.anon.ipath,bufr:inst.anon.value},function(rsp)
             {
-               rsp=rsp.body; if(rsp!=OK){alert("failed saving: "+inst.ipath);return};
-               inst.ohash=md5(inst.value); inst.check(inst.value);
+               rsp=rsp.body; if(rsp!=OK){popAlert(`Attention!`,`dark`,`harm`,`bug`)(`failed saving: \`${inst.anon.ipath}\``);return};
+               inst.anon.ohash=md5(inst.anon.value); inst.anon.check(inst.anon.value);
                // select('#CodeTreeMenu').update();
             });
-         },
+         }},
 
 
-         'Control /':function(inst, ev)
+         {name:'find',bindKey:{win:'Ctrl-F',mac:'Ctrl-F'},exec:function()
          {
-            inst.mytab.head.editor.toggleComment();
-         },
-
-
-         'Control f':function(inst, ev)
-         {
-            let tv=select('#CodeToolView'); tv.reclan((isin(tv.className,'hide')?'hide:show':'show:hide'));
-         },
-      },
+            let tlv=select('#CodeToolView'); let hdn=(isin(tlv.className,'hide')?1:0);  tlv.reclan((hdn?'hide:show':'show:hide'));
+            hdn=(hdn?0:1); Anon.Code.vars.activeInst.resize(); if(hdn){return}; select('#CodeToolFind').select('input')[0].focus();
+         }}
+      ],
 
 
 
@@ -240,56 +261,105 @@ extend(Anon)
 
 
 
-      open:function(nfo, drv,pth,tpe,ttl,tab,eav,ofp,ext,lng,wrp,opt,mim)
+      open:function(nfo, drv,pth,tpe,ttl,lib,tab,eav,ofp,ext,lng,wrp,opt,mim,mde)
       {
-         drv=select('#CodeTabber').driver; pth=nfo.path; tpe=nfo.type; ttl=`${pth}`;
+         drv=select('#CodeTabber').driver; pth=nfo.path; tpe=nfo.type; ttl=`${pth}`; lib='/Code/libs/ace';
          tab=drv.select(ttl); if(!!tab){return}; eav=this.vars.external; ofp=(eav.readPath||'/Code/openFile');
          ext=nfo.fext; if(ext=='htm'){ext='html'}; if(isin('gif,jpg,jpeg,png,svg,webp',ext)){this.view(nfo);return};
-         lng=this.vars.extNeeds[ext]; drv.create({title:ttl, contents:[{div:'.CodeEditWrap'}]});
+         drv.create({title:ttl, contents:[{div:'.CodeEditWrap'}]}); tab=drv.select(ttl,0); wrp=tab.body.select('.CodeEditWrap')[0];
+         lng=this.vars.extNeeds[ext]; if(!lng){lng=this.vars.extNeeds.txt}; mde=`${lng}`; lng=padded(lng,`${lib}/mode-`,'.js');
 
-         if(lng){lng=padded(lng,'/Code/libs/codemirror/mode/','.js')};
-
-         requires(lng,()=>
+         requires(lng,()=>{purl(ofp,{path:pth,type:tpe},(r)=>
          {
-            purl(ofp,{path:pth,type:tpe},(r)=>
-            {
-               tab=drv.select(ttl,0); wrp=tab.body.select('.CodeEditWrap')[0];
-               lng=(lng||['/default.']).pop().split('/').pop().split('.')[0];
-               opt={mode:lng, lineNumbers:true, theme:'seti', indentUnit:3, tabSize:3, matchBrackets:true, value:r.body};
-               tab.head.editor=CodeMirror(wrp,opt); wrp.childNodes[0].setStyle({height:'100%'});
+            wrp.textContent=r.body;
+            tab.head.editor=ace.edit(wrp); tab.head.editor.setTheme('ace/theme/tomorrow_night');
+            mde=ace.require(`ace/mode/${mde}`).Mode; tab.head.editor.session.setMode(new mde());
 
-               tab.head.editor.anon=//object
-               {
-                  mytab:tab,
-                  ipath:pth,
-                  itype:tpe,
-                  imime:r.head.ContentType.split(';charset=').join(' '),
-                  iposi:[1,1],
-                  ipick:[0,0],
-                  irepo:nfo.repo,
-                  saved:true,
-                  ohash:md5(r.body),
-                  check:function(hsh)
-                  {hsh=md5(hsh); this.saved=(hsh==this.ohash); select('#CodeTabber').driver.edited(this.mytab.head.title,(!this.saved));},
-               };
-               tab.head.editor.on('change',function(cmi){cmi.anon.check(cmi.doc.getValue());});
-               tab.head.editor.on('keydown',function(cmi,evt)
-               {
-                  if(!Anon.Code.keys[evt.signal]){return}; evt.stopImmediatePropagation(); evt.stopPropagation(); evt.preventDefault();
-                  Anon.Code.keys[evt.signal](cmi.anon,evt);
-               });
-               tab.head.editor.on('cursorActivity',function(cmi)
-               {
-                  let kb,sd,cs; kb=cmi.doc.getCursor(); cmi.anon.iposi=[(kb.line+1),(kb.ch+1)]; sd='~(//*\\)~'; cs=cmi.doc.getSelection(sd);
-                  let sc,cl,ll; sc=(cs||'').split(sd).pop(); cl=sc.length; ll=(cl?sc.split('\n').length:0); cmi.anon.ipick=[ll,cl];
-                  Anon.Code.info(cmi.anon);
-               });
-               Anon.Code.info(tab.head.editor.anon);
-               // doc.getSelection
-               // tab.editor.execCommand('goDocStart');
-               // mim=eav.mimeName; if(!mim){mim=mimeName(r.head.ContentType)};
+            tab.head.editor.setDisplayIndentGuides(false);
+            tab.head.editor.setPrintMarginColumn(128);
+
+            tab.head.editor.locate=function(qry, len,bfr,idx,pfx,fr,fc,tr,tc)
+            {
+               len=qry.length; if(len<1){return}; bfr=this.getValue(); idx=bfr.indexOf(qry); if(idx<0){return};
+               pfx=bfr.slice(0,idx); dump(pfx);
+            };
+
+            tab.head.editor.anon=//object
+            {
+               mytab:tab,
+               ipath:pth,
+               itype:tpe,
+               imime:r.head.ContentType.split(';charset=').join(' '),
+               iposi:[1,1],
+               ipick:[0,0],
+               irepo:nfo.repo,
+               saved:true,
+               ohash:md5(r.body),
+               check:function(hsh)
+               {hsh=md5(hsh); this.saved=(hsh==this.ohash); select('#CodeTabber').driver.edited(this.mytab.head.title,(!this.saved));},
+            };
+
+            Anon.Code.keys.forEach((o)=>{tab.head.editor.commands.addCommand(o);});
+            tab.head.editor.on('change',function(o,e){e.anon.check(e.getValue())});
+            tab.head.editor.session.selection.on('changeSelection',function(a1,a2)
+            {
+               let ed=Anon.Code.vars.activeInst; ed.anon.iposi=[(a2.cursor.row+1),(a2.cursor.column+1)];
+               let st=ed.getSelectedText(); let sc=st.length; let sl=st.split('\n'); if(vals(sl,-1)==''){rpop(sl)}; sl=sl.length;
+               ed.anon.ipick=[sl,sc]; Anon.Code.info(ed.anon);
             });
-         });
+
+         })});
+      },
+
+
+
+      find:
+      {
+         exec:function(op,fn,a1)
+         {
+            let iv={}; select('#CodeToolFind').select('input').forEach((n)=>{iv[n.name]=n.value});
+            this[op][fn](iv,a1);
+         },
+
+         bufr:
+         {
+            seek:function(qry,arg, edt,len,pos,fnd,bgn,opt,fnc,sel,fbx)
+            {
+               edt=Anon.Code.vars.activeInst; fnd=qry.findText; len=fnd.length;
+               pos={row:(arg?0:(edt.anon.iposi[0]-1)),col:(arg?0:(edt.anon.iposi[1]-1))},
+               bgn=(new ace.Range(pos.row,pos.col,pos.row,pos.col));
+
+               opt=//obj
+               {
+                  backwards: false,
+                  wrap: false,
+                  caseSensitive: true,
+                  wholeWord: false,
+                  range:null,
+                  regExp: false,
+                  start:bgn,
+               };
+
+               fnc=(arg?'findAll':'find'); sel=edt[fnc](fnd,opt); if(!!sel){return sel}; // found .. return selection
+               if(!arg){opt.start=(new ace.Range(0,0,0,0)); sel=edt.find(fnd,opt); if(!!sel){return sel}}; // try again for `one`
+
+               fbx=rectOf(select('#CodeToolFind').select('input')[0]);
+               document.body.notify('not found',NEED,BL,[fbx.left,(fbx.top-fbx.height-6)]);
+            },
+
+            swap:function(qry,arg, sel,edt,rpl,fnc)
+            {
+               sel=this.seek(qry,arg); if(!sel){return}; edt=Anon.Code.vars.activeInst; rpl=qry.swapText;
+               fnc=(arg?'replaceAll':'replace'); edt[fnc](rpl);
+            },
+         },
+
+         bulk:
+         {
+            seek:function(){},
+            swap:function(){},
+            done:function(){},
+         },
       },
 
 
@@ -333,6 +403,7 @@ extend(Anon)
       },
 
 
+
       info:function(inf)
       {
          let disp; disp=select('#CodeInfoPanl'); disp.innerHTML='';
@@ -358,6 +429,7 @@ extend(Anon)
       },
 
 
+
       feed:function(vrs)
       {
          if(vrs.from=='menu'){purl('/Code/feedFile',vrs,function(rsp)
@@ -366,6 +438,7 @@ extend(Anon)
             alert('failed to upload `'+vrs.path+'`\n\n'+rsp.body);
          });return};
       },
+
 
 
       pull:function(rpo)
@@ -379,6 +452,7 @@ extend(Anon)
             Anon.Code.rake('MR'); select('#CodeTreeMenu').update();
          });
       },
+
 
 
       rake:function(flg)
@@ -396,36 +470,6 @@ extend(Anon)
          },500);
       },
 
-
-      find:
-      {
-         exec:function(op,fn)
-         {
-            let iv={}; select('#CodeToolFind').select('input').forEach((n)=>{iv[n.name]=n.value});
-            this[op][fn](iv);
-         },
-
-         bufr:
-         {
-            seek:function(qry, cmi,pos,cur)
-            {
-               cmi=Anon.Code.vars.activeInst; pos={line:(cmi.anon.iposi[0]-1),ch:(cmi.anon.iposi[1]-1)};
-               if(!qry.findText){return}; cur=cmi.getSearchCursor(qry.findText,pos);
-               console.log(cur.findNext());
-            },
-            next:function(){},
-            prev:function(){},
-            swap:function(){},
-            done:function(){},
-         },
-
-         bulk:
-         {
-            seek:function(){},
-            swap:function(){},
-            done:function(){},
-         },
-      },
 
 
       save:function(bfr,cbf, eav,nfo)
@@ -449,6 +493,7 @@ extend(Anon)
       },
 
 
+
       tint:function()
       {
          var mnu,tab,bfr,gtr,tnt,lnh; mnu=select('#CodeTreeMenu'); tab=select('#CodeTabber').driver.active; if(!tab){return};
@@ -465,6 +510,7 @@ extend(Anon)
       },
 
 
+
       shut:function(drv,tgt, inf,dne)
       {
          inf=tgt.head.editor.anon; dne=inf.saved;
@@ -472,6 +518,7 @@ extend(Anon)
 
          if(dne)
          {
+            tgt.head.editor.destroy(); tgt.head.editor.container.remove();
             drv.delete(tgt.head.title,true); // delete with `No Signal Intercept`
             select('#CodeInfoPanl').innerHTML='';
             return;
