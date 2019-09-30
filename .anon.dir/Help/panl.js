@@ -27,7 +27,7 @@ select('#AnonAppsView').insert
             [
                {grid:
                [
-                  {row:[{col:'#HelpHeadView .slabViewHead', contents:[{tabber:'#HelpTabber', tabStyle:'.tabsDark', target:'#HelpBodyPanl'}]}]},
+                  {row:[{col:'#HelpHeadView .slabViewHead', contents:[{tabber:'#HelpTabber', theme:'.dark', target:'#HelpBodyPanl'}]}]},
                   {row:[{col:'.panlHorzLine', contents:{hdiv:''}}]},
                   {row:[{col:'.slabViewBody', contents:{panl:'#HelpBodyPanl'}}]},
                ]}

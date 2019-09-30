@@ -18,18 +18,18 @@ select('#AnonAppsView').insert
                {grid:
                [
                   {row:[{col:'.slabMenuHead', contents:'plan'}]},
-                  {row:[{col:'.panlHorzLine', contents:{hdiv:''}}]},
-                  {row:[{col:'.slabMenuBody', contents:{panl:'#PlanTreeMenu'}}]},
+                  {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
+                  {row:[{col:'.slabMenuBody', contents:[{panl:'#PlanTreeMenu'}]}]},
                ]}
             ]},
-            {col:'.panlVertDlim', contents:{vdiv:''}},
+            {col:'.panlVertDlim', contents:[{vdiv:''}]},
             {col:
             [
                {grid:
                [
-                  {row:[{col:'.slabMenuHead'}]},
-                  {row:[{col:'.panlHorzLine', contents:{hdiv:''}}]},
-                  {row:[{col:'.slabMenuBody', contents:{panl:'#PlanTreeView'}}]},
+                  {row:[{col:'.slabViewHead'}]},
+                  {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
+                  {row:[{col:'.slabViewBody', contents:[{panl:'#PlanBodyPanl'}]}]},
                ]}
             ]},
          ]}

@@ -1,3 +1,21 @@
+#NaviIconFind
+{
+   height:1px;
+   padding:0px;
+}
+
+#NaviIconFind input
+{
+   width:50% !important;
+   min-width:100px !important;
+   margin-bottom:6px !important;
+}
+
+#NaviIconList
+{
+   font-size:13px;
+}
+
 
 .iconCardPane
 {
@@ -25,14 +43,16 @@
 
 .iconCardFace
 {
-   font-size:30px;
-   line-height:30px;
    vertical-align:middle;
    text-align:center;
    padding:8px;
    background:hsla(0,0%,25%,0.7);
 }
-
+.iconCardFace i
+{
+   font-size:30px !important;
+   line-height:30px !important;
+}
 .iconCardText
 {
    height:20px;

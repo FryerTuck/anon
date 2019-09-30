@@ -219,7 +219,8 @@
          if(isFunc(evt)){cbf=evt;evt=VOID}; if(isFunc(opt)){cbf=opt;opt=EVRY}else if(isKnob(opt)){fltr=opt; opt=EVRY};
          if(isFunc(hash)){cbf=hash;hash=VOID}; self=(this||MAIN); if(!isText(hash)){hash=Listen.hash(cbf)}else{cbf=Listen.jobs[hash]};
          if(!opt){opt=EVRY}else if(!isin([ONCE,EVRY],opt)){opt=EVRY}; expect.func(cbf); if(evt==VOID){evt=AUTO}; let ice;
-         if(evt==AUTO){evt=keys(self,AUTO,'on*');}; if(!isList(evt)){if(isin(evt,' ')){ice=evt; evt=['keydown','mousedown']}else{evt=[evt]}};
+         if(evt==AUTO){evt=keys(self,AUTO,'on*');};
+         if(!isList(evt)){if(isin(evt,' ')){ice=evt; evt=['keydown','mousedown','wheel','mousemove']}else{evt=[evt]}};
          if(!self.events){self.events={}}; obst=this; if(!!obst&&!obst.listensFor){obst.listensFor=[]}; once=['ready','idle'];
          if(!!obst&&!!ice){radd(obst.listensFor,ice)}; evt.forEach((e)=>
          {
@@ -849,7 +850,7 @@
          n=this; if(isText(o)){o={[o]:y};}; expect({knob:o}); o.each((sv,sk)=>
          {
             if(isNumr(sv)&&!isin(['zIndex','opacity'],sk)){sv=(sv+'px')};
-            n.style[sk]=sv;
+            let bx=n.getBoundingClientRect(); n.style[sk]=sv;
 
             if((sk=='transform')&&isin(sv,['isoSkewX','isoSkewY']))
             {
@@ -857,7 +858,7 @@
                if(!n.postProc){n.postProc={}}; if(!n.postProc.transform){n.postProc.transform={}}; n.postProc.transform[sk]=sv;
                n.onready=function()
                {
-                  let pt,sx,sy,iw,ih,ml,mt,ob,nb,wd,hd,xd,yd; pt=this.postProc.transform; sx=pt.isoSkewX; sy=pt.isoSkewY;
+                  let pt,sx,sy,ob,iw,ih,ml,mt,nb,wd,hd,xd,yd; pt=this.postProc.transform; sx=pt.isoSkewX; sy=pt.isoSkewY;
                   ob=this.getBoundingClientRect(); iw=ob.width; ih=ob.height;
                   if(sx){this.style.transform=('perspective('+((iw/2)-(ih/2))+'px) rotateX('+sx+'deg)');}
                   else{this.style.transform=('perspective('+((ih/2)-(iw/2))+'px) rotateY('+sy+'deg)');};
@@ -866,11 +867,41 @@
                   else if(nb.x>ob.x){this.style.marginLeft=(0-(nb.x-ob.x)+'px');};
                   if(nb.y<ob.y){this.style.marginTop=((ob.y-nb.y)+'px');}else if(nb.y>ob.y){this.style.marginTop=(0-(nb.y-ob.y)+'px');};
                };
-            };
+            }
+            else if((sk=='transform')&&isin(sv,['scale','scaleX','scaleY']))
+            {
+               let ob,nb,xd,yd,ml,mt; ob=bx; nb=n.getBoundingClientRect(); ml=(n.getStyle('margin-left')||0); mt=(n.getStyle('margin-top')||0);
+               xd=((nb.x<ob.x)?(ob.x-nb.x):(nb.x-ob.x)); yd=((nb.y<ob.y)?(ob.y-nb.y):(nb.y-ob.y));
+               if(nb.x<ob.x){xd=(ml+xd); n.style.marginLeft=`${xd}px`;}else if(nb.x>ob.x){xd=(ml-xd); n.style.marginLeft=`${xd}px`;}
+               if(nb.y<ob.y){yd=(mt+yd); n.style.marginTop=`${yd}px`;}else if(nb.y>ob.y){yd=(mt-yd); n.style.marginTop=`${yd}px`;}
+            }
          });
          return
       },
+
+
+      getStyle:function(d, r,q,z)
+      {
+         if(isList(d)){r={}; d.forEach((i)=>{r[i]=cStyle(this,i)}); return r}; if(!isText(d)){return}; r=cStyle(this,d);
+         if(r=='none'){return}; if((d!='transform')||!isin(r,'(')){return r}; q=this.style[d].split(')'); r=VOID; r={};
+         q.forEach((i)=>{i=trim(i).split('('); let k=trim(i[0]); let v=trim(i[1]); if(!k||!v){return}; if(!isNaN(v)){v*=1}; r[k]=v});
+         return r;
+      },
    });
+
+
+   const styleSheet = function(d)
+   {
+      let r,z; r=VOID; z={}; if(!isText(d,1)){return}; (document.styleSheets.each((v)=>
+      {if((v.ownerNode.purl==d)||(v.ownerNode.id==d)||isin(v.className,d)){r=listOf(v.rules); return STOP}})); if(!r){return};
+      r.forEach((i)=>
+      {
+         let s=i.selectorText; let p={}; if(!s||!isin(i.cssText,';')){return}; let q=trim(unwrap(trim(i.cssText.split(s)[1]))).split(';');
+         q.forEach((y)=>{y=stub(y,':'); if(!y){return}; let k=trim(y[0]); let v=trim(y[2]); if(isNumr(v)){v*=1}else{v=unwrap(v)}; p[k]=v});
+         z[s]=p;
+      });
+      return z;
+   };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 

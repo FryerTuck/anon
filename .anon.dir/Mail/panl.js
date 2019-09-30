@@ -27,7 +27,7 @@ select('#AnonAppsView').insert
             [
                {grid:
                [
-                  {row:[{col:'#MailHeadView .slabViewHead', contents:[{tabber:'#MailTabber', tabStyle:'.tabsDark', target:'#MailBodyPanl'}]}]},
+                  {row:[{col:'#MailHeadView .slabViewHead', contents:[{tabber:'#MailTabber', theme:'.dark', target:'#MailBodyPanl'}]}]},
                   {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
                   {row:[{col:'.slabViewBody', contents:[{panl:'#MailBodyPanl'}]}]},
                ]}

@@ -407,18 +407,37 @@ extend(custom.domtag)
 
          create:function(obj,cbf,idx)
          {
-            expect({knob:obj}); if(!isFunc(cbf)){cbf=function(){}}; let ttl,bdy,slf,pid,tid,hdr,tgt,hid,bid,hob,bob,stl,lip;
-            ttl=(obj.title||obj.head); bdy=(obj.contents||obj.body); if(!ttl){return}; if(bdy==VOID){bdy=''}; slf=this.entity;
-            expect({text:ttl}); if(!slf.id){slf.id=('TN'+hash())}; if(!isNumr(idx)){idx=0;}; stl=(slf.tabStyle||'.tabsDark');
-            pid=slf.id; tid=sha1(pid+ttl); hdr=slf.select('.tabhdr')[0]; tgt=select(slf.target);
-            hid=('#TAB'+tid+'HEAD'); bid=('#TAB'+tid+'BODY'); hob=select(hid); bob=select(hid); if(!!hob||!!bob){return};
-            this.opened[ttl]=1;
+            expect({knob:obj}); if(!isFunc(cbf)){cbf=function(){}}; let ttl,bdy,slf,pid,tid,hdr,tgt,hid,bid,hob,bob,stl,spn,fso,flp,cls,rot;
+            ttl=(obj.title||obj.head||obj.tab); bdy=(obj.contents||obj.body); if(!ttl){return}; if(bdy==VOID){bdy=''}; slf=this.entity;
+            expect({text:ttl}); if(!slf.id){slf.id=('TN'+hash())}; if(!isNumr(idx)){idx=0;}; stl=(slf.theme||'.dark'); spn=span(ttl);
+            pid=slf.id; tid=sha1(pid+ttl); hdr=slf.select('.tabhdr')[0]; tgt=select(slf.target); cls=obj.canClose; if(cls==VOID){cls=1};
+            hid=('#TAB'+tid+'HEAD'); bid=('#TAB'+tid+'BODY'); hob=select(hid); bob=select(bid); if(!!hob||!!bob){return}; if(!cls){cls=VOID};
+            if(cls){cls={icon:'cross', title:'close', onclick:function(){this.select('^4').driver.delete(this.select('^^').title)}}};
+            flp=(slf.flap||U); let ori=(isin([L,R],flp)?'.vert':'.horz'); let sze=12; this.opened[ttl]=1; let trn; n.enclan(ori);
+            fso=//obj
+            {
+               [U]:{transform:'isoSkewX(15deg)',  height:(sze*2.4)},
+               [D]:{transform:'isoSkewX(-15deg)', height:(sze*2.4), top:-4},
+               [L]:{transform:'isoSkewY(-15deg)', width:(sze*2.4), height:(spn*sze), right:-4},
+               [R]:{transform:'isoSkewY(15deg)',  width:(sze*2.4), height:(spn*sze), left:-4},
+            };
 
-            hdr.insert({tab:(hid+' .head '+stl), title:ttl, onclick:function(){this.select('^^').driver.select(this.title)}, contents:
+            hdr.insert({tab:`${hid} .head ${ori} ${stl}`, style:{height:(spn*sze)}, title:ttl,
+            listen:
+            {
+               click:function(){this.select('^^').driver.select(this.title)},
+               ready:function()
+               {
+                  if(!isin(this.className,'vert')){return}; let de,te,db,tb,ld,dy,td;
+                  de=this.select('.tabdeck')[0]; te=this.select('.tabtext')[0]; tb=rectOf(te);
+                  this.setStyle({height:tb.height}); de.setStyle({height:tb.height}); db=rectOf(de); ld=(tb.left-db.left);
+                  te.setStyle({marginLeft:(1-ld),bottom:(5-(tb.height/2))});
+               },
+            },
+            contents:
             [
-               {div:('.tabdeck'), style:{transform:'isoSkewX(15deg)'}},
-               {div:'.tabtext',contents:[{span:ttl},{icon:'cross', title:'close', onclick:function()
-               {this.select('^4').driver.delete(this.select('^^').title)}}]},
+               {div:('.tabdeck'), style:fso[flp]},
+               {div:`.tabtext ${ori}`, contents:[{span:ttl},cls]},
             ]});
 
             tgt.insert({tab:(bid+' .body'), contents:bdy}); tick.after(20,()=>
@@ -476,7 +495,10 @@ extend(custom.domtag)
       };
 
 
-      n.insert({div:'.tabhdr'}); if(!a.target){a.target=('#TT'+hash()); n.insert({div:(a.target+' .tabtgt')});}; n.modify(a);
+      let ori=(isin([L,R],a.flap)?'.vert':'.horz');
+
+      n.insert({div:`.tabhdr ${ori}`});
+      if(!a.target){a.target=('#TT'+hash()); n.insert({div:(a.target+' .tabtgt')});}; n.modify(a);
 
 
       n.closeAll=function(cbf, drv,hdr,lst)

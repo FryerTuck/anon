@@ -16,6 +16,23 @@ extend(custom.attrib)
    {if(!isin('input,textarea',nodeName(n))){return}; if(isFunc(v)){return}; n.pattern=v; n.setAttribute('pattern',v); },
 
 
+   icon:function(v,n,a, t,p,pb,nb,ml,mt,pr,pt,fs,fc,bw,so)
+   {
+      wait.until(()=>{return (!!n.parentNode)},()=>
+      {
+         t=nodeName(n); p=n.parentNode; pb=rectOf(p); nb=rectOf(n); mt=cStyle(n,'margin-top'); ml=cStyle(n,'margin-left');
+         pr=cStyle(n,'padding-right'); pt=cStyle(n,'padding-top'); fs=cStyle(n,'font-size'); fc=cStyle(n,'color'); bw=cStyle(n,'border-width');
+
+         if(t=='input')
+         {
+            so={marginLeft:(ml+pr+(bw*2)),marginTop:((mt-1)+pt+(bw*2)),color:fc};
+            p.insert({icon:'.absTop .absLft', face:v, size:(fs-2), style:so}); n.setStyle({paddingLeft:fs});
+            return true;
+         };
+      });
+   },
+
+
    hint:function(v,n,a, data)
    {
       if(isFunc(v))

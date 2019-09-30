@@ -28,7 +28,7 @@ select('#AnonAppsView').insert
             [
                {grid:
                [
-                  {row:[{col:'#DataHeadView .slabViewHead', contents:[{tabber:'#DataTabber', tabStyle:'.tabsDark', target:'#DataBodyPanl'}]}]},
+                  {row:[{col:'#DataHeadView .slabViewHead', contents:[{tabber:'#DataTabber', theme:'.dark', target:'#DataBodyPanl'}]}]},
                   {row:[{col:'.panlHorzLine', contents:{hdiv:''}}]},
                   {row:[{col:'.slabViewBody', contents:{grid:
                   [

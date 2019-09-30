@@ -3,10 +3,10 @@
 const HOSTNAME='{:HOSTNAME:}';
 const UNDF=(function(){}());
 
-const wack = function()
+const wack = function(r)
 {
-   let z,x,m,t; if(this.done||window.HALT){return}; window.HALT=1; this.done=1; z=this.line.length; x=Math.floor(Math.random()*z);
-   m=this.line[x]; document.documentElement.innerHTML=('<head></head><body>'+m+'</body>');
+   let z,x,m,t;  z=this.line.length; x=Math.floor(Math.random()*z); m=this.line[x]; if(r){return m}; if(this.done||window.HALT){return};
+   window.HALT=1; this.done=1; document.documentElement.innerHTML=('<head></head><body>'+m+'</body>');
 }
 .bind({line:atob('{:WACKMESG:}').split('\n'),done:0});
 

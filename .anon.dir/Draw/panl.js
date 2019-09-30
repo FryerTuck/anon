@@ -39,18 +39,56 @@ select('#AnonAppsView').insert
                [
                   {row:[{col:'#DrawHeadView .slabViewHead', contents:
                   [
-                     {tabber:'#DrawTabber', tabStyle:'.tabsDark', target:'#DrawBodyPanl'}
+                     {tabber:'#DrawTabber', theme:'.dark', target:'#DrawBodyPanl'}
                   ]}]},
                   {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
                   {row:[{col:'.slabViewBody', contents:
                   [
                      {grid:'#DrawViewGrid', contents:[{row:
                      [
+                        {col:'#DrawToolView', contents:[{panl:'#DrawToolPanl'}]},
+                        {col:'.panlVertLine', contents:[{vdiv:''}]},
                         {col:'#DrawBodyView', contents:[{panl:'#DrawBodyPanl'}]},
                         {col:'.panlVertLine', contents:[{vdiv:''}]},
-                        {col:'#DrawToolView', contents:[{panl:'#DrawToolPanl'}]},
+                        {col:'#DrawPropView', contents:[{grid:'#DrawPropGrid', contents:[{row:
+                        [
+                           {col:'#DrawPropTabH',contents:
+                           [
+                              {tabber:'#DrawPropTabr', theme:'.dark', flap:L, target:'#DrawPropTabB', contents:
+                              [
+                                 {title:'Canvas', canClose:0, contents:[{grid:
+                                 [
+                                    {row:[{col:'.DrawPropView',contents:'Canvas'}]},
+                                    {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
+                                    {row:[{col:[{panl:'#DrawPropCanv .DrawPropPanl'}]}]}
+                                 ]}]},
+                                 {title:'Layers', canClose:0, contents:[{grid:
+                                 [
+                                    {row:[{col:'.DrawPropView',contents:'Layers'}]},
+                                    {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
+                                    {row:[{col:[{panl:'#DrawPropLayr .DrawPropPanl'}]}]}
+                                 ]}]},
+                                 {title:'Undone', canClose:0, contents:[{grid:
+                                 [
+                                    {row:[{col:'.DrawPropView',contents:'Undone'}]},
+                                    {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
+                                    {row:[{col:[{panl:'#DrawPropDone .DrawPropPanl'}]}]}
+                                 ]}]},
+                                 {title:'Active', canClose:0, contents:[{grid:
+                                 [
+                                    {row:[{col:'.DrawPropView',contents:'Active'}]},
+                                    {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
+                                    {row:[{col:[{panl:'#DrawPropItem .DrawPropPanl'}]}]}
+                                 ]}]},
+                              ]}
+                           ]},
+                           {col:'.panlVertLine', contents:[{vdiv:''}]},
+                           {col:'#DrawPropTabB'}
+                        ]}]}]},
                      ]}]}
                   ]}]},
+                  {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
+                  {row:[{col:'#DrawSeedView', contents:[{panl:'#DrawSeedPanl'}]}]}
                ]}
             ]},
          ]}
@@ -65,7 +103,7 @@ extend(Anon)
 ({
    Draw:
    {
-      vars:{cmnd:{},keys:''},
+      vars:{actv:VOID},
 
 
 
@@ -82,42 +120,22 @@ extend(Anon)
 
       init:function(slf)
       {
+         select('#DrawTabber').listen('focus',function(e)
+         {
+            let drv=e.detail.driver; let tgt=e.detail.target.body.select('.DrawViewWrap')[0];
+            wait.until(()=>{return (!!tgt.vars&&!!tgt.vars.canvas)},()=>
+            {Anon.Draw.vars.actv=tgt; select('#DrawBodyPanl').signal('tabfocus',tgt);});
+         });
+
          select('#DrawTabber').listen('close',function(e)
          {
             let drv=e.detail.driver; let tgt=e.detail.target; tgt.head.hijacked=1;
             Anon.Draw.shut(drv,tgt);
          });
 
-         slf=this; requires('/Draw/getTools.js',()=>
-         {
-            keys(slf.tool).forEach((k,v)=>
-            {
-               v=slf.tool[k]; if(!!v.keys)
-               {
-                  if(!!slf.vars.cmnd[v.keys]){fail('the keys `'+k+'` are already used by '+slf.vars.cmnd[v.keys]);return};
-                  slf.vars.cmnd[v.keys]=k;
-               };
-
-               select('#DrawToolPanl').insert({butn:('#AnonDrawButn'+k+' .AnonToolButn .icon-'+v.icon), title:swap(k,'_',' ')});
-            });
-
-            select('#DrawBodyPanl').listen(['keydown','keyup','mousewheel','mousemove','wheel','click'],function(evnt)
-            {
-               let tpe,sig,pck,cmd,btn,tgt,tnn; tpe=(isin(evnt.type,'down')?'dn':(isin(evnt.type,'up')?'up':'mv')); sig=evnt.signal;
-               pck=Anon.Draw.vars.keys; if(tpe=='up'){sig=pck}; cmd=Anon.Draw.vars.cmnd[sig]; tgt=evnt.target; tnn=(nodeName(tgt));
-               if(!cmd){return}; if(tnn=='canvas'){tgt=tgt.parentNode.parentNode}; if(!isin(tgt.className,'DrawViewWrap')){return};
-               btn=select('#AnonDrawButn'+cmd); if(tpe=='up'){Anon.Draw.vars.keys=''; btn.declan('AnonActvKnob'); return};
-               evnt.preventDefault(); evnt.stopPropagation(); Anon.Draw.vars.keys=sig; btn.enclan('AnonActvKnob');
-               Anon.Draw.tool[cmd].exec(tgt,evnt);
-            });
-
-            select('#DrawBodyPanl').focus();
-         });
-
          select('#DrawTreePanl').select('treeview')[0].listen('loaded',ONCE,()=>
          {
-            Busy.edit('/Draw/panl.js',100);
-            select('#DrawBodyPanl').focus();
+            requires('/Draw/getTools.js',()=>{Busy.edit('/Draw/panl.js',100);});
          });
       },
 
@@ -163,7 +181,6 @@ extend(Anon)
             ]};
 
             tgt.vars.saved=1;
-            slf.deja.pick(tgt,0); //tgt.vars.canvas.find('Transformer').destroy();
 
             tgt.onFeed(function(d,n, s)
             {
@@ -171,7 +188,8 @@ extend(Anon)
                Anon.Draw.load(d,(r)=>{Anon.Draw.feed(s,r.src,n);});
             });
 
-            select('#DrawBodyPanl').focus();
+            tgt.vars=slf.deja.pick(tgt,0); //tgt.vars.canvas.find('Transformer').destroy();
+            // tick.after(10,()=>{select('#DrawBodyPanl').signal('open',tgt)});
          });
       },
 
@@ -202,7 +220,7 @@ extend(Anon)
             l.add(o); f=(new Konva.Transformer()); l.add(f); f.attachTo(o); l.draw(); tgt.vars.selected=[o];
             if(dk){slf.deja.keep(tgt);};
 
-            select('#DrawBodyPanl').focus();
+            // select('#DrawBodyPanl').focus();
          }});return};
 
          alert('mime type `'+m+'` is not supported .. yet');
@@ -212,13 +230,13 @@ extend(Anon)
 
       deja:
       {
-         keep:function(tgt, slf,vrs,cux,lux,cnv,dim,mim,rsl)
+         keep:function(tgt, slf,vrs,cux,lux,cnv,dim,mim,rsl,atr)
          {
             slf=this; vrs=tgt.vars; cux=vrs.unredo.indx; if(!!vrs.unredo.keep[(cux+1)])
             {do{lux=(vrs.unredo.keep.length-1); if(lux>cux){vrs.unredo.keep.pop()}}while(lux>cux);}; // destroy all after this index
 
-            cnv=vrs.canvas; dim=cnv.dime; mim=tgt.vars.mimeType;
-            rsl={type:'Stage', nick:vrs.filePath, mime:mim, face:vrs.tgtLayer, attr:{width:dim.crop.w, height:dim.crop.h, scale:dim.zoom.s}};
+            cnv=vrs.canvas; dim=cnv.dime; mim=tgt.vars.mimeType; atr={width:dim.size.crpw,height:dim.size.crph,scale:dim.zoom.scal};
+            rsl={type:'Stage', nick:vrs.filePath, mime:mim, face:vrs.tgtLayer, attr:atr};
             rsl.data=slf.make(cnv); tgt.vars.unredo.indx++; tgt.vars.unredo.keep.push(rsl);
          },
 
@@ -261,16 +279,16 @@ extend(Anon)
          },
 
 
-         pick:function(tgt,tux, slf,vrs,cux,cnv,atr,scl)
+         pick:function(tgt,tux, slf,vrs,cux,cnv,atr,scl,aw,ah)
          {
             tux=((tux=='<')?(-1):((tux=='>')?1:tux)); slf=this; vrs=tgt.vars; cux=vrs.unredo.indx; tux=(cux+tux); cnv=vrs.unredo.keep[tux];
 
             if(!cnv){return}; vrs.unredo.indx=tux; atr=cnv.attr; scl=atr.scale; delete vrs.selected; delete vrs.tgtLayer; delete vrs.layers;
             if(!!vrs.canvas){vrs.canvas.destroyChildren(); vrs.canvas.draw(); vrs.canvas.destroy(); delete vrs.canvas; tgt.innerHTML='';};
 
-            vrs.canvas=(new Konva.Stage({container:tgt, width:atr.width, height:atr.height})); vrs.canvas.scale({x:scl,y:scl}); // new stage
-            vrs.canvas.width(atr.width); vrs.canvas.height(atr.height); tgt.setStyle({width:atr.width,height:atr.height}); // boundaries
-            vrs.canvas.dime={zoom:{s:scl,w:atr.width,h:atr.height}, crop:{s:scl,w:atr.width,h:atr.height}}; // for zoom & crop later
+            aw=atr.width; ah=atr.height; vrs.canvas=(new Konva.Stage({container:tgt, width:aw, height:ah})); vrs.canvas.scale({x:scl,y:scl});
+            vrs.canvas.width(aw); vrs.canvas.height(ah); tgt.setStyle({width:aw,height:ah}); // boundaries
+            vrs.canvas.dime={zoom:{scal:scl}, size:{sclx:scl,scly:scl,ownw:aw,ownh:ah,crpw:aw,crph:ah}}; // for zoom, scale & crop later
             vrs.layers=[]; cnv.data.forEach((o)=>{vrs.layers.push(slf.face(o,vrs.canvas)); vrs.canvas.draw()}); // create layers and contents
             vrs.filePath=cnv.nick; vrs.mimeType=cnv.mime; vrs.tgtLayer=cnv.face; // set active layer
             vrs.canvas.on('mousedown',function(evnt)
@@ -282,8 +300,15 @@ extend(Anon)
                let f=(new Konva.Transformer()); o.parent.add(f); f.attachTo(o); o.parent.draw();
                tgt.vars.selected.push(o);
             });
-
+            return vrs;
          },
+      },
+
+
+
+      exec:function(tgt,fnc,arg)
+      {
+         this.deja.keep(tgt); this.tool[fnc].apply(tgt,arg);
       },
 
 
@@ -313,19 +338,6 @@ extend(Anon)
 
 
 
-      exec:function(tgt,fnc,arg)
-      {
-         this.deja.keep(tgt); this.tool[fnc].apply(tgt,arg);
-      },
-
-
-
-      tool:
-      {
-      },
-
-
-
       shut:function(drv,tab, bfr,dne)
       {
          bfr=tab.body.select('.DrawViewWrap'); dne=(bfr?bfr[0].vars.saved:1);
@@ -339,5 +351,13 @@ extend(Anon)
             return;
          };
       },
+
+
+
+      tool:{},
+
+
+
+      prop:{},
    }
 });

@@ -38,7 +38,7 @@ select('#AnonAppsView').insert
                [
                   {row:[{col:'#CodeHeadView .slabViewHead', contents:
                   [
-                     {tabber:'#CodeTabber', tabStyle:'.tabsDark', target:'#CodeBodyPanl'}
+                     {tabber:'#CodeTabber', theme:'.dark', target:'#CodeBodyPanl'}
                   ]}]},
                   {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
                   {row:[{col:'.slabViewBody', contents:
@@ -323,11 +323,14 @@ extend(Anon)
 
          bufr:
          {
-            seek:function(qry,arg, edt,len,pos,fnd,bgn,opt,fnc,sel,fbx)
+            seek:function(qry,arg, edt,len,pos,fnd,bgn,opt,fnc,sel,fbx,bdy,nte)
             {
                edt=Anon.Code.vars.activeInst; fnd=qry.findText; len=fnd.length;
                pos={row:(arg?0:(edt.anon.iposi[0]-1)),col:(arg?0:(edt.anon.iposi[1]-1))},
-               bgn=(new ace.Range(pos.row,pos.col,pos.row,pos.col));
+               bgn=(new ace.Range(pos.row,pos.col,pos.row,pos.col)); bdy=document.body;
+               fbx=rectOf(select('#CodeToolFind').select('input')[0]); nte=['?',NEED,BL,[fbx.left,(fbx.top-fbx.height-6)]];
+
+               if(len<1){nte[0]=wack(1); bdy.notify.apply(bdy,nte); return};
 
                opt=//obj
                {
@@ -343,8 +346,7 @@ extend(Anon)
                fnc=(arg?'findAll':'find'); sel=edt[fnc](fnd,opt); if(!!sel){return sel}; // found .. return selection
                if(!arg){opt.start=(new ace.Range(0,0,0,0)); sel=edt.find(fnd,opt); if(!!sel){return sel}}; // try again for `one`
 
-               fbx=rectOf(select('#CodeToolFind').select('input')[0]);
-               document.body.notify('not found',NEED,BL,[fbx.left,(fbx.top-fbx.height-6)]);
+               nte[0]='not found'; bdy.notify.apply(bdy,nte);
             },
 
             swap:function(qry,arg, sel,edt,rpl,fnc)
@@ -356,8 +358,18 @@ extend(Anon)
 
          bulk:
          {
-            seek:function(){},
-            swap:function(){},
+            seek:function(qry,arg, pth,sbx,nte,bdy)
+            {
+               pth=qry.searchIn; sbx=rectOf(select('#CodeToolFind').select('input')[2]); nte=['?',NEED,BL,[sbx.left,(sbx.top-sbx.height-6)]];
+               pth=trim(pth); bdy=document.body; nte[0]='this feature is not available .. yet'; bdy.notify.apply(bdy,nte);
+               dump(pth);
+            },
+
+            swap:function(qry,arg)
+            {
+               this.seek(qry);
+            },
+
             done:function(){},
          },
       },
@@ -518,7 +530,7 @@ extend(Anon)
 
          if(dne)
          {
-            tgt.head.editor.destroy(); tgt.head.editor.container.remove();
+            if(!!tgt.head.editor.destroy){tgt.head.editor.destroy(); tgt.head.editor.container.remove()};
             drv.delete(tgt.head.title,true); // delete with `No Signal Intercept`
             select('#CodeInfoPanl').innerHTML='';
             return;

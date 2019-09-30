@@ -516,6 +516,14 @@
    .absoSpanPrnt {position:relative !important;}
    .absoSpanChld {position:absolute !important;}
 
+   .posAbs {position:absolute !important;}
+   .posRel {position:relative !important; box-sizing:border-box !important;}
+
+   .absLft {position:absolute !important; left:0px !important;}
+   .absRgt {position:absolute !important; right:0px !important;}
+   .absTop {position:absolute !important; top:0px !important;}
+   .absBtm {position:absolute !important; bottom:0px !important;}
+
    .scrollAuto {overflow:auto !important;};
    .scrollHide {overflow:none !important;};
    .scrollShow {overflow:scroll !important;};

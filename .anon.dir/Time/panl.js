@@ -64,7 +64,7 @@ select('#AnonAppsView').insert
                [
                   {row:[{col:'#TimeHeadView .slabViewHead', contents:
                   [
-                     {tabber:'#TimeTabber', tabStyle:'.tabsDark', target:'#TimeBodyPanl'}
+                     {tabber:'#TimeTabber', theme:'.dark', target:'#TimeBodyPanl'}
                   ]}]},
                   {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
                   {row:[{col:'.slabViewBody', contents:

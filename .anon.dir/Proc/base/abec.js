@@ -216,6 +216,37 @@
 // ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
+
+// func :: serializer : to use with JSON.stringify for circular references
+// ---------------------------------------------------------------------------------------------------------------------------------------------
+   const serializer = function (replacer, cycleReplacer)
+   {
+     var stack = [], keys = []
+
+     if (cycleReplacer == null) cycleReplacer = function(key, value)
+     {
+       if (stack[0] === value) return "[Circular ~]"
+       return "[Circular ~." + keys.slice(0, stack.indexOf(value)).join(".") + "]"
+     }
+
+     return function(key, value)
+     {
+       if (stack.length > 0)
+       {
+         var thisPos = stack.indexOf(this)
+         ~thisPos ? stack.splice(thisPos + 1) : stack.push(this)
+         ~thisPos ? keys.splice(thisPos, Infinity, key) : keys.push(key)
+         if (~stack.indexOf(value)) value = cycleReplacer.call(this, key, value)
+       }
+       else stack.push(value)
+
+       return replacer == null ? value : replacer.call(this, key, value)
+     }
+   }
+// ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 // func :: tval : turn any variable into text
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const tval = function(v)
@@ -223,7 +254,7 @@
       if(isMain(v)){return ':MAIN:'}; if(isBool(v)||isNumr(v)){return JSON.stringify(v)}; if(isFunc(v)||isTool(v)){return v.toString()};
       if(isText(v)){if(v==''){return '""'}; let x=v.trim(); if(x!=''){return v}; return swap(v,["\n",' ',"\t"],['↵','␣','⇥']);};
       if((v===VOID)){return 'undefined'}; if(v===null){return 'null';};
-      if(isNode(v)){return v.outerHTML}; if(isKnob(v)||(isList(v)&&!isNode(v[0]))){return JSON.stringify(v)};
+      if(isNode(v)){return v.outerHTML}; if(isKnob(v)||(isList(v)&&!isNode(v[0]))){return JSON.stringify(v,serializer())};
       let r=''; v.forEach((n)=>{r+=(n.outerHTML+'\n')}); return r;
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
@@ -641,6 +672,11 @@
       {
          let r=(Date.now()/1000);
          return r;
+      },
+      round:function(n,d, r)
+      {
+         if(!isNumr(n)){return}; if(!isInum(d)){d=3;}; r=n.toFixed(3); r=rtrim(rtrim(r,'0'),'.');
+         r=(r*1); return r;
       },
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------

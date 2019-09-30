@@ -55,16 +55,24 @@
 #DrawToolView
 {
    position:relative;
-   width:64px; min-width:64px; height:100%;
+   width:68px; min-width:68px; height:100%;
    background:hsla(0,0%,0%,0.1);
-   padding:2px;
 }
 
 #DrawToolPanl
 {
    position:absolute;
    overflow:hidden !important;
+   padding:2px;
 }
+
+#DrawToolPanl .panlHorzLine
+{
+   margin-top:2px;
+}
+
+
+
 
 #DrawBodyPanl
 {
@@ -79,11 +87,67 @@
 
 .DrawViewWrap
 {
+   outline:none !important;
    background:url('/Draw/dcor/void.jpg');
 }
 
 
-/* .slabViewBody
+
+
+#DrawPropView
 {
-   width:100%; height:auto;
-} */
+   width:160px; min-width:160px;
+   background:hsla(0,0%,0%,0.1);
+}
+
+#DrawPropTabH
+{
+   width:30px; min-width:30px;
+   padding-left:5px;
+}
+
+#DrawPropTabB
+{width:130px; min-width:130px;}
+
+.DrawPropView
+{
+   font-family:'head';
+   font-size:10px;
+   line-height:10px;
+   padding:6px;
+   padding-top:9px;
+   text-align:center;
+   height:1px;
+   opacity:0.7;
+}
+
+.DrawPropPanl
+{
+   padding:2px;
+}
+
+.DrawPropPanl col
+{
+   position:relative !important;
+   box-sizing:border-box !important;
+   padding:2px;
+}
+
+.DrawPropPanl input
+{
+   margin:0px !important;
+}
+
+
+
+
+#DrawSeedView
+{
+   height:64px; min-height:64px;
+   background:hsla(0,0%,0%,0.1);
+}
+
+#DrawSeedPanl
+{
+   padding:2px;
+}
