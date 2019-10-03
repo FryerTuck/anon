@@ -213,10 +213,22 @@ extend(Anon)
          ini=(ini||{}); this.vars.external=ini;
          mnu={treeview:'#CodeTreeMenu', source:'/User/treeMenu', uproot:true, listen:
          {
-            'LeftClick':function()
+            'LeftClick':function(evnt)
             {
-               if(this.info.kids){return};
-               Anon.Code.open(this.info);
+               if(isin(['fold','plug'],this.info.type)){return}; let ctrl=evnt.ctrlKey; let shft=evnt.shiftKey;
+               if(ctrl||shft){evnt.stopImmediatePropagation(); evnt.preventDefault(); evnt.stopPropagation();};
+               Anon.Code.open(this.info,(ctrl?'ctrl':(shft?'shft':VOID)));
+            },
+            'mouseover,mouseout':function(evnt)
+            {
+               if(evnt.type=='mouseout'){this.declan('treeItemCtrl'); this.declan('treeItemShft'); this.blur(); return};
+               this.focus(); if(evnt.ctrlKey){this.enclan('treeItemCtrl')}else if(evnt.shiftKey){this.enclan('treeItemShft')};
+            },
+
+            'keydown,keyup':function(evnt)
+            {
+               let k=evnt.signal; if((k!='Control')&&(k!='Shift')){return}; k=((k=='Control')?'Ctrl':'Shft');
+               if(evnt.type=='keydown'){this.enclan('treeItem'+k);return}; this.declan('treeItem'+k);
             },
             'drop':function(data,file, inf,dir,pth)
             {
@@ -261,11 +273,11 @@ extend(Anon)
 
 
 
-      open:function(nfo, drv,pth,tpe,ttl,lib,tab,eav,ofp,ext,lng,wrp,opt,mim,mde)
+      open:function(nfo,how, drv,pth,tpe,ttl,lib,tab,eav,ofp,ext,lng,wrp,opt,mim,mde)
       {
          drv=select('#CodeTabber').driver; pth=nfo.path; tpe=nfo.type; ttl=`${pth}`; lib='/Code/libs/ace';
          tab=drv.select(ttl); if(!!tab){return}; eav=this.vars.external; ofp=(eav.readPath||'/Code/openFile');
-         ext=nfo.fext; if(ext=='htm'){ext='html'}; if(isin('gif,jpg,jpeg,png,svg,webp',ext)){this.view(nfo);return};
+         ext=nfo.fext; if(ext=='htm'){ext='html'}; if((how=='shft')||isin('gif,jpg,jpeg,png,svg,webp',ext)){this.view(nfo);return};
          drv.create({title:ttl, contents:[{div:'.CodeEditWrap'}]}); tab=drv.select(ttl,0); wrp=tab.body.select('.CodeEditWrap')[0];
          lng=this.vars.extNeeds[ext]; if(!lng){lng=this.vars.extNeeds.txt}; mde=`${lng}`; lng=padded(lng,`${lib}/mode-`,'.js');
 
@@ -379,38 +391,61 @@ extend(Anon)
       view:function(nfo, pth,ttl,tpe,drv,tab,ext,wrp)
       {
          pth=nfo.path; ttl=pth; tpe=nfo.type; drv=select('#CodeTabber').driver; ext=fext(pth); //if(pth[0]=='~'){pth=('/'+pth);};
-         if(!isin(['jpg','jpeg','png','svg','gif'],ext)){alert('previewing file type `'+ext+'` is not supported .. yet');return};
+         if(!isin(['jpg','jpeg','png','svg','gif','md'],ext)){alert('previewing file type `'+ext+'` is not supported .. yet');return};
 
          purl('/Code/openFile',{path:pth,view:1},(r)=>
          {
-            drv.create({title:ttl, contents:[{panl:'.CodeViewWrap', contents:
-            [{img:'.CodeViewBufr', style:'display:block', src:r.body, listen:
+            if(ext=='md')
             {
-               ready:function()
+               r=stub(r.body,';base64,')[2]; parsed(atob(r),'markdown',(dne)=>
                {
-                  let bx=rectOf(this); this.dime=bx; this.editor.anon.ipick=[bx.width,bx.height];
-                  Anon.Code.info(this.editor.anon);
-               },
-               mousemove:function()
-               {
-                  let bi,cp,pn,sd,ci,px,py; bi=this.dime; cp={x:(cursor.posx-bi.x),y:(cursor.posy-bi.y)}; pn=this.parentNode;
-                  sd={x:pn.scrollLeft,y:pn.scrollTop}; px=((cp.x+sd.x)+1); py=((cp.y+sd.y)+1); this.editor.anon.iposi=[px,py];
-                  ci=select('#CodeInfoPosi'); if(!ci){return}; ci.innerHTML=(px+':'+py);
-               },
-            }}]}]});
-            tab=drv.select(ttl,0);
-            tab.head.editor={anon:
+                  drv.create({title:ttl, contents:[{panl:'.CodeViewBufr', style:{background:'hsla(0,0%,100%,0.9)'}, contents:dne}]});
+                  tab=drv.select(ttl,0);
+                  tab.head.editor={anon:
+                  {
+                     mytab:tab,
+                     ipath:pth,
+                     itype:tpe,
+                     imime:nfo.mime,
+                     iposi:[1,1],
+                     ipick:[0,0],
+                     irepo:nfo.repo,
+                     saved:true,
+                  }};
+                  tab.body.select('.CodeViewBufr')[0].editor=tab.head.editor;
+               });
+            }
+            else
             {
-               mytab:tab,
-               ipath:pth,
-               itype:tpe,
-               imime:nfo.mime,
-               iposi:[1,1],
-               ipick:[0,0],
-               irepo:nfo.repo,
-               saved:true,
-            }};
-            tab.body.select('.CodeViewBufr')[0].editor=tab.head.editor;
+               drv.create({title:ttl, contents:[{panl:'.CodeViewWrap', contents:
+               [{img:'.CodeViewBufr', style:'display:block', src:r.body, listen:
+               {
+                  ready:function()
+                  {
+                     let bx=rectOf(this); this.dime=bx; this.editor.anon.ipick=[bx.width,bx.height];
+                     Anon.Code.info(this.editor.anon);
+                  },
+                  mousemove:function()
+                  {
+                     let bi,cp,pn,sd,ci,px,py; bi=this.dime; cp={x:(cursor.posx-bi.x),y:(cursor.posy-bi.y)}; pn=this.parentNode;
+                     sd={x:pn.scrollLeft,y:pn.scrollTop}; px=((cp.x+sd.x)+1); py=((cp.y+sd.y)+1); this.editor.anon.iposi=[px,py];
+                     ci=select('#CodeInfoPosi'); if(!ci){return}; ci.innerHTML=(px+':'+py);
+                  },
+               }}]}]});
+               tab=drv.select(ttl,0);
+               tab.head.editor={anon:
+               {
+                  mytab:tab,
+                  ipath:pth,
+                  itype:tpe,
+                  imime:nfo.mime,
+                  iposi:[1,1],
+                  ipick:[0,0],
+                  irepo:nfo.repo,
+                  saved:true,
+               }};
+               tab.body.select('.CodeViewBufr')[0].editor=tab.head.editor;
+            };
          });
       },
 
