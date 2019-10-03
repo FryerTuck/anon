@@ -399,7 +399,7 @@ extend(Anon)
             {
                r=stub(r.body,';base64,')[2]; parsed(atob(r),'markdown',(dne)=>
                {
-                  drv.create({title:ttl, contents:[{panl:'.CodeViewBufr', style:{background:'hsla(0,0%,100%,0.9)'}, contents:dne}]});
+                  drv.create({title:ttl, contents:[{panl:'.CodeViewBufr', style:{background:'hsla(0,0%,100%,0.9)',padding:16}, contents:dne}]});
                   tab=drv.select(ttl,0);
                   tab.head.editor={anon:
                   {
