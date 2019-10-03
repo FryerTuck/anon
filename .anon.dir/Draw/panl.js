@@ -163,19 +163,20 @@ extend(Anon)
 
 
 
-      open:function(pth, drv,tab,ttl,tgt,slf,mim)
+      open:function(pth, drv,tab,ttl,tgt,slf,mim,lay)
       {
          slf=this; drv=select('#DrawTabber').driver; ttl=(pth+''); tab=drv.select(ttl);
          if(!!tab){return}; this.load(pth,(img,nic)=>
          {
             drv.create({title:ttl, contents:[{panl:'.DrawViewPanl', contents:[{div:'.DrawViewWrap', canFocus:1}]}]});
             tab=drv.select(ttl); tgt=tab.body.select('.DrawViewWrap')[0]; tgt.vars={}; mim=stub(img.src,';base64,')[0].split(':')[1];
+            lay=swap((rstub(ttl.split('/').pop(),'.')[0]),'.','_');
 
             tgt.vars.unredo={indx:0,keep:
             [
                {type:'Stage', nick:pth, mime:mim, face:0, attr:{width:img.width, height:img.height, scale:1}, data:
                [
-                  {type:'Layer', nick:'Layer0', data:
+                  {type:'Layer', nick:lay, data:
                   [{type:'Image', nick:pth.split('/').pop(), attr:{x:0,y:0,width:img.width,height:img.height}, data:img.src}]}
                ]}
             ]};
@@ -195,27 +196,16 @@ extend(Anon)
 
 
 
-      make:function(tgt,tpe,atr)
-      {
-
-      },
-
-
-
-      feed:function(tgt,v,n,atr, dk,slf,m,l,o,f)
+      feed:function(tgt,v,n,atr, dk,slf,m,l,o,f,q)
       {
          slf=this; tgt.vars.canvas.find('Transformer').destroy(); m=stub(v,';base64,')[0].split(':')[1];
-         l=tgt.vars.layers[tgt.vars.tgtLayer];
+         l=swap((rstub(n.split('/').pop(),'.')[0]),'.','_'); q=select('#DrawPropLayrMake'); q.value=l; l=Anon.Draw.tool.layrMake(q);
 
          if(isin(m,'image')){create({img:'', src:v, onload:function()
          {
             if(!atr){dk=1; atr={x:0, y:0, width:this.width, height:this.height, draggable:true, image:this}}
             else{delete atr.nick; delete atr.kind; delete atr.data; atr.image=this;};
-            o=(new Konva.Image(atr)); o.nick=n;
-
-            o.fumble=function()
-            {let inst=this.parent; do{inst=inst.parent}while(inst.nodeType!='Stage'); Anon.Draw.deja.keep(inst.attrs.container);};
-            o.on('dragend',function(){this.fumble()}); o.on('transformend',function(){this.fumble()});
+            o=Anon.Draw.fumb((new Konva.Image(atr))); o.nick=n;
 
             l.add(o); f=(new Konva.Transformer()); l.add(f); f.attachTo(o); l.draw(); tgt.vars.selected=[o];
             if(dk){slf.deja.keep(tgt);};
@@ -224,6 +214,15 @@ extend(Anon)
          }});return};
 
          alert('mime type `'+m+'` is not supported .. yet');
+      },
+
+
+
+      fumb:function(o)
+      {
+         o.fumble=function(){let i=this.parent; do{i=i.parent}while(i.nodeType!='Stage'); Anon.Draw.deja.keep(i.attrs.container);};
+         o.on('dragend',function(){this.fumble()}); o.on('transformend',function(){this.fumble()});
+         return o;
       },
 
 
@@ -283,14 +282,14 @@ extend(Anon)
          {
             tux=((tux=='<')?(-1):((tux=='>')?1:tux)); slf=this; vrs=tgt.vars; cux=vrs.unredo.indx; tux=(cux+tux); cnv=vrs.unredo.keep[tux];
 
-            if(!cnv){return}; vrs.unredo.indx=tux; atr=cnv.attr; scl=atr.scale; delete vrs.selected; delete vrs.tgtLayer; delete vrs.layers;
+            if(!cnv){return}; vrs.unredo.indx=tux; atr=cnv.attr; scl=atr.scale; delete vrs.selected;
             if(!!vrs.canvas){vrs.canvas.destroyChildren(); vrs.canvas.draw(); vrs.canvas.destroy(); delete vrs.canvas; tgt.innerHTML='';};
 
             aw=atr.width; ah=atr.height; vrs.canvas=(new Konva.Stage({container:tgt, width:aw, height:ah})); vrs.canvas.scale({x:scl,y:scl});
             vrs.canvas.width(aw); vrs.canvas.height(ah); tgt.setStyle({width:aw,height:ah}); // boundaries
             vrs.canvas.dime={zoom:{scal:scl}, size:{sclx:scl,scly:scl,ownw:aw,ownh:ah,crpw:aw,crph:ah}}; // for zoom, scale & crop later
-            vrs.layers=[]; cnv.data.forEach((o)=>{vrs.layers.push(slf.face(o,vrs.canvas)); vrs.canvas.draw()}); // create layers and contents
-            vrs.filePath=cnv.nick; vrs.mimeType=cnv.mime; vrs.tgtLayer=cnv.face; // set active layer
+            cnv.data.forEach((o)=>{delete vrs.flayer; vrs.flayer=slf.face(o,vrs.canvas); vrs.canvas.draw()}); // create layers and contents
+            vrs.filePath=cnv.nick; vrs.mimeType=cnv.mime;
             vrs.canvas.on('mousedown',function(evnt)
             {
                let o=evnt.target; if(o.attrs.name&&isin(o.attrs.name,' _anchor')){return}; let c=this; let tgt=c.attrs.container;

@@ -430,8 +430,8 @@ extend(custom.domtag)
                {
                   if(!isin(this.className,'vert')){return}; let de,te,db,tb,ld,dy,td;
                   de=this.select('.tabdeck')[0]; te=this.select('.tabtext')[0]; tb=rectOf(te);
-                  this.setStyle({height:tb.height}); de.setStyle({height:tb.height}); db=rectOf(de); ld=(tb.left-db.left);
-                  te.setStyle({marginLeft:(1-ld),bottom:(5-(tb.height/2))});
+                  this.setStyle({height:tb.height}); de.setStyle({height:Math.floor(tb.height)}); db=rectOf(de); 
+                  ld=Math.floor(tb.left-db.left); te.setStyle({marginLeft:(1-ld),bottom:(5-(tb.height/2))});
                },
             },
             contents:

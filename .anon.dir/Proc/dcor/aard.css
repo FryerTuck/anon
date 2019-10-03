@@ -168,6 +168,11 @@
       width:unset; height:unset;
       vertical-align:top; text-align:left;
    }
+   col.tiny
+   {
+      width:1px; height:1px;
+      font-size:12px; line-height:12px;
+   }
 
    datagrid
    {
@@ -523,6 +528,9 @@
    .absRgt {position:absolute !important; right:0px !important;}
    .absTop {position:absolute !important; top:0px !important;}
    .absBtm {position:absolute !important; bottom:0px !important;}
+
+   .inline {position:relative !important; display:inline-block !important;}
+   .nwline {position:relative !important; display:block !important;}
 
    .scrollAuto {overflow:auto !important;};
    .scrollHide {overflow:none !important;};

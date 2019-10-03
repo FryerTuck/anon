@@ -226,4 +226,24 @@ extend(custom.attrib)
       });
       return TRUE;
    },
+
+
+
+   editLock:function(v,n,a,c, r)
+   {
+      delete a.readOnly; delete a.readonly; r='readonly'; n.enbool(r); if(!v){return TRUE}; // editLock is just locked
+      if(!a.class){a.class=''}; a.class=a.class.split(' '); radd(a.class,'editLock'); a.class=a.class.join(' ');
+
+      n.listen('keydown,keyup,mouseover,mouseout,click'.split(','),function(e)
+      {
+         let s=e.signal; let o=(!this.readonly);
+         if(o&&(s=='Enter')){this.enbool(r); this.declan('editLockOpen'); this.blur(); return}; // done
+         if(o){return}; // open, only `Enter` (above line) will lock it now .. else just leave it open .. lockpicker's choice
+         if(s=='MouseOver'){this.focus();return}; // locked .. focus on it when pointed at in order to listen `on-key` events
+         if(s=='MouseOut'){this.blur();return}; // locked .. not interested in unlocking now
+         if((e.type=='keydown')&&(s=='Control')){this.enclan('editLockFeel');return}; // locked .. checking if it can be unlocked
+         if((e.type=='keyup')&&(s=='Control')){this.declan('editLockFeel');return}; // locked .. not interested in unlocking now
+         if(s=='Control LeftClick'){this.debool(r); this.declan('editLockFeel'); this.enclan('editLockOpen');}; // unlocked
+      });
+   },
 });

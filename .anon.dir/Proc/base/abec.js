@@ -401,7 +401,7 @@
 
    const listOf = function(v,o)
    {
-      if((v==VOID)||(v=='')){return []};
+      if((v==VOID)||(v=='')||(v==null)){return []};
       if(isList(v)){return ([].slice.call(v));};
       if(isNumr(v))
       {
@@ -409,6 +409,8 @@
          if(!o||!isNumr(o)){o=v;}; if(v===o){return [v]}; var r = [];
          if(v<o){for(v; v<=o; v++){r.push(v);}}else{for(o; o<=v; v--){r.push(v);}};  return r;
       };
+
+      if(isFunc(v.toArray)){return v.toArray()};
 
       if(isKnob(v)&&!isNode(v))
       {
@@ -423,6 +425,18 @@
    {
       if(!isText(v,2)){return}; let r=v; if(isin(r,'://')){r=r.split('://')[1]}; r=stub(r,'/'); if(!r){return};
       r=('/'+r[2]); r=r.split('//').join('/'); r=r.split(' ').join('_'); r=r.split('?')[0]; return (isPath(r)?r:VOID);
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: reversed : reverse any string, array, or object
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const reversed = function(d, r)
+   {
+      if(!d||(span(d)<2)){return d}; if(isText(d)){r=d.split('').reverse().join(''); return r};
+      if(isList(d)){r=d.reverse(); return r};
+      if(!isKnob(d)){return d}; r={}; (keys(d).reverse()).forEach((k)=>{r[k]=d[k]}); return r;
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 

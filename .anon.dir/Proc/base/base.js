@@ -250,9 +250,10 @@
                   else
                   {
                      // if(evnt.ctrlKey){grb=1};
-                     if(evnt.which==null){btn=((evnt.button<2)?"LeftClick":((event.button==4)?"MiddleClick":"RightClick"))}
+                     if(isin('mousewheel,wheel',evnt.type)){btn='MouseWheel'}else if(evnt.type=='mousemove'){btn='MouseMove'}
+                     else if(evnt.type=='mouseover'){btn='MouseOver'}else if(evnt.type=='mouseout'){btn='MouseOut'}
+                     else if(evnt.which==null){btn=((evnt.button<2)?"LeftClick":((event.button==4)?"MiddleClick":"RightClick"))}
                      else{(btn=(evnt.which<2)?"LeftClick":((evnt.which==2)?"MiddleClick":"RightClick"))};
-                     if((evnt.type=='mousewheel')||(evnt.type=='wheel')){btn='MouseWheel'}else if(evnt.type=='mousemove'){btn='MouseMove'};
                      crd=[evnt.clientX,evnt.clientY]; if(btn=='MouseWheel')
                      {
                         // dump(evnt);
@@ -274,6 +275,7 @@
                .bind({tgt:self,cbf:cbf,ice:ice,pvk:[],kpr:kpr,run:function(fe,ge)
                {
                   if(ge){fe.preventDefault(); fe.stopPropagation();};
+                  if(isNode(this.tgt)&&this.tgt.disabled&&this.tgt.inclan('disabled')){return};
                   fe.Target=fe.currentTarget; this.cbf.apply(this.tgt,[fe]);
                   return false;
                }});
@@ -281,7 +283,12 @@
 
             if(!alt)
             {
-               alt=function(evnt){evnt.Target=evnt.currentTarget; this.cbf.apply(this.tgt,[evnt]);}.bind({tgt:self,cbf:cbf});
+               alt=function(evnt)
+               {
+                  if(isNode(this.tgt)&&this.tgt.disabled&&this.tgt.inclan('disabled')){return};
+                  evnt.Target=evnt.currentTarget; this.cbf.apply(this.tgt,[evnt]);
+               }
+               .bind({tgt:self,cbf:cbf});
                if(e=='mutation')
                {
                   alt.worker=(new MutationObserver(function(l)
@@ -713,14 +720,30 @@
    };
 
 
-   extend(Element.prototype)
+   extend(HTMLInputElement.prototype)
    ({
-      Select:Element.prototype.select,
+      All:HTMLInputElement.prototype.select,
       select:function(x)
       {
-         if(isin('textarea,input',nodeName(this))){return this.Select.apply(this,listOf(arguments))};
+         if(!isText(x,1)){return this.All.apply(this,listOf(arguments))};
          return select(x,this);
       },
+   });
+
+
+   extend(Element.prototype)
+   ({
+      // oSelect:Element.prototype.select,
+      select:function(x)
+      {
+         // if(isin('textarea,input',nodeName(this))&&!isText(x,1)){return this.oSelect.apply(this,listOf(arguments))};
+         return select(x,this);
+      },
+      //
+      // Select:function(x)
+      // {
+      //    return select(x,this);
+      // },
 
       lookup:function(c,n, r,w)
       {
@@ -802,11 +825,13 @@
          this.className=l.join(' ');
       },
 
+
       declan:function()
       {
          var c,l,a,x; c=(this.className||'').trim(); l=(c?c.split(' '):[]); a=listOf(arguments);
          a.forEach((i)=>{x=l.indexOf(ltrim(i,'.')); if(x>-1){l.splice(x,1)}}); this.className=l.join(' ');
       },
+
 
       reclan:function()
       {
@@ -815,6 +840,26 @@
             if(!isText(i)||!isin(i,':')){return}; let p=i.split(':'); let f=p[0].trim(); let t=p[1].trim();
             if(!f||!t){return}; this.declan(f); this.enclan(t);
          });
+      },
+
+
+      inclan:function()
+      {
+         var a,c,r; a=listOf(arguments); c=(this.className||'').trim(); r=FALS;
+         a.each((i)=>{i=ltrim(i,'.'); if(isin(c),i){r=TRUE;return STOP}});
+         return r;
+      },
+
+
+      enbool:function(w)
+      {
+         if(!isText(w,1)){return}; this[w]=true; this.setAttribute(w,w); this.enclan(w);
+      },
+
+
+      debool:function(w)
+      {
+         if(!isText(w,1)){return}; this[w]=false; this.removeAttribute(w); this.declan(w);
       },
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------
@@ -1317,7 +1362,8 @@
    ({
       notify:function(mesg,tone,arro,attr,tout)
       {
-         let note=notify(mesg,tone,arro,attr,tout); this.appendChild(note);
+         let note=notify(mesg,tone,arro,attr,tout); let trgt=this; let t=nodeName(this);
+         if(isin('input,select,video,audio',t)){trgt=trgt.parentNode}; trgt.appendChild(note);
          return note;
       },
    });
