@@ -131,12 +131,12 @@
       {
          show:function()
          {
-            select('#anonPanlView').declan('hide'); this.actv=1;
+            select('#anonPanlView').reclan('hide:show'); this.actv=1;
             select('#AnonReplFeed').focus();
          },
          hide:function()
          {
-            select('#anonPanlView').enclan('hide'); this.actv=0;
+            select('#anonPanlView').reclan('show:hide'); this.actv=0;
          },
          actv:0,
       },

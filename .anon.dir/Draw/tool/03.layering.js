@@ -1,22 +1,5 @@
 
 
-// select('#DrawToolPanl').insert
-// ([
-//    {butn:'#DrawButnMakeLayr .AnonToolButn .icon-chevron-up', title:'shift layer up', onclick:function(){Anon.Draw.tool.shftLayr(U)}},
-//    {butn:'#DrawButnMakeLayr .AnonToolButn .icon-chevron-down', title:'shift layer down', onclick:function(){Anon.Draw.tool.shftLayr(D)}},
-//    {div:'.panlHorzLine', contents:[{hdiv:''}]},
-// ]);
-
-
-               // {col:[{butn:'.toolButnTiny .hovrCool .dark .icon-plus',
-               //    listen:{'click':function(){Anon.Draw.tool.makeLayr(this.select('^ < input')[0]);}},
-               // }]},
-
-
-
-
-
-
 select('#DrawPropLayr').insert
 ([
    {grid:
@@ -24,9 +7,11 @@ select('#DrawPropLayr').insert
       {row:[{col:'.tiny', contents:[{grid:[{row:
       [
          {col:'.midlChld', contents:[{input:'#DrawPropLayrMake .toolTextFeed .dark', demo:'newLayer', listen:
-            {'key:Enter':function(){Anon.Draw.tool.layrMake(this.value)}}
+            {'key:Enter':function(){Anon.Draw.tool.layrMake(this)}}
          }]},
-         {col:'.midlChld', contents:[{butn:'.dark .toolButnTiny .icon-plus'}]},
+         {col:'.midlChld', contents:[{butn:'.dark .toolButnTiny .icon-plus', onclick:function()
+            {Anon.Draw.tool.layrMake(this.select('^ < input')[0])}
+         }]},
       ]}]}]}]},
       {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
       {row:[{col:'#DrawPropLayrWrap', contents:[{panl:'#DrawPropLayrView .cntrChld', contents:[{tiny:'no layers'}]}]}]},
@@ -43,39 +28,8 @@ select('#DrawPropLayr').insert
                {butn:'.dark .toolButnTiny .icon-chevron-up', name:'mvup', onclick:function(){Anon.Draw.tool.layrShft('up')}},
                {butn:'.dark .toolButnTiny .icon-chevron-down', name:'mvdn', onclick:function(){Anon.Draw.tool.layrShft('dn')}},
                {butn:'.dark .toolButnTiny .icon-download2', name:'mrge', onclick:function(){Anon.Draw.tool.layrMrgd()}},
-               {butn:'.dark .toolButnTiny .icon-copy', name:'copy', onclick:function(){dump('olo copy')}},
-               {butn:'.dark .toolButnTiny .icon-cross', name:'void', onclick:function(){dump('olo void')}},
-            ]},
-            {grid:'.noSpan', contents:
-            [
-               {row:
-               [
-                  {col:'.tiny .midlChld', contents:'H'},
-                  {col:'.midlChld', contents:[{input:'.dark', type:'range', min:0, max:355, step:1, value:0, oninput:function()
-                  {let v=(this.value*1); this.select('^ > input')[0].value=v; Anon.Draw.tool.layrHSLA(H,v)}}]},
-                  {col:'.tiny .midlChld', contents:[{input:'.toolTextFeed .dark .mini', value:0}]},
-               ]},
-               {row:
-               [
-                  {col:'.tiny .midlChld', contents:'S'},
-                  {col:'.midlChld', contents:[{input:'.dark', type:'range', min:0, max:100, step:1, value:0, oninput:function()
-                  {let v=(this.value*1); this.select('^ > input')[0].value=`${v}%`; Anon.Draw.tool.layrHSLA(S,v)}}]},
-                  {col:'.tiny .midlChld', contents:[{input:'.toolTextFeed .dark .mini', value:`0%`}]},
-               ]},
-               {row:
-               [
-                  {col:'.tiny .midlChld', contents:'L'},
-                  {col:'.midlChld', contents:[{input:'.dark', type:'range', min:0, max:100, step:1, value:0, oninput:function()
-                  {let v=(this.value*1); this.select('^ > input')[0].value=`${v}%`; Anon.Draw.tool.layrHSLA(L,v)}}]},
-                  {col:'.tiny .midlChld', contents:[{input:'.toolTextFeed .dark .mini', value:`0%`}]},
-               ]},
-               {row:
-               [
-                  {col:'.tiny .midlChld', contents:'A'},
-                  {col:'.midlChld', contents:[{input:'.dark', type:'range', min:0, max:1, step:0.01, value:1, oninput:function()
-                  {let v=(this.value*1); this.select('^ > input')[0].value=v; Anon.Draw.tool.layrHSLA(A,v)}}]},
-                  {col:'.tiny .midlChld', contents:[{input:'.toolTextFeed .dark .mini', value:1}]},
-               ]},
+               {butn:'.dark .toolButnTiny .icon-copy', name:'copy', onclick:function(){Anon.Draw.tool.layrCopy()}},
+               {butn:'.dark .toolButnTiny .icon-cross', name:'void', onclick:function(){Anon.Draw.tool.layrVoid()}},
             ]},
          ]},
       ]},
@@ -87,11 +41,20 @@ select('#DrawPropLayr').insert
 
 extend(Anon.Draw.tool)
 ({
+   layrNick:function(n)
+   {
+      if(isText(n)){n=trim(n);}; if(!isText(n,1)){n='newLayer'}; let s,l,i,r;
+      l=select(`#DrawPropLayrView grid[name="${n}"]`); if(!l){return n}; s=rstub(n,'0123456789'.split(''));
+      if(s&&isNaN((s[0]*1))){i=`${s[1]}${s[2]}`; i=(i*1); i++; n=`${s[0]}${i}`;}else{n=`${n}1`};
+      r=this.layrNick(n); return r;
+   },
+
+
    layrMake:function(n)
    {
-      let v,b; v=trim(n.value); b=rectOf(n);
-      if(!isWord(v)){select('#DrawPropTabr').select('Layers'); n.notify('invalid layer name',NEED,TL,[0,(b.height+6)]); return};
-      let inst=Anon.Draw.vars.actv; let face=inst.vars.canvas; face.find('Transformer').destroy();
+      let v,b; v=trim(n.value); b=rectOf(n); if(!v){v=this.layrNick()};
+      if(!isWord(v)){select('#DrawPropTabr').driver.select('Layers'); n.notify('invalid layer name',NEED,TL,[0,(b.height+6)]); return};
+      v=this.layrNick(v); let inst=Anon.Draw.vars.actv; let face=inst.vars.canvas; face.find('Transformer').destroy();
       let layr=(new Konva.Layer()); layr.nick=v; face.add(layr); face.batchDraw();
       inst.vars.flayer=layr; this.layrAnew(); n.value=''; return layr;
    },
@@ -99,10 +62,13 @@ extend(Anon.Draw.tool)
 
    layrAnew:function()
    {
-      let ai,ci,ll,lv; ai=Anon.Draw.vars.actv; ci=ai.vars.canvas; ll=ci.children; lv=select('#DrawPropLayrView'); lv.innerHTML='';
-      reversed(listOf(ll)).forEach((lo)=>
+      let ai,ci,ll,lv; ai=Anon.Draw.vars.actv; ci=ai.vars.canvas; ll=listOf(ci.children); lv=select('#DrawPropLayrView'); lv.innerHTML='';
+      if(span(ll)<1){lv.insert({tiny:'no layers'}); select('#DrawPropLayrActv').reclan('show:hide'); return};
+      select('#DrawPropLayrActv').reclan('hide:show');
+
+      reversed(ll).forEach((lo)=>
       {
-         if(!lo.anon){lo.anon={name:lo.nick,lock:0,hide:0,hsla:{H:0,S:0,L:0,A:1}}};
+         if(!lo.anon){lo.anon={name:lo.nick,lock:0,hide:0}};
          let hdn,lck; hdn=(lo.anon.hide?'eye-blocked':'eye1'); lck=(lo.anon.lock?'lock1':'unlocked');
          lv.insert({grid:'.noSpan .selectable', name:lo.nick, info:lo.anon, canFocus:1,
          listen:{click:function(){Anon.Draw.tool.layrPick(this);}},
@@ -124,7 +90,7 @@ extend(Anon.Draw.tool)
 
    layrPick:function(gn)
    {
-      let ai,gi; ai=Anon.Draw.vars.actv;
+      let ai,ci,gi; ai=Anon.Draw.vars.actv; ci=ai.vars.canvas; ci.find('Transformer').destroy(); ci.batchDraw();
       select('#DrawPropLayrView grid').forEach((n)=>{n.declan('hasFocus'); if(isText(gn)&&(n.info.name==gn)){gn=n}});
       ai.vars.flayer=gn.select('input')[0].layer; gi=gn.info; gn.enclan('hasFocus'); select('#DrawPropLayrName').innerHTML=gi.name;
       select('#DrawPropLayrBtns butn').forEach((b)=>
@@ -133,14 +99,14 @@ extend(Anon.Draw.tool)
          if(b.name=='lock'){b.declan('icon-lock1','icon-unlocked'); b.enclan(gi.lock?'icon-unlocked':'icon-lock1'); return};
          if(gi.lock){b.enbool('disabled')}else{b.debool('disabled')};
       });
-
    },
 
 
    layrName:function(n)
    {
       let v,b; v=trim(n.value); b=rectOf(n); if(!isWord(v)){n.notify('invalid layer name',NEED,TL,[0,(b.height+6)]); return};
-      n.layer.nick=v; n.blur();
+      let o,g; o=n.layer.nick; g=select(`#DrawPropLayrView grid[name="${o}"]`)[0]; n.layer.nick=v; n.layer.anon.name=v;
+      g.name=v; g.info.name=v; n.blur();
    },
 
 
@@ -173,7 +139,7 @@ extend(Anon.Draw.tool)
          f=(new Konva.Image({x:0,y:0,width:d.w,height:d.h,image:fr})); fl.add(f); fl.draw(); fr=VOID; tr=VOID;
          let fi=fl.toDataURL(); fl.removeChildren(); create({img:'',src:fi,onload:function()
          {
-            let z=Anon.Draw.fumb(new Konva.Image({x:0,y:0,width:this.width,height:this.height,draggable:true,image:this})); 
+            let z=Anon.Draw.fumb(new Konva.Image({x:0,y:0,width:this.width,height:this.height,draggable:true,image:this}));
             z.nick=nn; fl.add(z); fl.draw(); Anon.Draw.deja.keep(ai); Anon.Draw.tool.layrAnew();
          }});
 
@@ -181,16 +147,21 @@ extend(Anon.Draw.tool)
    },
 
 
-   layrHSLA:function(w,v)
+   layrCopy:function()
    {
-      // let inst=Anon.Draw.vars.actv; let face=inst.vars.canvas;
-      dump(`${w} ${v}`);
+      let ai,ci,fl,nn,tl,fk; ai=Anon.Draw.vars.actv; ci=ai.vars.canvas; ci.find('Transformer').destroy(); ci.batchDraw();
+      fl=ai.vars.flayer; nn=this.layrNick(fl.nick); tl=(new Konva.Layer()); tl.nick=nn; ci.add(tl); tl.anon=dupe(fl.anon); tl.anon.name=nn;
+      listOf(fl.children).forEach((o)=>{tl.add(Anon.Draw.fumb(o.clone())); tl.draw()}); ci.batchDraw(); ai.vars.flayer=tl;
+      this.layrAnew();
    },
 
 
    layrVoid:function(n)
    {
-      // n.layer.destroy(); n.layer=VOID; remove(n.parentNode.select('^2'));
+      let ai,ci,fl,gn,nn; ai=Anon.Draw.vars.actv; ci=ai.vars.canvas; ci.find('Transformer').destroy(); ci.batchDraw();
+      fl=ai.vars.flayer; gn=select(`#DrawPropLayrView grid[name="${fl.nick}"]`)[0]; nn=gn.select('<'); if(isVoid(nn)){nn=gn.select('>');};
+      fl.destroy(); delete ai.vars.flayer; remove(gn); if(!isVoid(nn)){ai.vars.flayer=nn.select('input')[0].layer};
+      this.layrAnew();
    },
 });
 

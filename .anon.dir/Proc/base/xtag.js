@@ -430,7 +430,7 @@ extend(custom.domtag)
                {
                   if(!isin(this.className,'vert')){return}; let de,te,db,tb,ld,dy,td;
                   de=this.select('.tabdeck')[0]; te=this.select('.tabtext')[0]; tb=rectOf(te);
-                  this.setStyle({height:tb.height}); de.setStyle({height:Math.floor(tb.height)}); db=rectOf(de); 
+                  this.setStyle({height:tb.height}); de.setStyle({height:Math.floor(tb.height)}); db=rectOf(de);
                   ld=Math.floor(tb.left-db.left); te.setStyle({marginLeft:(1-ld),bottom:(5-(tb.height/2))});
                },
             },
@@ -486,7 +486,7 @@ extend(custom.domtag)
                   if(!nsi&&tgt.head.hijacked){return}; // the close event was intercepted and ignored
                   tgt.head.remove(); tgt.body.remove(); // no interceptor interference, just close it
                   delete drv[ttl]; drv.viewed.pop(); // remove this item from "view order"
-                  liv=(drv.viewed.length-1); if(liv<0){return}; // no "last viewed" tab to auto-select
+                  liv=(drv.viewed.length-1); if(liv<0){slf.signal('empty',{driver:drv});return}; // no "last viewed" tab to auto-select
                   liv=drv.viewed[liv]; drv.select(liv); // auto-select "last viewed"
                });
             });

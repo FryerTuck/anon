@@ -1,7 +1,7 @@
 "use strict";
 
 
-requires(['/Draw/dcor/aard.css','/Proc/libs/konva/konva.js']);
+requires(['/Draw/dcor/aard.css','/Proc/libs/konva/konva.min.js']);
 
 
 
@@ -46,7 +46,7 @@ select('#AnonAppsView').insert
                   [
                      {grid:'#DrawViewGrid', contents:[{row:
                      [
-                        {col:'#DrawToolView', contents:[{panl:'#DrawToolPanl'}]},
+                        {col:'#DrawToolView .hide', contents:[{panl:'#DrawToolPanl'}]},
                         {col:'.panlVertLine', contents:[{vdiv:''}]},
                         {col:'#DrawBodyView', contents:[{panl:'#DrawBodyPanl'}]},
                         {col:'.panlVertLine', contents:[{vdiv:''}]},
@@ -68,17 +68,17 @@ select('#AnonAppsView').insert
                                     {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
                                     {row:[{col:[{panl:'#DrawPropLayr .DrawPropPanl'}]}]}
                                  ]}]},
-                                 {title:'Undone', canClose:0, contents:[{grid:
-                                 [
-                                    {row:[{col:'.DrawPropView',contents:'Undone'}]},
-                                    {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
-                                    {row:[{col:[{panl:'#DrawPropDone .DrawPropPanl'}]}]}
-                                 ]}]},
                                  {title:'Active', canClose:0, contents:[{grid:
                                  [
                                     {row:[{col:'.DrawPropView',contents:'Active'}]},
                                     {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
                                     {row:[{col:[{panl:'#DrawPropItem .DrawPropPanl'}]}]}
+                                 ]}]},
+                                 {title:'Undone', canClose:0, contents:[{grid:
+                                 [
+                                    {row:[{col:'.DrawPropView',contents:'Undone'}]},
+                                    {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
+                                    {row:[{col:[{panl:'#DrawPropDone .DrawPropPanl'}]}]}
                                  ]}]},
                               ]}
                            ]},
@@ -133,8 +133,15 @@ extend(Anon)
             Anon.Draw.shut(drv,tgt);
          });
 
+         select('#DrawTabber').listen('empty',function(e)
+         {
+            select('#DrawToolView').reclan('show:hide');
+            select('#DrawPropView').reclan('show:hide');
+         });
+
          select('#DrawTreePanl').select('treeview')[0].listen('loaded',ONCE,()=>
          {
+            select('#DrawPropView').reclan('show:hide');
             requires('/Draw/getTools.js',()=>{Busy.edit('/Draw/panl.js',100);});
          });
       },
@@ -168,6 +175,8 @@ extend(Anon)
          slf=this; drv=select('#DrawTabber').driver; ttl=(pth+''); tab=drv.select(ttl);
          if(!!tab){return}; this.load(pth,(img,nic)=>
          {
+            select('#DrawToolView').reclan('hide:show');
+            select('#DrawPropView').reclan('hide:show');
             drv.create({title:ttl, contents:[{panl:'.DrawViewPanl', contents:[{div:'.DrawViewWrap', canFocus:1}]}]});
             tab=drv.select(ttl); tgt=tab.body.select('.DrawViewWrap')[0]; tgt.vars={}; mim=stub(img.src,';base64,')[0].split(':')[1];
             lay=swap((rstub(ttl.split('/').pop(),'.')[0]),'.','_');
@@ -222,6 +231,7 @@ extend(Anon)
       {
          o.fumble=function(){let i=this.parent; do{i=i.parent}while(i.nodeType!='Stage'); Anon.Draw.deja.keep(i.attrs.container);};
          o.on('dragend',function(){this.fumble()}); o.on('transformend',function(){this.fumble()});
+         o.on('mousedown',function(){Anon.Draw.tool.pickItem(this)});
          return o;
       },
 
@@ -269,9 +279,7 @@ extend(Anon)
             if(node.type=='Image')
             {node.attr.draggable=true, node.attr.image=create({img:'', src:node.data}); rsl=(new Konva.Image(node.attr));};
 
-            rsl.nick=node.nick; rsl.fumble=function()
-            {let tgt=this.parent; do{tgt=tgt.parent}while(tgt.nodeType!='Stage'); Anon.Draw.deja.keep(tgt.attrs.container);};
-            rsl.on('dragend',function(){this.fumble()}); rsl.on('transformend',function(){this.fumble()});
+            rsl.nick=node.nick; rsl=Anon.Draw.fumb(rsl);
 
             if(!!prnt&&(prnt.nodeType=='Layer'))
             {prnt.add(rsl); box=(new Konva.Transformer()); prnt.add(box); box.attachTo(rsl);};

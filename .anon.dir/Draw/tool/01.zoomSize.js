@@ -4,17 +4,43 @@ select('#DrawPropCanv').insert
 ([
    {grid:'.noSpanVert', contents:
    [
-      {row:[{col:
-      [{input:'#DrawPropZoom .toolTextFeed .dark',icon:'search1',demo:'100%', title:'zoom', listen:{'key:Enter':function(e)
-      {
-         let ns=((this.value.trim()||'100').split('%').join('')*1); if(!isNumr(ns)){return}; Anon.Draw.tool.zoom(ns/100);
-      }}}]}]},
+      {row:
+      [
+         {col:'.tiny .midlChld', contents:[{icon:'', face:'search1', size:12}]},
+         {col:'.midlChld', contents:[{input:'.dark', type:'range', min:1, max:500, step:1, value:100, oninput:function()
+         {let v=(this.value*1); this.select('^ > input')[0].value=`${v}%`; Anon.Draw.tool.zoom(v/100)}}]},
+         {col:'.tiny .midlChld', contents:[{input:'.toolTextFeed .dark .mini', value:'100%',  demo:'100%', title:'zoom',
+            listen:{'key:Enter':function(){let ns=((this.value.trim()||'100').split('%').join('')*1); Anon.Draw.tool.zoom(ns/100);}},
+         }]},
+      ]},
+      {row:
+      [
+         {col:'.tiny .midlChld', contents:[{icon:'', face:'versions', size:12}]},
+         {col:'.midlChld', contents:[{input:'.dark', type:'range', min:0.05, max:10, step:0.05, value:1, oninput:function()
+         {let v=(this.value*1); this.select('^ > input')[0].value=v; Anon.Draw.tool.scal(v,v)}}]},
+         {col:'.tiny .midlChld', contents:[{input:'.toolTextFeed .dark .mini', value:'1 x 1',  demo:'1', title:'scale',
+            listen:{'key:Enter':function()
+            {
+               let nv,nw,nh; nv=this.value.trim().split(' ').join('').split('x'); nw=(nv[0]*1); nh=(nv[1]*1); Anon.Draw.tool.scal(nw,nh);
+            }},
+         }]},
+      ]},
+   ]},
+
+   {grid:'.noSpanVert', contents:
+   [
       {row:[{col:[{input:'#DrawPropSize .toolTextFeed .dark', icon:'enlarge', demo:'0 x 0', title:'size', listen:{'key:Enter':function(e)
       {
          let nv,nw,nh; nv=this.value.trim().split(' ').join('').split('x'); nw=(nv[0]*1); nh=(nv[1]*1); Anon.Draw.tool.size(nw,nh);
       }}}]}]},
+      {row:[{col:[{input:'#DrawPropCrop .toolTextFeed .dark', icon:'crop', demo:'0 x 0', title:'crop', listen:{'key:Enter':function(e)
+      {
+         let nv,nw,nh; nv=this.value.trim().split(' ').join('').split('x'); nw=(nv[0]*1); nh=(nv[1]*1); Anon.Draw.tool.crop(nw,nh);
+      }}}]}]},
+      {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
    ]}
 ]);
+
 
 
 
@@ -31,6 +57,20 @@ extend(Anon.Draw.tool)
    }
    .bind({input:select('#DrawPropZoom')}),
 
+
+   scal:function(sx,sy,fm, nw,nh,os,zs,sb)
+   {
+      if(!isNumr(sx)||!isNumr(sy)){return}; let inst=Anon.Draw.vars.actv; let face=inst.vars.canvas; face.find('Transformer').destroy();
+      zs=face.dime.zoom.scal; os=face.dime.size; dump(sx,sy);
+      if(fm){sb=((ns/1000)/2); sx=round((os.sclx+sb),4); sy=round((os.scly+sb),4); let sv=((sx==sy)?sx:`${sx} x ${sy}`); this.input.value=sv;};
+      face.scaleX(sx); face.scaleY(sy); nw=Math.floor(os.crpw*sx); nh=Math.floor(os.crph*sy); face.width(nw); face.height(nh);
+      inst.setStyle({width:nw,height:nh}); face.batchDraw();
+      face.dime.size={sclx:sx,scly:sy,crpw:nw,crph:nh,ownw:os.ownw,ownh:os.ownh};
+      select('#DrawPropSize').value=`${nw} x ${nh}`; select('#DrawPropCrop').value=`${nw} x ${nh}`;
+   }
+   .bind({input:select('#DrawPropScal')}),
+
+
    size:function(nw,nh,fm, zs,os,sx,sy)
    {
       let inst=Anon.Draw.vars.actv; let face=inst.vars.canvas; face.find('Transformer').destroy(); if(fm){dump('do mouse resize');return};
@@ -41,64 +81,7 @@ extend(Anon.Draw.tool)
       select('#DrawPropCrop').value=`${nw} x ${nh}`;
    }
    .bind({input:select('#DrawPropSize')}),
-});
 
-
-
-select('#DrawBodyPanl').listen('tabfocus',function(e)
-{
-   let ds=e.detail.vars.canvas.dime.size; select('#DrawPropSize').value=`${ds.crpw} x ${ds.crph}`;
-});
-
-
-select('#DrawBodyPanl').listen('Control MouseWheel',function(evnt)
-{
-   let sv; sv=evnt.coords[1]; Anon.Draw.tool.zoom(sv,1);
-});
-
-
-select('#DrawBodyPanl').listen('Meta MouseWheel',function(evnt)
-{
-   let vx,vy; vx=evnt.coords[0]; vy=evnt.coords[1]; Anon.Draw.tool.size(vx,vy,1);
-});
-
-
-
-
-
-select('#DrawPropCanv').insert
-([
-   {grid:'.noSpanVert', contents:
-   [
-      {row:[{col:
-      [{input:'#DrawPropScal .toolTextFeed .dark',icon:'versions',demo:'1', title:'scale', listen:{'key:Enter':function(e)
-      {
-         let nv,sx,sy; nv=this.value.trim().split(' ').join('').split('x'); sx=((nv[0]||1)*1); sy=((nv[1]||sx)*1); Anon.Draw.tool.scal(sx,sy);
-         let ns=(this.value.trim()*1); if(!isNumr(ns)){return}; Anon.Draw.tool.scal(ns);
-      }}}]}]},
-      {row:[{col:[{input:'#DrawPropCrop .toolTextFeed .dark', icon:'crop', demo:'0 x 0', title:'crop', listen:{'key:Enter':function(e)
-      {
-         let nv,nw,nh; nv=this.value.trim().split(' ').join('').split('x'); nw=(nv[0]*1); nh=(nv[1]*1); Anon.Draw.tool.crop(nw,nh);
-      }}}]}]},
-      {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
-   ]}
-]);
-
-
-
-extend(Anon.Draw.tool)
-({
-   scal:function(sx,sy,fm, nw,nh,os,zs,sb)
-   {
-      if(!isNumr(sx)||!isNumr(sy)){return}; let inst=Anon.Draw.vars.actv; let face=inst.vars.canvas; face.find('Transformer').destroy();
-      zs=face.dime.zoom.scal; os=face.dime.size; dump(sx,sy);
-      if(fm){sb=((ns/1000)/2); sx=round((os.sclx+sb),4); sy=round((os.scly+sb),4); let sv=((sx==sy)?sx:`${sx} x ${sy}`); this.input.value=sv;};
-      face.scaleX(sx); face.scaleY(sy); nw=(os.crpw*sx); nh=(os.crph*sy); face.width(nw); face.height(nh);
-      inst.setStyle({width:nw,height:nh}); face.batchDraw();
-      face.dime.size={sclx:sx,scly:sy,crpw:nw,crph:nh,ownw:os.ownw,ownh:os.ownh};
-      select('#DrawPropSize').value=`${nw} x ${nh}`; select('#DrawPropCrop').value=`${nw} x ${nh}`;
-   }
-   .bind({input:select('#DrawPropScal')}),
 
    crop:function(nw,nh,fm, zs,os,sx,sy)
    {
@@ -114,9 +97,23 @@ extend(Anon.Draw.tool)
 
 
 
+
 select('#DrawBodyPanl').listen('tabfocus',function(e)
 {
-   let ds=e.detail.vars.canvas.dime.size; select('#DrawPropCrop').value=`${ds.crpw} x ${ds.crph}`;
+   let ds=e.detail.vars.canvas.dime.size; select('#DrawPropSize').value=`${ds.crpw} x ${ds.crph}`;
+   select('#DrawPropCrop').value=`${ds.crpw} x ${ds.crph}`;
+});
+
+
+select('#DrawBodyPanl').listen('Control MouseWheel',function(evnt)
+{
+   let sv; sv=evnt.coords[1]; Anon.Draw.tool.zoom(sv,1);
+});
+
+
+select('#DrawBodyPanl').listen('Meta MouseWheel',function(evnt)
+{
+   let vx,vy; vx=evnt.coords[0]; vy=evnt.coords[1]; Anon.Draw.tool.size(vx,vy,1);
 });
 
 

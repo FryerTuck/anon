@@ -1112,10 +1112,10 @@
 /* clan :: input : size
 /* ------------------------------------------------------------------------------------------------------------- */
    input.tiny
-   {width:12px !important; min-width:12px !important;}
+   {width:20px !important; min-width:20px !important;}
 
    input.mini
-   {width:36px !important; min-width:36px !important;}
+   {width:40px !important; min-width:40px !important;}
 
    input.midi
    {width:60px !important; min-width:60px !important;}

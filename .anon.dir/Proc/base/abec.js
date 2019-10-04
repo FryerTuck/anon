@@ -323,6 +323,16 @@
 
 
 
+// func :: pick : look in haystack and return the 1st needle found in haystack from list of needles
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const pick = function(h,n, r)
+   {
+      if(isText(n)){n=n.split(',')}; if(!isList(n,1)){return}; r=isin(h,n); return r;
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 // func :: defn : constants .. if text given with no spaces it returns a defined constant -or undefined .. else sets constans
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const defn = function(v)
@@ -359,7 +369,7 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const copyOf = function(v,n, r)
    {
-      if(isNumr(v)||isText(v)){v=(v+''); n=parseInt(n); if(!n){return v}; r=''; for(let i=0;i<n;i++){r+=v}; return r};
+      if(isNumr(v)||isText(v)){if(!n){return v}; v=(v+''); n=parseInt(n); r=''; for(let i=0;i<n;i++){r+=v}; return r};
       if((v instanceof Element)){return (v.cloneNode(true))};
       if(isList(v)){r=[]; v=([].slice.call(v)); v.forEach((i)=>{r.push(copyOf(i))}); return r};
       if(isKnob(v)||isFunc(v)){r={}; for(let k in v){if(!v.hasOwnProperty(k)){continue}; r[k]=copyOf(v[k])}; return (isFunc(v)?v.bind(r):r)};

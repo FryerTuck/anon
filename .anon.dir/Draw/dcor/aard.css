@@ -97,7 +97,7 @@
 
 #DrawPropView
 {
-   width:194px; min-width:194px;
+   width:200px; min-width:200px;
    background:hsla(0,0%,0%,0.1);
 }
 
@@ -110,7 +110,7 @@
 
 #DrawPropTabB
 {
-   width:164px; min-width:164px;
+   width:170px; min-width:170px;
    font-size:12px; color:hsla(0,0%,50%,1);
    background:hsla(220,3%,14%,0.8);
 }
@@ -130,6 +130,7 @@
 .DrawPropPanl
 {
    padding:2px;
+   text-align:center !important;
 }
 
 .DrawPropPanl col
