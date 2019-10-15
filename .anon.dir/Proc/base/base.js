@@ -33,13 +33,6 @@
 
 
 
-// incl :: RequireJS : dynamic dependency loader
-// --------------------------------------------------------------------------------------------------------------------------------------------
-// '/Proc/libs/require/require.js'
-// --------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
 // tool :: copyToClipboard : use like: `copyToClipboard('whatever')`
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const copyToClipboard = str =>
@@ -361,7 +354,7 @@
                   purl(evnt.Target.purl,(rsp)=>
                   {
                      // debug this issue by visiting the event emitter via API interface
-                     fail('server event emitter `'+evnt.Target.purl+'` has issues\n\nDetails:\n'+(rsp.body||'undefined'));
+                     console.log('server event emitter `'+evnt.Target.purl+'` has issues\n\nDetails:\n'+(rsp.body||'undefined'));
                   });
                };
             });
@@ -409,6 +402,13 @@
 
 
 
+// incl :: RequireJS : dynamic dependency loader
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   // '/Proc/libs/require/require.js'
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 // func :: requires : versatile preloader
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const requires = function(l,cbfn, s,a,slf,d)
@@ -423,13 +423,24 @@
 
          if(x=='js')
          {
-            if(p)
-            {
-               // require.config({paths:{[p]:i}});
-               // require([i],function(m){extend(MAIN)({[(this.nick)]:m}); d--; slf.done[this.purl]=1; a[this.nick]=m}.bind({nick:p,purl:i}));
-            };
-            let n=create('script'); n.purl=i; n.listen('ready',function(){d--; slf.done[this.purl]=1;});
-            n.modify({src:i}); document.head.insert(n); return;
+            // if(p)
+            // {
+            //    let ps=p.split('.'); let rm=ps.shift(); let hp=twig(i); let pn=((ps.length<1)?rm:ps.pop());
+            //    require.config({baseUrl:hp,paths:{[rm]:i}});
+            //    require([i],function(m)
+            //    {
+            //       let n=this.nick; let mm=this.root; if(isVoid(m)&&!isVoid(MAIN[mm][n])){m=MAIN[mm][n]};
+            //       if(isVoid(m)&&isVoid(MAIN[n])){fail(`invalid "${n}" definition in: "${this.purl}"`);return};
+            //       if(!!m){extend(MAIN)({[n]:m})}; d--; slf.done[this.purl]=1; a[this.nick]=m;
+            //    }
+            //    .bind({root:rm,nick:pn,purl:i}));
+            // }
+            // else
+            // {
+               let n=create('script'); n.purl=i; n.listen('ready',function(){d--; slf.done[this.purl]=1;});
+               n.modify({src:i}); document.head.insert(n);
+            // };
+            return;
          };
 
          if(x=='css')
@@ -492,7 +503,10 @@
 
       let fc=a.forClans; if(!isVoid(fc)){delete a.forClans; if(!userDoes(fc)){return}}; // ignore if not for this user's clan
       // if(isKnob(a.style)){a.style.each((v,k)=>{n.style[k]=v}); delete a.style}; // style object
-      if(isFunc(custom.domtag[t])){let dt=custom.domtag[t](n,a,c); if(dt==DONE){return n}}; // handle this node exclusively
+      if(isFunc(custom.domtag[t]))
+      {
+         let dt=custom.domtag[t](n,a,c); if(dt==DONE){return n}; if(isNode(dt)||isTemp(dt)){return dt};
+      }; // handle this node
       r=modify(n,a,c); // set this node's attributes, the result is the updated node
       if((r.childNodes.length<1)&&(c!=VOID)&&(c!='')){r=r.insert(c)}; // insert content if xtag & xatr did not
       return r; // done
@@ -503,16 +517,18 @@
 
 // func :: modify : define -or update exising DOM-node-attributes .. custom attributes are defined in `/Proc/base/xatr.js`
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   const modify = function(n,a,c)
+   const modify = function(n,a,c,o)
    {
       if(MAIN.HALT){return}; if(!isNode(n)||!isKnob(a)){return}; // validate
       let slog=getStack(); addStack.log=slog;
       a.each((v,k)=>
       {
+         if(o&&isin(o,k)){return};
          if(isFunc(custom.attrib[k])){if(!isVoid(custom.attrib[k](v,n,a,c))){return}}; // set attribute from custom, VOID returns get ignored
          // if(isin(['src','href'],k)&&v.startsWith('~/')){v=ltrim(v,'~/'); v=('/User/data/'+sesn('USER')+'/home/'+v);};
          if(!isFunc(v)&&!isKnob(v)&&(k!='innerHTML')){n.setAttribute(k,v);}; // normal attribute
          if(k=='class'){k='className'}; // prep attribute name for JS
+         if((k=='className')&&!trim(v)){return};
          n[k]=v; // set attribute as property -which possibly triggers some intrinsic JS event
       });
       addStack.log=slog;
@@ -521,9 +537,9 @@
 
    extend(Element.prototype)
    ({
-      modify:function(a)
+      modify:function(a,o)
       {
-         return modify(this,a);
+         return modify(this,a,VOID,o);
       },
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------
@@ -541,7 +557,7 @@
          this.signal('insert');
          if(t=='img'){return this}; // TODO :: impose?
          if(t=='input'){this.value=tval(v); return this}; // form input text
-         if(isNode(v)){this.appendChild(v); return this}; // normal DOM-node append
+         if(isNode(v)||isTemp(v)){this.appendChild(v); return this}; // normal DOM-node append
          if(isKnob(v)){this.appendChild(create(v));return this}; // create it first then append
          if(isText(v)&&(wrapOf(trim(v))=='<>')){this.innerHTML=v; return this}; // convert html to nodes and try again
          if(!isText(v)){v=tval(v);}; // convert any non-text to text .. circular, boolean, number, function, etc.
@@ -727,6 +743,17 @@
       {
          if(!isText(x,1)){return this.All.apply(this,listOf(arguments))};
          return select(x,this);
+      },
+      getSelection:function(r)
+      {
+         let v,b,e; v=this.value; if(v.length<1){return ''}; b=this.selectionStart; e=this.selectionEnd;
+         if(!(b<e)){return (r?VOID:'')}; if(r){return [b,e]}; r=v.slice(b,e); return r;
+      },
+      setSelection:function(b,e,f)
+      {
+         let v,x; v=this.value; if(v.length<1){return}; if(isText(b)){x=v.indexOf(b); e=(x+b.length); b=x;};
+         if(isInum(e)&&(e<0)){e=(v.length+e)}; if(!isInum(b)||!isInum(e)||(b<0)){return};
+         this.setSelectionRange(b,e); if(f||(f==VOID)){this.focus()};
       },
    });
 
@@ -1346,9 +1373,11 @@
          if(isin(this.arro,tone)){let t=[arro,tone]; tone=VOID;arro=VOID; tone=lpop(t);arro=rpop(t)};
          if(!tone||!isin(this.tone,tone)){tone=LITE};tone=lowerCase(unwrap(tone)); if(!arro||!isin(this.arro,arro)){arro=TM};arro=unwrap(arro);
 
-         let note=create({notedeck:`.${tone}`, contents:[{noteface:mesg},{notearro:`.${arro}`, contents:[{div:''}]}]});
+         let note=create({notedeck:`.${tone}`, canFocus:1, contents:[{noteface:mesg},{notearro:`.${arro}`, contents:[{div:''}]}]});
          if(isList(attr)&&isNumr(attr[0])&&isNumr(attr[1])){attr={style:{left:attr[0],top:attr[1]}}}; if(isKnob(attr)){note.modify(attr)};
          if((tout===VOID)||(isNumr(tout)&&(tout>0))){note.expire=tick.after((isInum(tout)?tout:3000),()=>{remove(note)})};
+         note.listen('blur',function(){this.signal('close'); tick.after(10,()=>{remove(this)})});
+         if(!note.expire){note.listen('ready',function(){this.focus()})};
          return note;
       }
       .bind
@@ -1362,11 +1391,234 @@
    ({
       notify:function(mesg,tone,arro,attr,tout)
       {
-         let note=notify(mesg,tone,arro,attr,tout); let trgt=this; let t=nodeName(this);
-         if(isin('input,select,video,audio',t)){trgt=trgt.parentNode}; trgt.appendChild(note);
+         let dime=rectOf(this); if(!isKnob(attr)){attr={}}; if(!isKnob(attr.style)){attr.style={}};
+         attr.style.left=dime.x; attr.style.top=(dime.y+dime.height);
+         let note=notify(mesg,tone,arro,attr,tout);
+         document.body.appendChild(note);
+         // let trgt=this; let t=nodeName(this);
+         // if(isin('input,select,video,audio',t)){trgt=trgt.parentNode};
+         // trgt.appendChild(note);
          return note;
       },
    });
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// tool :: RotScaTra : `.knob` given a transorm-string, this returns rotation + scale + translate as object .. `.text` turns it back to string
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const RotScaTra= // obj
+   {
+      knob:function(q)
+      {
+         if(!isText(q)||!isin(q,'(')||!isin(q,')')){return}; q=q.trim(); q+=' '; let l,r; l=q.split(') '); l.pop(); r={};
+         l.forEach((i)=>
+         {
+            let p=i.split('('); let k=trim(p[0]); let s=trim(p[1]).split(', ').join(','); let d=pick(s,[' ',',']);
+            let a=((!d)?[s]:s.split(d)); a.forEach((v,x)=>{v=swap(v,['%','deg','px'],''); if(!isNaN(v)){a[x]=(v*1)}}); r[k]=a;
+         });
+         return r;
+      },
+
+      text:function(d,o)
+      {
+         if(!isKnob(d)){return}; let r=''; d.each((v,k)=>{v=v.join(','); r+=`${k}(${v}) `});
+         r=r.trim(); return r;
+      },
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: minMaxOf : given a number - this returns the given maximum -or minimum value .. or just the unchanged number if not exceeded
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const minMaxOf = function(n,mn,mx)
+   {
+      if(n<mn){return mn}; if(n>mx){return mx}; return n;
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: swapPolarity : changes a number from positive to negative, or whatever
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const swapPolarity = function(n)
+   {
+      if(isNaN(n)){return}; n=(n*1); return ((n<0)?(n*-1):(0-n));
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: addIfMissing : takes a string and an object, adds object value to result string if object key is missing
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const addIfMissing = function(q,o)
+   {
+      if(!isText(q)||!isKnob(o)){return q}; let r=`${q}`; o.each((v,k)=>{if(isin(r,k)){return}; r+=v});
+      return r;
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: rectAnglEdge : get coords in a rect by angle in degrees
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const rectAnglEdge = function(rect, deg)
+   {
+     var twoPI = Math.PI*2;
+     var theta = deg * Math.PI / 180;
+
+     while (theta < -Math.PI) {
+       theta += twoPI;
+     }
+
+     while (theta > Math.PI) {
+       theta -= twoPI;
+     }
+
+     var rectAtan = Math.atan2(rect.height, rect.width);
+     var tanTheta = Math.tan(theta);
+     var region;
+
+     if ((theta > -rectAtan) && (theta <= rectAtan)) {
+         region = 1;
+     } else if ((theta > rectAtan) && (theta <= (Math.PI - rectAtan))) {
+         region = 2;
+     } else if ((theta > (Math.PI - rectAtan)) || (theta <= -(Math.PI - rectAtan))) {
+         region = 3;
+     } else {
+         region = 4;
+     }
+
+     var edgePoint = {x: rect.width/2, y: rect.height/2};
+     var xFactor = 1;
+     var yFactor = 1;
+
+     switch (region) {
+       case 1: yFactor = -1; break;
+       case 2: yFactor = -1; break;
+       case 3: xFactor = -1; break;
+       case 4: xFactor = -1; break;
+     }
+
+     if ((region === 1) || (region === 3)) {
+       edgePoint.x += xFactor * (rect.width / 2.);
+       edgePoint.y += yFactor * (rect.width / 2.) * tanTheta;
+     } else {
+       edgePoint.x += xFactor * (rect.height / (2. * tanTheta));
+       edgePoint.y += yFactor * (rect.height /  2.);
+     }
+
+     return edgePoint;
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+// func :: rectAnglPlot : takes in object (numeric `width` & `height`) and agngle (numeric degrees) .. returns relative beginXY & endXY
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const rectAnglPlot = function(o,d,s)
+   {
+      if(!isKnob(o)||!isNumr(o.width)||!isNumr(o.height)){return}; if(!isNumr(d)){return}; d=(d%360); if(d<0){d=(360-d)}; // validate
+      let e,r,b; e=rectAnglEdge(o,d); e.x=round(e.x); e.y=round(e.y); r={bgn:{x:0,y:e.y},end:{x:e.x,y:0}};
+      r.bgn.x=(o.width-e.x); r.end.y=(o.height-e.y); if(!s||!isNumr(s)||(s==1)){return r}; // done - without scale
+      b=dupe(o); b.width*=s; b.height*=s; r=VOID; r=rectAnglPlot(b,d); d={w:((o.width-b.width)/2),h:((o.height-b.height)/2)};
+      r.bgn.x=round(r.bgn.x+d.w); r.bgn.y=round(r.bgn.y+d.h); r.end.x=round(r.end.x+d.w); r.end.y=round(r.end.y+d.h); // shift coords
+      return r;
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+// func :: popColor : color picker
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const popColor = function(el,bg,sc, mb,bx,pw)
+   {
+      if(isFunc(bg)){cb=bg; bg=VOID; bg=LITE;}; remove('#AnonPopColor');
+      if(!isNode(el)){fail('expecting 1st arg as :node:');return};
+      mb=el.notify('loading...',bg,VOID,VOID,false); let nf=mb.select('noteface')[0]; nf.innerHTML=''; bx=rectOf(el);
+      pw=14; requires(['/Proc/libs/iro/iro.min.js','/Proc/libs/iro/iro-transparency-plugin.min.js'],()=>
+      {
+         iro.use(iroTransparencyPlugin); mb.id='AnonPopColor'; let ew=(bx.width-pw); //nf.insert({div:'#AnonPopColorPanl'});
+         nf.insert({div:'', style:{width:ew, height:(ew*1.2)}, contents:
+         [
+            {div:'#AnonPopColorPanl .posAbs', style:{padding:18}},
+            {div:'.posAbs', style:{width:ew, height:ew, pointerEvents:'none'}, contents:
+            [
+               {svg:'#AnonPopColorDial', src:'/Proc/dcor/dial.svg',
+                  onready:function(){this.initRota()},
+                  initRota:function(degr,di,dw,dh,hw,hh,rota,scal)
+                  {
+                     let vs=stub(el.value,'+'); if(!vs||(!vs[2].trim())){return};
+                     if(this.rotaInited){return}; this.rotaInited=1; this.style.opacity=1; this.root=mb;
+                     degr=this.select('#AnonColrDialDegr'); di=rectOf(this); dw=di.width; dh=di.height; hw=(dw/2); hh=(dh/2);
+                     rota=this.select('#AnonColrDegrRota'); scal=this.select('#AnonColrDialScal');
+                     degr.listen('mousemove',(e)=>
+                     {
+                        if(!cursor.grab){return}; let c,x,y,r,d,q,s; c=e.coords; x=(c[0]-di.x); x=((x<hw)?(0-(hw-x)):((x>hw)?(x-hw):0));
+                        y=(c[1]-di.y); y=((y<hh)?(0-(hh-y)):((y>hh)?(y-hh):0)); r=Math.atan2(y,x); d=(r*(180/Math.PI));
+                        d+=180; d=round(d,3); if(d>359.999){d=0}; rota.setAttribute(`transform`,`rotate(${d} 50 50)`);
+                        q=(scal.getAttribute(`transform`)||''); c=50; s=1;
+                        q=RotScaTra.knob(addIfMissing(q,{rotate:`rotate(0 ${c} ${c})`, matrix:` matrix(1,0,0,1,${c-s*c},${c-s*c})`}));
+                        q.rotate=[d,c,c]; scal.setAttribute(`transform`,RotScaTra.text(q)); this.root.signal('change',{angl:d});
+                     });
+                     mb.listen('wheel',(e)=>
+                     {
+                        let w,q,c,s,t; w=round((swapPolarity(e.coords[1])/1000),3); q=(scal.getAttribute(`transform`)||''); c=50; s=1;
+                        q=RotScaTra.knob(addIfMissing(q,{rotate:`rotate(0 ${c} ${c})`, matrix:` matrix(1,0,0,1,${c-s*c},${c-s*c})`}));
+                        s=q.matrix[0]; s=minMaxOf((s+w),0.25,2.5); q.matrix=[s,0,0,s,(c-s*c),(c-s*c)];
+                        scal.setAttribute(`transform`,RotScaTra.text(q));
+                        this.root.signal('change',{scal:round(s,3)});
+                     });
+                  },
+               }
+            ]},
+         ]});
+
+         let cw = (new iro.ColorPicker("#AnonPopColorPanl",
+         {
+            width: (ew-36),
+            borderWidth:1,
+            wheelAngle:180,
+            padding: 1,
+            handleRadius: 3,
+            sliderMargin:22,
+            wheelDirection:'clockwise',
+            color:sc,
+            layout:
+            [
+               {
+                  component:iro.ui.Wheel,
+                  options:{borderColor:'#cccccc'},
+               },
+               {
+                  component:iro.ui.Slider,
+                  options:{borderColor:'none'},
+               },
+               {
+                  component:iro.ui.TransparencySlider,
+                  options:{sliderMargin:6,borderColor:'none'},
+               },
+            ],
+         }));
+
+         cw.root=mb; cw.on('input:change',function(c)
+         {
+            this.root.signal('change',{colr:c.hex8String,type:'sol',angl:0,scal:1});
+            this.root.select('#AnonPopColorDial').initRota();
+         });
+      });
+      mb.target=el;
+      mb.listen(['keydown','keyup'],(e)=>
+      {
+         if(e.signal!='Control'){return}; let kd=(e.type=='keydown'); let ku=(e.type=='keyup');
+         if(kd&&el.value.endsWith('+')){return}; if(kd){el.value+='+';return};
+         if(ku&&el.value.endsWith('+')){el.value=trim(trim(el.value,'+'))};
+      });
+      return mb;
+   };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -1378,7 +1630,7 @@
    ({
       cursor:
       {
-         posx:0, posy:0, refs:{},
+         posx:0, posy:0, refs:{}, grab:0,
 
          bind:function(r,x,y)
          {
@@ -1410,4 +1662,6 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    document.addEventListener("mousemove", function(e){cursor.move(e.clientX,e.clientY);},false);
    document.addEventListener("dragover", function(e){cursor.move(e.pageX,e.pageY);},false);
+   document.addEventListener("mousedown", function(e){if(isin(e.signal,'LeftClick')){cursor.grab=1;};},false);
+   document.addEventListener("mouseup", function(e){cursor.grab=0;},false);
 // --------------------------------------------------------------------------------------------------------------------------------------------

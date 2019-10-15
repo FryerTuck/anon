@@ -978,6 +978,7 @@
       display:inline-block; position:absolute; box-sizing:border-box;
       z-index:9999;
       text-align:left; color:#BBB;
+      outline:none;
    }
 
    notedeck.show{display:inline-block !important;}
@@ -1020,13 +1021,6 @@
       padding:2px !important; overflow:hidden;
    }
 
-   notedeck.dark>noteface,notedeck.dark>notearro>div{background-color:hsla(210,3%,16%,1); border:1px solid hsla(210,3%,22%,1);}
-   notedeck.good>noteface,notedeck.good>notearro>div{background-color:hsla(140,60%,20%,1); border:1px solid hsla(140,60%,40%,1);}
-   notedeck.cool>noteface,notedeck.cool>notearro>div{background-color:hsla(210,60%,20%,1); border:1px solid hsla(210,60%,40%,1);}
-   notedeck.need>noteface,notedeck.need>notearro>div{background-color:hsla(280,60%,20%,1); border:1px solid hsla(280,60%,40%,1);}
-   notedeck.warn>noteface,notedeck.warn>notearro>div{background-color:hsla(40,60%,20%,1); border:1px solid hsla(40,60%,40%,1);}
-   notedeck.fail>noteface,notedeck.fail>notearro>div{background-color:hsla(0,60%,20%,1); border:1px solid hsla(0,60%,40%,1);}
-
    notearro
    {
       display:inline-block; position:absolute; box-sizing:border-box;
@@ -1040,6 +1034,13 @@
       background-color:hsla(210,3%,16%,1);
       border:1px solid #5e6163;
    }
+
+   notedeck.dark>noteface,notedeck.dark>notearro>div{background-color:hsla(210,3%,16%,1); border:1px solid hsla(210,3%,22%,1);}
+   notedeck.good>noteface,notedeck.good>notearro>div{background-color:hsla(140,60%,20%,1); border:1px solid hsla(140,60%,40%,1);}
+   notedeck.cool>noteface,notedeck.cool>notearro>div{background-color:hsla(210,60%,20%,1); border:1px solid hsla(210,60%,40%,1);}
+   notedeck.need>noteface,notedeck.need>notearro>div{background-color:hsla(280,60%,20%,1); border:1px solid hsla(280,60%,40%,1);}
+   notedeck.warn>noteface,notedeck.warn>notearro>div{background-color:hsla(40,60%,20%,1); border:1px solid hsla(40,60%,40%,1);}
+   notedeck.fail>noteface,notedeck.fail>notearro>div{background-color:hsla(0,60%,20%,1); border:1px solid hsla(0,60%,40%,1);}
 
    notearro.TL {left:0px;  top:0px;}
    notearro.TM {left:50%;  top:0px; transform:translate(-50%,0%);}

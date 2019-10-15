@@ -279,7 +279,7 @@ namespace Anon;
       $o=array(CURLOPT_RETURNTRANSFER=>1,CURLOPT_SSL_VERIFYPEER=>false,CURLOPT_URL=>$uri,CURLOPT_USERAGENT=>$uas,CURLOPT_REFERER=>$ref);
       $c=curl_init(); curl_setopt_array($c,$o); curl_setopt($c,CURLOPT_HTTPHEADER,array("REMOTE_ADDR: $ipa", "HTTP_X_FORWARDED_FOR: $ipa"));
       $r=curl_exec($c); $e=null; if(!$r){$x=curl_error($c); if($x){$e=$x;};}; curl_close($c);
-      if($e){return null;}; return $r;
+      if($e){return "FAIL :: $e";}; return $r;
    };
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -300,7 +300,7 @@ namespace Anon;
       if(!$p&&(strpos($f,'http')!==0)){echo($f); die();}; // not file and not URI .. serve trap mesg as plain text
       if($p&&(fext($f)!=='php')){echo pget($f); die();}; // serve file contents
       if($p){ob_start(); require($p); $r=ob_get_clean(); echo($r); die();}; // custom PHP handler
-      $r=spuf($f); if(!$r){header("Location: $f"); die();}; // try to spoof URI .. if fail -then redirect instead
+      $r=spuf($f); if(!$r||(strpos($r,'FAIL ::')===0)){header("Location: $f"); die();}; // try to spoof URI .. if fail -then redirect instead
       echo $r; die(); // spoof worked, so from here any subsequent link is not our problem, we're done here
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -550,14 +550,14 @@ namespace Anon;
 
 # dbug :: protocol : force https .. this cannot be done reliably in .htaccess
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   if((envi('USER_AGENT')==='SYS:Verify-SSL')&&(envi('SCHEME')==='https')){die('OK');}; // STILL ALIVE .. we're taking an introspection trip
+   if((envi('USER_AGENT')==='SYS:Verify-SSL')&&(envi('SCHEME')==='https')){die('OK');}; // STILL ALIVE .. we took an introspection trip
    if(envi('SCHEME')!=='https')
    {
-      $a='SYS:Verify-SSL'; if(envi('USER_AGENT')===$a){exit;}; $p=('https://'.envi('HOST')); $c=curl_init();
-      curl_setopt_array($c,array(CURLOPT_RETURNTRANSFER=>1,CURLOPT_SSL_VERIFYPEER=>false,CURLOPT_URL=>$p,CURLOPT_USERAGENT=>$a));
-      $r=curl_exec($c); $e='invalid config'; if(!$r){$x=curl_error($c); if($x){$e=$x;};}; curl_close($c); // see if we have what it takes
-      if($r!=='OK'){halt(500,"SSL :: $e");};  // YOU HAVE DIED ... our journey ended because we are too insecure ... no SSL support
-      $p=($p.envi('QUERY_STRING')); header("Location: $p"); die(); // continue our journey on our new found sense of security
+      $a='SYS:Verify-SSL'; if(envi('USER_AGENT')===$a){die('?');}; $h=envi('HOST'); $p=("https://$h"); $r=spuf($p,$a,$h);
+      if($r==='OK'){$p=($p.envi('QUERY_STRING')); header("Location: $p"); exit;}; // continue our journey on our new found sense of security
+      if(strpos($r,'Could not resolve')!==false){$q=spuf("http://$h",$a,$h); if($q!=='?'){halt(500,'epic');}}; // DIED .. invalid host config
+      if((strpos($r,'SSL')!==false)&&(strpos($r,'not match')!==false)){halt(500,'epic');}; // YOU HAVE DIED .. broken SSL certificate
+      halt(500,$r);  // YOU HAVE DIED ... our journey ended because we are too insecure ... invalid SSL
    };
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 

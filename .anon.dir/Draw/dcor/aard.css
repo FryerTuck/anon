@@ -68,10 +68,15 @@
 
 #DrawToolPanl .panlHorzLine
 {
-   margin-top:2px;
-   margin-bottom:2px;
+   margin-top:4px;
+   margin-bottom:6px;
 }
 
+#DrawPropTabB .panlHorzLine
+{
+   margin-top:4px;
+   margin-bottom:6px;
+}
 
 
 
@@ -97,7 +102,7 @@
 
 #DrawPropView
 {
-   width:200px; min-width:200px;
+   width:250px; min-width:250px;
    background:hsla(0,0%,0%,0.1);
 }
 
@@ -110,7 +115,7 @@
 
 #DrawPropTabB
 {
-   width:170px; min-width:170px;
+   width:220px; min-width:220px;
    font-size:12px; color:hsla(0,0%,50%,1);
    background:hsla(220,3%,14%,0.8);
 }

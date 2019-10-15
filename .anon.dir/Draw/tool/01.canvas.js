@@ -1,5 +1,22 @@
 
 
+select('#DrawToolPanl').insert
+([
+   {butn:'#DrawButnPickArro .AnonToolButn .icon-floppy-disk', title:'save session ~ canvas', onclick:function(){Anon.Draw.tool.saveSesn()}},
+   {butn:'#DrawButnArroNone .AnonToolButn .icon-image', title:'save image ~ canvas', onclick:function(){Anon.Draw.tool.saveDraw()}},
+
+   {butn:'#DrawButnArroNone .AnonToolButn .icon-point-up', title:'cursor reset ~ canvas', onclick:function(){Anon.Draw.tool.pickNone()}},
+   {butn:'#DrawButnArroNone .AnonToolButn .icon-circle-slash', title:'un-select all ~ canvas', onclick:function(){Anon.Draw.tool.pickNone()}},
+
+   {butn:'#DrawButnArroNone .AnonToolButn .icon-eyedropper', title:'find colour ~ canvas', onclick:function(){Anon.Draw.tool.pickNone()}},
+   {butn:'#DrawButnArroNone .AnonToolButn .icon-download2', title:'merge all ~ canvas', onclick:function(){Anon.Draw.tool.pickNone()}},
+
+   {div:'.panlHorzLine', contents:[{hdiv:''}]},
+]);
+
+
+
+
 select('#DrawPropCanv').insert
 ([
    {grid:'.noSpanVert', contents:
@@ -18,7 +35,7 @@ select('#DrawPropCanv').insert
          {col:'.tiny .midlChld', contents:[{icon:'', face:'versions', size:12}]},
          {col:'.midlChld', contents:[{input:'.dark', type:'range', min:0.05, max:10, step:0.05, value:1, oninput:function()
          {let v=(this.value*1); this.select('^ > input')[0].value=v; Anon.Draw.tool.scal(v,v)}}]},
-         {col:'.tiny .midlChld', contents:[{input:'.toolTextFeed .dark .mini', value:'1 x 1',  demo:'1', title:'scale',
+         {col:'.tiny .midlChld', contents:[{input:'.toolTextFeed .dark .mini', value:'1 x 1',  demo:'1 x 1', title:'scale',
             listen:{'key:Enter':function()
             {
                let nv,nw,nh; nv=this.value.trim().split(' ').join('').split('x'); nw=(nv[0]*1); nh=(nv[1]*1); Anon.Draw.tool.scal(nw,nh);
@@ -46,25 +63,24 @@ select('#DrawPropCanv').insert
 
 extend(Anon.Draw.tool)
 ({
-   zoom:function(ns,fm, sx,sy,nw,nh,os,zs,sb)
+   zoom:function(ns,fm, sx,sy,bx,nw,nh,os,zs,sb)
    {
       if(!isNumr(ns)){return}; let inst=Anon.Draw.vars.actv; let face=inst.vars.canvas; face.find('Transformer').destroy();
       zs=face.dime.zoom.scal; os=face.dime.size; sx=os.sclx; sy=os.scly;
       if(fm){sb=((ns/1000)/2); ns=(zs+sb); this.input.value=round(ns*100);}; sx*=ns; sy*=ns;
-      face.scaleX(sx); face.scaleY(sy); nw=(os.crpw*ns); nh=(os.crph*ns); face.width(nw); face.height(nh);
-      inst.setStyle({width:nw,height:nh}); face.batchDraw();
-      face.dime.zoom.scal=ns;
+      face.scaleX(sx); face.scaleY(sy); face.batchDraw(); bx=face.getClientRect(); nw=Math.floor(bx.width); nh=Math.floor(bx.height);
+      face.width(nw); face.height(nh); inst.setStyle({width:nw,height:nh});  face.dime.zoom.scal=ns;
    }
    .bind({input:select('#DrawPropZoom')}),
 
 
-   scal:function(sx,sy,fm, nw,nh,os,zs,sb)
+   scal:function(sx,sy,fm, bx,nw,nh,os,zs,sb)
    {
       if(!isNumr(sx)||!isNumr(sy)){return}; let inst=Anon.Draw.vars.actv; let face=inst.vars.canvas; face.find('Transformer').destroy();
-      zs=face.dime.zoom.scal; os=face.dime.size; dump(sx,sy);
+      zs=face.dime.zoom.scal; os=face.dime.size;
       if(fm){sb=((ns/1000)/2); sx=round((os.sclx+sb),4); sy=round((os.scly+sb),4); let sv=((sx==sy)?sx:`${sx} x ${sy}`); this.input.value=sv;};
-      face.scaleX(sx); face.scaleY(sy); nw=Math.floor(os.crpw*sx); nh=Math.floor(os.crph*sy); face.width(nw); face.height(nh);
-      inst.setStyle({width:nw,height:nh}); face.batchDraw();
+      face.scaleX(sx); face.scaleY(sy); face.batchDraw(); bx=face.getClientRect(); nw=Math.floor(bx.width); nh=Math.floor(bx.height);
+      face.width(nw); face.height(nh); inst.setStyle({width:nw,height:nh});
       face.dime.size={sclx:sx,scly:sy,crpw:nw,crph:nh,ownw:os.ownw,ownh:os.ownh};
       select('#DrawPropSize').value=`${nw} x ${nh}`; select('#DrawPropCrop').value=`${nw} x ${nh}`;
    }
@@ -93,6 +109,14 @@ extend(Anon.Draw.tool)
       select('#DrawPropSize').value=`${nw} x ${nh}`;
    }
    .bind({input:select('#DrawPropCrop')}),
+
+
+   pickNone:function()
+   {
+      let ai,ci; ai=Anon.Draw.vars.actv; ci=ai.vars.canvas; ci.find('Transformer').destroy(); ci.batchDraw();
+      select('#DrawPropFiltWrap').reclan('show:hide');
+      delete Anon.Draw.vars.actv.vars.active;
+   },
 });
 
 

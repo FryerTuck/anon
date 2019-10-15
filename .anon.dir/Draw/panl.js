@@ -1,7 +1,29 @@
 "use strict";
 
 
-requires(['/Draw/dcor/aard.css','/Proc/libs/konva/konva.min.js']);
+requires
+([
+   '/Draw/dcor/aard.css','Konva:/Proc/libs/konva/konva.min.js',
+   'iro:/Proc/libs/iro/iro.min.js','iro.iroTransparencyPlugin:/Proc/libs/iro/iro-transparency-plugin.min.js'
+],()=>
+{
+   (function()
+   {
+      let func = Konva.Group.prototype.getClientRect;
+      let orig = {enumerable:false, configurable:false, writable:false, value:func};
+      let altr = {enumerable:false, configurable:false, writable:false, value:function(t)
+      {
+         let attr = this.attrs;
+         let resl = this.getOrigClientRect(t);
+         if(attr.hasOwnProperty('clipWidth')){resl.width=attr.clipWidth};
+         if(attr.hasOwnProperty('clipHeight')){resl.height=attr.clipHeight};
+         return resl;
+      }};
+      Object.defineProperty(Konva.Group.prototype,'getOrigClientRect', orig);
+      Object.defineProperty(Konva.Group.prototype,'getClientRect', altr);
+   })();
+});
+
 
 
 
@@ -68,17 +90,17 @@ select('#AnonAppsView').insert
                                     {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
                                     {row:[{col:[{panl:'#DrawPropLayr .DrawPropPanl'}]}]}
                                  ]}]},
-                                 {title:'Active', canClose:0, contents:[{grid:
+                                 {title:'Detail', canClose:0, contents:[{grid:
                                  [
-                                    {row:[{col:'.DrawPropView',contents:'Active'}]},
+                                    {row:[{col:'.DrawPropView',contents:'Detail'}]},
                                     {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
                                     {row:[{col:[{panl:'#DrawPropItem .DrawPropPanl'}]}]}
                                  ]}]},
-                                 {title:'Undone', canClose:0, contents:[{grid:
+                                 {title:'Filter', canClose:0, contents:[{grid:
                                  [
-                                    {row:[{col:'.DrawPropView',contents:'Undone'}]},
+                                    {row:[{col:'.DrawPropView',contents:'Filter'}]},
                                     {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
-                                    {row:[{col:[{panl:'#DrawPropDone .DrawPropPanl'}]}]}
+                                    {row:[{col:[{panl:'#DrawPropFilt .DrawPropPanl'}]}]}
                                  ]}]},
                               ]}
                            ]},
@@ -194,10 +216,11 @@ extend(Anon)
 
             tgt.onFeed(function(d,n, s)
             {
-               s=this; if(n){Anon.Draw.feed(s,d,n);return}; n=d.split('/').pop();
-               Anon.Draw.load(d,(r)=>{Anon.Draw.feed(s,r.src,n);});
+               if(n){Anon.Draw.feed(s,d,n);return}; n=d.split('/').pop();
+               Anon.Draw.load(d,(r)=>{Anon.Draw.feed(r.src,n);});
             });
 
+            Anon.Draw.vars.actv=tgt;
             tgt.vars=slf.deja.pick(tgt,0); //tgt.vars.canvas.find('Transformer').destroy();
             // tick.after(10,()=>{select('#DrawBodyPanl').signal('open',tgt)});
          });
@@ -205,22 +228,12 @@ extend(Anon)
 
 
 
-      feed:function(tgt,v,n,atr, dk,slf,m,l,o,f,q)
+      feed:function(v,n,l, s,m,c)
       {
-         slf=this; tgt.vars.canvas.find('Transformer').destroy(); m=stub(v,';base64,')[0].split(':')[1];
-         l=swap((rstub(n.split('/').pop(),'.')[0]),'.','_'); q=select('#DrawPropLayrMake'); q.value=l; l=Anon.Draw.tool.layrMake(q);
+         s=this; m=stub(v,';base64,')[0].split(':')[1];
 
          if(isin(m,'image')){create({img:'', src:v, onload:function()
-         {
-            if(!atr){dk=1; atr={x:0, y:0, width:this.width, height:this.height, draggable:true, image:this}}
-            else{delete atr.nick; delete atr.kind; delete atr.data; atr.image=this;};
-            o=Anon.Draw.fumb((new Konva.Image(atr))); o.nick=n;
-
-            l.add(o); f=(new Konva.Transformer()); l.add(f); f.attachTo(o); l.draw(); tgt.vars.selected=[o];
-            if(dk){slf.deja.keep(tgt);};
-
-            // select('#DrawBodyPanl').focus();
-         }});return};
+         {s.make({nick:n,type:'Rect', x:0, y:0, width:this.width, height:this.height,fillPatternImage:this},1,l)}});return};
 
          alert('mime type `'+m+'` is not supported .. yet');
       },
@@ -229,19 +242,75 @@ extend(Anon)
 
       fumb:function(o)
       {
-         o.fumble=function(){let i=this.parent; do{i=i.parent}while(i.nodeType!='Stage'); Anon.Draw.deja.keep(i.attrs.container);};
+         o.fumble=function(){select('#DrawBodyPanl').signal('editItem',this); Anon.Draw.deja.keep()};
          o.on('dragend',function(){this.fumble()}); o.on('transformend',function(){this.fumble()});
-         o.on('mousedown',function(){Anon.Draw.tool.pickItem(this)});
          return o;
       },
 
+
+      fidl:function(f)
+      {
+         f=VOID; f=(new Konva.Transformer
+         ({
+            rotateAnchorOffset:10,
+            anchorCornerRadius:3,
+            anchorFill: 'yellow',
+            anchorSize: 6,
+            anchorStroke: 'red',
+            borderDash: [3,3],
+            borderStroke: 'white',
+            borderStrokeWidth:1,
+         }));
+         return f;
+      },
+
+
+      make:function(o,i,l, a,c,t,x,n,fg,bg,f)
+      {
+         a=Anon.Draw.vars.actv; c=a.vars.canvas; c.find('Transformer').destroy(); c.batchDraw(); t=o.type; delete o.type;
+         if(isVoid(o.x)){o.x=0}; if(isVoid(o.y)){o.y=0}; if(isVoid(o.width)){o.width=60}; if(isVoid(o.height)){o.height=30};
+         if(isVoid(o.draggable)){o.draggable=true}; x=(o.nick||t); delete o.nick; if(!l){l=Anon.Draw.tool.layrMake(x)};
+         n=Anon.Draw.fumb((new Konva.Group({x:o.x,y:o.y,draggable:o.draggable,clip:{x:0,y:0,width:o.width,height:o.height}})));
+         delete o.x; delete o.y; delete o.draggable; if(i&&!!o.fillPatternImage){bg=(new Konva[t](o))};
+         if(!!bg){n.add(bg); delete o.fillPatternImage}; fg=(new Konva[t](o)); n.add(fg);
+         // n.attrs.width=o.width; n.attrs.height=o.height;
+
+         l.add(n); f=this.fidl(); l.add(f); f.attachTo(n);
+
+         // n.size=function( a){a=this.attrs; return {width:(a.width||a.clipWidth), height:(a.height||a.clipHeight)}};
+         // extend(n)({getClientRect:function()
+         // {
+         //    let a=this.attrs; return {width:(a.width||a.clipWidth), height:(a.height||a.clipHeight)}
+         // }});
+
+
+         delete a.vars.selected; a.vars.selected=[n]; l.batchDraw();
+         n.nick=l.nick; if(!!bg){n.bg=n.children[0]; n.fg=n.children[1]}else{n.fg=n.children[0]}; n.tr=f;
+         this.deja.keep(); select('#DrawBodyPanl').signal('pickItem',n); return n;
+      },
+
+
+      edit:function(p,v,s, i,l,n)
+      {
+         i=Anon.Draw.vars.actv; l=i.vars.flayer; n=i.vars.active;
+
+         if(!isin(p,['fill','stroke'])){n[p](v)}
+         else
+         {
+            n.fg[p](v);
+         }
+
+         l.batchDraw();
+         if(s||(s==VOID)){select('#DrawBodyPanl').signal('editItem',n);};
+         this.deja.keep();
+      },
 
 
       deja:
       {
          keep:function(tgt, slf,vrs,cux,lux,cnv,dim,mim,rsl,atr)
          {
-            slf=this; vrs=tgt.vars; cux=vrs.unredo.indx; if(!!vrs.unredo.keep[(cux+1)])
+            if(!tgt){tgt=Anon.Draw.vars.actv}; slf=this; vrs=tgt.vars; cux=vrs.unredo.indx; if(!!vrs.unredo.keep[(cux+1)])
             {do{lux=(vrs.unredo.keep.length-1); if(lux>cux){vrs.unredo.keep.pop()}}while(lux>cux);}; // destroy all after this index
 
             cnv=vrs.canvas; dim=cnv.dime; mim=tgt.vars.mimeType; atr={width:dim.size.crpw,height:dim.size.crph,scale:dim.zoom.scal};
@@ -272,17 +341,14 @@ extend(Anon)
 
             if(node.type=='Layer')
             {
-               rsl=(new Konva.Layer()); rsl.nick=node.nick; prnt.add(rsl);
+               rsl=Anon.Draw.tool.layrMake(node.nick);
                node.data.forEach((o)=>{slf.face(o,rsl)}); return rsl;
             };
 
             if(node.type=='Image')
-            {node.attr.draggable=true, node.attr.image=create({img:'', src:node.data}); rsl=(new Konva.Image(node.attr));};
-
-            rsl.nick=node.nick; rsl=Anon.Draw.fumb(rsl);
-
-            if(!!prnt&&(prnt.nodeType=='Layer'))
-            {prnt.add(rsl); box=(new Konva.Transformer()); prnt.add(box); box.attachTo(rsl);};
+            {Anon.Draw.feed(node.data,node.nick,prnt)}
+            else
+            {node.attr.nick=node.nick; Anon.Draw.make(node.attr,VOID,prnt);};
          },
 
 
@@ -304,8 +370,8 @@ extend(Anon)
                if(o.parent&&(o.parent.nodeType=='Group')){o=o.parent}; if(!o.parent||!evnt.evt.ctrlKey)
                {c.find('Transformer').destroy(); c.children.forEach((i)=>{i.draw()}); if(!o.parent){tgt.vars.selected=[];return}};
                if(!evnt.evt.ctrlKey){c.find('Transformer').destroy(); o.parent.draw(); tgt.vars.selected=[]};
-               let f=(new Konva.Transformer()); o.parent.add(f); f.attachTo(o); o.parent.draw();
-               tgt.vars.selected.push(o);
+               let f=Anon.Draw.fidl(); o.parent.add(f); f.attachTo(o); o.parent.draw(); o.tr=f;
+               radd(tgt.vars.selected,o); select('#DrawBodyPanl').signal('pickItem',o);
             });
             return vrs;
          },

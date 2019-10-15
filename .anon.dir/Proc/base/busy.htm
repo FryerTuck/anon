@@ -55,7 +55,7 @@
    {
       if(((typeof k)!='string')||(k.length<1)||((typeof v)!='number')){return}; if(!Busy.node){Busy.init(k,v); return}; Busy.dead=false;
       n=Busy.node; Busy.jobs[k]=((v>100)?100:v); j=Busy.jobs; l=0; t=((Object.getOwnPropertyNames(j)).length*100);
-      for(i in j){if(j.hasOwnProperty(i)){l+=j[i];}}; d=Math.floor((l/t)*100); n.style.opacity=1; n.focus();
+      for(i in j){if(j.hasOwnProperty(i)){l+=j[i];}}; d=Math.floor((l/t)*100); n.style.opacity=1; //n.focus();
       Busy.data=d; m=Math.floor(d/10); g=n.getElementsByClassName('pgrp')[0]; p=g.getElementsByTagName('path');
       i=null; for(i in p){if(p.hasOwnProperty(i)){u=(p[i].getAttribute('name')*1); p[i].style.opacity=((u<=m)?1:0.5);}};
       if(d>0){a=g.getElementsByTagName('animateTransform')[0]; if(a){a.parentNode.removeChild(a);}}; if(d>99){Busy.done()};

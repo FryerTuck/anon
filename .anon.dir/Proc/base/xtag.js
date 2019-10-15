@@ -65,6 +65,20 @@ extend(custom.domtag)
 
 
 
+   svg:function(n,a,c)
+   {
+      if(isPath(c)){a.src=c; c=VOID}; if(!isPath(a.src)){return}; let src=`${a.src}`; delete a.src;
+      n=create('holder');
+      purl(src,function(r)
+      {
+         if(!isin(r.body,'<svg')||!isin(r.body,'</svg>')){r.body=`<svg><text>?</text></svg>`}; let t=create('div'); t.innerHTML=r.body;
+         let f=document.createDocumentFragment(); r=t.select('svg')[0]; r.modify(a); f.appendChild(r); t=VOID; n.replaceWith(r);
+      });
+      return n;
+   },
+
+
+
    treeview:function(n,a,c)
    {
       n.setAttribute('tabindex',-1); n.tabindex=-1;

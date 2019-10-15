@@ -52,6 +52,7 @@ extend(Anon.Draw.tool)
 
    layrMake:function(n)
    {
+      if(isText(n)){let q=n.split('/').pop(); q=swap(((rstub(q,'.')||[q])[0]),'.','_'); n=select('#DrawPropLayrMake'); n.value=q};
       let v,b; v=trim(n.value); b=rectOf(n); if(!v){v=this.layrNick()};
       if(!isWord(v)){select('#DrawPropTabr').driver.select('Layers'); n.notify('invalid layer name',NEED,TL,[0,(b.height+6)]); return};
       v=this.layrNick(v); let inst=Anon.Draw.vars.actv; let face=inst.vars.canvas; face.find('Transformer').destroy();

@@ -25,7 +25,7 @@ namespace Anon;
 
 # refs :: constants : short-hand references to values that are frequently used
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   $h=envi('SERVER_NAME'); if(!$h){$h=envi('HOST');};
+   $h=pget('/Proc/conf/hostName'); if(!$h){$h=envi('SERVER_NAME'); if(!$h){$h=envi('HOST');}};
    defn
    ([
       'ROOTPATH' => envi('ROOTPATH'),
@@ -396,7 +396,8 @@ namespace Anon;
    {
       guiStrap();
       //ekko::head(['Referrer-Policy'=>'origin','cache'=>false,'cookies'=>true]); // send bootStrap headers
-      $r=import('/Proc/base/aard.htm',['botHoney'=>conf('Proc/badRobot')->lure]); echo($r); done(); // send BootStrap GUI keeping headers intact
+      $r=import('/Proc/base/aard.htm',['botHoney'=>conf('Proc/badRobot')->lure]);
+      echo($r); done(); // send BootStrap GUI keeping headers intact
    };
 
    if((envi('METHOD')==='POST')&&facing('API')){$d=file_get_contents('php://input'); if(wrapOf($d)==='{}')

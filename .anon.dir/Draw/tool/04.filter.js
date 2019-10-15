@@ -1,28 +1,18 @@
 
 
-select('#DrawToolPanl').insert
+select('#DrawPropFilt').insert
 ([
-   {butn:'#DrawButnPickArro .AnonToolButn .icon-point-up', title:'pick tool', onclick:function(){Anon.Draw.tool.pickArro()}},
-   {butn:'#DrawButnArroNone .AnonToolButn .icon-circle-slash', title:'pick none', onclick:function(){Anon.Draw.tool.pickNone()}},
-   {div:'.panlHorzLine', contents:[{hdiv:''}]},
-]);
-
-
-
-
-select('#DrawPropItem').insert
-([
-   {div:'#DrawPropItemWrap .hide', contents:
+   {div:'#DrawPropFiltWrap .hide', contents:
    [
-      {div:'#DrawPropItemType', contents:'undefined type'},
-      {tiny:'#DrawPropItemName', contents:'undefined name'},
+      {div:'#DrawPropFiltType', contents:'undefined type'},
+      {tiny:'#DrawPropFiltName', contents:'undefined name'},
       {grid:'.noSpan', style:{marginTop:6}, contents:
       [
          {row:
          [
             {col:'.tiny .midlChld', contents:'H'},
-            {col:'.midlChld', contents:[{input:'.dark', type:'range', min:-180, max:179, step:1, value:0, oninput:function()
-            {let v=((this.value*1)+180); this.select('^ > input')[0].value=v; Anon.Draw.tool.layrHSLA(H,v)}}]},
+            {col:'.midlChld', contents:[{input:'.dark', type:'range', min:0, max:359, step:1, value:0, oninput:function()
+            {let v=(this.value*1); this.select('^ > input')[0].value=v; Anon.Draw.tool.layrHSLA(H,v)}}]},
             {col:'.tiny .midlChld', contents:[{input:'.toolTextFeed .dark .mini', value:0}]},
          ]},
          {row:
@@ -62,36 +52,12 @@ select('#DrawPropItem').insert
 
 extend(Anon.Draw.tool)
 ({
-   pickArro:function()
-   {
-      let ai,ci; ai=Anon.Draw.vars.actv; ci=ai.vars.canvas;
-   },
-
-
-   pickNone:function()
-   {
-      let ai,ci; ai=Anon.Draw.vars.actv; ci=ai.vars.canvas; ci.find('Transformer').destroy(); ci.batchDraw();
-      select('#DrawPropItemWrap').reclan('show:hide');
-      delete Anon.Draw.vars.actv.vars.active;
-   },
-
-
-   pickItem:function(pi)
-   {
-      let ai,ci,ip; ai=Anon.Draw.vars.actv; ci=ai.vars.canvas; Anon.Draw.vars.actv.vars.active=pi;
-      let na,ak,nt; na=pi.attrs; ak=keys(na); nt=(pick(ak,'image,ellipse,rectangle,text')||'polygon');
-      select('#DrawPropItemWrap').reclan('hide:show');
-      select('#DrawPropItemType').innerHTML=nt; select('#DrawPropItemName').innerHTML=pi.nick;
-      select('#DrawPropTabr').driver.select('Active');
-   },
-
-
    layrHSLA:function(w,v)
    {
       let ai,ci; ai=Anon.Draw.vars.actv; ci=ai.vars.canvas;
-      let fl,tn; fl=ai.vars.flayer; tn=ai.vars.active;
+      let fl,tn; fl=ai.vars.flayer; tn=ai.vars.active; if(!tn.anon){tn.anon={}};
 
-      if(!tn.anon){tn.anon={hsla:{H:0,S:0,L:0,A:1}}; tn.cache(); tn.filters([Konva.Filters.HSL,Konva.Filters.Blur])};
+      if(!tn.anon.hsla){tn.anon.hsla={H:0,S:0,L:0,A:1}; tn.cache(); tn.filters([Konva.Filters.HSL,Konva.Filters.Blur])};
 
       if(w==H){tn.hue(v); fl.draw(); return};
       if(w==S){tn.saturation(v); fl.draw(); return};

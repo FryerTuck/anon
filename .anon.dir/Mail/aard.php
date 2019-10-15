@@ -197,7 +197,8 @@ namespace Anon;
       $tn=time(); $lr=pget('/Mail/vars/lastRead'); if(!$lr){$lr=($tn-($ri+1));}; $td=($tn-$lr); if($td<$ri){return;}; // read later
       $l=fuse(pget('$'),pget('/')); $pl=[]; // $a=args(func_get_args());
       foreach($l as $i){if(!isFold("/$i")){continue;}; $x=path::conf("/$i"); $c=pget("$x/autoMail"); if($x&&$c&&!isin($pl,$c)){$pl[]=$c;}};
-      if(!online()){fail('`'.HOSTNAME.'` is offline');};
+      // if(!online()){fail('`'.HOSTNAME.'` is offline');};
+      if(!online()){return;};
       Proc::impede('busy.mail'); foreach($pl as $pv){Mail::openPlug($pv); Mail::fetchBox($pv);}; Proc::resume('busy.mail');
       path::make('/Mail/vars/lastRead',$tn);
    });

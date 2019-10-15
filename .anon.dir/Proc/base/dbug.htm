@@ -225,13 +225,15 @@
                   <ul>
                      <li>at least Apache v2.4 armed with: SSL/TLS, mod_headers, mod_env, mod_rewrite</li>
                      <li>at least PHP v5.6 armed with: curl_init, ftp_get, mb_strlen, gmp_strval, SQLite3, imap_open</li>
-                     <li>that its core file-structure is intact and readable</li>
+                     <li>that the framework's core structure is intact and readable by Apache & PHP</li>
+                     <li>a valid FQDN (with subdomain) and able to resolve its own public host-name</li>
+                     <li>a valid SSL certificate; either self-signed or CA-signed -which has not expired</li>
                   </ul>
                   <p>
-                     Please make sure these dependencies are installed and enabled.<br>
+                     Please make sure the above dependencies are resolved.<br>
                      TIP: If you're upgrading your server, Apache v2.4+ and PHP v7.2+ works well.
                   </p>
-                  <pre>If this issue persists, read the manual</pre>
+                  <pre>If this issue persists, consult the manual</pre>
                </div>
             </div>
 
@@ -315,12 +317,16 @@
 
          window.Select=function(d,h)
          {
-            if(!h){h=document}; var f,r,a,n,s,c; a=[d]; s=a.length; f='querySelectorAll'; r=[]; a.forEach(function(v)
+            if(!h){h=document}; var f,r,a,n,s,c,y; a=[d]; s=a.length; f='querySelectorAll'; r=[]; a.forEach(function(v)
             {
-               c=v[0]; n=h[f](':scope '+v); if((n.length<1)&&(v[0]=='#')){n=h[f](':scope [name='+v.substr(1)+']')};
-               if(n.length<1){return r}; ([].slice.call(n)).forEach(function(i){r.push(i)});
+               try
+               {
+                  c=v[0]; n=h[f](':scope '+v); if((n.length<1)&&(v[0]=='#')){n=h[f](':scope [name='+v.substr(1)+']')};
+                  if(n.length<1){return r}; ([].slice.call(n)).forEach(function(i){r.push(i)});
+               }
+               catch(e){y=1;return};
             });
-            if((s==1)&&(d.indexOf(' ')<0)&&(c=='#')){r=r[0]}else if(!r.forEach){r=[]};
+            if(y){return}; if((s==1)&&(d.indexOf(' ')<0)&&(c=='#')){r=r[0]}else if(!r.forEach){r=[]};
             return r;
          };
 
@@ -363,9 +369,11 @@
                if((location.href+'').indexOf('?#')>-1){dk=(location.href+'').split('?')[1]; df=Select(dk);}; // check fail from URL
                if(df){dbug.fail(dk.substr(1));return}; // direct fail from URL
                if(dbug.data==('{'+':(DBUGDATA):'+'}')){dbug.fail('epic');return}; // direct fail from .htaccess .. no PHP
-               dd=dbug.data; try{dd=atob(dd); dd=JSON.parse(dd);}catch(e){dbug.fail('hack');return;}; // invalid dbug data
+               dd=dbug.data; try{dd=atob(dd); if(Select('#'+dd)){dbug.fail(dd);return}}catch(e){dbug.fail('hack');return;}; // direct or hack
+               try{dd=JSON.parse(dd);}catch(e){dbug.fail('hack');return;}; // invalid dbug data
                dk=['name','mesg','file','line','stak','user','clan']; dk.forEach(function(k){if(!dd[k]){df='hack'}}); // validate dbug data
                dump(dd);
+               if((dd.name=='Boot')&&Select('#'+dd.mesg)){dbug.fail(dd.mesg);return;};
                if(df){dbug.fail('hack');return;}; // invalid dbug data
                if(dd.clan.indexOf('geek')<0){dbug.fail('auto');return;}; // not privileged to see error details
                dbug.data=dd; dbug.view('fail'); // proceed

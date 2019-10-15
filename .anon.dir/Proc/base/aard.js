@@ -39,8 +39,9 @@ window.eval=null;
 const badCfg='{:badCfg:}';
 (function(a,b,s,c)
 {
-   s=HOSTNAME; c=location.host.split('.'); c.shift(); c=c.join('.');
-   if((location.host!=s)&&(c!=s)){wack();return}; a=document.createElement('script'); a.src='/Proc/base/base.js'; a.onload=function()
+   s=HOSTNAME.split('.'); c=location.host.split('.'); if((s.length<3)||(c.length<3)){wack();return};
+   s.shift(); s=s.join('.'); c.shift(); c=c.join('.');if((location.host!=s)&&(c!=s)){wack();return};
+   a=document.createElement('script'); a.src='/Proc/base/base.js'; a.onload=function()
    {
       extend(window)({eval:function(s){return proc('evl',s,window)}});
       requires(['/Proc/base/busy.htm','/Proc/dcor/aard.css','/Proc/base/boot.js']);

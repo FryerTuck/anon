@@ -90,6 +90,7 @@
 
    const isKnob = function(v,g,l){if(((typeof v)!='object')||isList(v)||isNode(v)){return FALS}; return (isVoid(g)||spanIs(v,g,l))};
    const isNode = function(v,g,l){if(!(v instanceof Element)){return FALS}; return (isVoid(g)||spanIs(v.childNodes.length,g,l))};
+   const isTemp = function(v){return (v instanceof DocumentFragment)};
    const isMain = function(v){if(!v||isBool(v)){return FALS}; return (v.isMaster||v.isWorker);};
 
    const isFunc = function(v,g,l){if(!((typeof v)==='function')){return FALS}; return true;};
@@ -272,6 +273,8 @@
          MAIN.dispatchEvent((new CustomEvent('dump',{detail:x})));
       });
    }.bind({ckb:0,mkb:64,old:0});
+
+   const dumpIf = function(c,d){if(c){dump(d)}};
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -436,6 +439,24 @@
       if(!isText(v,2)){return}; let r=v; if(isin(r,'://')){r=r.split('://')[1]}; r=stub(r,'/'); if(!r){return};
       r=('/'+r[2]); r=r.split('//').join('/'); r=r.split(' ').join('_'); r=r.split('?')[0]; return (isPath(r)?r:VOID);
    };
+
+   const argval = function(v)
+   {
+      if(isText(v)){v=trim(v)}; if(!isText(v,1)){return v}; let d=pick(v,[',',' x ',' ']);
+      if(!d){return (!isNaN(v)?(v*1):v)}; let r=[]; v.split(d).forEach((i)=>{radd(r,(!isNaN(i)?(i*1):i))});
+      return r;
+   };
+
+   const argToObj = function(a,o, r,i,l,z)
+   {
+      if(!isKnob(o)){return}; if(isText(a)){a=argval(a)}; if(!isList(a)){a=[a]}; r={}; i=(0-1); l=(a.length-1); z=a[(a.length-1)];
+      o.each((v,k)=>
+      {
+         i++; let q=((i>l)?z:a[i]); if(v=='*'){r[k]=q;return};
+         let f=constant(`is${proprCase(v)}`); if(!isFunc(f)||!f(q)){r=VOID; return STOP}; r[k]=q;
+      });
+      return r;
+   };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -525,13 +546,13 @@
 
 // func :: frag : returns part(s) of a string or array .. supports negative-start-pos-int and length-int .. supports negative-end-pos int
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   const frag = function(d,x,l, s,p,i)
+   const frag = function(d,x,l, s,p,i,r,z)
    {
       if(isVoid(l)&&(isVoid(x)||(x==='')||(x===0)||(x===1))){return (isText(d)?d.split(''):d)}; // chunk by 1
       if(!isText(d)&&!isList(d)){return}; if(isText(d)&&isText(x)&&isVoid(l)){return d.split(x)}; // chunk by delimiter
       if(isText(d)&&isNumr(x)&&isVoid(l)){s=Math.ceil(d.length/x);r=[];for(i=0;i<s;i++){p=(i*x);r[i]=d.substring(p,(p+x))};return r};// chunk n
 
-      let z,r; z=(span(d)-1); if(z<0){return}; if(isList(d)&&isVoid(l)){l=z}; if(isNumr(x)&&(x<0)){x=(z+x);if(isVoid(l)){l=z}};
+      z=(span(d)-1); if(z<0){return}; if(isList(d)&&isVoid(l)){l=z}; if(isNumr(x)&&(x<0)){x=(z+x);if(isVoid(l)){l=z}};
       if(isNumr(l)&&(l<0)){l=(z+l);}; if(!isNumr(x)){x=d.indexOf(x)}; if(!isNumr(l)){l=d.indexOf(l)}; if((x<1)||(l<1)){return}; // void
       if(isText(d)){return d.substring(x,l)}; if(isList(d)){return d.slice(x,l)}; // slice
    };
@@ -603,6 +624,9 @@
 
       lpop:function(){let r=this.shift(); return r},
       rpop:function(){let r=this.pop(); return r},
+
+      last:function(){let z=(this.length-1); return ((z<0)?VOID:this[z])},
+      item:function(x){if(!isInum(x)){return}; if(x<0){x=(this.length+x)}; return this[x];},
    });
 
    const ladd = function(a,i){a.ladd(i); return a};
@@ -610,6 +634,20 @@
 
    const lpop = function(a,i){let r=a.lpop(); return r};
    const rpop = function(a,i){let r=a.rpop(); return r};
+
+   const last = function(a){let r=a.last(); return r};
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: sval : simple string parsed value
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const sval = function(a)
+   {
+      if(!isText(a)){return}; let b=a.trim(); b=b.toLowerCase(); if((1>b.length)||("null"===b)||("undefined"===b)){return null};
+      if("true"===b){return!0}; if("false"===b){return!1}; if((a[0]=='+')&&!isNaN(a.slice(1))){a=a.slice(1)};
+      if(!isNaN(a)){return (a*1)}; return a;
+   };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -618,14 +656,112 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const dval = function(a)
    {
-      if(!isText(a)){return}; a=a.trim(); var b=a.toLowerCase(); if((1>b.length)||("null"===b)||("undefined"===b)){return null};
-      if("true"===b){return!0}; if("false"===b){return!1}; var r=VOID;
-      if((a[0]=='+')&&!isNaN(a.slice(1))){a=a.slice(1)}; if(!isNaN(a)){return (a*1)}; let w=wrapOf(a);
+      let b=sval(a); if(b!=a){return b}; let w=wrapOf(a); let r=VOID;
       if(isin(["{}","[]"],w)){try{b=JSON.parse(a)}catch(c){return null}return b}; if(isin(['""',"''","``"],w)){return unwrap(a)};
       let q=a.indexOf(':'); if(q>-1){q=camelCase((a.slice(0,q)).trim())};  if((w==='<>')||!isWord(q)){return a};
       a=a.split("\r\n").join("\n").split("\n");  r=null; a.forEach((l)=>{let p=stub(l,':'); if(!r){r=(p?{}:[]);};
       if(!p){r[r.length]=dval(l);return;}; let k=camelCase(p[0].trim());
       let v=(((p[2].indexOf(':')>-1)&&(p[2].indexOf('{')<0))?p[2].trim():dval(p[2])); r[k]=v;}); return r;
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: farg : extract argument values from function-like string .. `n` forces numeric if n is true .. typically used for CSS parsing
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const farg = function(d,n, t,r)
+   {
+      if(isText(d)){d=rtrim(trim(d),';')}; if(!isText(d,1)){return}; d=rtrim(d,')'); d=d.split('(').pop(); r=[]; d.split(',').forEach((v)=>
+      {v=v.trim(); if(n&&v.endsWith('%')){t=rtrim(v,'%'); if(!isNaN(t)){v=((t*1)/100)}}; if(!isNaN(v)){v*=1}; r.radd(v)});
+      return r;
+   }
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: hext : validate, purify & enrich hex string .. removes `#` .. `o` is "octa"
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const hext = function(d,o, l)
+   {
+      if(isText(d)){d=lowerCase(trim(trim(d),'#'));}; if(!test(d,/^[a-f0-9]{3,8}$/)){return};
+      if(d.length<5){l=[]; d.split('').forEach((c)=>{radd(l,(c+''+c))}); d=l.join('');};
+      if(o&&d.length<8){d=(d+'ff')}; l=d.length; if((!o&&(l<6))||(o&&(l!=8))){return}; return d;
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: (color-space) : convert between hsl,hsv,rgb,hex
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const hsv2hsl = (h,s,v,l=v-v*s/2,m=Math.min(l,1-l)) => [h,m?(v-l)/m:0,l];
+   const hsl2hsv = (h,s,l,v=s*Math.min(l,1-l)+l) => [h, v?2-2*l/v:0, v];
+
+   const rgb2hsv = function(r,g,b,a)
+   {
+      if(isText(r)){r=farg(r,1)}; if(isList(r)){a=r[3]; b=r[2]; g=r[1]; r=r[0]};
+      let v=Math.max(r,g,b), n=v-Math.min(r,g,b); let h= n && ((v==r) ? (g-b)/n : ((v==g) ? 2+(b-r)/n : 4+(r-g)/n));
+      let z=[60*(h<0?h+6:h), v&&n/v, v]; if(isNumr(a)){z.radd(a)}; return z;
+   }
+
+   const hsv2rgb = function(h,s,v,a)
+   {
+      if(isText(h)){h=farg(h,1)}; if(isList(h)){a=h[3]; v=h[2]; s=h[1]; h=h[0]};
+      let f= (n,k=(n+h/60)%6) => v - v*s*Math.max( Math.min(k,4-k,1), 0);
+      let z=[f(5),f(3),f(1)]; z.forEach((v,k)=>{z[k]=Math.round(v*255)});
+      if(isNumr(a)){z.radd(a)}; return z;
+   };
+
+   const rgb2hsl = function(r,g,b,a)
+   {
+      if(isText(r)){r=farg(r,1)}; if(isList(r)){a=r[3]; b=r[2]; g=r[1]; r=r[0]};
+      let q=Math.max(r,g,b), n=q-Math.min(r,g,b), f=(1-Math.abs(q+q-n-1));
+      let h= n && ((q==r) ? (g-b)/n : ((q==g) ? 2+(b-r)/n : 4+(r-g)/n));
+      let z=[60*(h<0?h+6:h), f ? n/f : 0, (q+q-n)/2]; if(isNumr(a)){z.radd(a)}; return z;
+   }
+
+   const hsl2rgb = function (h,s,l,a)
+   {
+      if(isText(h)){h=farg(h,1)}; if(isList(h)){a=h[3]; l=h[2]; s=h[1]; h=h[0]};
+      let q=s*Math.min(l,1-l);
+      let f= (n,k=(n+h/30)%12) => l - q*Math.max(Math.min(k-3,9-k,1),-1);
+      let z=[f(0),f(8),f(4)]; z.forEach((v,k)=>{z[k]=Math.round(v*255)});
+      if(isNumr(a)){z.radd(a)}; return z;
+   }
+
+   const hex2rgb = function(d)
+   {
+      let x,l,r; x=hext(d,((span(d)==4)||(span(d)==8))); if(!x){return}; l=frag(d,2); r=[];
+      l.forEach((v,k)=>{v=ltrim(v,'0'); if(!v){v='0'}; radd(r,parseInt(v,16))}); if(r.length>3){r[3]=round((r[3]/255),4)};
+      return r;
+   };
+
+   const rgb2hex = function(r,g,b,a)
+   {
+      let l; if(isText(r)){r=farg(r,1)}; if(isList(r)){l=r}else{l=[r,g,b,a]}; let z=[];
+      l.forEach((v,k)=>{v=(v*1); if(k>2){v=Math.ceil(255*v)}; v=v.toString(16); if(span(v)<2){v=`0${v}`}; z.radd(v)});
+      z=z.join(''); return z;
+   };
+
+   const hsl2hex = function(h,s,l,a)
+   {
+      return rgb2hex(hsl2rgb(h,s,l,a));
+   };
+
+   const hsv2hex = function(h,s,v,a)
+   {
+      return rgb2hex(hsv2rgb(h,s,v,a));
+   };
+
+   const hexTxt = function(t,o)
+   {
+      let p,s,f,r; p=stub(trim(t),'('); if(!p){r=hext(t,o); return (r?`#${r}`:VOID)}; s=rtrim(p[0],'a');
+      f=constant(`${s}2hex`); if(!f){return}; r=f(t); if(!r){return}; if(o&&(r.length<8)){r+='ff'}; return `#${r}`;
+   };
+
+   const rgbTxt = function(t)
+   {
+      let p,s,f,r; p=stub(trim(t),'('); if(!p){t=hext(t); if(!t){return}; p=['hex'];}; s=rtrim(p[0],'a'); f=constant(`${s}2rgb`);
+      if(!f){return}; r=f(t); if(!r){return}; s='rgb'; if(r.length>3){s+='a'}; r=r.join(','); return `${s}(${r})`;
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -644,6 +780,18 @@
          let skp=false; each(o,(v)=>{if(skp){return STOP}; if((v===f)||(v===x)||(v===p)){skp=TRUE}});
          if(!skp&&f&&isPath(p)&&l){r.push({call:f,path:p,line:l});}; x++;
       });
+      return r;
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: xmlAtr : given an html attributes string, return an object
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const xmlAtr = function(d)
+   {
+      if(isText(d)){d=d.trim()}; if(!isText(d,1)){return}; let l,r; l=d.split('\n').join(' '); l+=' '; l=swap(l,['   ','  '],' ');
+      r={}; l.split('" ').forEach((i)=>{i=i.trim().split('="'); let k=trim(i[0]); if(!k){return}; let v=sval(i[1]); r[k]=v});
       return r;
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
@@ -699,7 +847,7 @@
       },
       round:function(n,d, r)
       {
-         if(!isNumr(n)){return}; if(!isInum(d)){d=3;}; r=n.toFixed(3); r=rtrim(rtrim(r,'0'),'.');
+         if(!isNumr(n)){return}; if(isInum(n)){return n}; if(!d||!isInum(d)){return Math.round(n)}; r=n.toFixed(d); r=rtrim(rtrim(r,'0'),'.');
          r=(r*1); return r;
       },
    });
