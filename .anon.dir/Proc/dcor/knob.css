@@ -33,7 +33,7 @@
    butn .butnIcon
    {
       width:10px !important;
-      vertical-align:middle !important;
+      text-align:center !important; vertical-align:middle !important;
    }
    butn .butnLine
    {

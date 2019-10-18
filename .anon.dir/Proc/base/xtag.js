@@ -16,22 +16,8 @@ extend(custom.domtag)
 
    butn:function(n,a,c, i)
    {
-      n.setAttribute('tabindex',-1); n.tabindex=-1; if(!c){c=a.text; delete a.text}; i=a.icon; delete a.icon;
-      if(!c&&!i&&!isin(a.class,'icon-')){c='?'}; n.modify(a); n.insert(c); if(!i){return DONE;};
-      n.insert([{grid:[{row:
-      [
-         {col:'.butnIcon',contents:[{icon:i}]},
-         {col:'.butnLine',contents:[{vdiv:''}]},
-         {col:'.butnText',contents:c},
-      ]}]}]);
-      n.listen('ready',ONCE,function()
-      {
-         let bs,pl,pr,ts,th,io,fc,lc; bs=rectOf(this); fc=this.select('.butnIcon')[0]; io=fc.childNodes[0]; lc=this.select('.butnText')[0];
-         pl=cStyle(this,'padding-left'); pr=cStyle(this,'padding-right'); ts=cStyle(this,'font-size'); th=cStyle(this,'line-height');
-         fc.setStyle({paddingRight:pl}); lc.style.paddingLeft=(pr+'px');
-         io.setStyle({display:'block',fontSize:(ts*1.2),lineHeight:(ts*1.5),paddingTop:2});
-      });
-      return DONE;
+      n.setAttribute('tabindex',-1); n.tabindex=-1; if(!c){c=a.text; delete a.text}; i=a.icon;
+      n.modify(a); if((c!=VOID)&&(c!='')){n.insert(c)}; return DONE;
    },
 
 
@@ -84,9 +70,24 @@ extend(custom.domtag)
       n.setAttribute('tabindex',-1); n.tabindex=-1;
       if(!!a.events){n.events=a.events; delete a.events}else if(!!a.listen){n.events=a.listen; delete a.listen}else{n.events={}};
 
-      if(n.events.dragover===VOID){n.events.dragover=function(){this.enclan('dragOver');};};
-      if(n.events.dragleave===VOID){n.events.dragleave=function(){this.declan('dragOver');};};
-      if(n.events.drop===VOID){n.events.drop=function(){dump('caught drop event on `'+this.info.path+'`');};};
+
+      if(a.feedable)
+      {
+         n.feedMe=function(fp,fd)
+         {
+            Busy.edit(fp,0);
+            purl('/User/treeExec',{exec:'upload',path:fp,bufr:fd},(r)=>
+            {Busy.edit(fp,100); if(r.body==OK){this.update(); return}; dump(r.body);});
+         };
+
+         n.onFeed(function(fd,fn){this.feedMe(`${repl.PWD}/${fn}`,fd);});
+
+         n.events.feed=function(fd,fn, hp)
+         {
+            hp=this.info.path; if(!isin(['fold','plug'],this.info.type)){twig(hp)};
+            this.info.root.feedMe(`${hp}/${fn}`,fd);
+         };
+      };
 
 
       if((n.events.RightClick===VOID)&&(n.events.contextmenu===VOID)){n.listen('RightClick',function(e, x,m,t,w,l)

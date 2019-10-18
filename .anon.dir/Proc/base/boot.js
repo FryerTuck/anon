@@ -6,8 +6,9 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    select('script').forEach((n)=>{remove(n)}); extend(Element.prototype)
    ({
+      eval:function(s){return proc('evl',s,window)},
       appendChild:function(n){return proc('add',n,this)},
-      setAttribute:function(k,v){return proc('mod',[k,v],this)}
+      setAttribute:function(k,v){return proc('mod',[k,v],this)},
    });
    extend(XMLHttpRequest.prototype)({open:function(m,u){return proc('xhr',[m,u],this)}});
 // --------------------------------------------------------------------------------------------------------------------------------------------
@@ -28,6 +29,7 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    select('body')[0].insert
    ([
+      {view:'#anonHidnView .full', style:'overflow:hidden; opacity:0'},
       {view:'#anonMarkView .full', style:'overflow:hidden; opacity:0.1', contents:
       [
          // {img:'.cenmid', src:'/Proc/dcor/mark.svg'}

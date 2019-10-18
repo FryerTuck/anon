@@ -195,7 +195,7 @@
    {
       width:36px; height:36px; margin:5px; min-width:36px !important; padding:0px !important;
       background:linear-gradient(0deg, hsla(210,3%,19%,1) 0%, hsla(210,3%,23%,1) 100%);
-      font-size:25px; line-height:35px; text-align:center; color:hsla(0,0%,70%,1);
+      font-size:25px; text-align:center; color:hsla(0,0%,70%,1);
       border-color:hsla(210,3%,26%,1); box-shadow:0px 0px 2px hsla(0,0%,0%,0.4);
    }
    .AnonMainButn:hover

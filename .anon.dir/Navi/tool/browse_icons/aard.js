@@ -31,13 +31,13 @@ extend(Anon.Navi.tool)
          ]},
       ]);
 
-      select('#NaviIconFind input')[0].focus(); g=select('#NaviIconList'); let x=keys(styleSheet('/User/dcor/icon.fnt'));
+      select('#NaviIconFind input')[0].focus(); g=select('#NaviIconList'); let x=keys(styleSheet('/Proc/dcor/icon.woff'));
       g.iconList=[]; x.forEach((i)=>{if(i.startsWith('.icon-')){i=i.split('::')[0].slice(6); radd(g.iconList,i)}}); x=VOID;
 
       g.doSearch=function(w, l,k,s,t,i,d,p)
       {
          w=w.trim(); this.innerHTML=''; if(!w){this.insert({p:'', style:'padding:10px', contents:'nothing to find'});return};
-         if(w=='*'){l=this.iconList}else{l=[]; this.iconList.forEach((q)=>{if(isin(q,w)){radd(l,q)}})}; s=l.length; d=0; p=0;
+         if(w=='*'){l=dupe(this.iconList)}else{l=[]; this.iconList.forEach((q)=>{if(isin(q,w)){radd(l,q)}})}; s=l.length; d=0; p=0;
          if(s<1){this.insert({p:'', style:'padding:10px', contents:`nothing matched "${w}" .. try: *`});return};
 
          Busy.edit('thinking',1);

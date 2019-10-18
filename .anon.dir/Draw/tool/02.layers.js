@@ -71,7 +71,7 @@ extend(Anon.Draw.tool)
       {
          if(!lo.anon){lo.anon={name:lo.nick,lock:0,hide:0}};
          let hdn,lck; hdn=(lo.anon.hide?'eye-blocked':'eye1'); lck=(lo.anon.lock?'lock1':'unlocked');
-         lv.insert({grid:'.noSpan .selectable', name:lo.nick, info:lo.anon, canFocus:1,
+         lv.insert({grid:'.noSpanVert .selectable', name:lo.nick, info:lo.anon, canFocus:1,
          listen:{click:function(){Anon.Draw.tool.layrPick(this);}},
          contents:[{row:
          [

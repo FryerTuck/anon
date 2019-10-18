@@ -21,7 +21,7 @@
       {
          requires
          ([
-            '/User/dcor/icon.fnt','marked:/Proc/libs/marked/marked.js','/Proc/libs/marked/marked.css',
+            'marked:/Proc/libs/marked/marked.js','/Proc/libs/marked/marked.css',
             '/Proc/libs/prism/prism.js','/Proc/libs/prism/prism.css'
          ],()=>
          {

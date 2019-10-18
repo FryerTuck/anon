@@ -2,21 +2,21 @@
 
 select('#DrawToolPanl').insert
 ([
-   {butn:'#DrawButnMakeRect .AnonToolButn .icon-checkbox-unchecked', title:'rectangle ~ detail', onclick:function(){Anon.Draw.tool.makeRect()}},
-   {butn:'#DrawButnMakeElip .AnonToolButn .icon-radio-unchecked', title:'ellipse ~ detail', onclick:function(){Anon.Draw.tool.makeElip()}},
+   {butn:'#DrawButnMakeRect .AnonToolButn', icon:'checkbox-unchecked', title:'rectangle ~ detail', onclick:function(){Anon.Draw.tool.makeRect()}},
+   {butn:'#DrawButnMakeElip .AnonToolButn', icon:'radio-unchecked', title:'ellipse ~ detail', onclick:function(){Anon.Draw.tool.makeElip()}},
 
-   {butn:'#DrawButnMakeLine .AnonToolButn .icon-opt', title:'line ~ detail', onclick:function(){Anon.Draw.tool.makeLine()}},
-   {butn:'#DrawButnMakeText .AnonToolButn .icon-star-empty', title:'polygon ~ detail', onclick:function(){Anon.Draw.tool.makePoly()}},
+   {butn:'#DrawButnMakeLine .AnonToolButn', icon:'opt', title:'line ~ detail', onclick:function(){Anon.Draw.tool.makeLine()}},
+   {butn:'#DrawButnMakeText .AnonToolButn', icon:'star-empty', title:'polygon ~ detail', onclick:function(){Anon.Draw.tool.makePoly()}},
 
-   {butn:'#DrawButnMakeText .AnonToolButn .icon-text-color', title:'text ~ detail', onclick:function(){Anon.Draw.tool.makeText()}},
-   {butn:'#DrawButnMakeText .AnonToolButn .icon-sphere', title:'mesh ~ detail', onclick:function(){Anon.Draw.tool.makeMesh()}},
+   {butn:'#DrawButnMakeText .AnonToolButn', icon:'text-color', title:'text ~ detail', onclick:function(){Anon.Draw.tool.makeText()}},
+   {butn:'#DrawButnMakeText .AnonToolButn', icon:'sphere', title:'mesh ~ detail', onclick:function(){Anon.Draw.tool.makeMesh()}},
 
    {div:'.panlHorzLine', contents:[{hdiv:''}]},
 
-   {butn:'#DrawButnMakeText .AnonToolButn', title:'stencil-inside ~ detail', contents:[{div:'.icon-scissors .flipVert'}],
+   {butn:'#DrawButnMakeText .AnonToolButn', title:'stencil-inside ~ detail', contents:[{icon:'.flipVert', face:'scissors'}],
       onclick:function(){Anon.Draw.tool.cutBelow(O)
    }},
-   {butn:'#DrawButnMakeText .AnonToolButn', title:'stencil-outside ~ detail', contents:[{i:'.icon-scissors'}],
+   {butn:'#DrawButnMakeText .AnonToolButn', title:'stencil-outside ~ detail', contents:[{icon:'scissors'}],
       onclick:function(){Anon.Draw.tool.cutBelow(I)
    }},
 
@@ -89,7 +89,7 @@ extend(Anon.Draw.tool)
                let s=dupe(v); v.x=0; v.y=0; Anon.Draw.edit('clip',v); tick.after(10,()=>{Anon.Draw.edit('size',s)});
             }}
          }]},
-         {div:'', style:{padding:2}, contents:[{input:'#DrawPropItemFill .toolTextFeed .dark', icon:'paintcan', demo:'#BadA5588',
+         {div:'', style:{padding:2}, contents:[{input:'#DrawPropItemFill .toolTextFeed .dark', icon:'paint-format', demo:'#BadA5588',
             title:'fill (hex|rgb|hsl|hsv)', value:`${(av.fill||'')}`,
 
             paint:function(c)
@@ -106,10 +106,9 @@ extend(Anon.Draw.tool)
                let ae,bx,gp,cs,si,sx,li; ae=Anon.Draw.vars.actv.vars.active; if(!ae){return}; bx=ae.size();
                if(!bx.width){bx={width:ae.attrs.clipWidth,height:ae.attrs.clipHeight};}; gp=rectAnglPlot(bx,a,s); li=(l.length-1);
                cs=[]; si=(1/(l.length-1)); sx=0; l.forEach((i,k)=>{if(k==li){sx=1}; cs.radd(sx); cs.radd(rgbTxt(i)); sx=round((sx+si),3)});
-// dump('\n');
+
                if(f=='lin')
                {
-// dump(gp.bgn,gp.end,cs);
                   ae.fg.fill(null);
                   ae.fg.fillLinearGradientStartPoint(gp.bgn);
                   ae.fg.fillLinearGradientEndPoint(gp.end);
@@ -128,11 +127,14 @@ extend(Anon.Draw.tool)
             {
                'RightClick':function()
                {
-                  let sr,ev,vp,fs,cl,si,sc,bx; sr=this.getSelection(1); ev=this.value; vp=stub(ev,' ');  if(vp){fs=vp[0]; cl=vp[2]};
+                  let sr,ev,vp,fs,gr,gs,cl,si,sc,bx; sr=this.getSelection(1); ev=this.value; vp=stub(ev,' ');  if(vp){fs=vp[0]; cl=vp[2]};
                   if(sr&&vp&&isin(cl,' ')){this.notify(`extra space wastes the selection index`);return};
                   sc=this.getSelection(); if(sc){sc=rgbTxt(sc)}else{sc=VOID};
+                  if(fs&&isin(fs,'^')){vp=stub(fs,':'); fs=vp[0]; vp=stub(vp[2],'^'); gr=(vp[0]*1); gs=(vp[2]*1);};
+                  if(!isNumr(gr)){gr=0}; if(!isNumr(gs)){gs=1};
+                  if(cl){cl=cl.split('+'); if(!sc){sc=rgbTxt(cl.pop())}};
 
-                  bx=popColor(this,DARK,sc);
+                  bx=popColor(this,DARK,sc,gr,gs);
 
                   bx.listen('change',function(e)
                   {
@@ -151,6 +153,14 @@ extend(Anon.Draw.tool)
                   this.paint();
                },
             }
+         }]},
+
+         {div:'', style:{padding:2}, contents:[{input:'#DrawPropItemStrk .toolTextFeed .dark', icon:'pencil', demo:'1 solid #BadA5588',
+            title:'stroke (width type color)', value:``, listen:{'key:Enter':function(e)
+            {
+               dump(this.value);
+               // Anon.Draw.edit('stroke',v);
+            }}
          }]},
 
          {div:'.panlHorzLine', contents:[{hdiv:''}]},

@@ -386,6 +386,8 @@ namespace Anon;
    if(($tmn-$ldb)>$dbs){require(path('/Proc/base/keep.php')); upkeep($dbs,$ldb,$tmn);}; unset($dbs,$ldb,$tmn);
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
+// path::make('/Proc/dcor/zico.woff',decode::b64(pget('/Proc/dcor/icon.fnt')));
+// done('!');
 
 
 # cond :: flow : serve configured shortcuts .. tighten security .. if facing GUI -then boot the GUI
@@ -414,8 +416,9 @@ namespace Anon;
    {
       $a=scan('$'); $b=scan('/',FOLD); $l=concat($a,$b); $r=[]; foreach($l as $i)
       {
-         $p=path::conf($i); if(!$p||($i==='Proc')){continue;}; $d=dval(pget("$p/autoboot"));
-         if(is_assoc_array($d)&&(fext($d['client'])==='js')){$r[]=$d['client'];};
+         $p=path::conf($i); if(!$p){continue;}; $d=dval(pget("$p/autoboot")); if(!is_assoc_array($d)||!isset($d['client'])){continue;};
+         $d=$d['client']; if(!$d){continue;}; if(isText($d)){$d=[$d];}; if(!isNuma($d)){continue;};
+         foreach($d as $f){if(!isText($f)){fail("invalid `autoboot` config in: `$p/autoboot`");}; $r[]=$f;};
       };
       finish(NAVIPATH,['bootList'=>tval($r)]);
    }

@@ -283,6 +283,19 @@ namespace Anon;
             done("TODO :: delete remote $t over $XP");
          };
 
+
+         if($q->exec==='upload')
+         {
+            if(!$X)
+            {
+               if(isPath($h,X)){$h=path::inic($h);}; $b=furl($q->bufr);
+               $r=path::make($h,$b->data); if($r){done(OK);}; fail("failed to upload $h");
+            };
+
+            done("TODO :: upload remote file over $XP");
+         };
+
+
          fail("undefined action `$q->exec`");
       }
    }

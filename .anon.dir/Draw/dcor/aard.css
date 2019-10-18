@@ -66,6 +66,12 @@
    padding:2px;
 }
 
+#DrawToolPanl butn.AnonToolButn
+{
+   margin-top:2px !important;
+   margin-bottom:0px !important;
+}
+
 #DrawToolPanl .panlHorzLine
 {
    margin-top:4px;
@@ -74,7 +80,7 @@
 
 #DrawPropTabB .panlHorzLine
 {
-   margin-top:4px;
+   margin-top:6px;
    margin-bottom:6px;
 }
 

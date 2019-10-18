@@ -9,6 +9,37 @@
 // "use strict"; .. already defined in abec.js
 
 
+// func :: globVars : immutable globals
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const globVars = function(d)
+   {
+      if(isText(d,1)){return this[d]}; if(!isKnob(d,1)){return};
+      d.each((v,k)=>{if(k.length<1){return}; if(this[k]!=VOID){return}; this[k]=v});
+   }.bind({});
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+// func :: mimeType|typeMime : return mime-type from path -or file-extension -OR- return file-extension from mime-type
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const mimeType = function(d)
+   {
+      if(!isText(d)){return}; if(isin(d,'.')){d=d.split('.').pop()}; if(!isText(d,1)){return};
+      return globVars('mime')[d];
+   };
+
+   const typeMime = function(d)
+   {
+      if(!isText(d,3)||!isin(d,'/')){return};
+   };
+
+   globVars({mime:decode.jso(`{:conf('Proc/mimeType'):}`)});
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
 // shiv :: Cookies : https://github.com/js-cookie/js-cookie
 // --------------------------------------------------------------------------------------------------------------------------------------------
    !function(e){var n=!1;if("function"==typeof define&&define.amd&&(define(e),n=!0),"object"==typeof exports&&(module.exports=e(),n=!0),!n){var o=window.Cookies,t=window.Cookies=e();t.noConflict=function(){return window.Cookies=o,t}}}(function(){function g(){for(var e=0,n={};e<arguments.length;e++){var o=arguments[e];for(var t in o)n[t]=o[t]}return n}return function e(l){function C(e,n,o){var t;if("undefined"!=typeof document){if(1<arguments.length){if("number"==typeof(o=g({path:"/"},C.defaults,o)).expires){var r=new Date;r.setMilliseconds(r.getMilliseconds()+864e5*o.expires),o.expires=r}o.expires=o.expires?o.expires.toUTCString():"";try{t=JSON.stringify(n),/^[\{\[]/.test(t)&&(n=t)}catch(e){}n=l.write?l.write(n,e):encodeURIComponent(String(n)).replace(/%(23|24|26|2B|3A|3C|3E|3D|2F|3F|40|5B|5D|5E|60|7B|7D|7C)/g,decodeURIComponent),e=(e=(e=encodeURIComponent(String(e))).replace(/%(23|24|26|2B|5E|60|7C)/g,decodeURIComponent)).replace(/[\(\)]/g,escape);var i="";for(var c in o)o[c]&&(i+="; "+c,!0!==o[c]&&(i+="="+o[c]));return document.cookie=e+"="+n+i}e||(t={});for(var a=document.cookie?document.cookie.split("; "):[],s=/(%[0-9A-Z]{2})+/g,f=0;f<a.length;f++){var p=a[f].split("="),d=p.slice(1).join("=");this.json||'"'!==d.charAt(0)||(d=d.slice(1,-1));try{var u=p[0].replace(s,decodeURIComponent);if(d=l.read?l.read(d,u):l(d,u)||d.replace(s,decodeURIComponent),this.json)try{d=JSON.parse(d)}catch(e){}if(e===u){t=d;break}e||(t[u]=d)}catch(e){}}return t}}return(C.set=C).get=function(e){return C.call(C,e)},C.getJSON=function(){return C.apply({json:!0},[].slice.call(arguments))},C.defaults={},C.remove=function(e,n){C(e,"",g(n,{expires:-1}))},C.withConverter=e,C}(function(){})});
@@ -459,6 +490,29 @@
             }); return NEXT;
          };
 
+         if(isin(['woff','ttf','otf'],x))
+         {
+            opentype.load(i,function(err,fnt)
+            {
+               d--; slf.done[this.pth]=1; if(err){dump(err);return}; let fln,fam,mim,css,hsh,fmt,ico,reg;
+               fln=this.pth.split('/').pop().split('.')[0]; fam=this.fam; if(!fam){fam=(fnt.names.fontFamily.en||fln)};
+               hsh=md5(this.pth); fmt=fnt.outlinesFormat; ico=(isin(lowerCase(fam),'icon')||isin(lowerCase(fln),'icon'));
+               reg=(ico||isin(lowerCase(fnt.names.fontSubfamily),'regular')); reg=((reg||ico)?` font-weight:normal; font-style:normal;`:'');
+               css=`@font-face{font-family:'${fam}'; src:url('${this.pth}') format('${fmt}');${reg}}\n\n`;
+               if(ico){css+=`[class^="${fam}-"], [class*=" ${fam}-"] {font-family:'${fam}' !important; speak:none; font-style:normal; `};
+               if(ico){css+=`font-weight:normal; font-variant:normal; text-transform:none; line-height:1; `};
+               if(ico){css+=`-webkit-font-smoothing:antialiased; -moz-osx-font-smoothing: grayscale;}\n\n`};
+               if((this.fam||ico)&&(fnt.glyphNames.names.length>0)){fnt.glyphs.glyphs.each((g)=>
+               {
+                  if(!g.unicode||!g.name||g.name.startsWith('.')){return}; let c=g.unicode.toString(16);
+                  css+=`.${fam}-${g.name}:before{content:"\\${c}";}\n`;
+               })};
+               document.head.insert({style:'', purl:this.pth, contents:css});
+            }
+            .bind({fam:p,pth:i}));
+            return;
+         };
+
          fail('unsupported file-extension `'+x+'`'); return STOP; // loop must not reach here
       });
 
@@ -649,7 +703,11 @@
    ({
       onFeed:function(h)
       {
-         this.ondragover=function(e){e.preventDefault();e.stopPropagation();}; this.handle=h; this.ondrop=function(e,s)
+         this.handle=h;
+         this.ondragover=function(e){e.preventDefault();e.stopPropagation(); this.focus()};
+         this.ondragenter=function(e){this.focus()};
+         this.ondragleave=function(e){this.blur()};
+         this.ondrop=function(e,s)
          {
             e.preventDefault(); e.stopPropagation(); var d,l,z; d=e.dataTransfer; l=d.files; s=this; z=([...l]);
             if(z.length<1){let r=d.getData('text/plain'); if(pathOf(r)){durl(r,function(t,f){s.handle(t,f);});return}; s.handle(r);return;};
@@ -965,8 +1023,8 @@
    const styleSheet = function(d)
    {
       let r,z; r=VOID; z={}; if(!isText(d,1)){return}; (document.styleSheets.each((v)=>
-      {if((v.ownerNode.purl==d)||(v.ownerNode.id==d)||isin(v.className,d)){r=listOf(v.rules); return STOP}})); if(!r){return};
-      r.forEach((i)=>
+      {if((v.ownerNode.purl==d)||isin(v.ownerNode.href,d)||(v.ownerNode.id==d)||isin(v.className,d)){r=listOf(v.rules); return STOP}}));
+      if(!r){return}; r.forEach((i)=>
       {
          let s=i.selectorText; let p={}; if(!s||!isin(i.cssText,';')){return}; let q=trim(unwrap(trim(i.cssText.split(s)[1]))).split(';');
          q.forEach((y)=>{y=stub(y,':'); if(!y){return}; let k=trim(y[0]); let v=trim(y[2]); if(isNumr(v)){v*=1}else{v=unwrap(v)}; p[k]=v});
@@ -1532,9 +1590,26 @@
 
 
 
+// func :: image2Canvas : shorthand to load an image from URL into a hidden canvas
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const image2Canvas = function(iu,fn)
+   {
+      if(!isText(iu)||!isFunc(fn)){return};
+      create({img:'',src:iu, onload:function(ev, rc,ow,oh,hv,rx)
+      {
+         ow=this.width; oh=this.height; rc=create({canvas:'', width:ow, height:oh, style:{width:ow,height:oh}});
+         hv=select('#anonHidnView'); hv.appendChild(rc); rx=rc.getContext('2d'); rx.drawImage(this,0,0);
+         fn(rc,rx);
+      }});
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
 // func :: popColor : color picker
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   const popColor = function(el,bg,sc, mb,bx,pw)
+   const popColor = function(el,bg,sc,gr,gs, mb,bx,pw)
    {
       if(isFunc(bg)){cb=bg; bg=VOID; bg=LITE;}; remove('#AnonPopColor');
       if(!isNode(el)){fail('expecting 1st arg as :node:');return};
@@ -1549,25 +1624,27 @@
             [
                {svg:'#AnonPopColorDial', src:'/Proc/dcor/dial.svg',
                   onready:function(){this.initRota()},
-                  initRota:function(degr,di,dw,dh,hw,hh,rota,scal)
+                  initRota:function(degr,di,dw,dh,hw,hh,rc,rota,scal)
                   {
                      let vs=stub(el.value,'+'); if(!vs||(!vs[2].trim())){return};
-                     if(this.rotaInited){return}; this.rotaInited=1; this.style.opacity=1; this.root=mb;
+                     if(this.rotaInited){return}; this.rotaInited=1; this.style.opacity=1; this.root=mb; rc=50;
                      degr=this.select('#AnonColrDialDegr'); di=rectOf(this); dw=di.width; dh=di.height; hw=(dw/2); hh=(dh/2);
                      rota=this.select('#AnonColrDegrRota'); scal=this.select('#AnonColrDialScal');
+                     rota.setAttribute(`transform`,`rotate(${gr} ${rc} ${rc})`);
+                     scal.setAttribute(`transform`,`rotate(${gr} ${rc} ${rc}) matrix(${gs},0,0,${gs},${rc-gs*rc},${rc-gs*rc})`);
                      degr.listen('mousemove',(e)=>
                      {
                         if(!cursor.grab){return}; let c,x,y,r,d,q,s; c=e.coords; x=(c[0]-di.x); x=((x<hw)?(0-(hw-x)):((x>hw)?(x-hw):0));
-                        y=(c[1]-di.y); y=((y<hh)?(0-(hh-y)):((y>hh)?(y-hh):0)); r=Math.atan2(y,x); d=(r*(180/Math.PI));
-                        d+=180; d=round(d,3); if(d>359.999){d=0}; rota.setAttribute(`transform`,`rotate(${d} 50 50)`);
-                        q=(scal.getAttribute(`transform`)||''); c=50; s=1;
-                        q=RotScaTra.knob(addIfMissing(q,{rotate:`rotate(0 ${c} ${c})`, matrix:` matrix(1,0,0,1,${c-s*c},${c-s*c})`}));
+                        y=(c[1]-di.y); y=((y<hh)?(0-(hh-y)):((y>hh)?(y-hh):0)); r=Math.atan2(y,x); d=(r*(180/Math.PI)); c=50; s=1;
+                        d+=180; d=round(d,3); if(d>359.999){d=0}; rota.setAttribute(`transform`,`rotate(${d} ${c} ${c})`);
+                        q=(scal.getAttribute(`transform`)||'');
+                        q=RotScaTra.knob(addIfMissing(q,{rotate:`rotate(0 ${c} ${c})`, matrix:` matrix(${gs},0,0,${gs},${c-s*c},${c-s*c})`}));
                         q.rotate=[d,c,c]; scal.setAttribute(`transform`,RotScaTra.text(q)); this.root.signal('change',{angl:d});
                      });
                      mb.listen('wheel',(e)=>
                      {
                         let w,q,c,s,t; w=round((swapPolarity(e.coords[1])/1000),3); q=(scal.getAttribute(`transform`)||''); c=50; s=1;
-                        q=RotScaTra.knob(addIfMissing(q,{rotate:`rotate(0 ${c} ${c})`, matrix:` matrix(1,0,0,1,${c-s*c},${c-s*c})`}));
+                        q=RotScaTra.knob(addIfMissing(q,{rotate:`rotate(0 ${c} ${c})`, matrix:` matrix(${gs},0,0,${gs},${c-s*c},${c-s*c})`}));
                         s=q.matrix[0]; s=minMaxOf((s+w),0.25,2.5); q.matrix=[s,0,0,s,(c-s*c),(c-s*c)];
                         scal.setAttribute(`transform`,RotScaTra.text(q));
                         this.root.signal('change',{scal:round(s,3)});
@@ -1635,9 +1712,9 @@
          bind:function(r,x,y)
          {
             if(isNode(r)){if(!r.id){r.id=('EL'+hash())}; r=('#'+r.id)}; let n=select(r);
-            if(!isNode(n)){fail('expecting node with id '+r+' to exist in the DOM');}; let dx,dy;
-            dx=(cursor.posx-x); dy=(cursor.posy-y);
-            if(!isNumr(x)){x=0;}; if(!isNumr(y)){y=0;}; this.refs[r]={xd:dx,yd:dy};
+            if(!isNode(n)){fail('expecting node with id '+r+' to exist in the DOM');return};
+            if(cStyle(n,'position')!='absolute'){fail('expecting `position:absolute`');return};
+            if(!isNumr(x)){x=0;}; if(!isNumr(y)){y=0;}; this.refs[r]={xd:x,yd:y};
          },
 
          drop:function(r)
@@ -1651,11 +1728,19 @@
             cursor.posx=x; cursor.posy=y; if(span(cursor.refs)<1){return}; let nx,ny;
             cursor.refs.each((p,r)=>
             {
-               let n=select(r); if(!isNode(n)){return}; if(n.style.position!='absolute'){return};
-               nx=(x-p.xd); ny=(y-p.yd);
+               let n=document.getElementById(r.slice(1)); if(!n){return};
+
+               nx=(x+p.xd); ny=(y+p.yd);
                n.style.left=(nx+'px'); n.style.top=(ny+'px');
                n.signal('boundmove',{x:x,y:y});
             });
+         },
+
+         hint:function(m,t,s, b,a)
+         {
+            a=VOID; b=notify(m,t,a,VOID,(s||1000));
+            b.setStyle({left:(cursor.posx+14),top:cursor.posy});
+            document.body.insert(b);
          },
       }
    });

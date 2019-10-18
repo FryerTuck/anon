@@ -91,7 +91,7 @@ namespace Anon;
 
    function isDurl($d,$g=null,$l=null){return (isText($d,20)&&(strpos($d,'data:')===0)&&isin($d,';base64,'));}
 
-   function isFunc($d){return is_closure($d);}
+   function isFunc($d,$s=null){if(!$s){return is_closure($d);}; $x=function_exists($d); if(!$x){$x=function_exists("Anon\\$d");}; return $x;}
    function isKnob($d,$g=null,$l=null){$r=is_object($d); return (!is_int($g)?$r:spanIs($d,$g,$l));}
 
    function isNumr($d,$g=null,$l=null){$r=is_number($d); return (!is_int($g)?$r:spanIs($d,$g,$l));}
@@ -387,7 +387,14 @@ namespace Anon;
       {
          $f="{$b}{$i}{$e}"; if($u){$i=unwrap($i);}; $vn=is_funnic($i); $pn=isee($i);
          if($pn){$r=import($i,$v); if(isVoid($r)&&isFile($i)){$r=pget($i);}}
-         elseif($vn){$r=$v->$i; if($r===null){$r=envi($i); if($r===''){$r=defn($i);}}}else{$r='';};
+         elseif($vn){$r=$v->$i; if($r===null){$r=envi($i); if($r===''){$r=defn($i);}}}
+         elseif(isin($i,'('))
+         {
+            $p=rshave($i,')'); $p=stub($p,'('); $n=$p[0]; $a=trim($p[2]); $a=swap("[$a]",["['","',","']"],['["','",','"]']);
+            $a=dval($a); if(isFunc($n,1)){$r=call($n,$a);}
+         }
+         // elseif(isin($i,'(')){$p=rshave($i,')'); $p=stub($p,'('); $n=$p[0]; $a=$p[2]; $a=dval("[$a]"); if(isFunc($n)){$r=call($n,$a);}}
+         else{$r='';};
          if(!is_string($r)){$r=tval($r);}; $z=str_replace($f,$r,$z);
       };
       return $z;
@@ -821,6 +828,15 @@ namespace Anon;
       }
 
 
+      static function inic($p)
+      {
+         if(!isPath($p)){return;}; $h=twig($p); $n=rstub($p,'/')[2];
+         $s=rstub($n,'.'); $x=''; if($s){$n=$s[0]; $x=$s[2];}; $s=rstub($n,frag('0123456789',1));
+         if(!$s){$i=0;}else{$i=($s[1].$s[2]); if(!is_numeric($i)){return $p;}; $n=$s[0]; $i=($i*1);}; $i+=1;
+         return "$h/{$n}{$i}{$x}";
+      }
+
+
       static function indx($p)
       {
          $p=isee($p); if(!$p){return;}; if(!is_dir($p)){$p=self::twig($p);};
@@ -877,7 +893,7 @@ namespace Anon;
 
       static function make($p,$v=null)
       {
-         if(!path($p)){return;}; lock::awaits($p); pset($p,$v); lock::remove($p); return true;
+         if(!path($p)){return;}; lock::awaits($p); $r=pset($p,$v); lock::remove($p); return $r;
       }
 
 

@@ -72,7 +72,7 @@
    const isVoid = function(v){return ((v===VOID)||(v===null));};
    const isBool = function(v){return ((v===TRUE)||(v===FALS));};
 
-   const isNumr = function(v,g,l){if(!((typeof v)==='number')){return FALS}; return (isVoid(g)||spanIs(v,g,l))};
+   const isNumr = function(v,g,l){if(!((typeof v)==='number')||isNaN(v)){return FALS}; return (isVoid(g)||spanIs(v,g,l))};
    const isFrac = function(v,g,l){if(!(isNumr(v)&&((v+'').indexOf('.')>0))){return FALS}; return (isVoid(g)||spanIs(v,g,l))};
    const isInum = function(v,g,l){if(!isNumr(v)||isFrac(v)){return FALS}; return (isVoid(g)||spanIs(v,g,l))};
 

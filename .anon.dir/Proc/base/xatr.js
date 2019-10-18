@@ -23,11 +23,19 @@ extend(custom.attrib)
          t=nodeName(n); p=n.parentNode; pb=rectOf(p); nb=rectOf(n); mt=cStyle(n,'margin-top'); ml=cStyle(n,'margin-left');
          pr=cStyle(n,'padding-right'); pt=cStyle(n,'padding-top'); fs=cStyle(n,'font-size'); fc=cStyle(n,'color'); bw=cStyle(n,'border-width');
 
+         if(t=='butn')
+         {
+            let c=n.innerHTML; n.innerHTML=''; let r=[{col:'.butnIcon',contents:[{icon:'', face:v, size:fs}]}];
+            if(c){r.radd({col:'.butnLine',contents:[{vdiv:''}]}); r.radd({col:'.butnText',contents:c})};
+            n.insert({grid:[{row:r}]});
+            return;
+         };
+
          if(t=='input')
          {
             so={marginLeft:(ml+pr+(bw*2)),marginTop:((mt-1)+pt+(bw*2)),color:fc};
             p.insert({icon:'.absTop .absLft', face:v, size:(fs-2), style:so}); n.setStyle({paddingLeft:fs});
-            return true;
+            return;
          };
       });
    },

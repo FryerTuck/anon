@@ -5,7 +5,7 @@
 
 // init :: panl : view
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   requires(['/User/dcor/aard.css','/User/dcor/icon.fnt','/User/dcor/code.fnt','/User/dcor/head.fnt','/User/dcor/butn.fnt'],()=>
+   requires(['/User/dcor/aard.css','/Proc/dcor/code.fnt','/Proc/dcor/head.fnt','/Proc/dcor/butn.fnt'],()=>
    {
       select('#anonPanlView').enclan((userDoes('work')?'full':'part'));
       select('#anonPanlView').insert
@@ -25,7 +25,7 @@
                            {col:'#AnonAppsMenu', contents:(function()
                            {
                               var mods={:(mods):}; var btns=[];
-                              mods.each((v,k)=>{btns.push({butn:('#'+k+'MenuKnob .AnonMainButn .icon-'+v), title:k, listen:
+                              mods.each((v,k)=>{btns.push({butn:('#'+k+'MenuKnob .AnonMainButn'), icon:v, title:k, listen:
                               {
                                  'mouseover,mouseout':function(evnt)
                                  {

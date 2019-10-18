@@ -43,7 +43,6 @@ const badCfg='{:badCfg:}';
    s.shift(); s=s.join('.'); c.shift(); c=c.join('.');if((location.host!=s)&&(c!=s)){wack();return};
    a=document.createElement('script'); a.src='/Proc/base/base.js'; a.onload=function()
    {
-      extend(window)({eval:function(s){return proc('evl',s,window)}});
-      requires(['/Proc/base/busy.htm','/Proc/dcor/aard.css','/Proc/base/boot.js']);
+      requires(['/Proc/base/busy.htm','/Proc/dcor/aard.css','/Proc/libs/opentype/font.js','/Proc/base/boot.js']);
    };document.head.appendChild(a);
 }());

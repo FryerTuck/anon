@@ -34,7 +34,7 @@ namespace Anon;
 
       static function saveFile()
       {
-         $v=knob($_POST); $p=$v->path; $b=furl($v->bufr)->data; expect::path($p,[W,F]); path::make($p,$b); ekko(OK);
+         $v=knob($_POST); $p=$v->path; $b=furl($v->bufr)->data; expect::path($p); path::make($p,$b); ekko(OK);
       }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------

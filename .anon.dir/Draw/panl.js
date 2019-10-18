@@ -43,11 +43,11 @@ select('#AnonAppsView').insert
                   {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
                   {row:[{col:'#DrawTreeView .slabMenuBody', contents:[{panl:'#DrawTreePanl', contents:
                   [
-                     {treeview:'', source:'/User/treeMenu', uproot:true, draggable:true, listen:
+                     {treeview:'', source:'/User/treeMenu', uproot:true, draggable:true, feedable:true, listen:
                      {
                         'LeftClick':function()
                         {
-                           if(this.info.type=='fold'){return};
+                           if(isin(['fold','plug'],this.info.type)){return};
                            Anon.Draw.open(this.info.path);
                         },
                      }}
@@ -202,6 +202,7 @@ extend(Anon)
             drv.create({title:ttl, contents:[{panl:'.DrawViewPanl', contents:[{div:'.DrawViewWrap', canFocus:1}]}]});
             tab=drv.select(ttl); tgt=tab.body.select('.DrawViewWrap')[0]; tgt.vars={}; mim=stub(img.src,';base64,')[0].split(':')[1];
             lay=swap((rstub(ttl.split('/').pop(),'.')[0]),'.','_');
+            tgt.vars.path=pth; tgt.vars.mime=mim;
 
             tgt.vars.unredo={indx:0,keep:
             [
