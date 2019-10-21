@@ -1609,7 +1609,7 @@
 
 // func :: popColor : color picker
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   const popColor = function(el,bg,sc,gr,gs, mb,bx,pw)
+   const popColor = function(el,bg,sc,gs,gr, mb,bx,pw)
    {
       if(isFunc(bg)){cb=bg; bg=VOID; bg=LITE;}; remove('#AnonPopColor');
       if(!isNode(el)){fail('expecting 1st arg as :node:');return};
@@ -1624,12 +1624,13 @@
             [
                {svg:'#AnonPopColorDial', src:'/Proc/dcor/dial.svg',
                   onready:function(){this.initRota()},
-                  initRota:function(degr,di,dw,dh,hw,hh,rc,rota,scal)
+                  initRota:function(degr,di,dw,dh,hw,hh,rc,rota,scal,so)
                   {
-                     let vs=stub(el.value,'+'); if(!vs||(!vs[2].trim())){return};
-                     if(this.rotaInited){return}; this.rotaInited=1; this.style.opacity=1; this.root=mb; rc=50;
+                     let vs=stub(el.value,'+'); if(!vs||(!vs[2].trim())||isVoid(gr)){gr=0; so=1}; //if(isNaN(gs)){gs=1};
+                     this.style.opacity=1; this.root=mb; rc=50;
                      degr=this.select('#AnonColrDialDegr'); di=rectOf(this); dw=di.width; dh=di.height; hw=(dw/2); hh=(dh/2);
                      rota=this.select('#AnonColrDegrRota'); scal=this.select('#AnonColrDialScal');
+                     if(so){rota.style.opacity=0;}else{rota.style.opacity=1;}; if(this.rotaInited){return}; this.rotaInited=1;
                      rota.setAttribute(`transform`,`rotate(${gr} ${rc} ${rc})`);
                      scal.setAttribute(`transform`,`rotate(${gr} ${rc} ${rc}) matrix(${gs},0,0,${gs},${rc-gs*rc},${rc-gs*rc})`);
                      degr.listen('mousemove',(e)=>
@@ -1645,7 +1646,7 @@
                      {
                         let w,q,c,s,t; w=round((swapPolarity(e.coords[1])/1000),3); q=(scal.getAttribute(`transform`)||''); c=50; s=1;
                         q=RotScaTra.knob(addIfMissing(q,{rotate:`rotate(0 ${c} ${c})`, matrix:` matrix(${gs},0,0,${gs},${c-s*c},${c-s*c})`}));
-                        s=q.matrix[0]; s=minMaxOf((s+w),0.25,2.5); q.matrix=[s,0,0,s,(c-s*c),(c-s*c)];
+                        s=q.matrix[0]; s=minMaxOf((s+w),0.01,2.5); q.matrix=[s,0,0,s,(c-s*c),(c-s*c)];
                         scal.setAttribute(`transform`,RotScaTra.text(q));
                         this.root.signal('change',{scal:round(s,3)});
                      });
@@ -1683,7 +1684,9 @@
 
          cw.root=mb; cw.on('input:change',function(c)
          {
-            this.root.signal('change',{colr:c.hex8String,type:'sol',angl:0,scal:1});
+            c=c.hex8String;
+            if(this.root.target.value.endsWith('+')){this.root.target.value+=c; this.root.target.indx+=1};
+            this.root.signal('change',{colr:c});
             this.root.select('#AnonPopColorDial').initRota();
          });
       });

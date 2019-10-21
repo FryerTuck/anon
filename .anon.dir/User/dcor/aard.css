@@ -24,40 +24,26 @@
 /* ----------------------------------------------------------------------------------------------------------------------------------------- */
    #AnonMainGrid
    {
-      position:relative;
       width:100%; height:100%;
-      background:hsla(210,3%,16%,1);
       user-select:none;
    }
 
-   #MainGridRow1 {}
    #MainGridCol1
    {
-      position:relative;
    }
 
-   /* #MainGridRow2 {height:5px;} */
-   #MainGridCol2 {height:5px;}
-
-   /* #MainGridRow3 {height:100px;} */
-   #MainGridCol3
-   {
-      position:relative;
-      height:100px; min-height:1px;
-      vertical-align:top;
-   }
+   #MainGridCol2 {height:5px; min-height:5px; max-height:5px;}
 
    #AnonMainPanl
    {
-      position:absolute;
       width:100%; height:100% !important;
       overflow:hidden;
       user-select:none;
+      background:hsla(210,3%,16%,1);
    }
 
    #AnonAppsGrid
    {
-      position:relative;
       width:100% !important; height:100% !important;
    }
 /* ----------------------------------------------------------------------------------------------------------------------------------------- */
@@ -69,13 +55,16 @@
 /* ----------------------------------------------------------------------------------------------------------------------------------------- */
    #AnonAppsMenu
    {
-      position:relative;
       width:46px; height:100%;
       user-select:none;
    }
-   #AnonAppsMenu>div
+   #AnonAppsMenu > wrap
    {
-      position:absolute;
+      width:46px !important;
+   }
+   #AnonAppsMenu > wrap > div
+   {
+      position:absolute !important;
       width:66px; height:100%;
       overflow:auto;
    }
@@ -88,7 +77,6 @@
 /* ----------------------------------------------------------------------------------------------------------------------------------------- */
    #AnonAppsDeck
    {
-      position:relative;
    }
 
    #AnonAppsView
@@ -105,18 +93,24 @@
 
 /* Anon :: Repl
 /* ----------------------------------------------------------------------------------------------------------------------------------------- */
+   #AnonReplView
+   {
+      height:100px;
+      vertical-align:top;
+      background:url('/User/dcor/blue.jpg');
+      background-size:cover;
+   }
+
    #AnonReplPanl
    {
-      position:absolute;
-      width:100% !important; height:100% !important;
       padding:5px; overflow:auto !important;
       font-family:"code";
       font-size:16px;
       line-height:16px;
-      background:hsla(210,3%,4%,1);
+      background:hsla(0,0%,3%,0.9);
    }
 
-   #AnonReplPanl>grid
+   #AnonReplPanl grid
    {
       height:10px;
    }
@@ -193,7 +187,8 @@
 /* ----------------------------------------------------------------------------------------------------------------------------------------- */
    .AnonMainButn
    {
-      width:36px; height:36px; margin:5px; min-width:36px !important; padding:0px !important;
+      float:left;
+      width:36px; height:36px; margin:5px; margin-top:6px; margin-bottom:0px; min-width:36px !important; padding:0px !important;
       background:linear-gradient(0deg, hsla(210,3%,19%,1) 0%, hsla(210,3%,23%,1) 100%);
       font-size:25px; text-align:center; color:hsla(0,0%,70%,1);
       border-color:hsla(210,3%,26%,1); box-shadow:0px 0px 2px hsla(0,0%,0%,0.4);

@@ -28,6 +28,8 @@
    <IfModule mod_headers.c>
       Header unset Strict-Transport-Security
       Header set Strict-Transport-Security "max-age=0;includeSubDomains"
+      Header unset Referrer-Policy
+      Header set Referrer-Policy same-origin
       Header unset X-Powered-By
       Header unset Server
    </IfModule>

@@ -1,4 +1,4 @@
-"use strict";
+// "use strict";
 
 requires
 ([
@@ -7,9 +7,15 @@ requires
 ],()=>
 {
    requires('/Code/libs/ace/theme-tomorrow_night.js');
-   // requires('/Code/libs/ace/ext-error_marker.js');
-   // requires('/Code/libs/ace/ext-spellcheck.js');
-   // requires('/Code/libs/ace/ext-static_highlight.js');
+
+   hijack(window,'Blob',function()
+   {
+      let a,s; a=listOf(arguments); if(!isList(a[0])){return a}; s=a[0][0];
+      if(!s.startsWith(`importScripts(`)||!s.endsWith(`.js');`)){return a};
+      s=rstub(s,`');`); s[0]+=`?k=${sesn('HASH')}`; s=s.join(''); a[0][0]=s;
+      return a;
+   });
+
 });
 
 

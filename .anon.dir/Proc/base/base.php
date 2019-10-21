@@ -482,12 +482,12 @@ namespace Anon;
 
             header("HTTP/1.1 $a $m");
 
-            if(facing('API'))
+            if(!facing('BOT'))
             {
                $v=conf('/Proc/corsFrom'); header("Access-Control-Allow-Origin: $v");
-               // header("Access-Control-Allow-Credentials: true");
+               header("Access-Control-Allow-Credentials: true");
                // header("Access-Control-Expose-Headers: Lokomotionz");
-               // header("Access-Control-Allow-Headers: Lokomotionz");
+               header("Access-Control-Allow-Headers: x-requested-with, accept, authorization");
             };
 
             if(facing('GUI')){header("X-Frame-Options: SAMEORIGIN");};

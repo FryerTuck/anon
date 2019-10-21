@@ -37,7 +37,257 @@ select('#DrawPropItem').insert
       ]},
       {row:
       [
-         {col:[{wrap:'#DrawPropItemAttr', style:{padding:6}}]},
+         {col:[{wrap:'#DrawPropItemAttr', style:{padding:6}, contents:
+         [
+            {div:'', style:{padding:2}, contents:[{input:'#DrawPropItemPosi .toolTextFeed .dark', icon:'location', demo:'0 x 0',
+               title:'location (X,Y)', value:'', listen:{'key:Enter':function(e)
+               {let v=argToObj(this.value,{x:'numr',y:'numr'}); if(v){Anon.Draw.edit('position',v)}}}
+            }]},
+
+
+            {div:'', style:{padding:2}, contents:[{input:'#DrawPropItemRota .toolTextFeed .dark', icon:'spinner11', demo:'0',
+               title:'rotation (deg)', value:'', listen:{'key:Enter':function(e)
+               {let v=argval(this.value); if(isNumr(v)){Anon.Draw.edit('rotation',v)}}}
+            }]},
+
+
+            {div:'', style:{padding:2}, contents:[{input:'#DrawPropItemScal .toolTextFeed .dark', icon:'versions', demo:'0 x 0',
+               title:'scale (X,Y)', value:'', listen:{'key:Enter':function(e)
+               {let v=argToObj(this.value,{x:'numr',y:'numr'}); if(v){Anon.Draw.edit('scale',v)}}}
+            }]},
+
+
+            {div:'', style:{padding:2}, contents:[{input:'#DrawPropItemSkew .toolTextFeed .dark', icon:'italic1', demo:'0 x 0',
+               title:'skew (X,Y)', value:'', listen:{'key:Enter':function(e)
+               {let v=argToObj(this.value,{x:'numr',y:'numr'}); if(v){Anon.Draw.edit('skew',v)}}}
+            }]},
+
+
+            {div:'', style:{padding:2}, contents:[{input:'#DrawPropItemSize .toolTextFeed .dark', icon:'enlarge', demo:'0 x 0',
+               title:'size (W,H)', value:'', listen:{'key:Enter':function(e)
+               {
+                  let v=argToObj(this.value,{width:'numr',height:'numr'}); if(v){Anon.Draw.edit('size',v)};
+                  // dump(v);
+               }}
+            }]},
+
+
+            {div:'', style:{padding:2}, contents:[{input:'#DrawPropItemCrop .toolTextFeed .dark', icon:'crop', demo:'0 x 0',
+               title:'crop (W,H)', value:'', listen:{'key:Enter':function(e)
+               {
+                  let v=argToObj(this.value,{width:'numr',height:'numr'}); if(!v){return};
+                  let s=dupe(v); v.x=0; v.y=0; Anon.Draw.edit('clip',v); tick.after(10,()=>{Anon.Draw.edit('size',s)});
+               }}
+            }]},
+
+
+            {div:'', style:{padding:2}, contents:[{input:'#DrawPropItemFill .toolTextFeed .dark', icon:'paint-format', demo:'sol:1^0 #BadA5588',
+               title:'fill (style:size^angle color1+color2)', value:'',
+
+               prep:function()
+               {
+                  let d,r,o,p,l,f,a,s; d=this.value.trim();  d=swap(d,['   ','  '],' '); d=swap(d,['#',';'],''); r=['sol',1,0,['BadA5588']];
+                  let c=rgbTxt(d); if(c){r[3][0]=hexTxt(c)}; o=['sol','lin','rad']; p=stub(d,' '); if(!p){return r}; f=p[0]; l=p[2].split('+');
+                  r[3]=l; if((l.length>1)){f=swap(f,'sol','lin')}; if(isin(o,f)){r[0]=f; return r}; p=stub(f,':'); if(!p){return r};
+                  f=pick(f,o); p=stub(p[2],'^'); if(!f||!p){return r}; a=(p[0]*1); s=(p[2]*1); if(!isNumr(a)||!isNumr(s)){return r};
+                  return [f,a,s,l];
+               },
+
+               pres:function(a){this.value=`${a[0]}:${a[1]}^${a[2]} ${a[3].join('+')}`;},
+
+               indxOf:function(r)
+               {
+                  dump('indx modda uka');
+               },
+
+
+               paint:function()
+               {
+                  let i,v,l,e,d; i=Anon.Draw.vars.actv; v=i.vars; l=v.flayer; e=v.active; d=this.prep();
+                  let f,s,a,c,o; f=d[0]; s=d[1]; a=d[2]; c=d[3]; e.fg.fill(null);
+
+                  if(f=='sol'){e.fg.fill(rgbTxt(c[0])); l.batchDraw(); return};
+
+                  let b,p,z,x,q; b={width:e.attrs.clipWidth,height:e.attrs.clipHeight}; s/=6; p=rectAnglPlot(b,a,s); z=c.last(1);
+                  q=[]; s=(1/z); x=0; c.forEach((h,k)=>{if(k==z){x=1}; q.radd(x); q.radd(rgbTxt(h)); x=round((x+s),3)});
+
+                  if(f=='lin')
+                  {
+                     e.fg.fill(null); e.fg.fillLinearGradientStartPoint(p.bgn); e.fg.fillLinearGradientEndPoint(p.end);
+                     e.fg.fillLinearGradientColorStops(q); l.batchDraw(); return;
+                  };
+
+                  if(f=='rad')
+                  {
+                     dump('TODO :: radial fill');
+                  };
+               },
+
+               listen:
+               {
+                  'RightClick':function()
+                  {
+                     let sc,si,bx; sc=this.getSelection(); if(sc){sc=rgbTxt(sc)}; if(sc){si=this.indxOf(this.getSelection(1));};
+                     let va,sw,ga; va=this.prep(); if(!si){si=(va[3].length-1); sc=rgbTxt(va[3][si])}; this.indx=si;
+                     sw=round((va[1]/10),3); ga=va[2]; this.pres(va); bx=popColor(this,DARK,sc,sw,ga);
+
+                     bx.listen('change',function(e)
+                     {
+                        let va,ed,ti; va=this.target.prep(); ed=e.detail; ti=this.target.indx; if(ed.colr){va[3][ti]=ltrim(ed.colr,'#')};
+                        if(ed.scal){va[1]=round((ed.scal*10),3)}; if(ed.angl){va[2]=ed.angl}; this.target.pres(va); this.target.paint();
+                     });
+
+                     bx.listen('close',function(e){this.target.indx=VOID});
+                  },
+
+                  'key:Enter':function(e)
+                  {
+                     this.paint();
+                  },
+               }
+            }]},
+
+
+            {div:'', style:{padding:2}, contents:[{input:'#DrawPropItemStrk .toolTextFeed .dark', icon:'pencil', demo:'sol:1^0 #BadA5588',
+               title:'stroke (style:size^angle color1+color2)', value:'',
+
+               prep:function()
+               {
+                  let d,r,o,p,l,f,a,s; d=this.value.trim();  d=swap(d,['   ','  '],' '); d=swap(d,['#',';'],''); r=['sol',1,0,['000000ff']];
+                  let c=rgbTxt(d); if(c){r[3][0]=hexTxt(c)}; o=['sol','lin','rad']; p=stub(d,' '); if(!p){return r}; f=p[0]; l=p[2].split('+');
+                  r[3]=l; if((l.length>1)){f=swap(f,'sol','lin')}; if(isin(o,f)){r[0]=f; return r}; p=stub(f,':'); if(!p){return r};
+                  f=pick(f,o); p=stub(p[2],'^'); if(!f||!p){return r}; a=(p[0]*1); s=(p[2]*1); if(!isNumr(a)||!isNumr(s)){return r};
+                  return [f,a,s,l];
+               },
+
+               pres:function(a){this.value=`${a[0]}:${a[1]}^${a[2]} ${a[3].join('+')}`;},
+
+               indxOf:function(r)
+               {
+                  dump('indx modda uka');
+               },
+
+               paint:function()
+               {
+                  let i,v,l,e,d; i=Anon.Draw.vars.actv; v=i.vars; l=v.flayer; e=v.active; d=this.prep();
+                  let f,s,a,c,o; f=d[0]; s=d[1]; a=d[2]; c=d[3]; o=e.fg.strokeWidth();
+
+                  if(s!=o){let y=[(e.fg.width()+o),(e.fg.height()+o)]; e.fg.strokeWidth(s); l.batchDraw(); Anon.Draw.grow(y);};
+                  if(f=='sol'){e.fg.stroke(rgbTxt(c[0])); l.batchDraw(); return;};
+
+                  let b,p,z,x,q; b={width:e.attrs.clipWidth,height:e.attrs.clipHeight}; s/=6; p=rectAnglPlot(b,a,s); z=c.last(1);
+                  q=[]; s=(1/z); x=0; c.forEach((h,k)=>{if(k==z){x=1}; q.radd(x); q.radd(rgbTxt(h)); x=round((x+s),3)});
+                  e.fg.stroke(null);
+
+                  if(f=='lin')
+                  {
+                     e.fg.strokeLinearGradientStartPoint(p.bgn); e.fg.strokeLinearGradientEndPoint(p.end);
+                     e.fg.strokeLinearGradientColorStops(q); l.batchDraw(); return;
+                  };
+
+                  if(f=='rad')
+                  {
+                     dump('TODO :: stroke radial gradient');
+                  };
+
+                  l.batchDraw();
+               },
+
+               listen:
+               {
+                  'RightClick':function()
+                  {
+                     let sc,si,bx; sc=this.getSelection(); if(sc){sc=rgbTxt(sc)}; if(sc){si=this.indxOf(this.getSelection(1));};
+                     let va,sw,ga; va=this.prep(); if(!si){si=(va[3].length-1); sc=rgbTxt(va[3][si])}; this.indx=si;
+                     sw=round((va[1]/50),3); ga=va[2]; this.pres(va); bx=popColor(this,DARK,sc,sw,ga);
+
+                     bx.listen('change',function(e)
+                     {
+                        let va,ed,ti; va=this.target.prep(); ed=e.detail; ti=this.target.indx; if(ed.colr){va[3][ti]=ltrim(ed.colr,'#')};
+                        if(ed.scal){va[1]=round((ed.scal*50),3)}; if(ed.angl){va[2]=ed.angl}; this.target.pres(va); this.target.paint();
+                     });
+
+                     bx.listen('close',function(e){this.target.indx=VOID});
+                  },
+
+                  'key:Enter':function(e)
+                  {
+                     this.paint();
+                  }
+               }
+            }]},
+
+
+            {div:'', style:{padding:2}, contents:[{input:'#DrawPropItemXarc .toolTextFeed .dark', icon:'circle-notch', demo:'0',
+               title:'arc (TL TR BR BL)', value:'',
+               paint:function(t,d)
+               {
+                  let l=Anon.Draw.vars.actv.vars.flayer; let e=Anon.Draw.vars.actv.vars.active;
+                  if(t=='Arc')
+                  {
+                     if(d.length<2){this.paint(l,e,'Circle',d); return};
+                     d[0]=(d[0]||0); d[1]=(d[1]||360); d[2]=(d[2]||60); d[3]=(d[3]||0);
+                     if(d[0]<0){d[0]=(360-d[0])}; if(d[1]<0){d[1]=(360-d[1])};
+                     e.fg.rotation(d[0]);
+                     l.batchDraw(); return;
+                  };
+
+                  if(t=='Circle')
+                  {
+                     if(d.length>3){this.paint(l,e,'Arc',d); return};
+                     let s,o; s=e.fg.strokeWidth(); o=[(e.fg.width()+s),(e.fg.height()+s)]; d[0]=(d[0]||60); e.fg.radius(d[0]);
+                     l.batchDraw(); Anon.Draw.grow(o); return;
+                  };
+
+                  if(t=='Rect')
+                  {
+                     d[0]=(d[0]||0); d[1]=(d[1]||0); d[2]=(d[2]||0); d[3]=(d[3]||0);
+                     e.fg.cornerRadius(d); l.batchDraw(); return;
+                  };
+               },
+
+               listen:{'key:Enter':function()
+               {
+                  let i,v,l,e,t,d,f; i=Anon.Draw.vars.actv; v=i.vars; l=v.flayer; e=v.active; t=(e.fg.className||e.fg.nodeType);
+                  d=swap(swap(this.value.trim(),',',' '),['   ','  '],' ').trim(); if(!d){return}; d=d.split(' ');
+                  d.forEach((x,k)=>{x*=1; if(!isNumr(x)){f=1;return}; d[k]=x}); if(f){this.notify(`invalid input`);return};
+                  this.paint(t,d);
+               }}
+            }]},
+
+
+            {div:'', style:{padding:2}, contents:[{input:'#DrawPropItemGlow .toolTextFeed .dark', icon:'sun1', demo:'0 0 9 #BadA5588',
+               title:'glow (x y blur color)', value:'',
+               paint:function(c)
+               {
+
+               },
+
+               listen:
+               {
+                  'RightClick':function()
+                  {
+                     let sc,si,bx; sc=this.getSelection(); if(sc){sc=rgbTxt(sc)}; if(sc){this.indx=this.indxOf(this.getSelection(1))};
+                     let va=this.prep(); bx=popColor(this,DARK,sc);
+
+                     bx.listen('change',function(e)
+                     {
+                        let d=e.detail; if(d.colr){this.target.paint(d.colr);return};
+                     });
+
+                     bx.listen('close',function(e){this.target.paint()});
+                  },
+
+                  'key:Enter':function(e)
+                  {
+                     dump(this.value);
+                     // Anon.Draw.edit('stroke',v);
+                  }
+               }
+            }]},
+
+            {div:'.panlHorzLine', contents:[{hdiv:''}]},
+         ]}]},
       ]},
    ]}
 ]);
@@ -54,118 +304,23 @@ extend(Anon.Draw.tool)
       select('#DrawPropFiltWrap').reclan('hide:show');
       select('#DrawPropFiltType').innerHTML=nt; select('#DrawPropFiltName').innerHTML=pi.nick;
       select('#DrawPropTabr').driver.select('Detail');
-      select('#DrawPropItemName').innerHTML=pi.nick; nc.innerHTML='';
+      select('#DrawPropItemName').innerHTML=pi.nick;
       let sz=pi.size(); if(!sz.width){sz={width:na.clipWidth,height:na.clipHeight};};
+      let fa=pi.fg.attrs; let iv={}; let rc=(fa.cornerRadius||[]);
+      if(rc.length>0){rc[0]=(rc[0]||0); rc[1]=(rc[1]||0); rc[2]=(rc[2]||0); rc[3]=(rc[3]||0);}; rc=rc.join(' ').trim();
 
-      nc.insert
-      ([
-         {div:'', style:{padding:2}, contents:[{input:'#DrawPropItemPosi .toolTextFeed .dark', icon:'location', demo:'0 x 0',
-            title:'location (X,Y)', value:`${round(na.x,4)} x ${round(na.y,4)}`, listen:{'key:Enter':function(e)
-            {let v=argToObj(this.value,{x:'numr',y:'numr'}); if(v){Anon.Draw.edit('position',v)}}}
-         }]},
-         {div:'', style:{padding:2}, contents:[{input:'#DrawPropItemRota .toolTextFeed .dark', icon:'spinner11', demo:'0',
-            title:'rotation (deg)', value:`${round((na.rotation||0),4)}`, listen:{'key:Enter':function(e)
-            {let v=argval(this.value); if(isNumr(v)){Anon.Draw.edit('rotation',v)}}}
-         }]},
-         {div:'', style:{padding:2}, contents:[{input:'#DrawPropItemScal .toolTextFeed .dark', icon:'versions', demo:'0 x 0',
-            title:'scale (X,Y)', value:`${round((na.scaleX||0),4)} x ${round((na.scaleY||0),4)}`, listen:{'key:Enter':function(e)
-            {let v=argToObj(this.value,{x:'numr',y:'numr'}); if(v){Anon.Draw.edit('scale',v)}}}
-         }]},
-         {div:'', style:{padding:2}, contents:[{input:'#DrawPropItemSkew .toolTextFeed .dark', icon:'italic1', demo:'0 x 0',
-            title:'skew (X,Y)', value:`${round((na.skewX||0),4)} x ${round((na.skewY||0),4)}`, listen:{'key:Enter':function(e)
-            {let v=argToObj(this.value,{x:'numr',y:'numr'}); if(v){Anon.Draw.edit('skew',v)}}}
-         }]},
-         {div:'', style:{padding:2}, contents:[{input:'#DrawPropItemSize .toolTextFeed .dark', icon:'enlarge', demo:'0 x 0',
-            title:'size (W,H)', value:`${round(sz.width,4)} x ${round(sz.height,4)}`, listen:{'key:Enter':function(e)
-            {
-               let v=argToObj(this.value,{width:'numr',height:'numr'}); if(v){Anon.Draw.edit('size',v)};
-               // dump(v);
-            }}
-         }]},
-         {div:'', style:{padding:2}, contents:[{input:'#DrawPropItemCrop .toolTextFeed .dark', icon:'crop', demo:'0 x 0',
-            title:'crop (W,H)', value:`${Math.floor(na.clipWidth)} x ${Math.floor(na.clipHeight)}`, listen:{'key:Enter':function(e)
-            {
-               let v=argToObj(this.value,{width:'numr',height:'numr'}); if(!v){return};
-               let s=dupe(v); v.x=0; v.y=0; Anon.Draw.edit('clip',v); tick.after(10,()=>{Anon.Draw.edit('size',s)});
-            }}
-         }]},
-         {div:'', style:{padding:2}, contents:[{input:'#DrawPropItemFill .toolTextFeed .dark', icon:'paint-format', demo:'#BadA5588',
-            title:'fill (hex|rgb|hsl|hsv)', value:`${(av.fill||'')}`,
+      iv.Posi=`${round(na.x,4)} x ${round(na.y,4)}`;
+      iv.Rota=`${round((na.rotation||0),4)}`;
+      iv.Scal=`${round((na.scaleX||0),4)} x ${round((na.scaleY||0),4)}`;
+      iv.Skew=`${round((na.skewX||0),4)} x ${round((na.skewY||0),4)}`;
+      iv.Size=`${round(sz.width,4)} x ${round(sz.height,4)}`;
+      iv.Crop=`${Math.floor(na.clipWidth)} x ${Math.floor(na.clipHeight)}`;
+      iv.Fill=(av.fill||(!fa.fill?"":`sol:1^0 ${rgb2hex(fa.fill)}`));
+      iv.Strk=(av.strk||(!fa.stroke?"":`sol:${(fa.strokeWidth||0)}^0 ${rgb2hex(fa.stroke)}`));
+      iv.Xarc=((nt=='Circle')?fa.radius:((nt=='Arc')?`${fa.outerRadius} ${(fa.innerRadius||0)}`:rc));
+      iv.Glow=(av.glow||'');
 
-            paint:function(c)
-            {
-               let d,s,p,f,l,x,a,v; d=this.value.trim(); if(!d&&!c){return}; d=swap(d,['#',';'],''); if(c&&d.endsWith('+')){d+=c};
-               let q=['sol','rad','lin']; s=stub(d,' '); if(s&&isin(s[0],q)){f=s[0]; l=s[2]}else{f='?'; l=d}; l=swap(l,' ','');
-               if(isin(l,q)){f=l;l=''}else if(!isin(f,q)){f=(isin(l,'+')?'lin:0^1':'sol')}; if((l.length<3)&&!c){this.value=''; return};
-               if(c){c=ltrim(c,'#')}; l=((c&&!l)?[c]:l.split('+'));  if((l.length>1)&&(f=='sol')){f='lin:0^1'}else if(l.length<2){f='sol'};
-               l.forEach((i,k)=>{l[k]=ltrim(hexTxt(i,1),'#')});  s=(this.getSelection()||l.last()); x=l.indexOf(s);
-               if(c){l[x]=c}; a=l[x]; v=l.join('+').trim(); this.value=`${f} ${v}`; d=this.value;
-               Anon.Draw.vars.actv.vars.active.anon.fill=d; if(l.length<2){Anon.Draw.edit('fill',rgbTxt(l[0]),0);return};
-
-               p=stub(f,':'); if(!p){return}; f=p[0]; p=stub(p[2],'^'); if(!p){return}; a=(p[0]*1); s=(p[2]*1); if(isNaN(a)||isNaN(s)){return};
-               let ae,bx,gp,cs,si,sx,li; ae=Anon.Draw.vars.actv.vars.active; if(!ae){return}; bx=ae.size();
-               if(!bx.width){bx={width:ae.attrs.clipWidth,height:ae.attrs.clipHeight};}; gp=rectAnglPlot(bx,a,s); li=(l.length-1);
-               cs=[]; si=(1/(l.length-1)); sx=0; l.forEach((i,k)=>{if(k==li){sx=1}; cs.radd(sx); cs.radd(rgbTxt(i)); sx=round((sx+si),3)});
-
-               if(f=='lin')
-               {
-                  ae.fg.fill(null);
-                  ae.fg.fillLinearGradientStartPoint(gp.bgn);
-                  ae.fg.fillLinearGradientEndPoint(gp.end);
-                  ae.fg.fillLinearGradientColorStops(cs);
-                  Anon.Draw.vars.actv.vars.flayer.draw();
-                  return;
-               };
-
-               if(f=='rad')
-               {
-                  dump('TODO :: radial fill');
-               };
-            },
-
-            listen:
-            {
-               'RightClick':function()
-               {
-                  let sr,ev,vp,fs,gr,gs,cl,si,sc,bx; sr=this.getSelection(1); ev=this.value; vp=stub(ev,' ');  if(vp){fs=vp[0]; cl=vp[2]};
-                  if(sr&&vp&&isin(cl,' ')){this.notify(`extra space wastes the selection index`);return};
-                  sc=this.getSelection(); if(sc){sc=rgbTxt(sc)}else{sc=VOID};
-                  if(fs&&isin(fs,'^')){vp=stub(fs,':'); fs=vp[0]; vp=stub(vp[2],'^'); gr=(vp[0]*1); gs=(vp[2]*1);};
-                  if(!isNumr(gr)){gr=0}; if(!isNumr(gs)){gs=1};
-                  if(cl){cl=cl.split('+'); if(!sc){sc=rgbTxt(cl.pop())}};
-
-                  bx=popColor(this,DARK,sc,gr,gs);
-
-                  bx.listen('change',function(e)
-                  {
-                     let d=e.detail; if(d.colr){this.target.paint(d.colr);return};
-                     let v,p,f,a,s,l; v=this.target.value; p=stub(v,' '); l=p[2]; p=stub(p[0],':');
-                     if(!p){return}; f=p[0]; p=stub(p[2],'^'); if(!p){return}; a=p[0]; s=p[2];
-                     if(d.angl!=VOID){a=d.angl;}; if(d.scal!=VOID){s=d.scal;};
-                     this.target.value=`${f}:${a}^${s} ${l}`; this.target.paint();
-                  });
-
-                  bx.listen('close',function(e){this.target.paint()});
-               },
-
-               'key:Enter':function(e)
-               {
-                  this.paint();
-               },
-            }
-         }]},
-
-         {div:'', style:{padding:2}, contents:[{input:'#DrawPropItemStrk .toolTextFeed .dark', icon:'pencil', demo:'1 solid #BadA5588',
-            title:'stroke (width type color)', value:``, listen:{'key:Enter':function(e)
-            {
-               dump(this.value);
-               // Anon.Draw.edit('stroke',v);
-            }}
-         }]},
-
-         {div:'.panlHorzLine', contents:[{hdiv:''}]},
-      ]);
-
+      iv.each((xv,xk)=>{select(`#DrawPropItem${xk}`).value=xv});
       this[nt](select('#DrawPropItemAttr'),pi,na);
    }
    .bind
@@ -177,7 +332,20 @@ extend(Anon.Draw.tool)
 
       Rect:function(a)
       {
-         // dump(a);
+         select('#DrawPropItemXarc').title=`cornerRadius (TL TR BR BL)`;
+         select('#DrawPropItemXarc').modify({demo:'60 0 60 0'});
+      },
+
+      Arc:function(a)
+      {
+         select('#DrawPropItemXarc').title=`arc (beginAngle endAngle outerRadius innerRadius) .. 1 val = circle`;
+         select('#DrawPropItemXarc').modify({demo:'30 330 60 0'});
+      },
+
+      Circle:function(a)
+      {
+         select('#DrawPropItemXarc').title=`cirle (radius) .. 4 vals = arc`;
+         select('#DrawPropItemXarc').modify({demo:'60'});
       },
    }),
 
@@ -188,23 +356,24 @@ extend(Anon.Draw.tool)
       let ao=Anon.Draw.make
       ({
          type:'Rect',
-         x: 10,
-         y: 10,
          width: 180,
          height: 120,
-         stroke: '#000',
-         fill: 'rgba(255,255,255,0.5)',
-         cornerRadius: 10,
       });
    },
 
 
    makeElip:function()
    {
-      let ai,ci,fl; ai=Anon.Draw.vars.actv; ci=ai.vars.canvas; fl=ai.vars.flayer;
+      let ai,ci,fl,ra; ai=Anon.Draw.vars.actv; ci=ai.vars.canvas; fl=ai.vars.flayer;
       let ao=Anon.Draw.make
       ({
-         type:'Rect',
+         type:'Circle',
+         radius:60,
+         // type:'Arc',
+         // angle:360,
+         // // clockwise:true,
+         // rotation:180,
+         // outerRadius:60,
       });
    },
 

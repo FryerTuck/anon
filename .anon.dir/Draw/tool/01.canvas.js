@@ -209,3 +209,10 @@ select('#DrawBodyPanl').listen('Meta Shift MouseWheel',function(evnt)
 {
    let vx,vy; vx=evnt.coords[0]; vy=evnt.coords[1]; Anon.Draw.tool.size(vx,vy,1);
 });
+
+
+select('#DrawBodyPanl').listen('key:Delete',function(evnt)
+{
+   let i,c,l,e; i=Anon.Draw.vars.actv; c=i.vars.canvas; l=i.vars.flayer; e=i.vars.active;
+   c.find('Transformer').destroy(); e.destroy(); Anon.Draw.vars.actv.vars.active=VOID; c.batchDraw();
+});

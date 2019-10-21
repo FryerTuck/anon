@@ -37,10 +37,10 @@
                                     if(evnt.type=='keydown'){this.enclan('AnonButnWarn');return}; this.declan('AnonButnWarn');
                                  },
                                  'LeftClick':function(evnt){AnonMenu.init(this.id,evnt.ctrlKey)},
-                              }});}); return [{div:[btns]}];
+                              }});}); return [{wrap:[{div:[btns]}]}];
                            }())},
                            {col:'.panlVertDlim', style:'height:100%',  contents:{vdiv:''}},
-                           {col:'#AnonAppsDeck', style:'height:100%', contents:[{panl:'#AnonAppsView'}]},
+                           {col:'#AnonAppsDeck', style:'height:100%', contents:[{wrap:[{panl:'#AnonAppsView'}]}]},
                         ]},
                      ]},
                   ]},
@@ -52,7 +52,7 @@
             ]},
             {row:'#MainGridRow3', contents:
             [
-               {col:'#MainGridCol3', contents:
+               {col:'#AnonReplView', contents:
                [
                   {panl:'#AnonReplPanl', onmouseup:function(){select('#AnonReplFeed').focus()}, contents:
                   [

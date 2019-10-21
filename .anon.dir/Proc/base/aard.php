@@ -608,7 +608,7 @@ namespace Anon;
    elseif(envi('INTRFACE')){$i=envi('INTRFACE');}
    elseif((($m==='application/json')&&($x!=='json'))||(($m==='text/plain')&&($x!=='txt'))){$i='API';}
    elseif($_SERVER['MADEFUBU']&&($_SERVER['USERDEED']==='insert')){$i='API';}
-   elseif($k&&(kuki($k)==='...')){$i='DPR';}else{$i='GUI';};
+   elseif($s&&$k&&(kuki($k)==='...')){$i='DPR';}else{$i='GUI';};
 
    if(($i==='BOT')&&!in_array(envi('USERDEED'),array('descry','select'))){harakiri('Method Not Allowed');}; // silly bot .. YOU HAVE DIED
    if(($p===envi('DBUGPATH'))&&($i!=='BOT')){$i='DPR';};
@@ -622,7 +622,11 @@ namespace Anon;
    }
    elseif($i==='API')
    {
-      if(!$k){harakiri('missing -or invalid session key');};
+      if(!$k){harakiri('missing -or invalid session key');}; // YOU HAVE DIED
+   }
+   elseif($i==='GUI')
+   {
+      if(!$s&&isset($_GET['k'])&&($_GET['k']===$k)){$i='DPR';};
    };
 
    $_SERVER['INTRFACE']=$i; unset($a,$h,$p,$x,$r,$b,$s,$k,$i);
