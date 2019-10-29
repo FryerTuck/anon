@@ -75,5 +75,21 @@ namespace Anon;
          if(!$n){ekko(OK);}; $rsp=OK; try{repo::commit($p,"merge $n commit(s)",true,$b);}catch(\Exception $e){$rsp=$e->getMessage();};
          Proc::signal('repoUpdate',['fork'=>$b],'.work'); ekko($rsp);
       }
+
+
+      static function bulkFind()
+      {
+         $v=knob($_POST); $p=$v->path; $f=$v->find;
+         if(!isPath($p,[D,R])){done("expecting `$p` as readable folder");};
+         $r=path::line($p,$f); ekko($r);
+      }
+
+
+      static function bulkSwap()
+      {
+         $v=knob($_POST); $l=$v->{'list'}; $f=$v->find; $s=$v->swap; $v=null;
+         foreach($l as $p){$v=pget($p); $v=swap($v,$f,$s); path::make($p,$v);};
+         done(OK);
+      }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------

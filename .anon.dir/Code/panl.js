@@ -1,5 +1,6 @@
 // "use strict";
 
+
 requires
 ([
    '/Code/dcor/aard.css',
@@ -8,14 +9,13 @@ requires
 {
    requires('/Code/libs/ace/theme-tomorrow_night.js');
 
-   hijack(window,'Blob',function()
+   jack('Blob',function()
    {
       let a,s; a=listOf(arguments); if(!isList(a[0])){return a}; s=a[0][0];
       if(!s.startsWith(`importScripts(`)||!s.endsWith(`.js');`)){return a};
       s=rstub(s,`');`); s[0]+=`?k=${sesn('HASH')}`; s=s.join(''); a[0][0]=s;
       return a;
    });
-
 });
 
 
@@ -52,7 +52,7 @@ select('#AnonAppsView').insert
                      {grid:'#CodeViewGrid', contents:
                      [
                         {row:'#CodeBodyView', contents:[{col:[{panl:'#CodeBodyPanl'}]}]},
-                        {row:'#CodeToolView .hide', contents:[{col:[{panl:'#CodeToolWrap', contents:
+                        {row:'#CodeToolHold .show', contents:[{col:'#CodeToolView', contents:[{panl:'#CodeToolWrap', contents:
                         [
                            {grid:
                            [
@@ -184,13 +184,6 @@ extend(Anon)
                // select('#CodeTreeMenu').update();
             });
          }},
-
-
-         {name:'find',bindKey:{win:'Ctrl-F',mac:'Ctrl-F'},exec:function()
-         {
-            let tlv=select('#CodeToolView'); let hdn=(isin(tlv.className,'hide')?1:0);  tlv.reclan((hdn?'hide:show':'show:hide'));
-            hdn=(hdn?0:1); Anon.Code.vars.activeInst.resize(); if(hdn){return}; select('#CodeToolFind').select('input')[0].focus();
-         }}
       ],
 
 
@@ -247,6 +240,7 @@ extend(Anon)
 
          select('#CodeTreePanl').select('treeview')[0].listen('loaded',ONCE,()=>
          {
+            select('#CodeToolHold').reclan('show:hide');
             Busy.edit('/Code/panl.js',100);
             // TODO .. repo stuff here
             if(!!ini.openItem){Anon.Code.open(ini.openItem);};
@@ -266,6 +260,9 @@ extend(Anon)
                {
                   Anon.Code.vars.activeInst=e.detail.target.head.editor;
                   Anon.Code.info(e.detail.target.head.editor.anon);
+                  let tlv,hdn,fnd,val; tlv=select('#CodeToolHold'); hdn=(isin(tlv.className,'hide')?1:0); if(hdn){return};
+                  fnd=tlv.select('#CodeToolFind'); hdn=(isin(fnd.className,'hide')?1:0); if(hdn){return};
+                  val=fnd.select('input')[0].value; if(!val){return}; Anon.Code.find.exec('bufr','seek');
                }
             );
          });
@@ -274,6 +271,24 @@ extend(Anon)
          {
             let drv=e.detail.driver; let tgt=e.detail.target; tgt.head.hijacked=1;
             Anon.Code.shut(drv,tgt);
+         });
+
+         select('#CodeBodyPanl').focus();
+         select('#CodeBodyPanl').listen
+         ({
+            'Control f':function(e)
+            {
+               let tlv=select('#CodeToolHold'); let hdn=(isin(tlv.className,'hide')?1:0);  tlv.reclan((hdn?'hide:show':'show:hide'));
+               e.hijack(); hdn=(hdn?0:1); if(!!Anon.Code.vars.activeInst){Anon.Code.vars.activeInst.resize()}; if(hdn){return};
+               select('#CodeToolFind').select('input')[0].focus();
+            },
+         });
+
+         listen('key:Esc',function(e)
+         {
+            let tlv=select('#CodeToolHold'); let hdn=(isin(tlv.className,'hide')?1:0); if(hdn){return};
+            e.hijack(select('#CodeToolWrap')); tlv.reclan('show:hide'); select('#CodeBodyPanl').focus();
+            if(!!Anon.Code.vars.activeInst){Anon.Code.vars.activeInst.resize()};
          });
       },
 
@@ -289,7 +304,7 @@ extend(Anon)
 
          requires(lng,()=>{purl(ofp,{path:pth,type:tpe},(r)=>
          {
-            wrp.textContent=r.body;
+            wrp.textContent=r.body; select('#CodeBodyPanl').focus();
             tab.head.editor=ace.edit(wrp); tab.head.editor.setTheme('ace/theme/tomorrow_night');
             mde=ace.require(`ace/mode/${mde}`).Mode; tab.head.editor.session.setMode(new mde());
 
@@ -299,7 +314,7 @@ extend(Anon)
             tab.head.editor.locate=function(qry, len,bfr,idx,pfx,fr,fc,tr,tc)
             {
                len=qry.length; if(len<1){return}; bfr=this.getValue(); idx=bfr.indexOf(qry); if(idx<0){return};
-               pfx=bfr.slice(0,idx); dump(pfx);
+               pfx=bfr.slice(0,idx); // dump(pfx);
             };
 
             tab.head.editor.anon=//object
@@ -376,16 +391,50 @@ extend(Anon)
 
          bulk:
          {
-            seek:function(qry,arg, pth,sbx,nte,bdy)
+            seek:function(qry,arg, inp,fnd,pwd,sch,pth,drv,ttl,tab,rsl)
             {
-               pth=qry.searchIn; sbx=rectOf(select('#CodeToolFind').select('input')[2]); nte=['?',NEED,BL,[sbx.left,(sbx.top-sbx.height-6)]];
-               pth=trim(pth); bdy=document.body; nte[0]='this feature is not available .. yet'; bdy.notify.apply(bdy,nte);
-               dump(pth);
+               inp=select('#CodeToolFind').select('input'); fnd=qry.findText;
+               pwd=rtrim(repl.PWD,'/'); if(!fnd){inp[0].notify('nothing to find',NEED);return};
+               sch=ltrim(qry.searchIn,'./'); sch=ltrim(sch,'/');  sch=rtrim(sch,'/');
+               pth=rtrim(`${pwd}/${sch}`,'/'); if(!isPath(pth)&&!isPath(`/${pth}`)){inp[2].notify('invalid path',FAIL);return};
+               drv=select('#CodeTabber').driver; ttl=`bulkFind`; tab=drv.select(ttl); if(!!tab){drv.delete(ttl,true)};
+               tick.after(60,()=>
+               {
+                  drv.create({title:ttl,contents:[{panl:'#CodeBulkPanl', style:{padding:10},contents:[{h3:`searching...`}]}]});
+                  tab=drv.select(ttl,0); tab.head.editor={anon:{saved:1}}; rsl=tab.body.select('#CodeBulkPanl');
+                  purl('/Code/bulkFind',{path:pth,find:qry.findText},(r)=>
+                  {
+                     r=r.body; rsl.innerHTML=''; if(!isJson(r)){rsl.insert({span:r}); inp[2].notify(r,FAIL); return};
+                     r=decode.jso(r); rsl.insert({h3:'', pick:(!!arg), contents:((span(r)>0)?'found:':'nothing found')});
+                     let l=[]; let d=(arg?'inline-block':'none'); let t='replace in this file'; r.each((v,k)=>
+                     {
+                        radd(l,{grid:'.noSpan', contents:[{row:
+                        [
+                           {col:[{input:'', type:'checkbox', style:{display:d, width:20}, title:t, checked:true, value:k}]},
+                           {col:[{div:'.link', contents:`${k} (${v})`, onclick:function()
+                           {
+                              let nfo={path:this.path,type:'file',fext:fext(this.path)};
+                              Anon.Code.open(nfo);
+                           }
+                           .bind({path:k,find:fnd})}]},
+                        ]}]});
+                     });
+                     rsl.insert(l);
+                  });
+               });
             },
 
-            swap:function(qry,arg)
+            swap:function(qry,arg, slf,blk,lst,vrs)
             {
-               this.seek(qry);
+               slf=this; if(!select('#CodeBulkPanl')){this.seek(qry,'swap'); wait.until(()=>
+               {return (!!select('#CodeBulkPanl')&&!!select('#CodeBulkPanl').select('h3'))},()=>{this.swap(qry,arg)});return};
+               blk=select('#CodeBulkPanl'); lst=blk.select('input'); if(!lst){return}; // nothing found
+               if(!blk.select('h3')[0].pick){blk.select('h3')[0].pick=1; lst.each((n)=>{n.view('inline-block')}); return}; // show checkboxes
+               vrs={list:[],find:qry.findText,swap:qry.swapText}; lst.each((n)=>{if(n.checked){radd(vrs.list,n.value)}});
+               popConfirm(`Confirm BULK replace`,`This action cannot be "undone".\nAre you sure you want to do this?`,`dark`)
+               ({
+                  'warn::Ok':function(){purl('/Code/bulkSwap',vrs,()=>{slf.seek(qry)});this.root.exit()},
+               });
             },
 
             done:function(){},

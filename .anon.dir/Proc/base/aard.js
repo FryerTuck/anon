@@ -1,6 +1,7 @@
 "use strict";
 
 const HOSTNAME='{:HOSTNAME:}';
+const HOSTPURL=('https://'+HOSTNAME);
 const UNDF=(function(){}());
 
 const wack = function(r)
@@ -10,39 +11,34 @@ const wack = function(r)
 }
 .bind({line:atob('{:WACKMESG:}').split('\n'),done:0});
 
-const addStack = function(e, s,l)
+const stak = function(x,a, e,s,r,h,o)
 {
-   if(!e||!e.stack){e=(new Error('.'))}; s=e.stack.split('\n'); s.shift(); l=[]; if(!addStack.log){addStack.log=''};
-   s.forEach((i)=>{i=i.trim(); if((i.indexOf('<anonymous>')<0)&&(addStack.log.indexOf(i)<0)&&(l.indexOf(i)<0)){l.push(i)}});
-   s=l.join('\n'); s+=('\n'+addStack.log); s=s.trim(); addStack.log=s;
+   a=(a||''); e=(new Error('.')); s=e.stack.split('\n'); s.shift();  r=[]; h=HOSTPURL; o=['_fake_']; s.forEach((i)=>
+   {
+      if(i.indexOf(h)<0){return}; let p,c,f,l,q; q=1; p=i.trim().split(h); c=p[0].split('@').join('').split('at ').join('').trim();
+      c=c.split(' ')[0];if(!c){c='anon'}; o.forEach((y)=>{if(((c.indexOf(y)==0)||(c.indexOf('.'+y)>0))&&(a.indexOf(y)<0)){q=0}}); if(!q){return};
+      p=p[1].split(' '); f=p[0]; if(f.indexOf(':')>0){p=f.split(':'); f=p[0]}else{p=p.pop().split(':')}; if(f=='/'){return};
+      l=p[1]; r[r.length]=([c,f,l]).join(' ');
+   });
+   if(!isNaN(x*1)){return r[x]}; return r;
 };
 
-const getStack = function(e,k, r){addStack(e); r=addStack.log; if(!k){addStack.log=''}; return r};
-
-const fubu = function(o,k)
-{
-   let l,r; if(k==UNDF){k=1}; l=getStack(0,k).split('\n'); r=(!1); if((typeof o)!='string'){o=''};
-   l.forEach((i)=>{if(o&&(i.indexOf(o)>-1)){return}; if(i.indexOf(HOSTNAME)>0){r=(!0)}}); return r;
-};
-
-const sesn = function(a,k)
-{if(!fubu(0,k)){wack();return}; if(((typeof a)!='string')||(a.length<1)||!this[a]){return (!0)}; return this[a];}.bind
+const sesn = function(a)
+{if(!stak(0)){wack();return}; if(((typeof a)!='string')||(a.length<1)||!this[a]){return}; return this[a];}.bind
 ({USER:'{:SESNUSER:}',CLAN:'{:SESNCLAN:}',HASH:'{:SESNHASH:}'});
 
-const proc = function(n,v,c)
+const script=function(p,f, n){n=document.createElement('script'); n.src=`${p}`; n.onload=f; document.head.appendChild(n);};
+(function(s,c)
 {
-   if(((typeof n)!='string')||(n.length<1)||!this[n]){return}; if(!v){return}; if(!v.forEach){v=[v]}; let z=0; let s=addStack.log;
-   if(!fubu()){wack();return}; addStack.log=s; return this[n].apply((c||null),v);
-}.bind({evl:window.eval,add:Element.prototype.appendChild,mod:Element.prototype.setAttribute,xhr:XMLHttpRequest.prototype.open});
-
-window.eval=null;
-const badCfg='{:badCfg:}';
-(function(a,b,s,c)
-{
+   document.cookie=`{:SESNHASH:}=...;domain=${HOSTNAME};path=/`;
    s=HOSTNAME.split('.'); c=location.host.split('.'); if((s.length<3)||(c.length<3)){wack();return};
    s.shift(); s=s.join('.'); c.shift(); c=c.join('.');if((location.host!=s)&&(c!=s)){wack();return};
-   a=document.createElement('script'); a.src='/Proc/base/base.js'; a.onload=function()
+   script('/Proc/base/abec.js',()=>
    {
-      requires(['/Proc/base/busy.htm','/Proc/dcor/aard.css','/Proc/libs/opentype/font.js','/Proc/base/boot.js']);
-   };document.head.appendChild(a);
+      script('/Proc/base/base.js',()=>{requires
+      ([
+         '/Proc/base/busy.htm','/Proc/dcor/aard.css','/Proc/base/xtag.js','/Proc/base/xatr.js',
+         '/Proc/libs/opentype/font.js','/Proc/base/boot.js'
+      ])});
+   });
 }());

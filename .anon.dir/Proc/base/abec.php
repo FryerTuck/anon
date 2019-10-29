@@ -611,9 +611,10 @@ namespace Anon;
          if(isin($src,['https://','http://']))
          {
             if(!online()){fail("`$hst` is offline");}; try{$x=exec::{"git ls-remote $src"}();}catch(\Exception $e){$x=$e->getMessage();};
-            $w=0; if(isin($x,'fatal: ')){$w=(isin($x,'not read Password')?'forbidden':(isin($x,' not found')?'undefined':'missing'));};
-            if($w){$x=''; if($w=='forbidden'){$x="\nTIP :: set the password inside the origin URL .. http://user:pass@site.com/repo.git";}};
-            if($w){fail("failed to connect to `$src` .. reason: it's $w".$x);};
+            $w=0; $eg="https://USER:PASS@example.com/repoName.git"; if(arg($x)->startsWith('fatal: '))
+            {$w=(isin($x,['not read Username','not read Password'])?'forbidden':(isin($x,' not found')?'undefined':'missing'));};
+            if($w){$x=''; if($w=='forbidden'){$x="\n\n>TIP :: set the username and password inside the origin URL like this: $eg";}};
+            if($w){fail::repo("Repository at: $src is $w".$x);};
          };
 
          $nps=self::survey($dir,$brn,NATIVE,0,0); exec::{"git fetch origin $brn"}($dir);
@@ -821,9 +822,11 @@ namespace Anon;
 
       static function line($p,$b,$e=null)
       {
+         if(!isee($p)){fail("expecting readable path");};  if(isFold($p)){$r=knob(); $l=pget($p); foreach($l as $i)
+         {$q=self::line("$p/$i",$b,$e); if(isKnob($q)){foreach($q as $k => $v){$r->$k=$v;}}elseif($q!==null){$r->{"$p/$i"}=$q;}}; return $r;};
          expect::file($p,R); $d=pget($p); if(!isin($d,$b)||($e!==null)&&!isin($d,$e)){return;}; $d=frag($d,"\n");
-         if($e===null){foreach($d as $x => $l){if(isin($l,$b)){return ($x+1);}}; return;}; $r=[]; $bx=0; $ex=0; foreach($d as $x => $l)
-         {$x=($x+1); $bx=(isin($l,$b)?$x:$bx); $ex=(isin($l,$e)?$x:0); if($bx&&$ex){$r[]=[$bx,$ex]; $bx=0; $ex=0;};};
+         if($e===null){foreach($d as $x => $l){if(isin($l,$b)){return ($x+1);}}; return;}; $r=[]; $bx=0; $ex=0; foreach($d as $i => $l)
+         {$x=($i+1); $bx=(isin($l,$b)?$x:$bx); $ex=(isin($l,$e)?$x:0); if($bx&&$ex){$r[]=[$bx,$ex]; $bx=0; $ex=0;};};
          return ((span($r)<1)?null:$r);
       }
 

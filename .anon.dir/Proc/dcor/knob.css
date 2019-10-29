@@ -167,9 +167,10 @@
       display:inline-block; position:relative; box-sizing:border-box;
       padding:0px; margin:0px; font-size:16px; line-height:16px;
    }
-   icon>div
+   icon div
    {
       display:inline-block;
+      font-family: Arial, Helvetica, sans-serif !important;
       font-size:0.85em;
       padding-left:0.3em;
    }
@@ -691,7 +692,7 @@
       padding:0px;
       margin:0px;
       overflow:hidden;
-      background:hsla(0,0%,10%,0.8);
+      background:hsla(0,0%,6%,0.95);
       outline:none;
    }
 
@@ -935,6 +936,24 @@
    {
       padding:10px !important;
       text-shadow:0px 0px 1px hsla(0,0%,0%,0.3);
+   }
+
+   .AnonPopAlert .bodymesg .markdown-body p
+   {
+      margin-left:0px !important;
+   }
+
+   .AnonPopAlert .bodymesg .markdown-body blockquote
+   {
+      color:hsla(0,0%,80%,1);
+      opacity:0.6;
+   }
+
+   .AnonPopAlert .bodymesg .markdown-body pre code
+   {
+      font-family:'code' !important;
+      font-size:16px !important;
+      line-height:16px !important;
    }
 /* ----------------------------------------------------------------------------------------------- */
 

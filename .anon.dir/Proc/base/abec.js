@@ -78,7 +78,7 @@
 
    const isText = function(v,g,l){if(!((typeof v)==='string')){return FALS}; return (isVoid(g)||spanIs(v,g,l))};
    const isWord = function(v,g,l){if(!test(trim(v,'_'),/^([a-zA-Z])([a-zA-Z0-9_]{1,35})+$/)){return}; return (isVoid(g)||spanIs(v,g,l))};
-   const isPath = function(v,g,l){if(!test(v,/^([a-zA-Z0-9-\/\._@~]){1,432}$/)){return FALS}; return ((v[0]=='/')&&(isVoid(g)||spanIs(v,g,l)))};
+   const isPath = function(v,g,l){if(!test(v,/^([a-zA-Z0-9-\/\._@~$]){1,432}$/)){return FALS}; return ((v[0]=='/')&&(isVoid(g)||spanIs(v,g,l)))};
    const isJson = function(v,g,l){return (isin(['[]','{}','""'],wrapOf(v))?TRUE:FALS);};
 
    const isList = function(v,g,l)
@@ -144,7 +144,7 @@
 
 // func :: harden : make immutable
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   const harden = function(t,o,l)
+   const harden = function(t,o)
    {
       o=(o||MAIN); if(!o.hasOwnProperty){fail('invalid parent'); return;}; var k=(isText(t)?t:t.name);
       if(!k||!o.hasOwnProperty(k)){fail('invalid attribute `'+k+'`'); return;};
@@ -266,7 +266,7 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const dump = function()
    {
-      let m,a,t,f,x,n,d; m=('dump stack size of '+this.mkb+'Kb exceeded'); a=([].slice.call(arguments)); a.forEach((i)=>
+      let m,a,t,f,x,n,d; m=('dump log size of '+this.mkb+'Kb exceeded'); a=([].slice.call(arguments)); a.forEach((i)=>
       {
          n=time(); d=(n-this.old); t=tval(i); this.ckb+=(t.length/1024); f=(this.ckb>this.mkb); if(f){this.ckb=0; this.old=n;};
          if(f&&(d>5)){console.clear(); f=0}; x=(f?m:i); console[(f?'error':'log')](x);
@@ -281,12 +281,11 @@
 
 // func :: fail : trigger error
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   const fail = function(m, t,o)
+   const fail = function(m, n,e)
    {
-      if(!isin(m,' :: ')){}; m=('Usage :: '+m); t=stub(m,' :: '); m=t[0]; t=t[2];
-      o=(new Error((m+''))); o.name=t; MAIN.dispatchEvent((new CustomEvent('fail',{detail:o})));
-      MAIN.HALT=1; console.error(o);
-      // throw o;
+      if(isKnob(m)){if(!m.name){m.name='Usage'}; MAIN.dispatchEvent((new CustomEvent('procFail',{detail:m})));return};
+      if(!isin(m,' :: ')){m=('Usage :: '+m);}; n=stub(m,' :: '); m=n[2]; n=n[0]; e=(new Error(m)); e.name=n;
+      throw e;
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -473,30 +472,6 @@
 
 
 
-// func :: hijack : intercept class-constructors or methods
-// --------------------------------------------------------------------------------------------------------------------------------------------
-   const hijack = function(driver,victim,jacker)
-   {
-      if(((typeof driver)=='string')&&!victim){return this.plan[driver]}; // recap
-      if(victim in this.plan){return}; // only jack once .. less cruel
-      this.plan[victim]={victim:driver[victim],jacker:jacker}; // plan the heist
-
-      let con = {enumerable:false,configurable:false,writable:false,value:function()
-      {
-         let car=hijack((this.mask||this.name||this.constructor.name)); let m=this.mask;
-         let arg=car.jacker.apply(null,arguments); if(!Array.isArray(arg)){arg=[arg]};
-         if(!m){return new (Function.prototype.bind.apply(car.victim,[null].concat(arg)))()}
-         else{return car.victim.apply(this,arg)};
-      }};
-
-      try{con.value.prototype = Object.create(driver[victim].prototype)} // blend in
-      catch(oops){Object.defineProperty(driver,'mask',{value:victim});}; // recover
-      Object.defineProperty(driver,victim,con);
-   }.bind({plan:{}});
-// --------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
 // shiv :: sha1 : hash
 // --------------------------------------------------------------------------------------------------------------------------------------------
    !function(){"use strict";function t(t){t?(f[0]=f[16]=f[1]=f[2]=f[3]=f[4]=f[5]=f[6]=f[7]=f[8]=f[9]=f[10]=f[11]=f[12]=f[13]=f[14]=f[15]=0,this.blocks=f):this.blocks=[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],this.h0=1732584193,this.h1=4023233417,this.h2=2562383102,this.h3=271733878,this.h4=3285377520,this.block=this.start=this.bytes=this.hBytes=0,this.finalized=this.hashed=!1,this.first=!0}var h="object"==typeof window?window:{},s=!h.JS_SHA1_NO_NODE_JS&&"object"==typeof process&&process.versions&&process.versions.node;s&&(h=global);var i=!h.JS_SHA1_NO_COMMON_JS&&"object"==typeof module&&module.exports,e="function"==typeof define&&define.amd,r="0123456789abcdef".split(""),o=[-2147483648,8388608,32768,128],n=[24,16,8,0],a=["hex","array","digest","arrayBuffer"],f=[],u=function(h){return function(s){return new t(!0).update(s)[h]()}},c=function(){var h=u("hex");s&&(h=p(h)),h.create=function(){return new t},h.update=function(t){return h.create().update(t)};for(var i=0;i<a.length;++i){var e=a[i];h[e]=u(e)}return h},p=function(t){var h=eval("require('crypto')"),s=eval("require('buffer').Buffer"),i=function(i){if("string"==typeof i)return h.createHash("sha1").update(i,"utf8").digest("hex");if(i.constructor===ArrayBuffer)i=new Uint8Array(i);else if(void 0===i.length)return t(i);return h.createHash("sha1").update(new s(i)).digest("hex")};return i};t.prototype.update=function(t){if(!this.finalized){var s="string"!=typeof t;s&&t.constructor===h.ArrayBuffer&&(t=new Uint8Array(t));for(var i,e,r=0,o=t.length||0,a=this.blocks;r<o;){if(this.hashed&&(this.hashed=!1,a[0]=this.block,a[16]=a[1]=a[2]=a[3]=a[4]=a[5]=a[6]=a[7]=a[8]=a[9]=a[10]=a[11]=a[12]=a[13]=a[14]=a[15]=0),s)for(e=this.start;r<o&&e<64;++r)a[e>>2]|=t[r]<<n[3&e++];else for(e=this.start;r<o&&e<64;++r)(i=t.charCodeAt(r))<128?a[e>>2]|=i<<n[3&e++]:i<2048?(a[e>>2]|=(192|i>>6)<<n[3&e++],a[e>>2]|=(128|63&i)<<n[3&e++]):i<55296||i>=57344?(a[e>>2]|=(224|i>>12)<<n[3&e++],a[e>>2]|=(128|i>>6&63)<<n[3&e++],a[e>>2]|=(128|63&i)<<n[3&e++]):(i=65536+((1023&i)<<10|1023&t.charCodeAt(++r)),a[e>>2]|=(240|i>>18)<<n[3&e++],a[e>>2]|=(128|i>>12&63)<<n[3&e++],a[e>>2]|=(128|i>>6&63)<<n[3&e++],a[e>>2]|=(128|63&i)<<n[3&e++]);this.lastByteIndex=e,this.bytes+=e-this.start,e>=64?(this.block=a[16],this.start=e-64,this.hash(),this.hashed=!0):this.start=e}return this.bytes>4294967295&&(this.hBytes+=this.bytes/4294967296<<0,this.bytes=this.bytes%4294967296),this}},t.prototype.finalize=function(){if(!this.finalized){this.finalized=!0;var t=this.blocks,h=this.lastByteIndex;t[16]=this.block,t[h>>2]|=o[3&h],this.block=t[16],h>=56&&(this.hashed||this.hash(),t[0]=this.block,t[16]=t[1]=t[2]=t[3]=t[4]=t[5]=t[6]=t[7]=t[8]=t[9]=t[10]=t[11]=t[12]=t[13]=t[14]=t[15]=0),t[14]=this.hBytes<<3|this.bytes>>>29,t[15]=this.bytes<<3,this.hash()}},t.prototype.hash=function(){var t,h,s=this.h0,i=this.h1,e=this.h2,r=this.h3,o=this.h4,n=this.blocks;for(t=16;t<80;++t)h=n[t-3]^n[t-8]^n[t-14]^n[t-16],n[t]=h<<1|h>>>31;for(t=0;t<20;t+=5)s=(h=(i=(h=(e=(h=(r=(h=(o=(h=s<<5|s>>>27)+(i&e|~i&r)+o+1518500249+n[t]<<0)<<5|o>>>27)+(s&(i=i<<30|i>>>2)|~s&e)+r+1518500249+n[t+1]<<0)<<5|r>>>27)+(o&(s=s<<30|s>>>2)|~o&i)+e+1518500249+n[t+2]<<0)<<5|e>>>27)+(r&(o=o<<30|o>>>2)|~r&s)+i+1518500249+n[t+3]<<0)<<5|i>>>27)+(e&(r=r<<30|r>>>2)|~e&o)+s+1518500249+n[t+4]<<0,e=e<<30|e>>>2;for(;t<40;t+=5)s=(h=(i=(h=(e=(h=(r=(h=(o=(h=s<<5|s>>>27)+(i^e^r)+o+1859775393+n[t]<<0)<<5|o>>>27)+(s^(i=i<<30|i>>>2)^e)+r+1859775393+n[t+1]<<0)<<5|r>>>27)+(o^(s=s<<30|s>>>2)^i)+e+1859775393+n[t+2]<<0)<<5|e>>>27)+(r^(o=o<<30|o>>>2)^s)+i+1859775393+n[t+3]<<0)<<5|i>>>27)+(e^(r=r<<30|r>>>2)^o)+s+1859775393+n[t+4]<<0,e=e<<30|e>>>2;for(;t<60;t+=5)s=(h=(i=(h=(e=(h=(r=(h=(o=(h=s<<5|s>>>27)+(i&e|i&r|e&r)+o-1894007588+n[t]<<0)<<5|o>>>27)+(s&(i=i<<30|i>>>2)|s&e|i&e)+r-1894007588+n[t+1]<<0)<<5|r>>>27)+(o&(s=s<<30|s>>>2)|o&i|s&i)+e-1894007588+n[t+2]<<0)<<5|e>>>27)+(r&(o=o<<30|o>>>2)|r&s|o&s)+i-1894007588+n[t+3]<<0)<<5|i>>>27)+(e&(r=r<<30|r>>>2)|e&o|r&o)+s-1894007588+n[t+4]<<0,e=e<<30|e>>>2;for(;t<80;t+=5)s=(h=(i=(h=(e=(h=(r=(h=(o=(h=s<<5|s>>>27)+(i^e^r)+o-899497514+n[t]<<0)<<5|o>>>27)+(s^(i=i<<30|i>>>2)^e)+r-899497514+n[t+1]<<0)<<5|r>>>27)+(o^(s=s<<30|s>>>2)^i)+e-899497514+n[t+2]<<0)<<5|e>>>27)+(r^(o=o<<30|o>>>2)^s)+i-899497514+n[t+3]<<0)<<5|i>>>27)+(e^(r=r<<30|r>>>2)^o)+s-899497514+n[t+4]<<0,e=e<<30|e>>>2;this.h0=this.h0+s<<0,this.h1=this.h1+i<<0,this.h2=this.h2+e<<0,this.h3=this.h3+r<<0,this.h4=this.h4+o<<0},t.prototype.hex=function(){this.finalize();var t=this.h0,h=this.h1,s=this.h2,i=this.h3,e=this.h4;return r[t>>28&15]+r[t>>24&15]+r[t>>20&15]+r[t>>16&15]+r[t>>12&15]+r[t>>8&15]+r[t>>4&15]+r[15&t]+r[h>>28&15]+r[h>>24&15]+r[h>>20&15]+r[h>>16&15]+r[h>>12&15]+r[h>>8&15]+r[h>>4&15]+r[15&h]+r[s>>28&15]+r[s>>24&15]+r[s>>20&15]+r[s>>16&15]+r[s>>12&15]+r[s>>8&15]+r[s>>4&15]+r[15&s]+r[i>>28&15]+r[i>>24&15]+r[i>>20&15]+r[i>>16&15]+r[i>>12&15]+r[i>>8&15]+r[i>>4&15]+r[15&i]+r[e>>28&15]+r[e>>24&15]+r[e>>20&15]+r[e>>16&15]+r[e>>12&15]+r[e>>8&15]+r[e>>4&15]+r[15&e]},t.prototype.toString=t.prototype.hex,t.prototype.digest=function(){this.finalize();var t=this.h0,h=this.h1,s=this.h2,i=this.h3,e=this.h4;return[t>>24&255,t>>16&255,t>>8&255,255&t,h>>24&255,h>>16&255,h>>8&255,255&h,s>>24&255,s>>16&255,s>>8&255,255&s,i>>24&255,i>>16&255,i>>8&255,255&i,e>>24&255,e>>16&255,e>>8&255,255&e]},t.prototype.array=t.prototype.digest,t.prototype.arrayBuffer=function(){this.finalize();var t=new ArrayBuffer(20),h=new DataView(t);return h.setUint32(0,this.h0),h.setUint32(4,this.h1),h.setUint32(8,this.h2),h.setUint32(12,this.h3),h.setUint32(16,this.h4),t};var y=c();i?module.exports=y:(h.sha1=y,e&&define(function(){return y}))}();
@@ -539,6 +514,8 @@
    const indx = function(h,n,p)
    {
       if(!isInum(p)){p=0;}; let x,r;
+
+      if(isList(h)){return h.indexOf(n);};
 
       if(isText(h))
       {
@@ -584,13 +561,23 @@
 
 
 
-
 // func :: hash : returns sha1 hash of given value .. if no value given then return hash of (timestamp + document-lifetime + 10-random-chars)
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const hash = function(v)
    {
       if(v==VOID){v=(Date.now()+''+performance.now()+''+(Math.random().toString(36).slice(2,12)));}else{v=tval(v)};
       return sha1(v);
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: fash : faster prformance variant of `hash` .. not as "unique" (but unique to this runtime instance) and returns md5
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const fash = function(v)
+   {
+      if(v==VOID){v=(performance.now()+''+(Math.random().toString(36).slice(2,12)));}else{v=tval(v)};
+      return md5(v);
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -795,7 +782,7 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const stackLog = function(e,o)
    {
-      var h,s,r,f,p,l,x; h=(location.protocol+'//'+location.hostname+''); s=getStack(e);
+      var h,s,r,f,p,l,x; h=(location.protocol+'//'+location.hostname+''); s=getStack(e); addStack.log=s;
       if((s.indexOf('\n')<0)||(s.indexOf('at ')<0)){return []}; s=s.split('\n'); r=[]; x=0; if(!isList(o)){o=[o]};
       o.push('getStack'); o.push('addStack'); o.push('stackLog'); s.forEach(function(i)
       {
@@ -828,10 +815,11 @@
    {
       MAIN.addEventListener('error',function(event)
       {
-         var e,m,f,l,s,i,n,o; event.preventDefault(); event.stopPropagation(); if(MAIN.HALT){return}; MAIN.HALT=1; e=event.error;
+         var e,m,f,l,s,i,n,h,o; event.preventDefault(); event.stopPropagation(); if(MAIN.HALT){return}; MAIN.HALT=1; e=event.error;
          f=event.filename; l=event.lineno; if(!e||isText(e)||((e.stack+'').indexOf('\n')<0)){e=(new Error((e+'')))}; n=(e.name||'usage');
-         m=e.message; if(!f){f=fail.maybe;}; if(!l){l=0;}; s=getStack(e); o={name:n, mesg:m, file:f, line:l};
-         console.error((n+' :: '+m+' '+f+' ('+l+')'),s);
+         m=e.message; if(!f){f=fail.maybe;}; if(!l){l=0;}; s=stak(); h=`https://${HOSTNAME}`; f=ltrim(f,h); f=rtrim(f,'?n=script');
+         o={name:n, mesg:m, file:f, line:l, stak:s}; dump(o);
+         tick.after(500,()=>{MAIN.HALT=VOID}); MAIN.dispatchEvent((new CustomEvent('procFail',{detail:o})));
       });
    }());
 // --------------------------------------------------------------------------------------------------------------------------------------------
@@ -840,22 +828,93 @@
 
 // tool :: bore : get/set/rip keys of objects by dot-path reference
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   extend(MAIN)
-   ({
-      bore:function(obj,key,val)
+   const bore = function(o,k,v)
+   {
+      if(((typeof k)!='string')||(k.trim().length<1)){return}; // invalid
+      if(v===VOID){return (new Function("a",`return a.${k}`))(o)}; // get
+      if(v===null){(new Function("a",`delete a.${k}`))(o); return true}; // rip
+      (new Function("a","z",`a.${k}=z`))(o,v); return true; // set
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// tool :: bake : define hardened properties
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const bake = function(o,k,v)
+   {
+      if(!o||!o.hasOwnProperty){return}; if(v==VOID){v=o[k]};
+      let c={enumerable:false,configurable:false,writable:false,value:v};
+      let r=true; try{Object.defineProperty(o,k,c);}catch(e){r=false};
+      return r;
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// tool :: dubbed : define/change the name of a function
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const dubbed = function(n,f)
+   {
+      if(((typeof f)!='function')||((typeof n)!='string')||(n.trim().length<1)){return}; // validate
+      f=f.toString(); f=f.slice(f.indexOf('(')); let r=(new Function("a",`return {[a]:function${f}}[a];`))(n);
+      return r;
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+// func :: isConstructor
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   function isConstructor(f)
+   {
+      try{new f();}catch(e){if(e.message.indexOf('not a constructor')>=0){return false;}};
+      return true;
+   }
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: jack : intercept class-constructors or methods
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const jack = function(k,v,x)
+   {
+      if(((typeof k)!='string')||!k.trim()){return}; // invalid reference
+      if(!!v&&((typeof v)!='function')){return}; // invalid callback func
+      if(!v){return this[k]}; // return existing definition, or undefined
+      if(k in this){this[k].list[(this[k].list.length)]=v; return}; //add
+      if(!x||((typeof x)!='object')){x=VOID}; //  validate once as object
+      let h,n,c,f; h=k.split('.'); n=h.pop(); h=h.join('.'); //short vars
+      this[k]={func:bore(MAIN,k),list:[v],evnt:x}; // callback definition
+      h=(h?bore(MAIN,h):MAIN); c=isConstructor(this[k].func); //obj & con
+      this[k].cons=c; bore(MAIN,k,null); //set cons & delete the original
+
+      f=function()
       {
-         var map,end,rsl; map=key.split('.'); end=(map.length -1);
+         let n,r,j,a,z,q; j='_fake_'; r=stak(0,j); r=(r||'').split(' ')[0];
+         if(r.startsWith(j)||(r.indexOf(`.${j}`)>0)){n=(r.split(j).pop())};
+         if(!n&&(r=='new')&&!!this.constructor){n=this.constructor.name;};
+         if(!n){console.error(`can't jack "${r}"`);return}; r=jack(n);
+         a=([].slice.call(arguments)); for(let p in r.list)
+         {if(!r.list.hasOwnProperty(p)){continue}; let i=dubbed(j,r.list[p]);
+         q=i.apply(this,a); if(q!=VOID){break};}; if(!Array.isArray(q)){q=[q]};
+         try{if(!r.cons){z=r.func.apply(this,q)}else
+         {z=(new (Function.prototype.bind.apply(r.func,[null].concat(a))));}}
+         catch(e){if(!!r.evnt&&!!r.evnt.error){r.evnt.error(e)}
+         else{console.error(e)};return}; if(!!r.evnt&&!!z.addEventListener)
+         {for(let en in r.evnt){if(r.evnt.hasOwnProperty(en))
+         {z.addEventListener(en,r.evnt[en],false)}}}; return z;
+      };
 
-         map.forEach(function(ref,idx)
-         {
-            if (!obj.hasOwnProperty(ref)){obj[ref] = ((idx < end) ? {} : val);};
-            if (idx < end){obj = obj[ref]; return;};
-            rsl = ((val === undefined) ? obj[ref] : true);
-         });
+      if(!c){f=dubbed(`_fake_${k}`,f)}; bake(h,n,f);
+      try{h[n].prototype=Object.create(this[k].func.prototype)}catch(e){};
+   }.bind({});
 
-         return rsl;
-      },
-   });
+
+   const hijack = function(l,f)
+   {
+      if(isList(l)){l.forEach((i)=>{jack(i,f)})};
+      if(isKnob(l)){l.each((v,k)=>{jack(k,v)})};
+   };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -935,7 +994,7 @@
 
       for (var k in d)
       {
-         if(MAIN.HALT){return};
+         // if(MAIN.HALT){return};
          if(((k+'').length<1)||!d.hasOwnProperty(k)){continue}; if((t=='arr')&&!isNaN(k)){k=(k*1)};
          var z = f.apply(d,[d[k],k]);  if((z!==VOID)&&(z!==NEXT)&&(z!==SKIP)){break};
       };

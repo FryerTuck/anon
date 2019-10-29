@@ -41,17 +41,7 @@ select('#AnonAppsView').insert
                [
                   {row:[{col:'.slabMenuHead', contents:'draw'}]},
                   {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
-                  {row:[{col:'#DrawTreeView .slabMenuBody', contents:[{panl:'#DrawTreePanl', contents:
-                  [
-                     {treeview:'', source:'/User/treeMenu', uproot:true, draggable:true, feedable:true, listen:
-                     {
-                        'LeftClick':function()
-                        {
-                           if(isin(['fold','plug'],this.info.type)){return};
-                           Anon.Draw.open(this.info.path);
-                        },
-                     }}
-                  ]}]}]},
+                  {row:[{col:'#DrawTreeView .slabMenuBody', contents:[{panl:'#DrawTreePanl'}]}]},
                ]}
             ]},
             {col:'.panlVertDlim', role:'gridFlex', axis:X, target:'<', contents:{vdiv:''}},
@@ -142,6 +132,15 @@ extend(Anon)
 
       init:function(slf)
       {
+         select('#DrawTreePanl').insert({treeview:'', source:'/User/treeMenu', uproot:true, draggable:true, feedable:true, listen:
+         {
+            'LeftClick':function()
+            {
+               if(isin(['fold','plug'],this.info.type)){return};
+               Anon.Draw.open(this.info.path);
+            },
+         }});
+
          select('#DrawTabber').listen('focus',function(e)
          {
             let drv=e.detail.driver; let tgt=e.detail.target.body.select('.DrawViewWrap')[0];

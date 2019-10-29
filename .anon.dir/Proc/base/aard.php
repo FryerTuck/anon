@@ -360,7 +360,7 @@ namespace Anon;
       $l=array_keys($_COOKIE); if(count($l)<1){return;}; $r=null; $t='/^[a-z0-9]{40}$/'; $c=envi('COREPATH'); $h="$c/Proc/temp/sesn";
       $n=null; do{$n=array_pop($l); if(!test($n,$t)){$n=null; continue;}; if(is_dir("$h/$n")){$r=$n;break;}}while(count($l));
       if($r){return $r;}; // session is cookie-based .. it exists as a live session-dir server-side .. all is well
-      if($n){harakiri('session key expired or is fake');}; // YOU HAVE DIED
+      if($n){kuki($n,null); $s=envi('SCHEME'); $h=envi('HOST'); $p=envi('URI'); header("Location: $s://{$h}{$p}");}; // bad session key
       $r=kuki('APIKEY'); if(!$r){$r=post('APIKEY');}; if(!$r){$r=envi('APIKEY');}; if(!$r){return;}; // no key
       if(!test($r,$t)){harakiri(wack());}; // invalid session key .. YOU HAVE DIED
       if(is_dir("$h/$r")){return $r;}; // session is live
@@ -517,6 +517,7 @@ namespace Anon;
    if(envi('DOCUMENT_ROOT DBUGPATH HOST SCHEME BOTMATCH')!==1){header("HTTP/1.1 424 Failed Dependency - server vars"); die();}; // bad vars
    $d=envi('DOCUMENT_ROOT'); $s=skey(); $u=''; $c=explode('/',envi('COREPATH')); $c=array_pop($c);
    $g=envi('DBUGPATH'); $_SERVER['DBUGPATH']="/$g"; unset($g);
+
    if($s){$s="$d/$c/Proc/temp/sesn/$s/USER"; if(file_exists($s)){$u=file_get_contents($s);}};
    if(!$u){$u='anonymous';}; $_SERVER['USERNAME']=$u; $_SERVER['USERPATH']="$d/$c/User/data/$u/home";
 
@@ -626,7 +627,7 @@ namespace Anon;
    }
    elseif($i==='GUI')
    {
-      if(!$s&&isset($_GET['k'])&&($_GET['k']===$k)){$i='DPR';};
+      if(isset($_GET['k'])&&($_GET['k']===$k)){$i='DPR';};
    };
 
    $_SERVER['INTRFACE']=$i; unset($a,$h,$p,$x,$r,$b,$s,$k,$i);

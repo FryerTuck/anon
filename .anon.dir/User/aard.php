@@ -156,12 +156,16 @@ namespace Anon;
 
       static function treeMenu()
       {
-         $u=user('name'); $h="/User/data/$u/home"; //$q=knob($_POST); $f=$q->filter;
+         $v=knob($_POST); $h=$v->root; if(!$h){$h='~';};
 
-         if(!isee("$h/root"))
+         if(arg($h)->startsWith('~'))
          {
-            $b=conf('Code/forkName'); if(!is_funnic($b)){fail("invalid branch name in Code config");};
-            if(!isRepo('/')){repo::create('/'); wait(50);}; repo::cloned('/',"$h/root",$b,user('name'));
+            $u=user('name'); $h="/User/data/$u/home";
+            if(!isee("$h/root"))
+            {
+               $b=conf('Code/forkName'); if(!is_funnic($b)){fail("invalid branch name in Code config");};
+               if(!isRepo('/')){repo::create('/'); wait(50);}; repo::cloned('/',"$h/root",$b,$u);
+            };
          };
 
          $r=path::tree($h); ekko($r);

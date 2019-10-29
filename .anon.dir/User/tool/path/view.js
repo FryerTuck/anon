@@ -36,8 +36,7 @@ extend(repl)
    {
       repl.path('goto',a,(r)=>
       {
-         let p=ltrim(r,'$'); p=ltrim(p,'~');
-         if(!isPath(p)){repl.mumble(r);return};
+         if(!isPath(r)&&!isPath(`/${r}`)){repl.mumble(r);return};
          repl.PWD=r; repl.reprom();
       });
    },

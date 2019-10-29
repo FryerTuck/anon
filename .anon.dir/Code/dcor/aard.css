@@ -31,14 +31,9 @@
 
 
 
-#CodeBodyView>col
-{
-   position:relative
-}
 
 #CodeBodyPanl
 {
-   position:absolute !important;
    width:100% !important; height:100% !important;
    overflow:hidden !important;
 }
@@ -48,7 +43,7 @@
 
 .CodeEditWrap
 {
-   position:absolute;
+   /* position:absolute; */
    width:100%; height:100%;
    font-size:11px;
    line-height:15px;
@@ -99,17 +94,13 @@
 
 
 
-#CodeToolView
+#CodeToolHold
 {
-   background:hsla(0,0%,0%,0.1);
+   background:hsla(0,0%,0%,0.15);
 }
 
-/* #CodeToolView.show {height:98px !important;} */
-#CodeToolView.show {height:90px !important;}
-#CodeToolView.hide {height:0.1px !important;}
-#CodeToolView>col {position:relative;}
-
-#CodeToolWrap {position:absolute;}
+#CodeToolHold.show {height:90px !important;}
+#CodeToolHold.hide {height:0.1px !important;}
 
 
 
@@ -157,3 +148,13 @@
 
 #CodeInfoRepo
 {width:20px;}
+
+
+
+#CodeBulkPanl .link
+{
+   font-family:'code';
+   font-size:16px;
+   line-height:16px !important;
+   margin-top:2px;
+}

@@ -1,13 +1,13 @@
 extend(custom.attrib)
 ({
-   src:function(v,n,a, r)
-   {r=(isPath(v)?r=(v+'?n='+nodeName(n)):(v+'')); n.setAttribute('src',r); n.src=r; return TRUE;},
-
-   href:function(v,n,a, r)
-   {r=(isPath(v)?r=(v+'?n='+nodeName(n)):(v+'')); n.setAttribute('href',r); n.src=r; return TRUE;},
-
-   data:function(v,n,a, r)
-   {r=(isPath(v)?r=(v+'?n='+nodeName(n)):(v+'')); n.setAttribute('data',r); n.src=r; return TRUE;},
+   // src:function(v,n,a, r)
+   // {r=(isPath(v)?r=(v+'?n='+nodeName(n)):(v+'')); n.setAttribute('src',r); n.src=r; return TRUE;},
+   //
+   // href:function(v,n,a, r)
+   // {r=(isPath(v)?r=(v+'?n='+nodeName(n)):(v+'')); n.setAttribute('href',r); n.src=r; return TRUE;},
+   //
+   // data:function(v,n,a, r)
+   // {r=(isPath(v)?r=(v+'?n='+nodeName(n)):(v+'')); n.setAttribute('data',r); n.src=r; return TRUE;},
 
    demo:function(v,n,a, r)
    {if(!isin('input,textarea',nodeName(n))){return}; n.setAttribute('placeholder',v); n.placeholder=v;},

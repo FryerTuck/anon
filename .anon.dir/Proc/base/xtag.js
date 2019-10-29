@@ -94,7 +94,8 @@ extend(custom.domtag)
       {
          x=VOID; x=e.srcElement; if(nodeName(x)!='treeview'){x=x.lookup('^',3); if(nodeName(x)!='treetwig'){x=x.parentNode}};
          m=VOID; if(!x.info.root){x.info.root=x;}; m=x.info.mime.split('/')[0]; t=x.info.type; w=t; if(t=='fold'){w='folder'};
-         if(x.info.repo&&x.info.repo.fork&&x.info.repo.head&&x.info.repo.host){t='repoMain'; w='repo';};
+         // dump(x.info);
+         if(x.info.repo&&x.info.repo.head&&x.info.repo.host){t='repoMain'; w='repo';};
 
          l=//list
          [
@@ -114,7 +115,7 @@ extend(custom.domtag)
             radd(l,{item:'$repo-pull', text:'receive changes', onclick:function(){this.context.info.root.adjure('update','pull',this.context)}});
             radd(l,{item:'$repo-push', text:'publish changes', onclick:function(){this.context.info.root.adjure('update','push',this.context)}});
             radd(l,{item:'$warning', text:'discard changes', onclick:function(){this.context.info.root.adjure('update','anew',this.context)}});
-            radd(l,{item:'$history1', text:'revert previous', onclick:function(){this.context.info.root.adjure('update','anew',this.context)}});
+            radd(l,{item:'$history1', text:'revert previous', onclick:function(){this.context.info.root.adjure('update','prev',this.context)}});
          };
 
          if(t=='plug')
@@ -123,7 +124,7 @@ extend(custom.domtag)
             radd(l,{item:'$cog', text:'modify plug link', onclick:function(){this.context.info.root.adjure('modify','plug',this.context)}});
          };
 
-         if(x.info.path!='~')
+         if(!isin(['~','/'],x.info.path))
          {
             radd(l,{line:[]}),
             radd(l,{item:'$copy', text:('clone this '+w), onclick:function(){this.context.info.root.adjure('cloned',t,this.context)}});
@@ -168,7 +169,7 @@ extend(custom.domtag)
             });
          },
 
-         update:function(a,t,p,x){dump('update '+t);},
+         update:function(a,t,p,x){todo(`Anon treemenu update ${t} :: this needs to be working ASAP`);},
 
          modify:function(a,t,p,x)
          {
@@ -355,12 +356,13 @@ extend(custom.domtag)
       n.vivify = function(slnt, self,drgs,vars)
       {
          if(!isPath(this.source)){fail('expecting `source` attribute in treeview as path');return};
-         self=this; vars=(self.initVars||{}); if(self.filter){vars.filter=self.filter;};
+         self=this; vars=(self.initVars||{}); vars.root=repl.PWD; if(self.filter){vars.filter=self.filter;};
          if(self.draggable){drgs=TRUE; delete self.draggable}else{drgs=FALS};
          purl({target:this.source,convey:vars,silent:slnt},(r)=>
          {
             r=r.body; if((span(r)<1)||(r=='null')){return};
-            if(!isJson(r)){fail('expecting json');return}; r=decode.JSON(r); if(span(r)<1){return};
+            if(!isJson(r)){if(r.startsWith("evnt: fail\n")){return}; fail('expecting json');return};
+            r=decode.JSON(r); if(span(r)<1){return};
 
             self.repo=r.repo; r.root=self; delete r.repo; self.info={path:(r.path),type:r.type,mime:r.mime,time:r.time,repo:self.repo};
             if(isList(r)){self.uproot=1; r={name:'void',path:'/',mime:'inode/directory',type:'fold',data:r}};

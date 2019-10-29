@@ -1,12 +1,4 @@
-
-// incl :: abec : tools
-// --------------------------------------------------------------------------------------------------------------------------------------------
-{:'/Proc/base/abec.js':}
-// --------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-// "use strict"; .. already defined in abec.js
+"use strict";
 
 
 // func :: globVars : immutable globals
@@ -21,7 +13,7 @@
 
 
 
-// func :: mimeType|typeMime : return mime-type from path -or file-extension -OR- return file-extension from mime-type
+// func :: mimeType|typeMime : return mime-type from path/extn -OR- return extn from mime-type
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const mimeType = function(d)
    {
@@ -33,8 +25,6 @@
    {
       if(!isText(d,3)||!isin(d,'/')){return};
    };
-
-   globVars({mime:decode.jso(`{:conf('Proc/mimeType'):}`)});
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -262,6 +252,8 @@
 
                alt=function(evnt)
                {
+                  extend(evnt)({hijack:function(frce)
+                  {if(frce){this.stopImmediatePropagation()}; this.jacked=(frce||true); this.preventDefault(); this.stopPropagation();}});
                   let evn,btn,tgt,kcl,hcn,cmb,dev,crd,rpt,pvk,rkc,rsp,grb,key,ffmeta; evn=evnt.type; tgt=evnt.target; cmb=[];
                   dev=(isin(evn,'key')?'keyboard':'pointer'); pvk=this.pvk; rpt=evnt.repeat; key=this.kpr;
                   if((evnt instanceof MouseEvent)||(evnt instanceof WheelEvent)){dev='pointer'};
@@ -317,7 +309,7 @@
                {
                   alt.worker=(new MutationObserver(function(l)
                   {
-                     let q=addStack.log; if(!fubu('worker.MutationObserver.bind')){wack();return}; addStack.log=q;
+                     if(!stak(0)){wack();return};
 
                      let k,v,h,r; for(var m of l)
                      {
@@ -375,7 +367,7 @@
             // this.stream.listen('open',function(evnt){});
             this.stream.listen('ping',function(evnt){server.sensor.live=1});
             this.stream.listen('shut',function(evnt){server.stream.close(); server.sensor.live=0});
-            this.stream.listen('fail',function(evnt){if(MAIN.Busy){Busy.tint('red')}; fail(atob(evnt.data));});
+            this.stream.listen('fail',function(evnt){if(MAIN.Busy){Busy.tint('red')}; fail(decode.jso(atob(evnt.data)));});
 
             this.stream.listen('error',function(evnt) // this happens on reconnect -or "connection fail", only the latter is an error
             {
@@ -444,7 +436,8 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const requires = function(l,cbfn, s,a,slf,d)
    {
-      if(MAIN.HALT){return}; addStack(); if(!isFunc(cbfn)){cbfn=function(){}}; slf=this; a={}; d=0;
+      // if(MAIN.HALT){return};
+      if(!isFunc(cbfn)){cbfn=function(){}}; slf=this; a={}; d=0;
       if(!l||(span(l)<1)){cbfn();return}; if(!isList(l)){l=[l]}; //dump(`${this.decr} ${s}`,'\n');
       l.each((i)=>
       {
@@ -526,10 +519,6 @@
 // tool :: custom : library for custom `domtag` and `attrib` .. extend anywhere with: `extend(custom.domtag)({newtag:funcion(){}})`
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const custom = {domtag:{},attrib:{}};
-
-   {:'/Proc/base/xtag.js':}
-
-   {:'/Proc/base/xatr.js':}
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -538,7 +527,7 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const create = function(t,a,c, r,x,n)
    {
-      if(MAIN.HALT){return};
+      // if(MAIN.HALT){return};
       if(isList(t)){r=[]; t.forEach((o)=>{r.push(create(o,a,c))}); return r}; // list of nodes
       if(wrapOf(trim(t))=='<>'){return xdom(t)}; // xml to node-list
       if(isText(t,1)){t={[t]:(a||''),contents:c}}; if(!isKnob(t)){return}; // validate
@@ -573,8 +562,8 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const modify = function(n,a,c,o)
    {
-      if(MAIN.HALT){return}; if(!isNode(n)||!isKnob(a)){return}; // validate
-      let slog=getStack(); addStack.log=slog;
+      // if(MAIN.HALT){return};
+      if(!isNode(n)||!isKnob(a)){return}; // validate
       a.each((v,k)=>
       {
          if(o&&isin(o,k)){return};
@@ -585,7 +574,6 @@
          if((k=='className')&&!trim(v)){return};
          n[k]=v; // set attribute as property -which possibly triggers some intrinsic JS event
       });
-      addStack.log=slog;
       return n;
    }
 
@@ -606,13 +594,14 @@
    ({
       insert:function(v)
       {
-         if(MAIN.HALT){return}; if(v==VOID){return this}; addStack(); let t=nodeName(this);
+         // if(MAIN.HALT){return};
+         if(v==VOID){return this}; let t=nodeName(this);
          if(isList(v)){var s=this; listOf(v).forEach((o)=>{s.insert(o)});return s}; // works with nodelist or list-of-anything
          this.signal('insert');
          if(t=='img'){return this}; // TODO :: impose?
          if(t=='input'){this.value=tval(v); return this}; // form input text
          if(isNode(v)||isTemp(v)){this.appendChild(v); return this}; // normal DOM-node append
-         if(isKnob(v)){this.appendChild(create(v));return this}; // create it first then append
+         if(isKnob(v)){let n=create(v); if(!isNode(n)){return this}; this.appendChild(n);return this}; // create it first then append
          if(isText(v)&&(wrapOf(trim(v))=='<>')){this.innerHTML=v; return this}; // convert html to nodes and try again
          if(!isText(v)){v=tval(v);}; // convert any non-text to text .. circular, boolean, number, function, etc.
          if(isin(['code','text'],t)){this.textContent=v; return this;}; // insert as TEXT
@@ -838,6 +827,13 @@
          r=this; w=((c=='^')?'parentNode':((c=='<')?'previousSibling':'nextSibling')); while(n){n--; if(!!r[w]){r=r[w]}else{break}}; // find
          return r; // returns found-relative, or self if relative-not-found
       },
+
+      houses:function(n, h,p,r)
+      {
+         h=this.UniqueID; p=n.parentNode; r=false; if(!p){return r}; if(p.UniqueID==h){return true};
+         do{p=p.parentNode; if(!p){break}else if(p.UniqueID==h){r=true;break}}while(!r&&!!p);
+         return r;
+      },
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -847,9 +843,10 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const parsed = function(v,x,f)
    {
-      if(MAIN.HALT){return};
+      // if(MAIN.HALT){return};
       if(!isText(v,1)){fail('expecting 1st arg as text');return}; v=v.trim(); if(v.length<1){f(v);};
-      if(!isText(x)){fail('expecting 2nd arg as text');return}; if(!isin(parser,x)){fail('no parser defined for mimeType `'+x+'`');return};
+      if(!isText(x)){fail('expecting 2nd arg as text');return};
+      if(!isin(keys(parser),x)){fail('no parser defined for mimeType `'+x+'`');return};
       if(!isFunc(parser[x])){fail('expecting parser extension `'+x+'` as a function');return};
       if(!isFunc(f)){fail('expecting 3rd arg as callback-function');return}; return parser[x](v,f);
    };
@@ -865,14 +862,14 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const render = function(p,f, s)
    {
-      if(MAIN.HALT){return}; addStack(); if(!p){p='/'};
+      // if(MAIN.HALT){return};
+      if(!p){p='/'};
       expect({path:p,func:f}); s=this; purl({target:p,header:{Accept:'text/plain'}},(r)=>
       {
-         if(MAIN.HALT){return};
+         // if(MAIN.HALT){return};
          let m,q,t,x; m=r.head.ContentType.split(';')[0].split('/x-').join('/'); q=m.split('/'); t=q[0]; x=q[1];
          if(!isin(parser,t)){t=x}; parsed(r.body,t,(z)=>
          {
-
             if(t=='markdown'){z=create({div:'.markdown-page',contents:[z]})}; f(z);
          });
       });
@@ -887,7 +884,7 @@
    ({
       view:function(v)
       {
-         if(!isWord(v)){v='none'}; this.style.display=v;
+         if(!isText(v,1)){return}; this.style.display=v;
       },
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------
@@ -1044,6 +1041,19 @@
       if(isText(a)){a=a.trim().toLowerCase()}; if(!isText(a,8)||!isin(a,'@')||!isin(a,'.')){fail('invalid email address');return};
       if(isNumr(d)){s=d;d=VOID}; if(!d){d='robohash'}; if(!s){s=80};
       return ('https://www.gravatar.com/avatar/'+md5(a)+'?d='+d+'&s='+s);
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+// func :: todo : creates/updates a task related to title & file
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const todo = function(a, e,p,t,m,s)
+   {
+      if(isText(a)){a=a.trim()}; e='invalid use of `todo()`'; p=stub(a,' :: '); if(!isText(a,8)||!p){fail(e);return};
+      t=trim(p[0]); m=trim(p[2]); if(!isText(t,2)||!isText(m,2)){fail(e);return}; s=stackLog()[0];
+      dump(s);
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -1355,6 +1365,36 @@
          });
       }
       .bind({ttl:titl,skn:(skin||'lite'),tne:(tone||'auto'),ico:(icon||'warning'),sze:(size||'400x220')});
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: popConfirm : opens a pre-formatted modal dialogue .. requires a heading, message and a button
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const popConfirm = function(titl,mesg,skin,tone,icon,size)
+   {
+      return function(butn, txt,btn)
+      {
+         txt=trim(this.msg); txt=txt.split('\n'); txt.forEach((l,x)=>{txt[x]=l.trim()}); txt=txt.join('\n'); btn=[];  butn.each((v,k)=>
+         {let p,t; p=stub(k,'::'); if(p){t=trim(p[0]); k=trim(p[2])}else{t='auto'}; radd(btn,{butn:`.${t}`, text:k, onclick:v})});
+         if(btn.length<2){radd(btn,{butn:'', text:'Cancel', onclick:function(){this.root.exit()}})};
+
+         parsed(txt,'markdown',(msg)=>
+         {
+            popModal({class:'AnonPopAlert', theme:this.skn, size:this.sze})
+            ({
+               head:this.ttl,
+               body:
+               [
+                  {layr:'.bodyicon', contents:[{icon:`.${this.tne}`,face:this.ico}]},
+                  {panl:'.bodymesg', contents:[msg]},
+               ],
+               foot:btn,
+            });
+         });
+      }
+      .bind({ttl:titl,msg:mesg,skn:(skin||'lite'),tne:(tone||'auto'),ico:(icon||'question-circle'),sze:(size||'400x220')});
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
