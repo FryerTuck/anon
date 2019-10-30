@@ -170,12 +170,12 @@ select('#DrawPropItem').insert
                paint:function()
                {
                   let i,v,l,e,d; i=Anon.Draw.vars.actv; v=i.vars; l=v.flayer; e=v.active; d=this.prep();
-                  let f,s,a,c,o; f=d[0]; s=d[1]; a=d[2]; c=d[3]; o=e.fg.strokeWidth();
+                  let f,s,a,c,o; f=d[0]; s=d[1]; a=d[2]; c=d[3]; o=(e.fg.strokeWidth()||0); let b=(e.fg.shadowBlur()||0);
 
-                  if(s!=o){let y=[(e.fg.width()+o),(e.fg.height()+o)]; e.fg.strokeWidth(s); l.batchDraw(); Anon.Draw.grow(y);};
+                  if(s!=o){let y=[(e.fg.width()+o+b),(e.fg.height()+o+b)]; e.fg.strokeWidth(s); l.batchDraw(); Anon.Draw.grow(y);};
                   if(f=='sol'){e.fg.stroke(rgbTxt(c[0])); l.batchDraw(); return;};
 
-                  let b,p,z,x,q; b={width:e.attrs.clipWidth,height:e.attrs.clipHeight}; s/=6; p=rectAnglPlot(b,a,s); z=c.last(1);
+                  let p,z,x,q; b={width:e.attrs.clipWidth,height:e.attrs.clipHeight}; s/=6; p=rectAnglPlot(b,a,s); z=c.last(1);
                   q=[]; s=(1/z); x=0; c.forEach((h,k)=>{if(k==z){x=1}; q.radd(x); q.radd(rgbTxt(h)); x=round((x+s),3)});
                   e.fg.stroke(null);
 
@@ -258,30 +258,44 @@ select('#DrawPropItem').insert
 
             {div:'', style:{padding:2}, contents:[{input:'#DrawPropItemGlow .toolTextFeed .dark', icon:'sun1', demo:'0 0 9 #BadA5588',
                title:'glow (x y blur color)', value:'',
-               paint:function(c)
-               {
 
+               prep:function( v,p,x,y,b,c)
+               {
+                  v=this.value.trim(); if(!v){return}; v=swap(this.value,['   ','  '],' '); p=stub(v,' '); if(!p){return};
+                  x=(p[0]*1); p=stub(p[2],' '); if(!isNumr(x)||!p){return}; y=(p[0]*1); p=stub(p[2],' '); if(!isNumr(y)||!p){return};
+                  b=(p[0]*1); c=ltrim((hexTxt(swap(p[2],' ',''))),'#'); if(!isNumr(b)||(!isText(c,8,8))){return};
+                  v=[x,y,b,c]; this.value=v.join(' '); return v;
+               },
+
+               paint:function()
+               {
+                  let i,v,l,e,d,x,y,b,c,w,s,q; i=Anon.Draw.vars.actv; v=i.vars; l=v.flayer; e=v.active.fg; d=this.prep();
+                  if(!d){return}; x=d[0]; y=d[1]; b=d[2]; c=rgbTxt(d[3]); w=(e.shadowBlur()||0); s=(e.strokeWidth()||0);
+                  e.shadowOffset({x:x,y:y}); e.shadowBlur(b); e.shadowColor(c); l.batchDraw();
+                  if(w!=b){q=[(e.width()+s+w),(e.height()+s+w)]; Anon.Draw.grow(q);};
                },
 
                listen:
                {
                   'RightClick':function()
                   {
-                     let sc,si,bx; sc=this.getSelection(); if(sc){sc=rgbTxt(sc)}; if(sc){this.indx=this.indxOf(this.getSelection(1))};
-                     let va=this.prep(); bx=popColor(this,DARK,sc);
+                     let sc,va,bx; sc=this.getSelection(); if(sc){sc=rgbTxt(sc)};
+                     va=this.prep(); if(!va){this.value=("0 0 9 "+(sc?rgb2hex(sc):"bada55ff")); va=this.prep(); this.paint()};
+                     if(!sc){sc=rgbTxt(va[3])}; bx=popColor(this,DARK,sc,round((va[2]/50),3));
 
                      bx.listen('change',function(e)
                      {
-                        let d=e.detail; if(d.colr){this.target.paint(d.colr);return};
+                        let v,d,b,c; v=this.target.prep(); d=e.detail;
+                        if(d.scal){v[2]=round((d.scal*50),0);}; if(d.colr){v[3]=d.colr;};
+                        this.target.value=v.join(' '); this.target.paint();
                      });
 
-                     bx.listen('close',function(e){this.target.paint()});
+                     // bx.listen('close',function(e){this.target.paint()});
                   },
 
                   'key:Enter':function(e)
                   {
-                     dump(this.value);
-                     // Anon.Draw.edit('stroke',v);
+                     this.paint();
                   }
                }
             }]},
@@ -318,7 +332,8 @@ extend(Anon.Draw.tool)
       iv.Fill=(av.fill||(!fa.fill?"":`sol:1^0 ${rgb2hex(fa.fill)}`));
       iv.Strk=(av.strk||(!fa.stroke?"":`sol:${(fa.strokeWidth||0)}^0 ${rgb2hex(fa.stroke)}`));
       iv.Xarc=((nt=='Circle')?fa.radius:((nt=='Arc')?`${fa.outerRadius} ${(fa.innerRadius||0)}`:rc));
-      iv.Glow=(av.glow||'');
+      iv.Glow=([fa.shadowOffsetX,fa.shadowOffsetY,fa.shadowBlur,(fa.shadowColor?rgb2hex(fa.shadowColor):'')]).join(' ').trim();
+      // if(isin(iv.Glow,'undefined')){iv.Glow=""};
 
       iv.each((xv,xk)=>{select(`#DrawPropItem${xk}`).value=xv});
       this[nt](select('#DrawPropItemAttr'),pi,na);

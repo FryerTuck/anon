@@ -278,20 +278,11 @@ extend(Anon)
          n=Anon.Draw.fumb((new Konva.Group({x:o.x,y:o.y,draggable:o.draggable,clip:{x:0,y:0,width:od.w,height:od.h}})));
          delete o.x; delete o.y; delete o.draggable; if(i&&!!o.fillPatternImage){bg=(new Konva[t](o))};
          if(!!bg){n.add(bg); delete o.fillPatternImage}; o.x=os.x; o.y=os.y; o.rotation=ro; o.strokeScaleEnabled=false;
-         fg=(new Konva[t](o)); n.add(fg);
-         // n.attrs.width=o.width; n.attrs.height=o.height;
-
-         l.add(n); f=this.fidl(); l.add(f); f.attachTo(n); n.tf=f;
-
-         // n.size=function( a){a=this.attrs; return {width:(a.width||a.clipWidth), height:(a.height||a.clipHeight)}};
-         // extend(n)({getClientRect:function()
-         // {
-         //    let a=this.attrs; return {width:(a.width||a.clipWidth), height:(a.height||a.clipHeight)}
-         // }});
-
-
+         if(!bg){bg=(new Konva.Rect({width:60,height:60})); n.add(bg);};
+         fg=(new Konva[t](o)); n.add(fg); l.add(n); f=this.fidl(); l.add(f); f.attachTo(n); n.tf=f;
          delete a.vars.selected; a.vars.selected=[n]; l.batchDraw();
-         n.nick=l.nick; if(!!bg){n.bg=n.children[0]; n.fg=n.children[1]}else{n.fg=n.children[0]}; n.tr=f;
+         n.nick=l.nick; n.bg=n.children[0]; n.fg=n.children[1]; n.tr=f;
+         n.bg.setAttrs({width:n.clipWidth(),height:n.clipHeight()}); l.batchDraw();
          this.deja.keep(); select('#DrawBodyPanl').signal('pickItem',n); return n;
       },
 
@@ -312,12 +303,24 @@ extend(Anon)
       },
 
 
-      grow:function(o, i,l,e,s,n,d,c)
+      grow:function(o, i,l,e,s,b,c,n,d)
       {
-         i=Anon.Draw.vars.actv; l=i.vars.flayer; e=i.vars.active; s=(e.fg.strokeWidth()||0);
-         n=[(e.fg.width()+s),(e.fg.height()+s)]; d=[(o[0]-n[0]),(o[1]-n[1])]; c=e.clip();
-         e.clip({x:(c.x+(d[0]/2)),y:(c.y+(d[1]/2)),width:n[0],height:n[1]}); e.size({width:n[0],height:n[1]}); l.batchDraw();
-         if(!!e.tf&&!!e.tf.parent){e.tf.forceUpdate()}; l.batchDraw();
+         i=Anon.Draw.vars.actv; l=i.vars.flayer; e=i.vars.active;
+         s=(e.fg.strokeWidth()||0); b=(e.fg.shadowBlur()||0); c=e.clip();
+
+         n=[(e.fg.width()+s+b),(e.fg.height()+s+b)]; d=[((o[0]-n[0])/2),((o[1]-n[1])/2)];
+         e.clip({x:(c.x+d[0]),y:(c.y+d[1]),width:n[0],height:n[1]});
+         // e.clip({x:0,y:0,width:n[0],height:n[1]});
+
+         e.bg.setAttrs({width:n[0],height:n[1]});
+         e.bg.move({x:d[0],y:d[1]});
+         // e.fg.setAttrs({offsetX:(q[0]+d[0]),offsetY:(q[1]+d[1])});
+
+         e.size({width:n[0],height:n[1]}); e.draw();
+
+         // n=[(e.fg.width()+s+b),(e.fg.height()+s+b)]; d=[(o[0]-n[0]),(o[1]-n[1])];
+
+         l.batchDraw(); if(!!e.tf&&!!e.tf.parent){e.tf.forceUpdate();};
       },
 
 
