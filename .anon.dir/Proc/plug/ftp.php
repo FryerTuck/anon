@@ -59,6 +59,14 @@ namespace Anon;
 
 
 
+      function exists($f=null)
+      {
+         $L=$this->vivify(0); $I=$this->mean; $s=$L->size($I->path);
+         return ($s>=0);
+      }
+
+
+
       function select($a)
       {
          $L=$this->vivify(); $I=$this->mean; $P=$I->path;
@@ -80,7 +88,7 @@ namespace Anon;
          else
          {
             $R=$L->read(path::leaf($P)); if($L->fail){fail($L->fail);};
-         }
+         };
 
 
          if($a==='*'){return $R;};

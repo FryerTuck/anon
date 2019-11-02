@@ -290,13 +290,16 @@ namespace Anon;
 
          if($q->exec==='upload')
          {
+            $f="failed to upload $q->path";
+
             if(!$X)
             {
                if(isPath($h,X)){$h=path::inic($h);}; $b=furl($q->bufr);
-               $r=path::make($h,$b->data); if($r){done(OK);}; fail("failed to upload $h");
+               $r=path::make($h,$b->data); if($r){done(OK);}; fail($f);
             };
 
-            done("TODO :: upload remote file over $XP");
+            $f=rstub($X,'/')[2]; $x=rstub($X,'/')[0]; $b=furl($q->bufr)->data;
+            $r=crud($x)->insert(["$f"=>$b]); if($r){done(OK);}; fail($f);
          };
 
 

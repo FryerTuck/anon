@@ -818,7 +818,7 @@
          var e,m,f,l,s,i,n,h,o; event.preventDefault(); event.stopPropagation(); if(MAIN.HALT){return}; MAIN.HALT=1; e=event.error;
          f=event.filename; l=event.lineno; if(!e||isText(e)||((e.stack+'').indexOf('\n')<0)){e=(new Error((e+'')))}; n=(e.name||'usage');
          m=e.message; if(!f){f=fail.maybe;}; if(!l){l=0;}; s=stak(); h=`https://${HOSTNAME}`; f=ltrim(f,h); f=rtrim(f,'?n=script');
-         o={name:n, mesg:m, file:f, line:l, stak:s}; dump(o);
+         o={name:n, mesg:m, file:f, line:l, stak:s};
          tick.after(500,()=>{MAIN.HALT=VOID}); MAIN.dispatchEvent((new CustomEvent('procFail',{detail:o})));
       });
    }());

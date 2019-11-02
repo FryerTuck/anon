@@ -118,12 +118,20 @@
 
                       What will you do?`;
 
-            let info=e.detail; if(!userDoes('geek','sudo')){info.mesg=hint}
-            else{info.mesg+=("<br><br>\n\n```"+`\nfile: ${info.file}\nline: ${info.line}\n`+"```\n\n<br>")};
-            info.mesg+=`\n\n${apnd}`;
-            popConfirm(`${info.name} Fail`,info.mesg,`dark`,`harm`,`bug`,`500x250`)
+            let info=e.detail; let mesg=info.mesg; if(!userDoes('geek','sudo')){mesg=hint}
+            else{mesg+=("<br><br>\n\n```"+`\nfile: ${info.file}\nline: ${info.line}\n`+"```\n\n<br>")};
+            mesg+=`\n\n${apnd}`;
+            popConfirm(`${info.name} Fail`,mesg,`dark`,`harm`,`bug`,`500x260`)
             ({
-               'need::report bug and refresh':function(){dump('bug'); newGui({APIKEY:sesn('HASH')});},
+               'need::report bug and refresh':function(ce, fm)
+               {
+                  fm="Failed to report bug :(\n\nPlease contact tech support:\n{:TECHMAIL:}";
+                  try{purl("/Proc/makeTodo",{mesg:btoa(encode.jso(e.detail))},(r)=>
+                  {
+                     dump(r.body);
+                     if(r.body!=OK){alert(fm);return}; newGui({APIKEY:sesn('HASH')});
+                  });}catch(err){alert(fm);};
+               },
                'warn::refresh':function(){newGui({APIKEY:sesn('HASH')});},
                'harm::ignore':function(){this.root.exit();},
             });

@@ -100,6 +100,7 @@ namespace Anon;
    function isAssa($d,$g=null,$l=null){$r=is_assoc_array($d); return (!is_int($g)?$r:spanIs($d,$g,$l));}
    function isAsso($d,$g=null,$l=null){$r=is_assoc_array($d); return (!is_int($g)?$r:spanIs($d,$g,$l));}
    function isNuma($d,$g=null,$l=null){$r=is_nokey_array($d); return (!is_int($g)?$r:spanIs($d,$g,$l));}
+   function isList($d,$g=null,$l=null){return isNuma($d,$g,$l);}
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -548,7 +549,8 @@ namespace Anon;
       if(!isKnob($o)){fail('invalid `order` clause');}; $ok=keys($o)[0]; $ov=$o->$ok; if(is_string($ov)){$ov=unwrap(strtolower($ov));};
       if(!isin($ov,['asc','dsc'])){fail('invalid `order` value');}; $rk=keys($r[0]);
       if(!isin($rk,$ok)){fail("cannot order by `$ok` .. it does not exist in the result");}; $o=[]; $z=[]; unset($i,$x);
-      foreach($r as $i){$o[]=$i->$ok;}; unset($i); asort($o); foreach($o as $x => $i){$z[]=$r[$x];}; if($ov==='dsc'){$z=array_reverse($z);};
+      foreach($r as $x => $i){$o[$x]=$i->$ok;}; unset($x,$i); asort($o); foreach($o as $x => $i){$z[]=$r[$x];};
+      if($ov==='dsc'){$z=array_reverse($z);};
 
       if($f->limit){$z=filter::limit($z,$f->limit);};
       if($f->shape){$z=filter::shape($z,$f->shape);};

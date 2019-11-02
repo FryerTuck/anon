@@ -51,6 +51,7 @@
       background:linear-gradient(0deg, hsla(210,3%,19%,1) 0%, hsla(210,3%,23%,1) 100%);
       color:hsla(0,0%,70%,1);
       border-color:hsla(210,3%,26%,1); box-shadow:0px 0px 3px hsla(0,0%,0%,0.5);
+      text-shadow:0px 0px 1px hsla(0,0%,0%,1);
    }
 
    butn.dark:hover
@@ -165,6 +166,7 @@
    icon
    {
       display:inline-block; position:relative; box-sizing:border-box;
+      transform-origin:center;
       padding:0px; margin:0px; font-size:16px; line-height:16px;
    }
    icon div
@@ -729,6 +731,10 @@
       color:hsla(0,0%,50%,1);
       cursor:pointer;
    }
+   modal .modalBox .head .shut.dark:hover
+   {
+      color:hsla(0,0%,90%,1);
+   }
 
    modal .modalBox .head>div>span
    {
@@ -1096,7 +1102,7 @@
 
 
 
-/* clan :: toolGridFeed
+/* clan :: toolTextFeed
 /* ------------------------------------------------------------------------------------------------------------- */
    input.toolTextFeed
    {
@@ -1106,7 +1112,7 @@
       display:block;
       font-family:'code';
       font-size:16px !important; line-height:16px !important;
-      padding:4px !important;
+      padding:4px;
       background:none;
       border:1px solid hsla(0,0%,80%,1);
       border-radius:2px;
@@ -1121,10 +1127,37 @@
       border:1px solid hsla(0,0%,25%,1);
    }
 
-   input[icon]
+   input.toolTextFeed.show{display:block !important;}
+   input.toolTextFeed.hide{display:none !important;}
+
+
+   textarea.toolTextFeed
    {
-      padding-left:22px !important;
+      display:block !important;
+      position:relative !important;
+      box-sizing:border-box !important;
+      width:100%;
+      height:100%;
+      font-family:'code';
+      font-size:16px !important; line-height:16px !important;
+      padding:4px;
+      padding-top:2px;
+      background:none;
+      border:1px solid hsla(0,0%,80%,1);
+      border-radius:2px;
+      margin:6px !important;
+      margin-bottom:0px !important;
    }
+
+   textarea.toolTextFeed.dark
+   {
+      background:hsla(0,0%,0%,0.2);
+      color:hsla(0,0%,60%,1);
+      border:1px solid hsla(0,0%,25%,1);
+   }
+
+   textarea.toolTextFeed.show{display:block !important;}
+   textarea.toolTextFeed.hide{display:none !important;}
 /* ------------------------------------------------------------------------------------------------------------- */
 
 

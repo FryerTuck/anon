@@ -349,7 +349,8 @@ namespace Anon;
       {
          $stk=stak(); if(isset($stk[1])&&($stk[1]->func=='todo')){$stk=$stk[1];}else{$stk=$stk[0];};
          $ttl=trim($ttl); expect::text($ttl,2); expect::flat($arg,1); if(!isset($arg[1])){radd($arg,NOEXIT);};
-         $msg=$arg[0]; $opt=$arg[1]; $f=crop($stk->file); $l=$stk->line; $hsh=sha1("$ttl:$f"); requires::stem('Task');
+         $msg=$arg[0]; $opt=$arg[1]; if(isset($arg[2])&&isKnob($arg[2])&&isPath($arg[2]->file)){$stk=$arg[2];};
+         $f=crop($stk->file); $l=$stk->line; $hsh=sha1("$ttl:$f"); requires::stem('Task');
          $tdp="/Task/vars/geekTodo/$hsh"; $usr=sesn('USER'); $eml=pget("/User/data/$usr/mail");
 
 
@@ -436,8 +437,11 @@ namespace Anon;
 
       if(path($a))
       {
-         $p=isee($a); if(!$p){$p=path($a); finish((!file_exists($p)?404:403));};
+         if(isin($a,'.url/'))
+         {$r=Proc::scanPlug($a); if(isList($r)){done($r);}; defn(['HALT'=>1]); header("Content-Type: $r->head"); echo $r->body; die();};
+
          $m=mime($a); if(!$m){finish(415);}; $x=fext($a);
+         $p=isee($a); if(!$p){$p=path($a); finish((!file_exists($p)?404:403));};
 
          if(facing('SSE')&&envi('SSEREADY')){ekko(durl($a),'feed'); return;};
          if(facing('BOT')){dump('TODO :: feed bot : '.$a);};

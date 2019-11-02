@@ -46,19 +46,19 @@ namespace Anon;
             ([
                using => "/Task/data/$q",
                fetch => '*',
-               order => 'time:asc',
                limit => 'levl:2',
                shape => 'name:data',
             ]);
 
             $bn=$td->business; if(!$bn){$bn=find::firmByMail($td->fromAddy); $td->business=$bn;}; // get business name
             $wc=$td->withClan; if(!is_array($wc)){$wc=explode(',',$wc);}; //if(!isin($uc,$wc)){continue;}; // not meant for current user's clan
+            $ll=explode("\n",$td->editLogs); $ll=rpop($ll); $tt=isin($ll,"to test by");
             $wu=$td->withUser; $fu=$td->fromUser; $fc=find::clanByUser($fu); if($fc)
             {xpop($fc,'work'); xpop($fc,'sort'); xpop($fc,'test'); xpop($fc,'gang'); xpop($fc,'lead'); xpop($fc,'sudo'); xpop($fc,'surf');}
             if(!$fc||(span($fc)<1)){$fc=['sort'];}; $rc=pick($uc,$fc);
             if($wu&&($un!==$wu)){continue;}; // jobcard is work in progress with another user
             if(!$wu&&($fu!==$un)&&!$rc){continue;}; // jobcard is to be tested, but current user is not releated in any way
-            if(!$wu&&($fu===$un)){$td->inColumn='test';}; // jobcard is seen in both the from user's `test` and in target-user's `todo`
+            if(!$wu&&($fu===$un)&&$tt){$td->inColumn='test';}; // jobcard is seen in both the from user's `test` and in target-user's `todo`
 
             $f=$td->flagTags; if(!$f){$f='';}; $f=frag($f,','); foreach($f as $x => $n)
             {$i=pget("/Task/tags/$n"); if(!$i){fail("undefined task-tag `$n`");}; $f[$x]=$i;}; $td->tagIcons=$f; unset($f,$x,$n,$i);

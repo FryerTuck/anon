@@ -33,9 +33,9 @@ extend(custom.domtag)
    {
       if(!c){c='bug'}; if(!isText(a.face,1)){a.face=c}; if(!isText(a.font,1)){a.font='icon'};
       a.size=(isInum(a.size)?(a.size+'px'):(isNumr(a.size)?(a.size+'rem'):(isText(a.size,3)?a.size:'16px')));
-      let fce,fnt,sze; fce=a.face; fnt=a.font; sze=a.size; delete a.face; delete a.font; delete a.size;
-      c=VOID; if(a.text){c=a.text; delete a.text};
-      modify(n,a); n.enclan(('.'+fnt+'-'+fce)); n.style.fontSize=sze; // n.style.lineHeight=a.size;
+      let fce,fnt,sze,rot; fce=a.face; fnt=a.font; sze=a.size; delete a.face; delete a.font; delete a.size;
+      c=VOID; if(a.text){c=a.text; delete a.text}; rot=stub(fce,'@'); if(rot){fce=rot[0]; rot=(rot[2]*1); rot=(isNumr(rot)?round(rot,0):0)};
+      modify(n,a); n.enclan(('.'+fnt+'-'+fce)); n.setStyle({fontSize:sze,transform:`rotate(${rot}deg)`});
       if(c){n.insert({div:c})};
       return DONE;
    },
@@ -249,9 +249,9 @@ extend(custom.domtag)
       {
          fold:{},
 
-         togl:function(n)
+         togl:function(n,sig)
          {
-            if(!n.info.kids){return};
+            if(!n.info.kids){return}; if(isin(sig,['Control','Shift'])){return};
             var p,s,i,d,f,k,l,r; p=n.info.path; s=this.fold[p];
             s=((s=='shut')?'open':'shut'); i=((s=='open')?'down':'right');
             this.fold[p]=s; n.select('.treeTwigArro i')[0].className=('icon-chevron-'+i);
@@ -334,7 +334,7 @@ extend(custom.domtag)
             ]}]},
          ]});
 
-         twg.listen('click',function(){this.info.root.status.togl(this)});
+         twg.listen('click',function(ev){this.info.root.status.togl(this,ev.signal)});
          if(!!kds){twg.info.kids=true};
          if(drgs){twg.listen('dragstart',function(e)
          {

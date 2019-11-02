@@ -13,7 +13,7 @@ select('#DrawToolPanl').insert
 
    {div:'.panlHorzLine', contents:[{hdiv:''}]},
 
-   {butn:'#DrawButnMakeText .AnonToolButn', title:'stencil-inside ~ detail', contents:[{icon:'.flipVert', face:'scissors'}],
+   {butn:'#DrawButnMakeText .AnonToolButn', title:'stencil-inside ~ detail', contents:[{icon:'scissors@180'}],
       onclick:function(){Anon.Draw.tool.cutBelow(O)
    }},
    {butn:'#DrawButnMakeText .AnonToolButn', title:'stencil-outside ~ detail', contents:[{icon:'scissors'}],
@@ -37,7 +37,7 @@ select('#DrawPropItem').insert
       ]},
       {row:
       [
-         {col:[{wrap:'#DrawPropItemAttr', style:{padding:6}, contents:
+         {col:'.tiny', contents:[{wrap:'#DrawPropItemAttr', style:{padding:6}, contents:
          [
             {div:'', style:{padding:2}, contents:[{input:'#DrawPropItemPosi .toolTextFeed .dark', icon:'location', demo:'0 x 0',
                title:'location (X,Y)', value:'', listen:{'key:Enter':function(e)
@@ -57,7 +57,7 @@ select('#DrawPropItem').insert
             }]},
 
 
-            {div:'', style:{padding:2}, contents:[{input:'#DrawPropItemSkew .toolTextFeed .dark', icon:'italic1', demo:'0 x 0',
+            {div:'', style:{padding:2}, contents:[{input:'#DrawPropItemSkew .toolTextFeed .dark', icon:'diamonds@60', demo:'0 x 0',
                title:'skew (X,Y)', value:'', listen:{'key:Enter':function(e)
                {let v=argToObj(this.value,{x:'numr',y:'numr'}); if(v){Anon.Draw.edit('skew',v)}}}
             }]},
@@ -104,22 +104,33 @@ select('#DrawPropItem').insert
                paint:function()
                {
                   let i,v,l,e,d; i=Anon.Draw.vars.actv; v=i.vars; l=v.flayer; e=v.active; d=this.prep();
-                  let f,s,a,c,o; f=d[0]; s=d[1]; a=d[2]; c=d[3]; e.fg.fill(null);
+                  let f,s,a,c,o; f=d[0]; s=d[1]; a=d[2]; c=d[3]; e.fg.fill(null); let ea=e.fg.attrs;
 
                   if(f=='sol'){e.fg.fill(rgbTxt(c[0])); l.batchDraw(); return};
 
+                  if(f=='pat')
+                  {
+                     e.fg.fill(null);
+                     dump(c);
+                     l.batchDraw(); return;
+                  };
+
                   let b,p,z,x,q; b={width:e.attrs.clipWidth,height:e.attrs.clipHeight}; s/=6; p=rectAnglPlot(b,a,s); z=c.last(1);
-                  q=[]; s=(1/z); x=0; c.forEach((h,k)=>{if(k==z){x=1}; q.radd(x); q.radd(rgbTxt(h)); x=round((x+s),3)});
+                  let m={}; q=[]; s=(1/z); x=0; c.forEach((h,k)=>{if(k==z){x=1}; q.radd(x); q.radd(rgbTxt(h)); x=round((x+s),3)});
+                  let r=(((ea.width>ea.height)?ea.width:ea.height)*d[1]); m.x=(ea.width/2); m.y=(ea.height/2);
 
                   if(f=='lin')
                   {
-                     e.fg.fill(null); e.fg.fillLinearGradientStartPoint(p.bgn); e.fg.fillLinearGradientEndPoint(p.end);
+                     e.fg.fill(null);
+                     e.fg.fillLinearGradientStartPoint(p.bgn); e.fg.fillLinearGradientEndPoint(p.end);
                      e.fg.fillLinearGradientColorStops(q); l.batchDraw(); return;
                   };
 
                   if(f=='rad')
                   {
-                     dump('TODO :: radial fill');
+                     e.fg.fill(null);
+                     e.fg.fillRadialGradientStartPoint(m); e.fg.fillRadialGradientEndPoint(m); e.fg.fillRadialGradientStartRadius(0);
+                     e.fg.fillRadialGradientEndRadius(r); e.fg.fillRadialGradientColorStops(q); l.batchDraw(); return;
                   };
                },
 
@@ -170,7 +181,7 @@ select('#DrawPropItem').insert
                paint:function()
                {
                   let i,v,l,e,d; i=Anon.Draw.vars.actv; v=i.vars; l=v.flayer; e=v.active; d=this.prep();
-                  let f,s,a,c,o; f=d[0]; s=d[1]; a=d[2]; c=d[3]; o=(e.fg.strokeWidth()||0); let b=(e.fg.shadowBlur()||0);
+                  let f,s,a,c,o; f=d[0]; s=d[1]; a=d[2]; c=d[3]; o=(e.fg.strokeWidth()||0); let b=((e.fg.shadowBlur()||0)*3);
 
                   if(s!=o){let y=[(e.fg.width()+o+b),(e.fg.height()+o+b)]; e.fg.strokeWidth(s); l.batchDraw(); Anon.Draw.grow(y);};
                   if(f=='sol'){e.fg.stroke(rgbTxt(c[0])); l.batchDraw(); return;};
@@ -218,7 +229,52 @@ select('#DrawPropItem').insert
             }]},
 
 
-            {div:'', style:{padding:2}, contents:[{input:'#DrawPropItemXarc .toolTextFeed .dark', icon:'circle-notch', demo:'0',
+            {div:'', style:{padding:2}, contents:[{input:'#DrawPropItemGlow .toolTextFeed .dark', icon:'sun1', demo:'0 0 9 #BadA5588',
+               title:'glow (x y blur color)', value:'',
+
+               prep:function( v,p,x,y,b,c)
+               {
+                  v=this.value.trim(); if(!v){return}; v=swap(this.value,['   ','  '],' '); p=stub(v,' '); if(!p){return};
+                  x=(p[0]*1); p=stub(p[2],' '); if(!isNumr(x)||!p){return}; y=(p[0]*1); p=stub(p[2],' '); if(!isNumr(y)||!p){return};
+                  b=(p[0]*1); c=ltrim((hexTxt(swap(p[2],' ',''))),'#'); if(!isNumr(b)||(!isText(c,8,8))){return};
+                  v=[x,y,b,c]; this.value=v.join(' '); return v;
+               },
+
+               paint:function()
+               {
+                  let i,v,l,e,d,x,y,b,c,w,s,q; i=Anon.Draw.vars.actv; v=i.vars; l=v.flayer; e=v.active.fg; d=this.prep();
+                  if(!d){return}; x=d[0]; y=d[1]; b=d[2]; c=rgbTxt(d[3]); w=((e.shadowBlur()||0)*3); s=(e.strokeWidth()||0);
+                  e.shadowOffset({x:x,y:y}); e.shadowBlur(b); e.shadowColor(c); l.batchDraw();
+                  if(w!=b){q=[(e.width()+s+w),(e.height()+s+w)]; Anon.Draw.grow(q);};
+               },
+
+               listen:
+               {
+                  'RightClick':function()
+                  {
+                     let sc,va,bx; sc=this.getSelection(); if(sc){sc=rgbTxt(sc)};
+                     va=this.prep(); if(!va){this.value=("0 0 9 "+(sc?rgb2hex(sc):"bada55ff")); va=this.prep(); this.paint()};
+                     if(!sc){sc=rgbTxt(va[3])}; bx=popColor(this,DARK,sc,round((va[2]/50),3));
+
+                     bx.listen('change',function(e)
+                     {
+                        let v,d,b,c; v=this.target.prep(); d=e.detail;
+                        if(d.scal){v[2]=round((d.scal*50),0);}; if(d.colr){v[3]=d.colr;};
+                        this.target.value=v.join(' '); this.target.paint();
+                     });
+
+                     // bx.listen('close',function(e){this.target.paint()});
+                  },
+
+                  'key:Enter':function(e)
+                  {
+                     this.paint();
+                  }
+               }
+            }]},
+
+
+            {div:'', style:{padding:2}, contents:[{input:'#DrawPropItemXarc .toolTextFeed .dark', icon:'flattr', demo:'0',
                title:'arc (TL TR BR BL)', value:'',
                paint:function(t,d)
                {
@@ -254,55 +310,29 @@ select('#DrawPropItem').insert
                   this.paint(t,d);
                }}
             }]},
-
-
-            {div:'', style:{padding:2}, contents:[{input:'#DrawPropItemGlow .toolTextFeed .dark', icon:'sun1', demo:'0 0 9 #BadA5588',
-               title:'glow (x y blur color)', value:'',
-
-               prep:function( v,p,x,y,b,c)
-               {
-                  v=this.value.trim(); if(!v){return}; v=swap(this.value,['   ','  '],' '); p=stub(v,' '); if(!p){return};
-                  x=(p[0]*1); p=stub(p[2],' '); if(!isNumr(x)||!p){return}; y=(p[0]*1); p=stub(p[2],' '); if(!isNumr(y)||!p){return};
-                  b=(p[0]*1); c=ltrim((hexTxt(swap(p[2],' ',''))),'#'); if(!isNumr(b)||(!isText(c,8,8))){return};
-                  v=[x,y,b,c]; this.value=v.join(' '); return v;
-               },
-
-               paint:function()
-               {
-                  let i,v,l,e,d,x,y,b,c,w,s,q; i=Anon.Draw.vars.actv; v=i.vars; l=v.flayer; e=v.active.fg; d=this.prep();
-                  if(!d){return}; x=d[0]; y=d[1]; b=d[2]; c=rgbTxt(d[3]); w=(e.shadowBlur()||0); s=(e.strokeWidth()||0);
-                  e.shadowOffset({x:x,y:y}); e.shadowBlur(b); e.shadowColor(c); l.batchDraw();
-                  if(w!=b){q=[(e.width()+s+w),(e.height()+s+w)]; Anon.Draw.grow(q);};
-               },
-
-               listen:
-               {
-                  'RightClick':function()
-                  {
-                     let sc,va,bx; sc=this.getSelection(); if(sc){sc=rgbTxt(sc)};
-                     va=this.prep(); if(!va){this.value=("0 0 9 "+(sc?rgb2hex(sc):"bada55ff")); va=this.prep(); this.paint()};
-                     if(!sc){sc=rgbTxt(va[3])}; bx=popColor(this,DARK,sc,round((va[2]/50),3));
-
-                     bx.listen('change',function(e)
-                     {
-                        let v,d,b,c; v=this.target.prep(); d=e.detail;
-                        if(d.scal){v[2]=round((d.scal*50),0);}; if(d.colr){v[3]=d.colr;};
-                        this.target.value=v.join(' '); this.target.paint();
-                     });
-
-                     // bx.listen('close',function(e){this.target.paint()});
-                  },
-
-                  'key:Enter':function(e)
-                  {
-                     this.paint();
-                  }
-               }
-            }]},
-
-            {div:'.panlHorzLine', contents:[{hdiv:''}]},
          ]}]},
       ]},
+      {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
+      {row:[{col:'', style:{paddingRight:14, paddingBottom:14}, contents:
+      [
+         {grid:[{row:[{col:
+         [
+            {textarea:'#DrawPropItemText .toolTextFeed .dark .hide', demo:"Text", listen:
+            {
+               keyup:function()
+               {
+                  let i,v,l,e,t,d,w,h,c,b; i=Anon.Draw.vars.actv; v=i.vars; l=v.flayer; e=v.active; d=this.value;
+                  e.fg.text(d); l.batchDraw(); b=e.fg.getClientRect(); w=b.width; h=b.height;
+                  e.bg.setAttrs({width:w,height:h}); e.clipWidth(w); e.clipHeight(h); e.tf.forceUpdate();
+               },
+            }},
+         ]}]}]},
+
+         // {wrap:'', style:{padding:2}, contents:
+         // [
+         //    {textarea:'#DrawPropTextData .toolTextFeed .dark', }
+         // ]},
+      ]}]},
    ]}
 ]);
 
@@ -315,8 +345,8 @@ extend(Anon.Draw.tool)
       let ai,ci,ip; ai=Anon.Draw.vars.actv; ci=ai.vars.canvas; if(!pi.anon){pi.anon={}};
       let nt,na,nc; nt=(pi.fg.className||pi.fg.nodeType); na=pi.attrs; nc=select('#DrawPropItemAttr');
       let av=pi.anon; Anon.Draw.vars.actv.vars.active=pi; delete nc.target; nc.target={layr:ai.vars.flayer,item:pi};
-      select('#DrawPropFiltWrap').reclan('hide:show');
-      select('#DrawPropFiltType').innerHTML=nt; select('#DrawPropFiltName').innerHTML=pi.nick;
+      select('#DrawPropFiltWrap').reclan('hide:show'); select('#DrawPropFiltWrap').reclan('hide:show');
+      select('#DrawPropFiltType').innerHTML=nt; select('#DrawPropItemText').reclan('show:hide');
       select('#DrawPropTabr').driver.select('Detail');
       select('#DrawPropItemName').innerHTML=pi.nick;
       let sz=pi.size(); if(!sz.width){sz={width:na.clipWidth,height:na.clipHeight};};
@@ -333,7 +363,7 @@ extend(Anon.Draw.tool)
       iv.Strk=(av.strk||(!fa.stroke?"":`sol:${(fa.strokeWidth||0)}^0 ${rgb2hex(fa.stroke)}`));
       iv.Xarc=((nt=='Circle')?fa.radius:((nt=='Arc')?`${fa.outerRadius} ${(fa.innerRadius||0)}`:rc));
       iv.Glow=([fa.shadowOffsetX,fa.shadowOffsetY,fa.shadowBlur,(fa.shadowColor?rgb2hex(fa.shadowColor):'')]).join(' ').trim();
-      // if(isin(iv.Glow,'undefined')){iv.Glow=""};
+      iv.Text=fa.text;
 
       iv.each((xv,xk)=>{select(`#DrawPropItem${xk}`).value=xv});
       this[nt](select('#DrawPropItemAttr'),pi,na);
@@ -361,6 +391,13 @@ extend(Anon.Draw.tool)
       {
          select('#DrawPropItemXarc').title=`cirle (radius) .. 4 vals = arc`;
          select('#DrawPropItemXarc').modify({demo:'60'});
+      },
+
+      Text:function(a)
+      {
+         select('#DrawPropItemXarc').title=`font size padding`;
+         select('#DrawPropItemXarc').modify({demo:'Calibri 30 0'});
+         select('#DrawPropItemText').reclan("hide:show");
       },
    }),
 
@@ -408,7 +445,10 @@ extend(Anon.Draw.tool)
       let ai,ci,fl; ai=Anon.Draw.vars.actv; ci=ai.vars.canvas; fl=ai.vars.flayer;
       let ao=Anon.Draw.make
       ({
-         type:'Rect',
+         type:'Text',
+         fontSize:30,
+         fontFamily:'Calibri',
+         text:'Text',
       });
    },
 });

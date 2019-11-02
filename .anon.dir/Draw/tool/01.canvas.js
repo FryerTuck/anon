@@ -180,6 +180,12 @@ extend(Anon.Draw.tool)
 
 
 
+select('#DrawBodyPanl').listen('mouseover',function(e)
+{
+   this.focus();
+});
+
+
 select('#DrawBodyPanl').listen('tabfocus',function(e)
 {
    let ds=e.detail.vars.canvas.dime.size; select('#DrawPropSize').value=`${ds.crpw} x ${ds.crph}`;
@@ -213,6 +219,6 @@ select('#DrawBodyPanl').listen('Meta Shift MouseWheel',function(evnt)
 
 select('#DrawBodyPanl').listen('key:Delete',function(evnt)
 {
-   let i,c,l,e; i=Anon.Draw.vars.actv; c=i.vars.canvas; l=i.vars.flayer; e=i.vars.active;
+   let i,c,l,e; i=Anon.Draw.vars.actv; c=i.vars.canvas; l=i.vars.flayer; e=i.vars.active; if(!e){return};
    c.find('Transformer').destroy(); e.destroy(); Anon.Draw.vars.actv.vars.active=VOID; c.batchDraw();
 });

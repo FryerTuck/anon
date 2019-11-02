@@ -229,11 +229,11 @@ extend(Anon)
                let k=evnt.signal; if((k!='Control')&&(k!='Shift')){return}; k=((k=='Control')?'Ctrl':'Shft');
                if(evnt.type=='keydown'){this.enclan('treeItem'+k);return}; this.declan('treeItem'+k);
             },
-            'drop':function(data,file, inf,dir,pth)
-            {
-               this.declan('dragOver'); inf=this.info; dir=((inf.type=='fold')?inf.path:twig(inf.path));
-               pth=(dir+'/'+file); Anon.Code.feed({from:'menu',path:pth,data:data});
-            },
+            // 'drop':function(data,file, inf,dir,pth)
+            // {
+            //    this.declan('dragOver'); inf=this.info; dir=((inf.type=='fold')?inf.path:twig(inf.path));
+            //    pth=(dir+'/'+file); Anon.Code.feed({from:'menu',path:pth,data:data});
+            // },
          }};
          ini.each((v,k)=>{mnu[k]=v}); select('#CodeTreePanl').insert(mnu);
 

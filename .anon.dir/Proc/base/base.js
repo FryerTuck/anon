@@ -434,16 +434,25 @@
 
 // func :: requires : versatile preloader
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   const requires = function(l,cbfn, s,a,slf,d)
+   const requires = function(l,cbfn,cbpi, s,a,slf,d)
    {
       // if(MAIN.HALT){return};
-      if(!isFunc(cbfn)){cbfn=function(){}}; slf=this; a={}; d=0;
+      if(!stak(0)){wack();return};
+      if(!isFunc(cbfn)){cbfn=function(){}}; if(!isFunc(cbpi)){cbpi=function(){}};
+      slf=this; a={}; d=0;
+
+      if(isPath(l)&&l.endsWith('/'))
+      {
+         purl('/Proc/scanFold',{path:l},(r)=>{r=r.body; r=((wrapOf(r)=="[]")?decode.jso(r):[]); requires(r,cbfn)});
+         return;
+      };
+
       if(!l||(span(l)<1)){cbfn();return}; if(!isList(l)){l=[l]}; //dump(`${this.decr} ${s}`,'\n');
       l.each((i)=>
       {
          let p=stub(i,':'); if(p){i=p[2]; p=p[0]; a[p]=VOID}; let x=fext(i);
          if(x=='fnt'){x='css'}; if(!x){fail('expecting valid path');return STOP}; // validate
-         if(slf.done[i]){return}; d++; let t=VOID;
+         if(slf.done[i]){cbpi(i);return}; d++; let t=VOID;
 
          if(x=='js')
          {
@@ -461,7 +470,7 @@
             // }
             // else
             // {
-               let n=create('script'); n.purl=i; n.listen('ready',function(){d--; slf.done[this.purl]=1;});
+               let n=create('script'); n.purl=i; n.listen('ready',function(){d--; slf.done[this.purl]=1; cbpi(this.purl);});
                n.modify({src:i}); document.head.insert(n);
             // };
             return;
@@ -469,7 +478,7 @@
 
          if(x=='css')
          {
-            let n=create('link'); n.purl=i; n.listen('ready',function(){d--; slf.done[this.purl]=1});
+            let n=create('link'); n.purl=i; n.listen('ready',function(){d--; slf.done[this.purl]=1; cbpi(this.purl);});
             n.modify({rel:'stylesheet',href:i}); document.head.insert(n); return;
          };
 
@@ -479,7 +488,7 @@
             {
                d=(xdom(r.body)||[]); d.forEach((n)=> // html - insert each element into its implied DOM parent
                {document[(isin(['script','style'],nodeName(n))?'head':'body')].insert(n);});
-               tick.after(50,()=>{d--; slf.done[r.path]=1})
+               tick.after(50,()=>{d--; slf.done[r.path]=1; cbpi(r.path);})
             }); return NEXT;
          };
 
@@ -488,25 +497,31 @@
             opentype.load(i,function(err,fnt)
             {
                d--; slf.done[this.pth]=1; if(err){dump(err);return}; let fln,fam,mim,css,hsh,fmt,ico,reg;
-               fln=this.pth.split('/').pop().split('.')[0]; fam=this.fam; if(!fam){fam=(fnt.names.fontFamily.en||fln)};
+               fln=this.pth.split('/').pop().split('.')[0]; fam=this.fam; if(!fam){fam=(fnt.names.fontFamily.en||fln)}; fam=swap(fam,' ','-');
                hsh=md5(this.pth); fmt=fnt.outlinesFormat; ico=(isin(lowerCase(fam),'icon')||isin(lowerCase(fln),'icon'));
                reg=(ico||isin(lowerCase(fnt.names.fontSubfamily),'regular')); reg=((reg||ico)?` font-weight:normal; font-style:normal;`:'');
                css=`@font-face{font-family:'${fam}'; src:url('${this.pth}') format('${fmt}');${reg}}\n\n`;
-               if(ico){css+=`[class^="${fam}-"], [class*=" ${fam}-"] {font-family:'${fam}' !important; speak:none; font-style:normal; `};
-               if(ico){css+=`font-weight:normal; font-variant:normal; text-transform:none; line-height:1; `};
-               if(ico){css+=`-webkit-font-smoothing:antialiased; -moz-osx-font-smoothing: grayscale;}\n\n`};
+               css+=`[class^="${fam}-"], [class*=" ${fam}-"] {font-family:'${fam}' !important; `
+               if(ico){css+=`speak:none; font-style:normal; font-weight:normal; font-variant:normal; text-transform:none; line-height:1; `};
+               css+=`-webkit-font-smoothing:antialiased; -moz-osx-font-smoothing: grayscale;}\n\n`
                if((this.fam||ico)&&(fnt.glyphNames.names.length>0)){fnt.glyphs.glyphs.each((g)=>
                {
                   if(!g.unicode||!g.name||g.name.startsWith('.')){return}; let c=g.unicode.toString(16);
                   css+=`.${fam}-${g.name}:before{content:"\\${c}";}\n`;
-               })};
+               })}
+               else
+               {
+                  for(let gx=33; gx<256; gx++)
+                  {let hx=gx.toString(16); while(hx.length<4){hx=`0${hx}`}; css+=`.${fam}-${hx}:before{content:"\\${hx}";}\n`;};
+               };
                document.head.insert({style:'', purl:this.pth, contents:css});
+               cbpi(this.pth);
             }
             .bind({fam:p,pth:i}));
             return;
          };
 
-         fail('unsupported file-extension `'+x+'`'); return STOP; // loop must not reach here
+         console.error('requires() :: unsupported file-extension `'+x+'`'); return STOP; // loop must not reach here
       });
 
       wait.until(()=>{return (d<1)},()=>{tick.after(150,()=>{cbfn()})});
@@ -677,10 +692,11 @@
 
 // func :: durl : create data-url from path -or blob
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   const durl = function(d,f, n)
+   const durl = function(d,f, p,n,o)
    {
-      if(pathOf(d)){n=d.split('/').pop(); purl('/Proc/makeDurl',{purl:d},(r)=>{f(r.body,n)}); return;};
-      decode.BLOB(d,f);
+      p=pathOf(d); if(!p){decode.BLOB(d,f);return}; n=d.split('/').pop();
+      o=select(`img[src="${p}"]`); if(o){d=o[0].toDataURL(mimeType(n)); f(d,n);return};
+      purl('/Proc/makeDurl',{purl:d},(r)=>{f(r.body,n)});
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -699,8 +715,9 @@
          this.ondrop=function(e,s)
          {
             e.preventDefault(); e.stopPropagation(); var d,l,z; d=e.dataTransfer; l=d.files; s=this; z=([...l]);
-            if(z.length<1){let r=d.getData('text/plain'); if(pathOf(r)){durl(r,function(t,f){s.handle(t,f);});return}; s.handle(r);return;};
-            z.forEach(function(f){decode.BLOB(f,function(r){s.handle(r,f.name);})});
+            if(z.length>0){z.forEach(function(f){decode.BLOB(f,function(r){s.handle(r,f.name);})});return};
+            let r=d.getData('text/plain'); if(pathOf(r)){durl(r,function(t,f){s.handle(t,f);});return};
+            s.handle(r);
          };
       },
    });
@@ -833,6 +850,16 @@
          h=this.UniqueID; p=n.parentNode; r=false; if(!p){return r}; if(p.UniqueID==h){return true};
          do{p=p.parentNode; if(!p){break}else if(p.UniqueID==h){r=true;break}}while(!r&&!!p);
          return r;
+      },
+   });
+
+   extend(HTMLImageElement.prototype)
+   ({
+      toDataURL:function(m,q)
+      {
+         let c=document.createElement('canvas');
+         c.width=this.naturalWidth; c.height=this.naturalHeight;
+         c.getContext('2d').drawImage(this,0,0); return c.toDataURL(m,q);
       },
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------
@@ -1245,8 +1272,9 @@
          if(!atr){atr={}}; var mid,thm,box,inf,rsl; mid=('MDL'+hash()); if(!atr.class){atr.class='';}; atr.class=atr.class.trim().split(' ');
          ladd(atr.class,'modalBox'); ladd(atr.class,'cenmid'); thm=atr.theme; if(thm){radd(atr.class,thm)}; atr.class=atr.class.join(' ');
 
-         if(isText(obj.head)){obj.head={span:obj.head}}; let fiob,liob,pagr;
-         if(!isList(obj.head)){obj.head=[obj.head]}; radd(obj.head,{icon:'.shut', face:'cross', onclick:function(){this.root.exit()}});
+         if(isText(obj.head)){obj.head={span:obj.head}}; let fiob,liob,pagr,clot; clot=(thm?` .${thm}`:"");
+         if(!isList(obj.head)){obj.head=[obj.head]};
+         radd(obj.head,{icon:`.shut${clot}`, face:'cross', title:"close", onclick:function(){this.root.exit()}});
          if(isList(obj.body,2)&&isKnob(obj.body[0])){fiob=obj.body[0];}; if(!!fiob&&isKnob(vals(obj.body,-1))){liob=vals(obj.body,-1)};
 
          if(!!fiob&&(isText(fiob.panl)||isText(fiob.page))&&!!liob&&(isText(liob.panl)||isText(liob.page)))

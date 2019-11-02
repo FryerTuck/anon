@@ -100,7 +100,7 @@ select('#AnonAppsView').insert
                      ]}]}
                   ]}]},
                   {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
-                  {row:[{col:'#DrawSeedView', contents:[{panl:'#DrawSeedPanl'}]}]}
+                  {row:[{col:'#DrawScanView', contents:[{wrap:[{panl:'#DrawScanPanl'}]}]}]}
                ]}
             ]},
          ]}
@@ -130,14 +130,68 @@ extend(Anon)
 
 
 
+      scan:function(pth,clr,cbf, pnl,dne,fnt)
+      {
+         pnl=select('#DrawScanPanl'); Busy.edit(pth,0); dne=0; if(clr){pnl.innerHTML=""};
+         purl("/Draw/scanFold",{path:pth},(rsl)=>
+         {
+            rsl=decode.jso(rsl.body); fnt=[];
+            if(clr){pnl.insert({grid:'.noSpanHorz', contents:[{row:[]}]});}; let row=pnl.select('row')[0];
+
+            rsl.forEach((p)=>
+            {
+               if(isin(mimeType(p),'font')){radd(fnt,p);return};
+               row.insert({col:[{img:'.DrawScanPick', src:`/${p}`, title:p, draggable:true, listen:
+               {
+                  ready:function(){dne++; Busy.edit(pth,((dne/rsl.length)*100))},
+                  dblclick:function(){Anon.Draw.feed(this.toDataURL(),this.src.split('/').pop())},
+               }}]});
+            });
+
+            requires(fnt,()=>
+            {
+               let lib=[]; Busy.edit(pth,100); fnt.forEach((p)=>
+               {
+                  let gl=keys(styleSheet(p)); if(isin(gl[0],[`[class^="`,`[class*="`])){lpop(gl)}; if(isin(gl[0],[`-space:`])){lpop(gl)};
+                  let il=[]; gl=((isin(gl[0],'-0021'))?gl.slice(32,47):gl.slice(0,15));
+                  gl.forEach((n)=>{n=stub(n,':')[0]; radd(il,{div:".DrawScanGlyf", contents:[{span:n}]});});
+                  radd(lib,{col:[{div:'.DrawScanPick', title:p, contents:il, listen:
+                  {
+                     dblclick:function(){dump('testing fnt');},
+                  }}]});
+               });
+               row.insert(lib); if(isFunc(cbf)){cbf()};
+            },
+            ()=>
+            {
+               dne++; Busy.edit(pth,((dne/rsl.length)*100));
+            });
+         });
+      },
+
+
+
       init:function(slf)
       {
          select('#DrawTreePanl').insert({treeview:'', source:'/User/treeMenu', uproot:true, draggable:true, feedable:true, listen:
          {
-            'LeftClick':function()
+            'mouseover,mouseout':function(evnt)
             {
-               if(isin(['fold','plug'],this.info.type)){return};
-               Anon.Draw.open(this.info.path);
+               if(evnt.type=='mouseout'){this.declan('treeItemCtrl'); this.declan('treeItemShft'); this.blur(); return};
+               this.focus(); if(evnt.ctrlKey){this.enclan('treeItemCtrl')}else if(evnt.shiftKey){this.enclan('treeItemShft')};
+            },
+
+            'keydown,keyup':function(evnt)
+            {
+               let k=evnt.signal; if((k!='Control')&&(k!='Shift')){return}; k=((k=='Control')?'Ctrl':'Shft');
+               if(evnt.type=='keydown'){this.enclan('treeItem'+k);return}; this.declan('treeItem'+k);
+            },
+
+            'LeftClick':function(evnt)
+            {
+               if(!isin(['fold','plug'],this.info.type)){Anon.Draw.open(this.info.path);return};
+               let s=evnt.signal; let c=isin(s,'Control'); if(!c&&!isin(s,'Shift')){return};
+               Anon.Draw.scan(this.info.path,c);
             },
          }});
 
@@ -158,25 +212,41 @@ extend(Anon)
          {
             select('#DrawToolView').reclan('show:hide');
             select('#DrawPropView').reclan('show:hide');
+            select('#DrawScanPanl').reclan('show:hide');
          });
 
-         select('#DrawTreePanl').select('treeview')[0].listen('loaded',ONCE,()=>
+         select('#DrawTreePanl').select('treeview')[0].listen('loaded',ONCE,function()
          {
             select('#DrawPropView').reclan('show:hide');
-            requires('/Draw/getTools.js',()=>{Busy.edit('/Draw/panl.js',100);});
+            requires('/Draw/tool/',()=>{Anon.Draw.scan(this.info.path,1,()=>
+            {
+               select('#DrawScanPanl').reclan('show:hide');
+               select('#DrawScanPanl').setStyle({opacity:1});
+               Busy.edit('/Draw/panl.js',100);
+            });});
          });
       },
 
 
 
-      load:function(pth,cbf, ext,img)
+      load:function(pth,cbf, alt,xst,ext,img)
       {
+         alt=((pth.startsWith('~'))?`/${pth}`:pth); xst=select(`img[src="${alt}"]`);
+
+         if(xst)
+         {
+            img=create({img:'', src:xst[0].toDataURL(), onload:function()
+            {this.width=this.naturalWidth; this.height=this.naturalHeight; cbf(this)}});
+            return;
+         };
+
          purl('/Draw/loadFile',{path:pth},function(rsp)
          {
             ext=fext(pth); if(isin(['png','jpg','jpeg','svg','gif'],ext))
             {
-               img=create({img:'', src:rsp.body, onload:function(){this.rectInfo((i)=>
-               {this.width=i.width; this.height=i.height; cbf(this)})}}); return;
+               img=create({img:'', src:rsp.body, onload:function()
+               {this.width=this.naturalWidth; this.height=this.naturalHeight; cbf(this)}});
+               return;
             };
 
             // if(isin(['js','json','css','htm','html','txt','php','inf'],ext))
@@ -191,13 +261,15 @@ extend(Anon)
 
 
 
-      open:function(pth, drv,tab,ttl,tgt,slf,mim,lay)
+      open:function(pth, xst,drv,tab,ttl,tgt,slf,mim,lay)
       {
+         Busy.edit(pth,0);
          slf=this; drv=select('#DrawTabber').driver; ttl=(pth+''); tab=drv.select(ttl);
          if(!!tab){return}; this.load(pth,(img,nic)=>
          {
             select('#DrawToolView').reclan('hide:show');
             select('#DrawPropView').reclan('hide:show');
+            select('#DrawScanPanl').reclan('hide:show');
             drv.create({title:ttl, contents:[{panl:'.DrawViewPanl', contents:[{div:'.DrawViewWrap', canFocus:1}]}]});
             tab=drv.select(ttl); tgt=tab.body.select('.DrawViewWrap')[0]; tgt.vars={}; mim=stub(img.src,';base64,')[0].split(':')[1];
             lay=swap((rstub(ttl.split('/').pop(),'.')[0]),'.','_');
@@ -222,6 +294,7 @@ extend(Anon)
 
             Anon.Draw.vars.actv=tgt;
             tgt.vars=slf.deja.pick(tgt,0); //tgt.vars.canvas.find('Transformer').destroy();
+            Busy.edit(pth,100);
             // tick.after(10,()=>{select('#DrawBodyPanl').signal('open',tgt)});
          });
       },
@@ -230,6 +303,7 @@ extend(Anon)
 
       feed:function(v,n,l, s,m,c)
       {
+         if(!stub(v,';base64,')){dump([v,n]);};
          s=this; m=stub(v,';base64,')[0].split(':')[1];
 
          if(isin(m,'image')){create({img:'', src:v, onload:function()
@@ -265,7 +339,7 @@ extend(Anon)
       },
 
 
-      make:function(o,i,l, a,c,t,x,n,fg,bg,f,od,ra,os,fp,ro,sw,bo)
+      make:function(o,i,l, a,c,t,x,n,fg,bg,f,od,ra,os,fp,ro,sw,bo,ii)
       {
          a=Anon.Draw.vars.actv; c=a.vars.canvas; c.find('Transformer').destroy(); c.batchDraw(); t=o.type; delete o.type;
          if(isVoid(o.x)){o.x=20}; if(isVoid(o.y)){o.y=20}; od={w:60,h:30}; ra=(o.radius||o.outerRadius);
@@ -273,15 +347,14 @@ extend(Anon)
          ro=(o.rotation||0); delete o.rotation; if(isNumr(ra)){os.x=ra; os.y=ra; od.w=(ra*2); od.h=(ra*2)}
          else{if(isVoid(o.width)){o.width=60}; if(isVoid(o.height)){o.height=30}; od.w=o.width; od.h=o.height;};
          if(!fp&&isVoid(o.fill)){o.fill='rgba(255,255,255,0.5)'}; if(!fp&&isVoid(o.stroke)){o.stroke='rgba(0,0,0,1)'; o.strokeWidth=2};
-         sw=(o.strokeWidth||0); bo=(sw/2); od.w+=sw; od.h+=sw; os.x+=bo; os.y+=bo;
+         if(t=='Text'){o.strokeWidth=0.5}; sw=(o.strokeWidth||0); bo=(sw/2); od.w+=sw; od.h+=sw; os.x+=bo; os.y+=bo;
          if(isVoid(o.draggable)){o.draggable=true}; x=(o.nick||t); delete o.nick; if(!l){l=Anon.Draw.tool.layrMake(x)};
          n=Anon.Draw.fumb((new Konva.Group({x:o.x,y:o.y,draggable:o.draggable,clip:{x:0,y:0,width:od.w,height:od.h}})));
-         delete o.x; delete o.y; delete o.draggable; if(i&&!!o.fillPatternImage){bg=(new Konva[t](o))};
+         delete o.x; delete o.y; delete o.draggable; bg=(new Konva.Rect({width:60,height:60})); n.add(bg);
+         if(i&&!!o.fillPatternImage){ii=1}; if(ii){fg=(new Konva[t](o))};
          if(!!bg){n.add(bg); delete o.fillPatternImage}; o.x=os.x; o.y=os.y; o.rotation=ro; o.strokeScaleEnabled=false;
-         if(!bg){bg=(new Konva.Rect({width:60,height:60})); n.add(bg);};
-         fg=(new Konva[t](o)); n.add(fg); l.add(n); f=this.fidl(); l.add(f); f.attachTo(n); n.tf=f;
-         delete a.vars.selected; a.vars.selected=[n]; l.batchDraw();
-         n.nick=l.nick; n.bg=n.children[0]; n.fg=n.children[1]; n.tr=f;
+         if(!fg){fg=(new Konva[t](o))};  n.add(fg); l.add(n); f=this.fidl(); l.add(f); f.attachTo(n); n.tf=f;
+         delete a.vars.selected; a.vars.selected=[n]; l.batchDraw(); n.nick=l.nick; n.bg=n.children[0]; n.fg=n.children[1]; n.tr=f;
          n.bg.setAttrs({width:n.clipWidth(),height:n.clipHeight()}); l.batchDraw();
          this.deja.keep(); select('#DrawBodyPanl').signal('pickItem',n); return n;
       },
@@ -306,7 +379,7 @@ extend(Anon)
       grow:function(o, i,l,e,s,b,c,n,d)
       {
          i=Anon.Draw.vars.actv; l=i.vars.flayer; e=i.vars.active;
-         s=(e.fg.strokeWidth()||0); b=(e.fg.shadowBlur()||0); c=e.clip();
+         s=(e.fg.strokeWidth()||0); b=((e.fg.shadowBlur()||0)*3); c=e.clip();
 
          n=[(e.fg.width()+s+b),(e.fg.height()+s+b)]; d=[((o[0]-n[0])/2),((o[1]-n[1])/2)];
          e.clip({x:(c.x+d[0]),y:(c.y+d[1]),width:n[0],height:n[1]});

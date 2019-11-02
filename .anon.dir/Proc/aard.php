@@ -23,7 +23,7 @@ namespace Anon;
       static function init()
       {
          self::$meta->hush=knob(); self::$meta->hook=knob(); self::$meta->wait=500;
-         $p=NAVIPATH; Time::logEvent(); if(strpos($p,'/~/')===0){$p=ltrim($p,'/~/'); $u=user('name'); $p="/User/data/$u/home/$p";};
+         $p=NAVIPATH; Time::logEvent(); if(strpos($p,'/~/')===0){$p=lshave($p,'/~/'); $u=user('name'); $p="/User/data/$u/home/$p";};
          $r=path::call($p,__FILE__); // run PHP controller found in path .. this should exit here - else we handle it below:
          if(($r!==null)&&($r!==true)){ekko($r);}; // there was a PHP controller, it returned something, so we respond with that
          if(is_dir(path($p))){$i=path::indx($p); if($i){$p=(rshave($p,'/')."/$i");}}; // if folder, check for index-file
@@ -171,6 +171,7 @@ namespace Anon;
 
       static function makeDurl()
       {
+         permit::fubu('API');
          $v=knob($_POST); $p=$v->purl; if(!$p){ekko(FAIL);}; $l=isPath($p); $r=xeno::showHyperConduit($p); if(!$l&&!$r){ekko(FAIL);};
          $i=path::info($p); if($l){$p=crop($p); if(!isee($p)){ekko(404);}; ekko(durl($p));};
          if(!isin(['ftp','ftps','http','https'],$i->plug)){ekko(501);}; $f=path::leaf($i->path); $m=mime($f); if(!$m){ekko(415);};
@@ -183,6 +184,40 @@ namespace Anon;
          };
 
          $r=spuf($p); $r=base64_encode($r); $r="data:$m;base64,$r"; ekko($r);
+      }
+
+
+
+      static function makeTodo()
+      {
+         permit::fubu('API');
+         $v=knob($_POST); $d=decode::jso(decode::b64($v->mesg));
+         $r=todo::{"Bug reported"}($d->mesg,NOEXIT,$d); done($r);
+      }
+
+
+
+      static function scanFold()
+      {
+         permit::fubu('API','clan:work'); $v=knob($_POST); $p=rshave($v->path,'/'); if(!isFold($p)){done('[]');};
+         $r=pget($p); $r=padded($r,"$p/",''); ekko($r);
+      }
+
+
+
+      static function scanPlug($d)
+      {
+         permit::fubu('clan:work'); $x=xeno::showHyperConduit($d);
+         if(!$x){return;}; $q=path::info($x)->path; $l=crud($x)->select('*'); $r=[];
+         if(!isList($l)){$r=knob(['head'=>mime($d),'body'=>$l]); return $r;};
+
+         foreach($l as $i)
+         {
+            if(isKnob($i)&&isText($i->path)){$i=$i->path;}; if(!isText($i,1)){continue;};
+            $i=lshave($i,$q); $r[]=$i;
+         };
+
+         return $r;
       }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
