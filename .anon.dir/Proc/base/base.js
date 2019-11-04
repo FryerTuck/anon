@@ -494,30 +494,38 @@
 
          if(isin(['woff','ttf','otf'],x))
          {
-            opentype.load(i,function(err,fnt)
+            tick.after(1,function()
             {
-               d--; slf.done[this.pth]=1; if(err){dump(err);return}; let fln,fam,mim,css,hsh,fmt,ico,reg;
-               fln=this.pth.split('/').pop().split('.')[0]; fam=this.fam; if(!fam){fam=(fnt.names.fontFamily.en||fln)}; fam=swap(fam,' ','-');
-               hsh=md5(this.pth); fmt=fnt.outlinesFormat; ico=(isin(lowerCase(fam),'icon')||isin(lowerCase(fln),'icon'));
-               reg=(ico||isin(lowerCase(fnt.names.fontSubfamily),'regular')); reg=((reg||ico)?` font-weight:normal; font-style:normal;`:'');
-               css=`@font-face{font-family:'${fam}'; src:url('${this.pth}') format('${fmt}');${reg}}\n\n`;
-               css+=`[class^="${fam}-"], [class*=" ${fam}-"] {font-family:'${fam}' !important; `
-               if(ico){css+=`speak:none; font-style:normal; font-weight:normal; font-variant:normal; text-transform:none; line-height:1; `};
-               css+=`-webkit-font-smoothing:antialiased; -moz-osx-font-smoothing: grayscale;}\n\n`
-               if((this.fam||ico)&&(fnt.glyphNames.names.length>0)){fnt.glyphs.glyphs.each((g)=>
+               tick.after(1,()=>
                {
-                  if(!g.unicode||!g.name||g.name.startsWith('.')){return}; let c=g.unicode.toString(16);
-                  css+=`.${fam}-${g.name}:before{content:"\\${c}";}\n`;
-               })}
-               else
+                  if(!!this.otl){return};
+                  alert("Connection issue.\nTry to reset your connection, then hit refresh");
+               });
+               this.otl=opentype.load(i,function(err,fnt)
                {
-                  for(let gx=33; gx<256; gx++)
-                  {let hx=gx.toString(16); while(hx.length<4){hx=`0${hx}`}; css+=`.${fam}-${hx}:before{content:"\\${hx}";}\n`;};
-               };
-               document.head.insert({style:'', purl:this.pth, contents:css});
-               cbpi(this.pth);
-            }
-            .bind({fam:p,pth:i}));
+                  d--; slf.done[this.pth]=1; if(err){console.log(err);return}; let fln,fam,mim,css,hsh,fmt,ico,reg;
+                  fln=this.pth.split('/').pop().split('.')[0]; fam=this.fam;if(!fam){fam=(fnt.names.fontFamily.en||fln)};fam=swap(fam,' ','-');
+                  hsh=md5(this.pth); fmt=fnt.outlinesFormat; ico=(isin(lowerCase(fam),'icon')||isin(lowerCase(fln),'icon'));
+                  reg=(ico||isin(lowerCase(fnt.names.fontSubfamily),'regular')); reg=((reg||ico)?` font-weight:normal; font-style:normal;`:'');
+                  css=`@font-face{font-family:'${fam}'; src:url('${this.pth}') format('${fmt}');${reg}}\n\n`;
+                  css+=`[class^="${fam}-"], [class*=" ${fam}-"] {font-family:'${fam}' !important; `
+                  if(ico){css+=`speak:none; font-style:normal; font-weight:normal; font-variant:normal; text-transform:none; line-height:1; `};
+                  css+=`-webkit-font-smoothing:antialiased; -moz-osx-font-smoothing: grayscale;}\n\n`
+                  if((this.fam||ico)&&(fnt.glyphNames.names.length>0)){fnt.glyphs.glyphs.each((g)=>
+                  {
+                     if(!g.unicode||!g.name||g.name.startsWith('.')){return}; let c=g.unicode.toString(16);
+                     css+=`.${fam}-${g.name}:before{content:"\\${c}";}\n`;
+                  })}
+                  else
+                  {
+                     for(let gx=33; gx<256; gx++)
+                     {let hx=gx.toString(16); while(hx.length<4){hx=`0${hx}`}; css+=`.${fam}-${hx}:before{content:"\\${hx}";}\n`;};
+                  };
+                  document.head.insert({style:'', purl:this.pth, contents:css});
+                  cbpi(this.pth);
+               }
+               .bind({fam:this.fam,pth:this.pth}));
+            }.bind({fam:p,pth:i,otl:VOID}));
             return;
          };
 

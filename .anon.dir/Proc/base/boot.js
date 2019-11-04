@@ -77,9 +77,9 @@
 
                   p=this.purl; s=this;
                   s.listen('error',function(){this.failed=1; Busy.tint('red'); this.signal('load')}); // onfail
-                  s.listen('load',ONCE,function()
+                  s.listen('load',function()
                   {
-                     this.done=100; delete this._waiting; this.loaded=1; if(this.failed){return};
+                     if(!this._waiting){return}; this.done=100; delete this._waiting; this.loaded=1; if(this.failed){return};
                      tick.after(50,()=>{this.signal('ready'); tick.after(10,()=>{this.signal('idle')});});
                   });
 
