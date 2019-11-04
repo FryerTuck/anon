@@ -58,7 +58,7 @@ On the server-side, Anon is "name-spaced", so i you want to use Anon's features,
 >More info in the *Help* docs.
 
 #### Versatility
-When a folder is visited (including root/home) Anon looks or any o"aard or index" in the order of:
+When a folder is visited (including root/home) Anon looks for any "aard or index" in the order of:
 1. `.php`
 2. `.js`
 3. `.md`
@@ -170,9 +170,9 @@ To edit a field in a row, just `Ctrl click` it, change what you want and hit Ent
 
 - Clone the repo, or download & extract its contents to your web server, then visit its URL, and you're done.
 
-#### getting started
+#### Getting started
 
-In order to change anything in your Anon system (the Anon way), you'll need to use the ***WorkPanel***.
+In order to change anything in your Anon system (the Anon way), you'll need to use the *WorkPanel*.
 >You benefit from using "the Anon way" because Anon logs your time and provides security and assistance relative to what you're doing.
 
 #### How to toggle the WorkPanel on and off
