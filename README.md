@@ -59,7 +59,7 @@ Any sensitive data such as users, config, plugs, or API-keys, etc - are NOT dire
 When the *GUI* is served, a "client-side bootstrapping" sequence is initialized.
 1. Some minimal HTML, CSS and JavaScript is served for "probing" the client (user-agent/browser)
 2. The HTML + CSS presents a "honey trap" - hidden from humans - as (no-follow)-link which is configurable
-3. The JavaScript waits some milliseconds for the bot (if any) to fall in the trap, if the trap was ignored then the visitor is probably human (or a very clever bot) and then tests if the browser is "modern"; if not then the visitor is presented with a a notification to upgrade
+3. The JavaScript waits some milliseconds for the bot (if any) to fall in the trap, if the trap was ignored then the visitor is probably human (or a very clever bot) and then tests if the browser is "modern"; if not then the visitor is presented with a notification to upgrade
 4. The JS also checks if cookies are enabled, if not, then the visitor is notified to turn on cookies; this is for better security and UX.
 5. One last JS check is done (hidden in an encrypted/obfuscated cookie) - which checks if the server-side canonical-host matches the client-side host, if not identical then the visitor is kicked out
 6. If all went well, the GUI-bootstrapping is completed and the requested URL is served.
