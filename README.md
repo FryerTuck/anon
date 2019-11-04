@@ -175,7 +175,7 @@ You can also edit database sprocs (stored procedures and functions) with it when
 
 
 ### Draw
-The image editor is "simple yet effective". It has basic graphics editing unctions such as zoom, crop, layers, hue, blur, glow/shadow, (gradient)-fill, stroke, etc. With little practice you will ind it quite useful.
+The image editor is "simple yet effective". It has basic graphics editing unctions such as zoom, crop, layers, hue, blur, glow/shadow, (gradient)-fill, stroke, etc. With little practice you'll find it quite useful.
 
 ![Imgur](https://i.imgur.com/mXHntNl.png)
 
@@ -190,11 +190,12 @@ To edit a field in a row, just `Ctrl click` it, change what you want and hit Ent
 
 
 ## Installation
-- You'll need a Linux OS (virtualbox works too) with Apache & PHP installed.
-- Clone the repository, or download & extract its contents to your web server, then visit its URL
+- You'll need a Linux OS with Apache & PHP installed.
+- Clone the repository, or download & extract its contents to your web-server's `doc-root` folder, then visit its URL
 - Log in (instructions below) and change the `master` password
 - (optional) - change the `remote origin` of this (cloned) repo to your own by using the Anon terminal
 
+>If you're on Windows (-or OSX) then use VirtualBox, or something similar and install any decent Linux distro on it; *Arch* is great.
 >More info available in the *Help* docs
 
 #### Getting started
