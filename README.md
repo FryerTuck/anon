@@ -175,7 +175,7 @@ You can also edit database sprocs (stored procedures and functions) with it when
 
 
 ### Draw
-The image editor is "simple yet effective". It has basic graphics editing unctions such as zoom, crop, layers, hue, blur, glow/shadow, (gradient)-fill, stroke, etc. With little practice you'll find it quite useful.
+The image editor is "simple yet effective". It has basic graphics editing functions such as zoom, crop, layers, hue, blur, glow/shadow, (gradient)-fill, stroke, etc. With little practice you'll find it quite useful.
 
 ![Imgur](https://i.imgur.com/mXHntNl.png)
 
