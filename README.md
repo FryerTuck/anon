@@ -193,7 +193,9 @@ To edit a field in a row, just `Ctrl click` it, change what you want and hit Ent
 - You'll need a Linux OS (virtualbox works too) with Apache & PHP installed.
 - Clone the repository, or download & extract its contents to your web server, then visit its URL
 - Log in (instructions below) and change the `master` password
-- (optional) - change the `remote origin` of this (cloned) repo to your own.
+- (optional) - change the `remote origin` of this (cloned) repo to your own by using the Anon terminal
+
+>More info available in the *Help* docs
 
 #### Getting started
 
