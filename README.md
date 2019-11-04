@@ -48,7 +48,7 @@ Anon responds to each request in a way that compliments the request; these "inte
 - **DPR** - `Direct Path Request` ~ any request after ***GUI*** that is NOT *API* -or *SSE*
 - **SSE** - `Server Side Event` ~ the server responds with "event-signals" as expected
 - **API** - `Application Programming Interface` ~ response is in "plain text" (-or JSON), but only if XHR requests were made *FUBU* (for us by us) -or from another server -if an API-key is provided along with required headers such as "INTRFACE" and the key exists as file in your Anon server API-keys.
->The contents of an API-key-file is the original API-key
+
 
 
 #### Security
