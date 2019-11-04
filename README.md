@@ -26,9 +26,7 @@ After installing Anon, the only file you should see in your file-browser is the 
 
 This means that you can just create/drop your code in the main *web-root* of your web-server and not worry about over-writing anything.
 The same applies if you just want to delete all of it, just select-all and delete, no worries; remember to keep your "show hidden files off" though.
-Anon is not "supposed" be used this way, but, this was to explain that it does not get in your way if you just want to use Anon for some quickie.
-
-This is not "the way" to use Anon; the actual way is to use the built-in "Code" editor, but this is to illustrate that the "built-in" apps do not interfere when Anon is used the "traditional" way web-developers are used to; except, don't mess with the "hidden" files, such as the `.htaccess` -unless you know exactly what the code in there does and why.
+This is not "the way" to use Anon; the actual way is to use the built-in tree-menu and "Code" editor, but this is to illustrate that the "built-in apps" do not interfere when Anon is used the "traditional" way web-developers are used to; except, don't mess with the "hidden" files, such as the `.htaccess` -unless you know exactly what the code in there does and why.
 
 The rest (below) describes how Anon works "under the hood" - if you use it as intended.
 
