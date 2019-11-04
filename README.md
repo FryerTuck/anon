@@ -19,7 +19,6 @@ Anon is built on a set of simple principles expressed in the acronym: ***CANDRYK
 In order to describe what Anon is about, I'll use the same principle above, so without further word-crud, let's get into it.
 
 
-
 #### File Structure
 Anon's initial file structure is (wait or it) ... "hidden".
 After installing Anon, the only file you should see in your file-browser is the "README" - granted that your "show hidden files" option is off.
@@ -29,12 +28,18 @@ This means that you can just create/drop your code in the main *web-root* of you
 The same applies if you just want to delete all of it, just select-all and delete, no worries; remember to keep your "show hidden files off" though.
 Anon is not "supposed" be used this way, but, this was to explain that it does not get in your way if you just want to use Anon for some quickie.
 
+This is not "the way" to use Anon; the actual way is to use the built-in "Code" editor, but this is to illustrate that the "built-in" apps do not interfere when Anon is used the "traditional" way web-developers are used to; except, don't mess with the "hidden" files, such as the `.htaccess` -unless you know exactly what the code in there does and why.
+
 The rest (below) describes how Anon works "under the hood" - if you use it as intended.
 
-Every folder (directory) in your web-root can potentially be a "stem"; botanically - stems grow from "root"; this simply means that you have a older in the web-root of your server and inside it a file named "index.php" (or aard.php also). If you use "aard" it shows up first in your code-editor, so you don't have to fumble around to ind it.
+Every folder (directory) in your web-root can potentially be a "stem"; botanically - stems grow from "root"; this simply means that you have a folder in the web-root of your server and inside it a file named "index.php" (-or aard.php).
+> If you use "aard" it shows up first in your code-editor, so you don't have to fumble around to find it.
 
-Every **stem** can have its own configuration; that said, if you have a "crawler" file in a stem, then its directives are used cumulatively with all the other stem-crawlers config in order to dynamically build a "robots.txt" file -but this only happens upon request of said "robots.txt" explicitly.
+Every **stem** can have its own configuration; the config-folder-name in a stem can be any of these: `conf config settings cfg cnf`.
+If you have a "crawler" file in a stem's config-folder, then its directives are used cumulatively with all the other stems' crawler-config in order to dynamically serve a "robots.txt" file -but this only happens upon request of said "robots.txt" explicitly.
 
+Lastly, Anon is fully integrated with ***Git*** and each stem can be a "normal" repository as the primary git-repository-config ignores `.git` folders.
+Every (non-public)-user also has their "own local clone" of the "web-root" repo, but it runs in a special branch called "tanker" -which is used to collect the work of all the collaborators when they "publish" their work. A sudoer can merge the `tanker` with `master` when all is well.
 
 #### Interfaces
 Anon responds to each request in a way that compliments the request; these "interfaces" are identified automatically per request:
@@ -42,29 +47,48 @@ Anon responds to each request in a way that compliments the request; these "inte
 - **GUI** - `Graphical User Interface` ~ happens once per session, or upon refresh; Anon works as Single-Page-Application (SPA) -hybrid
 - **DPR** - `Direct Path Request` ~ any request after ***GUI*** that is NOT *API* -or *SSE*
 - **SSE** - `Server Side Event` ~ the server responds with "event-signals" as expected
-- **API** - `Application Programming Interface` ~ response is in "plain text" -or JSON, but only if requests were made *FUBU* (for us by us) -or an API-key is provided along with required headers such as "Referrer" and the API-key exists
+- **API** - `Application Programming Interface` ~ response is in "plain text" (-or JSON), but only if XHR requests were made *FUBU* (for us by us) -or from another server -if an API-key is provided along with required headers such as "INTRFACE" and the key exists as file in your Anon server API-keys.
+>The contents of an API-key-file is the original API-key
 
 
 #### Security
-If any of the "interface" requirements are violated, then the server responds with `503 Service Unavailable`. Such violation can be triggered upon various criteria, but 1 example is: when you have a rule in your "robots.txt" that denies access to some folder/file (path) -and a visitor tries to visit said path -then a *kban* is raised and that visitor is shut out for some time -which is configurable.
+On the server side, if any of the "interface" requirements are violated, then the server responds with `503 Service Unavailable`. Such violation can be triggered upon various criteria, but 1 example is: when you have a rule in your "robots.txt" that denies access to some folder/file (path) -and a visitor tries to visit said path -then a *kban* is raised and that visitor is shut out for some time -which is configurable.
 
-On the front-end, if a visitor tries to inject some code into the "dev-tools console", or in the address-bar, or by manipulating an "onlick" event (or anything really) that was not done *FUBU*, then the visitor is kicked out.
+Any sensitive data such as users, config, plugs, or API-keys, etc - are NOT directly accessible by the public in any way (except if you explicitly make it so on the server-side).
 
-Anon has a built-in user privilege system, which is mainly used for the *WorkPanel*, but you can use it or your projects as well. You can also be logged in using multiple (different) browsers in order to work/test more efficiently.
+When the *GUI* is served, a "client-side bootstrapping" sequence is initialized.
+1. Some minimal HTML, CSS and JavaScript is served for "probing" the client (user-agent/browser)
+2. The HTML + CSS presents a "honey trap" - hidden from humans - as (no-follow)-link which is configurable
+3. The JavaScript waits some milliseconds for the bot (if any) to fall in the trap, if the trap was ignored then the visitor is probably human (or a very clever bot) and then tests if the browser is "modern"; if not then the visitor is presented with a a notification to upgrade
+4. The JS also checks if cookies are enabled, if not, then the visitor is notified to turn on cookies; this is for better security and UX.
+5. One last JS check is done (hidden in an encrypted/obfuscated cookie) - which checks if the server-side canonical-host matches the client-side host, if not identical then the visitor is kicked out
+6. If all went well, the GUI-bootstrapping is completed and the requested URL is served.
 
-Any errors that occur either front-end -or back-end are hidden from the general public; you can only see these errors if you belong to the "geek" or "sudo" clans AND you are logged in.
+In each *stem* you can configure which paths are not accessible. Additionally you can set extra (config) security for images larger than a specified resolution, so if an image is requested directly (the GUI-strap happens regardless) and the image is served with a watermark of your choice. What all this really means is you have absolute control over what gets served; so nobody can leech images or any digital assets from your website, -if you choose it to be so.
 
-On the server-side, Anon is "name-spaced", so i you want to use Anon's features, just use `namespace Anon;`.
+Lastly - still on the client-side, if a visitor tries to inject some code into the "dev-tools console", or in the address-bar, or by manipulating an "onlick" event (or anything really) -which was NOT done *FUBU* (or us by us), then the visitor is kicked out.
+
+![Imgur](https://i.imgur.com/v8HZyE2.png)
+
+Anon has a built-in user privilege system, which is mainly used for the *WorkPanel*, but you can use it in your projects as well. You can also be logged in using multiple (different) browsers in order to work/test more efficiently. The user groups are called "clans". A typical "anonymous" visitor automatically has a username ("anonymous") -and belongs to the "surf" clan. Your members/subscribers can belong to the "back" clan (as "backer").
+User passwords are NEVER stored "as is", they are hashed and stored (as hash) in a place that is not accessible to anybody; so not even users in the "sudo" clan can see your password. Additionally, a user can reset their own password, or a ganger/leader/sudoer can change your email address -or issue a password reset on your behalf - in which case you get an email with a temp password -which you can use to log in and change as you wish.
+
+Any errors that occur either front-end -or back-end are hidden from the general public; you can only see the error-details if you are logged in as a user that belongs to the "geek" or "sudo" clans -which means you most probably work or the company or you were given such privilege explicitly.
+In the case of an error and if you are only a "surfer" -or "backer", then all you see is prompt that mention that there was an error - and the visitor can either "ignore" it, "refresh", or "report bug and refresh".
+
+![Imgur](https://i.imgur.com/vcVwfi3.png)
+
+On the server-side, Anon is "name-spaced", so if you want to use Anon's features in a PHP file, just use `namespace Anon;`.
 >More info in the *Help* docs.
 
-#### Versatility
-When a folder is visited (including root/home) Anon looks for any "aard or index" in the order of:
+#### Utility
+When a folder -like `/` (web-root) is visited, Anon looks for any "aard or index" (-or README) -prefixed file-names in the order of file-extensions
 1. `.php`
 2. `.js`
 3. `.md`
-4. README.md
 
-That last one may have your attention, and you're right; you can have sub-repositories in Anon and your `markdown` files are rendered as web pages on the fly. This "rendering" happens on the front-end to save the server from extra work-load; (same reason why bots are served what they need also).
+If that last one got your attention, you're right; you can have sub-repositories in Anon and your `markdown` files are rendered as web pages on the fly. This "rendering" happens client-side to save the server from extra work-load; (same reason why bots are served what they need).
+Directory-listing (raw folder viewing) is disabled (config) by default.
 
 You can also have `.js` files be served as web-pages, like this:
 
@@ -83,8 +107,8 @@ The above example has the advantage of having event-functions as actual JavaScri
 
 
 #### Intro conclusion
-There is a lot more info available in the "Help" docs. Again, each stem can have its own "docs" folder -which is used to render as part of the documentation within the Anon ***WorkPanel*** -up next ;)
-Now that you know more about "the boring tech stuff", next we explore the productivity tools collaboration integration built into Anon.
+There is a lot more info available in the "Help" docs; each stem can have its own "docs" folder -which is used to render as part of the documentation within the Anon ***WorkPanel*** -up next ;)
+Now that you know more about "the boring tech stuff", next we explore the productivity tools and collaboration integration built into Anon.
 
 
 
@@ -167,8 +191,9 @@ To edit a field in a row, just `Ctrl click` it, change what you want and hit Ent
 
 ## Installation
 - You'll need a Linux OS (virtualbox works too) with Apache & PHP installed.
-
-- Clone the repo, or download & extract its contents to your web server, then visit its URL, and you're done.
+- Clone the repository, or download & extract its contents to your web server, then visit its URL
+- Log in (instructions below) and change the `master` password
+- (optional) - change the `remote origin` of this (cloned) repo to your own.
 
 #### Getting started
 
