@@ -64,7 +64,7 @@ When the *GUI* is served, a "client-side bootstrapping" sequence is initialized.
 5. One last JS check is done (hidden in an encrypted/obfuscated cookie) - which checks if the server-side canonical-host matches the client-side host, if not identical then the visitor is kicked out
 6. If all went well, the GUI-bootstrapping is completed and the requested URL is served.
 
-In each *stem* you can configure which paths are not accessible. Additionally you can set extra (config) security for images larger than a specified resolution, so if an image is requested directly (the GUI-strap happens regardless) and the image is served with a watermark of your choice. What all this really means is you have absolute control over what gets served; so nobody can leech images or any digital assets from your website, -if you choose it to be so.
+In each *stem* you can configure which paths are not accessible. Additionally you can set extra (config) security for images larger than a specified resolution, so if an image is requested directly (the GUI-strap happens regardless) and the image is equal-or-larger-than the specified (restricted) resolution, then the image is served with a watermark of your (config) choice. What all this really means is you have absolute control over what gets served; so nobody can steal images (or any assets) from your website, -if you choose it to be so.
 
 Lastly - still on the client-side, if a visitor tries to inject some code into the "dev-tools console", or in the address-bar, or by manipulating an "onlick" event (or anything really) -which was NOT done *FUBU* (or us by us), then the visitor is kicked out.
 
