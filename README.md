@@ -140,7 +140,7 @@ You can configure an email address to use for tasks. New tasks come in either vi
 
 Tasks can also be assigned (-or incremented) this way via the front-end when a user clicks to "report bug and refresh" when an error pops up.
 
-Every task starts with its initial text as first comment - upon which you can reply. I the task was sent via email then your response will automatically be sent via email; i they reply -it will come in as another comment in the same task.
+Every task starts with its initial text as first comment - upon which you can reply. If the task was sent via email then your response will automatically be sent via email; upon email-reply it will come in as another comment in the same task.
 
 Comments can be rated. This is a way to decide (vote) on ideas, or to up-vote (or down-vote) a client. You also earn "ranking" this way, which ties in together with the user-privilege system, again, so; this is a way to prevent "noobs" from accessing/editing/deleting the wrong (sensitive) config/data.
 
