@@ -9,7 +9,7 @@
 To capture an intellectual audience within the first paragraph is tricky, but have a read, you're about to get blown away!
 Even though Anon is a "general purpose" framework, it's tiny, yet built to be secure both in back-end and front-end.
 
-As you probably know, security comes at the cost of speed and complexity; however, Anon is made to be as simple as possible, to save you (dear reader) the hassle of over-complicated nonsense so you can focus on the task at hand. That sounded like a cheesy sales pitch, but bare with me as the *devl* is in the details. If your are not a programmer -or just want to install it, ogle the pictures or skip ahead.
+As you probably know, security comes at the cost of speed and complexity; however, Anon is made to be as simple as possible, to save you (dear reader) the hassle of over-complicated nonsense so you can focus on the task at hand. That sounded like a cheesy sales pitch, but bare with me as the *devl* is in the details. If you're not in the mood to read much, or you're not a programmer, ogle the pictures; else if you just want to install then scroll ahead.
 
 Anon is built on a set of simple principles expressed in the acronym: ***CANDRYKIS*** .. which is:
 - **Compartmentalized And Nomadic** - modular design, each module (folder) can just be copied to another place and edited as you wish
