@@ -119,7 +119,7 @@ Anon's *WorkPanel* is a collection of productivity apps which you can use to do 
 
 You can of coarse style your workpanel any way you want - just as you can style any of its "apps" (icons on the left) by using your own (personal) "skin.css" file - (more on that later).
 
-Every **stem** can have its own "pack.inf" file - in which you can specify some dependencies, or permissions, etc. I you want your app to be shown in this workpanel, then you can simply give your app a "panlIcon" name in there (font icons are built in and browse-able).
+Every **stem** can have its own "pack.inf" file - in which you can specify some dependencies, or permissions, etc. If you want your app to be shown in this workpanel, then you can simply give your app a "panlIcon" name in there (font icons are built in and browse-able).
 
 The "terminal" (console, or simply CLI) you see there is very useful, you also use it to log in, or to pull updates from your remote repository, (-but you'll need "sudo" permission for that) .. This is NOT the "root" user/group in the underlying operating system, and Anon's users are "synthetic" - not part of the OS (at all).
 
