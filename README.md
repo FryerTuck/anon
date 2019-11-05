@@ -64,15 +64,15 @@ When the *GUI* is served, a "client-side bootstrapping" sequence is initialized.
 
 In each *stem* you can configure which paths are not accessible. Additionally you can set extra (config) security for images larger than a specified resolution, so if an image is requested directly (the GUI-strap happens regardless) and the image is equal-or-larger-than the specified (restricted) resolution, then the image is served with a watermark of your (config) choice. What all this really means is you have absolute control over what gets served; so nobody can steal images (or any assets) from your website, -if you choose it to be so.
 
-Lastly - still on the client-side, if a visitor tries to inject some code into the "dev-tools console", or in the address-bar, or by manipulating an "onlick" event (or anything really) -which was NOT done *FUBU* (or us by us), then the visitor is kicked out.
+Lastly - still on the client-side, if a visitor tries to inject some code into the "dev-tools console", or in the address-bar, or by manipulating an "onlick" event (or anything really) -which was NOT done *FUBU* (for us by us), then the visitor is kicked out.
 
 ![Imgur](https://i.imgur.com/v8HZyE2.png)
 
 Anon has a built-in user privilege system, which is mainly used for the *WorkPanel*, but you can use it in your projects as well. You can also be logged in using multiple (different) browsers in order to work/test more efficiently. The user groups are called "clans". A typical "anonymous" visitor automatically has a username ("anonymous") -and belongs to the "surf" clan. Your members/subscribers can belong to the "back" clan (as "backer").
 User passwords are NEVER stored "as is", they are hashed and stored (as hash) in a place that is not accessible to anybody; so not even users in the "sudo" clan can see your password. Additionally, a user can reset their own password, or a ganger/leader/sudoer can change your email address -or issue a password reset on your behalf - in which case you get an email with a temp password -which you can use to log in and change as you wish.
 
-Any errors that occur either front-end -or back-end are hidden from the general public; you can only see the error-details if you are logged in as a user that belongs to the "geek" or "sudo" clans -which means you most probably work or the company or you were given such privilege explicitly.
-In the case of an error and if you are only a "surfer" -or "backer", then all you see is prompt that mention that there was an error - and the visitor can either "ignore" it, "refresh", or "report bug and refresh".
+Any errors that occur either front-end -or back-end are hidden from the general public; you can only see the error-details if you are logged in as a user that belongs to the "geek" or "sudo" clans -which means you most probably work for the company, or you were given such privilege explicitly.
+In the case of an error and if you are only a "surfer" -or "backer", then all you see is a prompt that mention that there was an error - and the visitor can either "ignore" it, "refresh", or "report bug and refresh".
 
 ![Imgur](https://i.imgur.com/vcVwfi3.png)
 
@@ -80,7 +80,7 @@ On the server-side, Anon is "name-spaced", so if you want to use Anon's features
 >More info in the *Help* docs.
 
 #### Utility
-When a folder -like `/` (web-root) is visited, Anon looks for any "aard or index" (-or README) -prefixed file-names in the order of file-extensions
+When a folder is visited (incl. the *web-root* `/`), Anon looks for any "aard or index" (-or README) -prefixed file-names in the order of file-extensions
 1. `.php`
 2. `.js`
 3. `.md`
@@ -105,7 +105,7 @@ The above example has the advantage of having event-functions as actual JavaScri
 
 
 #### Intro conclusion
-There is a lot more info available in the "Help" docs; each stem can have its own "docs" folder -which is used to render as part of the documentation within the Anon ***WorkPanel*** -up next ;)
+There is a lot more info available in the "Help" docs and each stem can have its own "docs" folder -which is part of the "Help" docs on the Anon ***WorkPanel*** -up next ;)
 Now that you know more about "the boring tech stuff", next we explore the productivity tools and collaboration integration built into Anon.
 
 
