@@ -20,7 +20,7 @@ In order to describe what Anon is about, I'll use the same principle above, so w
 
 
 #### File Structure
-Anon's initial file structure is (wait or it) ... "hidden".
+Anon's initial file structure is (wait for it) ... "hidden".
 After installing Anon, the only file you should see in your file-browser is the "README" - granted that your "show hidden files" option is off.
 ![Imgur](https://i.imgur.com/B2uW2ZU.png)
 
