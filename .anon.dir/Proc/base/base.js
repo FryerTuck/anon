@@ -1790,10 +1790,15 @@
 
          bind:function(r,x,y)
          {
+            // if(isNode(r)){if(!r.id){r.id=('EL'+hash())}; r=('#'+r.id)}; let n=select(r);
+            // if(!isNode(n)){fail('expecting node with id '+r+' to exist in the DOM');return};
+            // if(cStyle(n,'position')!='absolute'){fail('expecting `position:absolute`');return};
+            // if(!isNumr(x)){x=0;}; if(!isNumr(y)){y=0;}; this.refs[r]={xd:x,yd:y};
+
             if(isNode(r)){if(!r.id){r.id=('EL'+hash())}; r=('#'+r.id)}; let n=select(r);
-            if(!isNode(n)){fail('expecting node with id '+r+' to exist in the DOM');return};
-            if(cStyle(n,'position')!='absolute'){fail('expecting `position:absolute`');return};
-            if(!isNumr(x)){x=0;}; if(!isNumr(y)){y=0;}; this.refs[r]={xd:x,yd:y};
+            if(!isNode(n)){fail('expecting node with id '+r+' to exist in the DOM');}; let dx,dy;
+            dx=(cursor.posx-x); dy=(cursor.posy-y);
+            if(!isNumr(x)){x=0;}; if(!isNumr(y)){y=0;}; this.refs[r]={xd:dx,yd:dy};
          },
 
          drop:function(r)
@@ -1808,10 +1813,9 @@
             cursor.refs.each((p,r)=>
             {
                let n=document.getElementById(r.slice(1)); if(!n){return};
-
-               nx=(x+p.xd); ny=(y+p.yd);
+               nx=(x-p.xd); ny=(y-p.yd);
                n.style.left=(nx+'px'); n.style.top=(ny+'px');
-               n.signal('boundmove',{x:x,y:y});
+               n.signal('boundmove',{x:x,y:y,n:n});
             });
          },
 
