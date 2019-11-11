@@ -898,7 +898,7 @@ namespace Anon;
 
       static function make($p,$v=null)
       {
-         if(!path($p)){return;}; lock::awaits($p); $r=pset($p,$v); lock::remove($p); return $r;
+         if(!path($p)){return;}; lock::awaits($p); $r=pset($p,$v); lock::remove($p); return (($r===false)?$r:true);
       }
 
 

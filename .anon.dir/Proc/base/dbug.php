@@ -120,7 +120,7 @@ namespace Anon;
 
    register_shutdown_function(function()
    {
-      if((defn('INTRFACE')==='TPI')||defn('HALT')){exit();}; $e=error_get_last(); if($e===null){exit();};
+      if((defn('INTRFACE')==='TPI')||defn('HALT')||envi('HALT')){exit;}; $e=error_get_last(); if($e===null){exit();};
       while(ob_get_level()){ob_end_clean();};
       $x=(new \Exception); dbug::$meta['stak']=$x->getTraceAsString(); dbug::$meta['file']=$e['file']; dbug::$meta['line']=$e['line'];
       if(ob_get_level()){ob_get_clean();}; dbug::fail($e['message'],$e['type']); exit;

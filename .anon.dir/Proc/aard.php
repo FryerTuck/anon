@@ -25,7 +25,7 @@ namespace Anon;
          self::$meta->hush=knob(); self::$meta->hook=knob(); self::$meta->wait=500;
          $p=NAVIPATH; Time::logEvent(); if(strpos($p,'/~/')===0){$p=lshave($p,'/~/'); $u=user('name'); $p="/User/data/$u/home/$p";};
          $r=path::call($p,__FILE__); // run PHP controller found in path .. this should exit here - else we handle it below:
-         if(($r!==null)&&($r!==true)){ekko($r);}; // there was a PHP controller, it returned something, so we respond with that
+         if(($r!==null)&&($r!==true)){if(defn('HALT')||envi('HALT')){done($r);}; ekko($r);}; // respond with contents from controller
          if(is_dir(path($p))){$i=path::indx($p); if($i){$p=(rshave($p,'/')."/$i");}}; // if folder, check for index-file
          finish($p); // handle regular path
       }

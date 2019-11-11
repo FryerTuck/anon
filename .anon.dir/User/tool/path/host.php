@@ -36,8 +36,8 @@ $export=function($x,$a,$h)
 
    if($x==='goto')
    {
-      if($s<1){return 'missing path';}; $a=$a[0]; $c=substr($a,0,1); if(isin(['/','$','~'],$c)){return $a;};
-      $r=path::fuse($h,$a); if(!isee($r)){return "`$r` is either undefined, or unreachable from here";};
+      if($s<1){return 'missing path';}; $a=$a[0]; $c=substr($a,0,1); if(isin(['/','$','~'],$a)){return $a;};
+      $r=(isin(['/','$','~'],$c)?$a:path::fuse($h,$a)); if(!isee($r)){return "`$r` is either undefined, or unreachable from here";};
 
       if(fext($r)==='url')
       {

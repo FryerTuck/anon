@@ -73,7 +73,11 @@
       let n=document.createElement('div'); n.innerHTML=v; let l=listOf(n.childNodes); let r=[]; l.forEach((i)=>
       {
          let t=i.nodeName.toLowerCase(); if((t=='#text')&&(i.textContent.trim()=='')){return}; // whitespace
-         if(t=='script'){t=i.innerHTML; i=VOID; i=document.createElement('script'); i.innerHTML=t; t='script'}; // permission
+         if(t=='script')
+         {
+            let c=(i.innerHTML+"").trim(); let s=i.getAttribute("src"); i=VOID; i=document.createElement('script');
+            if(c){i.innerHTML=c}else if(s){i.setAttribute("src",s)};
+         };
          r.push(i);
       });
       return r;
@@ -899,7 +903,8 @@
    {
       // if(MAIN.HALT){return};
       if(!p){p='/'};
-      expect({path:p,func:f}); s=this; purl({target:p,header:{Accept:'text/plain'}},(r)=>
+      // expect({path:p,func:f}); 
+      s=this; purl({target:p,header:{Accept:'text/plain'}},(r)=>
       {
          // if(MAIN.HALT){return};
          let m,q,t,x; m=r.head.ContentType.split(';')[0].split('/x-').join('/'); q=m.split('/'); t=q[0]; x=q[1];

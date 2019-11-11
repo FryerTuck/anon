@@ -141,7 +141,7 @@
 
          l=decode.JSON(('{:bootList:}'||'[]')); requires(l,()=>
          {
-            let np=pathOf(location.href); render(np,(r)=>
+            let np=location.href; render(np,(r)=>
             {
                let mv=select('#anonMainView'); mv.insert(r);
                Busy.done();
