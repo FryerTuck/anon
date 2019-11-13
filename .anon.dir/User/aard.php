@@ -220,16 +220,17 @@ namespace Anon;
          if($q->exec==='create')
          {
             if(is_string($a)){$a=trim($a); $a=trim("$a",'/');}; $l=$q->link; $p=crop("$h/$a"); $f="failed to create $t `$p`";
-            if(($t!=='repo')&&(!isText($a,1)||isin($a,['..','/'])||!isPath($p))){done("invalid $t name");}; 
+            if(($t!=='repo')&&(!isText($a,1)||isin($a,['..','/'])||!isPath($p))){done("invalid $t name");};
 
             if(($t==='fold')||($t==='repo')){$p="$p/";}; if(($t==='plug')&&(fext($p)!=='url')){$p="$p.url";};
 
             if(!$X) // local
             {
-               if(isee($p)&&($t!=='repo')){done("`$p` already exists");}; 
+               if(isee($p)&&($t!=='repo')){done("`$p` already exists");};
                if((($t==='plug')||($t==='repo'))&&!isPurl($l)){fail("invalid $t link");};
                if($t!=='repo'){$r=path::make($p,$l); if(!$r){done($f);}; done(OK);};
-               $r=repo::cloned($l,$p); if(!$r){done($f);}; done(OK);
+               $r=repo::cloned($l,$p); if(!$r){done($f);};  $h=path::twig($p); if(!isRepo($h)){done(OK);};
+               $i=path::leaf($p); repo::ignore($h,write,"$i/*"); done(OK);
             };
 
             if(isin(['ftp','ftps'],$XP))
