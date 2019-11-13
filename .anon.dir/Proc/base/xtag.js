@@ -149,10 +149,14 @@ extend(custom.domtag)
             b=//list
             [
                {row:[{col:'.text', contents:'in'},{col:[{input:'', name:'path', placeholder:'folder path', value:p}]}]},
-               {row:[{col:'.text', contents:'as'},{col:[{input:'', name:'args', placeholder:('new '+t+' name')}]}]},
             ];
+
+            if(t!='repo')
+            {radd(b,{row:[{col:'.text', contents:'as'},{col:[{input:'', name:'args', placeholder:('new '+t+' name')}]}]});};
+
             if((t=='plug')||(t=='repo'))
             {radd(b,{row:[{col:'.text', contents:'to'},{col:[{input:'', name:'link', placeholder:(t+' source URL')}]}]});};
+
             popModal({class:'AnonTreeModl', theme:'dark', size:'360x190'})
             ({
                head:[{icon:'plus'},{span:`create ${t}`}],

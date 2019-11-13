@@ -218,7 +218,8 @@ namespace Anon;
    {
       $p=isee($p); if(!$p){return;}; $c=COREPATH; $r=ROOTPATH; if(($p===$c)||($p===$r)||($p===("$c/Proc"))||($p===("$c/User"))){return;};
       if(!is_dir($p)){lock::awaits($p); $r=unlink($p); lock::remove($p); return $r;};
-      $h=twig($p); $l=explode('/',$p); $l=array_pop($l); lock::awaits($p); exec::{"rm -rf ./$l"}($h); lock::remove($p); return is_dir($p);
+      $h=twig($p); $l=explode('/',$p); $l=array_pop($l); lock::awaits($p); exec::{"rm -rf ./$l"}($h); lock::remove($p); 
+      return (!is_dir($p));
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 

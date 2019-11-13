@@ -684,19 +684,34 @@ namespace Anon;
       static function cloned($orgn,$trgt,$bran=null,$user=null)
       {
          expect::text($orgn,1); $orgn=swap($orgn,'file://',''); expect::path($trgt); $trgt=crop($trgt);
-
          $remo=pick($orgn,['https://','http://','git://','ftp://','ftps://']);
-         if($remo){todo::{'repo.cloned'}("enable clone from remote protocol: `$remo`",FAIL);return;};
-
-         $orgn=crop($orgn); $cb=self::branch($orgn); if(!$cb){expect::repo($orgn);}; $nb=($bran?self::branch($orgn,$bran,1):$cb);
-         if(isee($trgt)){expect::path($trgt,[D,E]);}else{path::make("$trgt/");}; $o=path($orgn); $t=path($trgt);
-
-         exec::{"git clone -b $nb --single-branch $o ."}($t); exec::{'git remote rm origin'}($t); exec::{"git remote add origin $o"}($t);
-         exec::{"git fetch --all"}($t); exec::{"git checkout $nb"}($t); exec::{"git branch --set-upstream-to origin/$nb"}($t);
-         exec::{"git add --all"}($t);  if(!isWord($user)){$user=user('name');}; $u=$user; $p=isee("/User/data/$u");
+         if(!isWord($user)){$user=user('name');}; $u=$user; $p=isee("/User/data/$u");
          if(!$p){fail("user `$u` is undefined");}; $m=pget("$p/mail");
-         exec::{"git config --local user.name \"$u\""}($t); exec::{"git config --local user.email \"$m\""}($t);
-         exec::{"git commit --allow-empty -m \"initial commit\""}($t); exec::{"git push origin $nb"}($t);
+
+         if($remo)
+         {
+             $q="git clone $orgn ."; if($bran){$q="git clone -b $bran --single-branch $orgn .";};
+             if(isin($remo,'http'))
+             {
+                 exec::{"$q"}($trgt);
+             }
+             else
+             {
+                 todo::{'repo.cloned'}("enable clone from remote protocol: `$remo`",FAIL);return;
+             };
+             exec::{"git config --local user.name \"$u\""}($trgt); exec::{"git config --local user.email \"$m\""}($trgt);
+         }
+         else
+         {
+             $orgn=crop($orgn); $cb=self::branch($orgn); if(!$cb){expect::repo($orgn);}; $nb=($bran?self::branch($orgn,$bran,1):$cb);
+             if(isee($trgt)){expect::path($trgt,[D,E]);}else{path::make("$trgt/");}; $o=path($orgn); $t=path($trgt);
+             exec::{"git clone -b $nb --single-branch $o ."}($t); exec::{'git remote rm origin'}($t); exec::{"git remote add origin $o"}($t);
+             exec::{"git fetch --all"}($t); exec::{"git checkout $nb"}($t); exec::{"git branch --set-upstream-to origin/$nb"}($t);
+             exec::{"git add --all"}($t);
+             exec::{"git config --local user.name \"$u\""}($t); exec::{"git config --local user.email \"$m\""}($t);
+             exec::{"git commit --allow-empty -m \"initial commit\""}($t); exec::{"git push origin $nb"}($t);
+         };
+ 
          return OK;
       }
 
