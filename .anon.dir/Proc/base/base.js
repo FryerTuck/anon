@@ -148,23 +148,23 @@
       o.listen.progress=function(b)
       {
          let q=(Math.floor(b.loaded/b.total)*100); if(this.done<q){this.done=q};pe(q,this.purl);
-         if(this.busy&&!!MAIN.Busy){Busy.edit(this.purl,q)};
+         if(this.busy&&!!select("#busyPane")){Busy.edit(this.purl,q)};
       };
 
       cb=o.listen.loadend; delete o.listen.loadend; o.listen.loadend=function() // event done
       {
          let h=dval(this.getAllResponseHeaders()); if((h!=null)&&h.Cookies){h.Cookies=decode.jso(decode.b64(h.Cookies))};
          let r={path:this.purl,head:h,body:this.response}; this.done=100;
-         if(this.status==200){pe(100,this.purl);if(this.busy&&!!MAIN.Busy){Busy.edit(this.purl,100)};};
+         if(this.status==200){pe(100,this.purl);if(this.busy&&!!select("#busyPane")){Busy.edit(this.purl,100)};};
          if(x.silent){tick.after(250,()=>{delete server.silent.busy})};
          if(MAIN.HALT){return}; cb(r);
       };
 
       if(o.silent){server.silent.busy=1};
       if(!o.method){o.method='POST'}; if(!o.expect){o.expect='text'}; if(!isKnob(o.header)){o.header={}}; // method, responseType, headerOBJ
-      if(!o.header.INTRFACE){o.header.INTRFACE='API'}; x=(new XMLHttpRequest()); x.open(o.method,o.target);
+      if(!o.header.INTRFACE){o.header.INTRFACE='API'}; x=(new XMLHttpRequest()); x.open(o.method,o.target); x.responseType=o.expect; x.done=0;
       // x.withCredentials=true;
-      x.responseType=o.expect; x.done=0;
+      if(!o.silent){x.wait=function(){if(this.done<100){Busy.edit(this.purl,this.done)}}; tick.after(1250,()=>{x.wait()})};
       x.purl=o.target; o.listen.each((v,k)=>{x.addEventListener(k,v)}); o.header.each((v,k)=>{x.setRequestHeader(k,v)}); // events, headers
       x.silent=o.silent; tick.after(750,()=>{if(x.done&&(x.done>99)){return}; x.busy=(x.silent?0:1)}); // show busy if true
       x.send((isKnob(o.convey)?encode.JSON(o.convey):VOID)); // dispatch request

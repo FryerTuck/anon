@@ -279,12 +279,16 @@ namespace Anon;
          if($q->exec==='delete')
          {
             if(!$X||($XO&&(!$XO->path||($XO->path==='/')))) // local
-            {$r=path::void($h); if($r){done(OK);}; fail("failed to delete $t");};
+            {
+                $r=path::void($h); if(!$r){done("failed to delete $t");};
+                if(!isin($t,'repo')){done(OK);}; $t=path::twig($h); $i=path::leaf($h); if(!isRepo($t)){done(OK);}; 
+                repo::ignore($t,erase,"$i/*"); repo::ignore($t,erase,"/$i"); done(OK);
+            };
 
             if(isin(['ftp','ftps'],$XP))
             {
                $n=path::leaf($h); if(arg($X)->endsWith("/$n")){$X=rshave($X,"/$n");};
-               $r=crud($X)->delete($n); if($r){done(OK);}; fail("failed to delete $t");
+               $r=crud($X)->delete($n); if($r){done(OK);}; done("failed to delete $t");
             };
 
             done("TODO :: delete remote $t over $XP");
