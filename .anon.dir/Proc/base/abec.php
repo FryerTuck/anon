@@ -727,17 +727,17 @@ namespace Anon;
 
       static function commit($dir,$msg,$psh=null,$brn=null)
       {
-         expect::repo($dir); if(isText($msg)){$msg=trim($msg);}; expect::text($msg,1); $msg=swap($msg,'"','`');
-         exec::{'git add --all'}($dir); exec::{"git commit --allow-empty -m \"$msg\""}($dir); if(!$psh){return true;};
+         expect::repo($dir); if(isText($msg)){$msg=trim($msg);}; expect::text($msg,1); $msg=swap($msg,"'",'`');
+         exec::{'git add --all'}($dir); exec::{"git commit --allow-empty -m '$msg'"}($dir); if(!$psh){return true;};
          if(!$brn){$brn=self::branch($dir);}elseif(!is_funnic($brn)){fail('invalid branch name');};
          exec::{"git pull origin $brn"}($dir); exec::{"git push origin $brn"}($dir); return true;
       }
 
 
-      static function update($dir,$brn=null)
+      static function update($dir,$brn=null,$run='pull')
       {
          expect::repo($dir); if(!$brn){$brn=self::branch($dir);}elseif(!is_funnic($brn)){fail('invalid branch name');};
-         exec::{"git pull origin $brn"}($dir); return true;
+         exec::{"git $run origin $brn"}($dir); return true;
       }
 
 

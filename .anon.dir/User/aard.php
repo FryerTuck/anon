@@ -306,6 +306,21 @@ namespace Anon;
          };
 
 
+         if($q->exec==='update')
+         {
+            $f="failed to update $t in $q->path"; $d=$q->todo; $m=$q->mesg;
+            if($t!=='repo'){done("cannot update $t, yet");};
+
+            if(!$X)
+            {
+                if($d==='pull'){$r=repo::update(); if($r){done(OK);}; done($f);};
+                $r=repo::commit($h,$m,true); if($r){done(OK);}; done($f);
+            };
+
+            done("TODO :: update remote $t over $XP");
+         };
+
+
          fail("undefined action `$q->exec`");
       }
    }

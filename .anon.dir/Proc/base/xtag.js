@@ -173,7 +173,34 @@ extend(custom.domtag)
             });
          },
 
-         update:function(a,t,p,x){todo(`Anon treemenu update ${t} :: this needs to be working ASAP`);},
+
+         update:function(a,t,p,x)
+         {
+            if(t=="pull")
+            {
+                purl('/User/treeExec',{exec:'update', type:"repo", todo:t, path:p},(ld)=>
+                {ld=ld.body; if(ld!=OK){fail(ld);return}; x.info.root.update();}); return;
+            };
+
+            popModal({class:'AnonTreeModl', theme:'dark'})
+            ({
+               head:[{icon:'repo-push'},{span:`update repo ~ ${t}`}],
+               body:
+               [
+                  {input:'',name:'mesg',placeholder:`commit message`,value:"latest updates"},
+               ],
+               foot:
+               [
+                  {butn:'.cool', contents:'update', from:x, vars:{todo:t,path:p}, onclick:function()
+                  {
+                     let d={exec:'update',type:"repo",todo:this.vars.todo,path:this.vars.path,mesg:this.dbox.select('input')[0].value};
+                     purl('/User/treeExec',d,(r)=>{if(r.body!=OK){fail(r.body);return}; this.from.info.root.update(); this.root.exit();});
+                  }},
+                  {butn:'', contents:'cancel', onclick:function(){this.root.exit();}},
+               ]
+            });
+         },
+
 
          modify:function(a,t,p,x)
          {
@@ -200,10 +227,12 @@ extend(custom.domtag)
             });
          },
 
+
          cloned:function(a,t,p,x)
          {
             dump('cloned '+t);
          },
+
 
          rename:function(a,t,p,x)
          {
@@ -225,6 +254,7 @@ extend(custom.domtag)
                ]
             });
          },
+
 
          delete:function(a,t,p,x)
          {

@@ -782,10 +782,11 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const stackLog = function(e,o)
    {
-      var h,s,r,f,p,l,x; h=(location.protocol+'//'+location.hostname+''); s=getStack(e); addStack.log=s;
+      var h,s,r,f,p,l,x; h=(location.protocol+'//'+location.hostname+''); s=(e||(new Error('.'))).stack;
       if((s.indexOf('\n')<0)||(s.indexOf('at ')<0)){return []}; s=s.split('\n'); r=[]; x=0; if(!isList(o)){o=[o]};
-      o.push('getStack'); o.push('addStack'); o.push('stackLog'); s.forEach(function(i)
+      o.push('stackLog'); s.forEach(function(i)
       {
+         if(i.indexOf("at ")<0){return};
          i=i.split('at ')[1].split('(').join('').split(')').join('').split(' ');if(i.length<2){i.unshift('anonymous')};if(i.length>2){return};
          f=i[0]; i=i[1].split(h).join('').split(':'); p=(i[0]+'').trim(); if(p.indexOf(h)>-1){p=p.split(h).join('')}; l=(i[1]*1);
          let skp=false; each(o,(v)=>{if(skp){return STOP}; if((v===f)||(v===x)||(v===p)){skp=TRUE}});
