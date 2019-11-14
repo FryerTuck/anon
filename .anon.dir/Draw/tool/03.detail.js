@@ -300,14 +300,25 @@ select('#DrawPropItem').insert
                      d[0]=(d[0]||0); d[1]=(d[1]||0); d[2]=(d[2]||0); d[3]=(d[3]||0);
                      e.fg.cornerRadius(d); l.batchDraw(); return;
                   };
+
+                  if(t=='Text')
+                  {
+                      let sr,dr,dp,ts,td,bx,pd,bw,bh; dp=d[1].split(""); ts=dp[0]; td=dp[1]; pd=d[3];
+                      sr={A:"normal",B:"bold",I:"italic"}; dr={A:"",L:"line-through",U:"underline"};
+                      e.fg.fontFamily(d[0]); e.fg.fontStyle(sr[ts]); e.fg.textDecoration(dr[td]); 
+                      e.fg.fontSize(d[2]); e.fg.padding(pd); l.draw(); bx=e.fg.getClientRect(); 
+                      bw=(bx.width); bh=(bx.height); e.bg.setAttrs({width:bw,height:bh}); 
+                      e.clipWidth(bw); e.clipHeight(bh); l.draw(); e.tf.forceUpdate(); l.batchDraw();
+                  };
                },
 
                listen:{'key:Enter':function()
                {
                   let i,v,l,e,t,d,f; i=Anon.Draw.vars.actv; v=i.vars; l=v.flayer; e=v.active; t=(e.fg.className||e.fg.nodeType);
                   d=swap(swap(this.value.trim(),',',' '),['   ','  '],' ').trim(); if(!d){return}; d=d.split(' ');
-                  d.forEach((x,k)=>{x*=1; if(!isNumr(x)){f=1;return}; d[k]=x}); if(f){this.notify(`invalid input`);return};
-                  this.paint(t,d);
+                  d.forEach((x,k)=>{if(!isNaN(x)){x*=1}; if(!isNumr(x)&&((t!="Text")||((t=="Text")&&(k>1)))){f=1;return}; d[k]=x});
+                  if((t=="Text")&&(span(d)<4)){f=1}; if((t=="Text")&&!isin("AA,AL,AU,BA,BL,BU,IA,IL,IU".split(","),d[1])){f=1}; 
+                  if(f){this.notify(`invalid input`);return}; this.paint(t,d);
                }}
             }]},
          ]}]},
@@ -321,17 +332,12 @@ select('#DrawPropItem').insert
             {
                keyup:function()
                {
-                  let i,v,l,e,t,d,w,h,c,b; i=Anon.Draw.vars.actv; v=i.vars; l=v.flayer; e=v.active; d=this.value;
-                  e.fg.text(d); l.batchDraw(); b=e.fg.getClientRect(); w=b.width; h=b.height;
-                  e.bg.setAttrs({width:w,height:h}); e.clipWidth(w); e.clipHeight(h); e.tf.forceUpdate();
+                  let i,v,l,e,t,d,c,b; i=Anon.Draw.vars.actv; v=i.vars; l=v.flayer; e=v.active; d=this.value; e.fg.text(d);
+                  l.draw(); b=e.fg.getClientRect(); e.bg.setAttrs({width:b.width,height:b.height}); 
+                  e.clipWidth(b.width); e.clipHeight(b.height); e.tf.forceUpdate(); l.draw();
                },
             }},
          ]}]}]},
-
-         // {wrap:'', style:{padding:2}, contents:
-         // [
-         //    {textarea:'#DrawPropTextData .toolTextFeed .dark', }
-         // ]},
       ]}]},
    ]}
 ]);
@@ -365,6 +371,12 @@ extend(Anon.Draw.tool)
       iv.Glow=([fa.shadowOffsetX,fa.shadowOffsetY,fa.shadowBlur,(fa.shadowColor?rgb2hex(fa.shadowColor):'')]).join(' ').trim();
       iv.Text=fa.text;
 
+      if(nt=="Text")
+      {
+          let ts,td; ts=upperCase((fa.fontStyle||"a").slice(0,1)); td=upperCase((fa.textDecoration||"a").slice(0,1)); 
+          if(ts=="N"){ts="A"}; iv.Xarc=`${fa.fontFamily} ${ts}${td} ${fa.fontSize} ${fa.padding}`;
+      };
+
       iv.each((xv,xk)=>{select(`#DrawPropItem${xk}`).value=xv});
       this[nt](select('#DrawPropItemAttr'),pi,na);
    }
@@ -395,8 +407,8 @@ extend(Anon.Draw.tool)
 
       Text:function(a)
       {
-         select('#DrawPropItemXarc').title=`font size padding`;
-         select('#DrawPropItemXarc').modify({demo:'Calibri 30 0'});
+         select('#DrawPropItemXarc').title=`Font StyleDecor Size Padding`;
+         select('#DrawPropItemXarc').modify({demo:'Calibri AA 30 0'});
          select('#DrawPropItemText').reclan("hide:show");
       },
    }),
@@ -442,14 +454,12 @@ extend(Anon.Draw.tool)
 
    makeText:function()
    {
-      let ai,ci,fl; ai=Anon.Draw.vars.actv; ci=ai.vars.canvas; fl=ai.vars.flayer;
-      let ao=Anon.Draw.make
-      ({
-         type:'Text',
-         fontSize:30,
-         fontFamily:'Calibri',
-         text:'Text',
-      });
+      let ai,ci,fl,bx; ai=Anon.Draw.vars.actv; ci=ai.vars.canvas; fl=ai.vars.flayer;
+      let gc,bg,fg,tf; gc=Anon.Draw.fumb(new Konva.Group({x:20,y:20,clip:{x:0,y:0,width:6,height:6}}));
+      bg=(new Konva.Rect({width:6,height:6})); fg=(new Konva.Text({fontSize:30,fontFamily:'Calibri',text:'Text',padding:0}));
+      gc.add(bg); gc.add(fg); gc.bg=bg; gc.fg=fg; fl.add(gc); fl.draw(); bx=gc.fg.getClientRect(); 
+      gc.bg.setAttrs({width:bx.width,height:bx.height}); gc.clipWidth(bx.width); gc.clipHeight(bx.height);
+      tf=Anon.Draw.fidl(); fl.add(tf); tf.attachTo(gc); gc.tf=tf; fl.draw(); select('#DrawBodyPanl').signal('pickItem',gc);
    },
 });
 
