@@ -64,7 +64,7 @@ class Data
 
    static function openItem()
    {
-      $vrs=knob($_POST); $tpe=$vrs->type; $prl=xeno::showHyperConduit($vrs->path); $dbc=crud($prl); $lmt=500; $qry=null; $rsl=null;
+      $vrs=knob($_POST); $tpe=$vrs->type; $prl=xeno::showHyperConduit($vrs->path); $dbc=crud($prl); $lmt=50; $qry=null; $rsl=null;
 
       if($tpe!=='field'){$rsl=$dbc->select([fetch=>'*',limit=>$lmt]); done($rsl);};
       $rsl=$dbc->descry('*'); done([$rsl]);
