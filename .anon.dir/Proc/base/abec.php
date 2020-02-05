@@ -39,7 +39,7 @@ namespace Anon;
    function isPath($d,$o=null)
    {
       $v=path($d); if(!$v){return false;}; if($o===null){return $v;}; // after this validation, all options need an existing path
-      if(!file_exists($v)){return false;}; $l=is_link($v); // avoids issues
+      $l=null; $x=null; deFail(); $x=file_exists($v); $l=is_link($v); enFail(); if(!$x){return false;}; // avoid issues here
       if((crop($v)!=='/')&&!is_dir(dirname($v))){return false;};
       if(isText($o,3)){$o=[$o];}; if(!is_nokey_array($o)){return;}; // validate single option and options list
       $os=count($o); $of=0; foreach($o as $i) // loop through options list
