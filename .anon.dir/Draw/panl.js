@@ -349,7 +349,7 @@ extend(Anon)
          if(!fp&&isVoid(o.fill)){o.fill='rgba(255,255,255,0.5)'}; if(!fp&&isVoid(o.stroke)){o.stroke='rgba(0,0,0,1)'; o.strokeWidth=2};
          if(t=='Text'){o.strokeWidth=0.5}; sw=(o.strokeWidth||0); bo=(sw/2); od.w+=sw; od.h+=sw; os.x+=bo; os.y+=bo;
          if(isVoid(o.draggable)){o.draggable=true}; x=(o.nick||t); delete o.nick; if(!l){l=Anon.Draw.tool.layrMake(x)};
-         n=Anon.Draw.fumb((new Konva.Group({x:o.x,y:o.y,draggable:o.draggable,clip:{x:0,y:0,width:od.w,height:od.h}})));
+         n=this.fumb((new Konva.Group({x:o.x,y:o.y,draggable:o.draggable,clip:{x:0,y:0,width:od.w,height:od.h}})));
          delete o.x; delete o.y; delete o.draggable; bg=(new Konva.Rect({width:60,height:60})); n.add(bg);
          if(i&&!!o.fillPatternImage){ii=1}; if(ii){fg=(new Konva[t](o))};
          if(!!bg){n.add(bg); delete o.fillPatternImage}; o.x=os.x; o.y=os.y; o.rotation=ro; o.strokeScaleEnabled=false;

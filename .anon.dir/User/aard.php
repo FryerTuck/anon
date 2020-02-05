@@ -279,12 +279,16 @@ namespace Anon;
          if($q->exec==='delete')
          {
             if(!$X||($XO&&(!$XO->path||($XO->path==='/')))) // local
-            {$r=path::void($h); if($r){done(OK);}; fail("failed to delete $t");};
+            {
+                $r=path::void($h); if(!$r){done("failed to delete $t");};
+                if(!isin($t,'repo')){done(OK);}; $t=path::twig($h); $i=path::leaf($h); if(!isRepo($t)){done(OK);}; 
+                repo::ignore($t,erase,"$i/*"); repo::ignore($t,erase,"/$i"); done(OK);
+            };
 
             if(isin(['ftp','ftps'],$XP))
             {
                $n=path::leaf($h); if(arg($X)->endsWith("/$n")){$X=rshave($X,"/$n");};
-               $r=crud($X)->delete($n); if($r){done(OK);}; fail("failed to delete $t");
+               $r=crud($X)->delete($n); if($r){done(OK);}; done("failed to delete $t");
             };
 
             done("TODO :: delete remote $t over $XP");
@@ -303,6 +307,21 @@ namespace Anon;
 
             $f=rstub($X,'/')[2]; $x=rstub($X,'/')[0]; $b=furl($q->bufr)->data;
             $r=crud($x)->insert(["$f"=>$b]); if($r){done(OK);}; fail($f);
+         };
+
+
+         if($q->exec==='update')
+         {
+            $f="failed to update $t in $q->path"; $d=$q->todo; $m=$q->mesg;
+            if($t!=='repo'){done("cannot update $t, yet");};
+
+            if(!$X)
+            {
+                if($d==='pull'){$r=repo::update(); if($r){done(OK);}; done($f);};
+                $r=repo::commit($h,$m,true); if($r){done(OK);}; done($f);
+            };
+
+            done("TODO :: update remote $t over $XP");
          };
 
 
