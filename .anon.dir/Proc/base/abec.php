@@ -39,7 +39,8 @@ namespace Anon;
    function isPath($d,$o=null)
    {
       $v=path($d); if(!$v){return false;}; if($o===null){return $v;}; // after this validation, all options need an existing path
-      if((crop($v)!=='/')&&!is_dir(dirname($v))){return false;}; $l=is_link($v); if(!$l&&!file_exists($v)){return false;}; // avoids issues
+      if(!file_exists($v)){return false;}; $l=is_link($v); // avoids issues
+      if((crop($v)!=='/')&&!is_dir(dirname($v))){return false;};
       if(isText($o,3)){$o=[$o];}; if(!is_nokey_array($o)){return;}; // validate single option and options list
       $os=count($o); $of=0; foreach($o as $i) // loop through options list
       {
@@ -711,7 +712,7 @@ namespace Anon;
              exec::{"git config --local user.name \"$u\""}($t); exec::{"git config --local user.email \"$m\""}($t);
              exec::{"git commit --allow-empty -m \"initial commit\""}($t); exec::{"git push origin $nb"}($t);
          };
- 
+
          return OK;
       }
 
