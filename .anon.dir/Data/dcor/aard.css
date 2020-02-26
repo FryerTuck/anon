@@ -10,9 +10,15 @@
 
 #DataToolView
 {
-   display:none !important;
-   width:100%; height:60px;
+   width:72px; height:100%;
    background:hsla(0,0%,0%,0.1);
+}
+
+
+#DataToolPanl
+{
+   width:100%; height:100%;
+   padding:3px;
 }
 
 

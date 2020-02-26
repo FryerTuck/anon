@@ -16,17 +16,26 @@ extend(custom.attrib)
    {if(!isin('input,textarea',nodeName(n))){return}; if(isFunc(v)){return}; n.pattern=v; n.setAttribute('pattern',v); },
 
 
-   icon:function(v,n,a, t,p,pb,nb,ml,mt,pr,pt,fs,fc,bw,so)
+   icon:function(v,n,a, t,p,pb,nb,ml,mt,pr,pt,fs,fc,bw,so,il)
    {
       wait.until(()=>{return (!!n.parentNode)},()=>
       {
          t=nodeName(n); p=n.parentNode; pb=rectOf(p); nb=rectOf(n); mt=cStyle(n,'margin-top'); ml=cStyle(n,'margin-left');
          pr=cStyle(n,'padding-right'); pt=cStyle(n,'padding-top'); fs=cStyle(n,'font-size'); fc=cStyle(n,'color'); bw=cStyle(n,'border-width');
+         il=stub(v," "); if(il){v=il[0]; il=dval(il[2]);};
 
          if(t=='butn')
          {
-            let c=n.innerHTML; n.innerHTML=''; let r=[{col:'.butnIcon',contents:[{icon:'', face:v, size:fs}]}];
-            if(c){r.radd({col:'.butnLine',contents:[{vdiv:''}]}); r.radd({col:'.butnText',contents:c})};
+            if(il)
+            {
+               n.insert({icon:"", face:v, size:fs, clip:il});
+               return;
+            };
+
+            let c=n.innerHTML; n.innerHTML='';
+            let r=[{col:'.butnIcon',contents:[{icon:'', face:v, size:fs}]}];
+            if(c)
+            {r.radd({col:'.butnLine',contents:[{vdiv:''}]}); r.radd({col:'.butnText',contents:c})};
             n.insert({grid:[{row:r}]});
             return;
          };

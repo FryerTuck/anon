@@ -32,15 +32,12 @@ select('#AnonAppsView').insert
                   {row:[{col:'.panlHorzLine', contents:{hdiv:''}}]},
                   {row:[{col:'.slabViewBody', contents:{grid:
                   [
-                     {row:[{col:'#DataBodyView', contents:{panl:'#DataBodyPanl'}}]},
-                     {row:'#DataToolView', contents:[{col:
+                     {row:
                      [
-                        {grid:
-                        [
-                           {row:[{col:'.panlHorzLine', contents:{hdiv:''}}]},
-                           {row:[{col:[{panl:'#DataToolPanl'}]}]}
-                        ]}
-                     ]}]},
+                        {col:'#DataBodyView', contents:[{panl:'#DataBodyPanl'}]},
+                        {col:'.panlVertLine', contents:[{vdiv:''}]},
+                        {col:'#DataToolView', contents:[{panl:'#DataToolPanl'}]},
+                     ]},
                   ]}}]},
                ]}
             ]},
@@ -97,7 +94,7 @@ extend(Anon)
 
          select('#DataTreePanl').select('treeview')[0].listen('loaded',ONCE,()=>
          {
-            Busy.edit('/Data/panl.js',100);
+            requires('/Data/tool/',()=>{Busy.done();});
          });
       },
 
@@ -277,5 +274,9 @@ extend(Anon)
             });
          },
       },
+
+
+
+      tool:{},
    }
 });

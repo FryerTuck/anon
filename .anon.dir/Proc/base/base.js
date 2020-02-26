@@ -903,7 +903,7 @@
    {
       // if(MAIN.HALT){return};
       if(!p){p='/'};
-      // expect({path:p,func:f}); 
+      // expect({path:p,func:f});
       s=this; purl({target:p,header:{Accept:'text/plain'}},(r)=>
       {
          // if(MAIN.HALT){return};
