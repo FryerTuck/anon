@@ -271,7 +271,9 @@ namespace Anon;
 
          if($q->exec==='modify')
          {
-            permit::clan('geek'); permit::rank(12); if(!isPath($a)&&!isPurl($a)){done("invalid $t link .. expecting `path` or `url`");};
+            permit::clan('geek'); permit::rank(12);
+            // if(!isPath($a)&&!isPurl($a)){done("invalid $t link .. expecting `path` or `url`");};
+            if(!isPath($a)&&!isPurl($a)){done(encode::json(path::info($a)));};
             $r=path::make($h,$a); if(!$r){done("failed to modify `$h`");}; done(OK);
          };
 
@@ -281,7 +283,7 @@ namespace Anon;
             if(!$X||($XO&&(!$XO->path||($XO->path==='/')))) // local
             {
                 $r=path::void($h); if(!$r){done("failed to delete $t");};
-                if(!isin($t,'repo')){done(OK);}; $t=path::twig($h); $i=path::leaf($h); if(!isRepo($t)){done(OK);}; 
+                if(!isin($t,'repo')){done(OK);}; $t=path::twig($h); $i=path::leaf($h); if(!isRepo($t)){done(OK);};
                 repo::ignore($t,erase,"$i/*"); repo::ignore($t,erase,"/$i"); done(OK);
             };
 

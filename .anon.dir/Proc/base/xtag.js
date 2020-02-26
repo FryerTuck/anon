@@ -33,10 +33,49 @@ extend(custom.domtag)
    {
       if(!c){c='bug'}; if(!isText(a.face,1)){a.face=c}; if(!isText(a.font,1)){a.font='icon'};
       a.size=(isInum(a.size)?(a.size+'px'):(isNumr(a.size)?(a.size+'rem'):(isText(a.size,3)?a.size:'16px')));
-      let fce,fnt,sze,rot; fce=a.face; fnt=a.font; sze=a.size; delete a.face; delete a.font; delete a.size;
+      let fce,fnt,sze,rot,clp; fce=a.face; fnt=a.font; sze=(a.size+""); clp=a.clip; delete a.face; delete a.font; delete a.size; delete a.clip;
       c=VOID; if(a.text){c=a.text; delete a.text}; rot=stub(fce,'@'); if(rot){fce=rot[0]; rot=(rot[2]*1); rot=(isNumr(rot)?round(rot,0):0)};
-      modify(n,a); n.enclan(('.'+fnt+'-'+fce)); n.setStyle({fontSize:sze,transform:`rotate(${rot}deg)`});
-      if(c){n.insert({div:c})};
+      modify(n,a); if(!clp){n.enclan(('.'+fnt+'-'+fce))}; n.setStyle({width:sze, height:sze, fontSize:sze,transform:`rotate(${rot}deg)`});
+
+      if(c){n.insert({div:c})}
+      else if(clp)
+      {
+         n.size=sze; n.icon=fce; n.clip=clp;
+         n.listen("ready",function()
+         {
+            let box=rectOf(this); let osz=this.size; let unt=(pick(osz,["px","rem","em"])||"px"); let nmr=(rtrim(osz,unt)*1);
+            let cid=fash(); let rad=Math.ceil(nmr/2.2); let cxy=Math.ceil(rad/2); let cpx=0; let cpy=0; let mcl=[]; let itl=[];
+            let bxw=box.width; let bxh=box.height; let ico=this.icon; let clp=this.clip; let par=n.parentNode; par.removeChild(n);
+            let sis=Math.ceil(nmr/2.8); let lst=styleSheet('/Proc/dcor/icon.woff'); let uni=lst[`.icon-${ico}::before`].content;
+            let tnt=cStyle(par,"color"); let crd={Tl:(0+cxy), Tr:(bxw-cxy)};
+            dump(this.clip);
+
+            par.innerHTML=`<div style="position:absolute; width:${bxw}px; height:${bxh}px; overflow:hidden">
+                              <svg width="${bxw}" height="${bxh}" viewbox="0 0 ${bxw} ${bxh}">
+                                 <mask id="IconMask${cid}">
+                                    <rect x="0" y="0" width="100%" height="100%" fill="white" />
+                                    <circle cx="${cxy}" cy="${cxy}" r="${rad}" fill="black" />
+                                 </mask>
+                                 <text x="0" y="${(bxh-2)}" font-family="icon" fill="${tnt}" stroke="none" style="webkit-font-smoothing:greyscale" mask="url(#IconMask${cid})">${uni}</text>
+                              </svg>
+                           </div>`;
+         });
+
+         // n.insert({grid:
+         // [
+         //    {row:
+         //    [
+         //       {col:(il.tl?[{icon:".tl", face:il.tl, size:cs;}]:[])},
+         //       {col:(il.tr?[{icon:".tr", face:il.tr, size:cs;}]:[])},
+         //    ]},
+         //    {row:
+         //    [
+         //       {col:(il.bl?[{icon:"bl", face:il.bl, size:cs;}]:[])},
+         //       {col:(il.br?[{icon:"br", face:il.br, size:cs;}]:[])},
+         //    ]},
+         // ]});
+      };
+
       return DONE;
    },
 
