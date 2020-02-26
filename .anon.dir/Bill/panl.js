@@ -57,9 +57,9 @@ extend(Anon)
 
       init:function()
       {
-         server.listen('bark',(d)=>{dump(d);});
+        //  server.listen('bark',(d)=>{dump(d);});
 
-         purl('/Bill/treeMenu',()=>{});
+        //  purl('/Bill/treeMenu',()=>{});
 
          // select('#BillTreeMenu').insert
          // ([

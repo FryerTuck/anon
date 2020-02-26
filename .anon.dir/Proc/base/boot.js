@@ -5,7 +5,7 @@
 // hack :: protection : hijack some functions and methods that can be used against us using dev-tools and address-bar
 // --------------------------------------------------------------------------------------------------------------------------------------------
    select('script').forEach((n)=>{remove(n)});
-   hijack(['eval','Element.prototype.appendChild','Element.prototype.setAttribute','XMLHttpRequest.prototype.open'],function()
+   hijack(['eval','Element.prototype.appendChild','Element.prototype.setAttribute','Element.prototype.addEventListener','XMLHttpRequest.prototype.open'],function()
    {if(stak(0)){return listOf(arguments)}; wack()});
 // --------------------------------------------------------------------------------------------------------------------------------------------
 

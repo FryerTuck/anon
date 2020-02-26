@@ -500,7 +500,7 @@
          {
             tick.after(1,function()
             {
-               tick.after(1,()=>
+               tick.after(100,()=>
                {
                   if(!!this.otl){return};
                   alert("Connection issue.\nTry to reset your connection, then hit refresh");
