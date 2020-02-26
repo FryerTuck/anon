@@ -63,13 +63,8 @@ namespace Anon;
    function isPurl($d)
    {
       if(!is_string($d)){return false;}; if($d!==trim($d)){return false;}; $l=strlen($d);
-      if(($l<9)||(strlen($d)!==mb_strlen($d))){return false;}; $p=stub($d,['://','::']); if(!$p){return false;};
-      if(!isWord($p[0])){return false;}; $p=$p[2]; if(strpos($p,'.')===false){return false;};
-      $ci=strpos($p,':'); $ai=strpos($p,'@'); $di=strpos($p,'.'); if(($ci!==false)&&($ai===false)){return false;};
-      if(($ci!==false)&&(($ci>$ai)||($ci>$di))){return false;}; if(($ai!==false)&&($ai>$di)){return false;};
-      $p=explode('/',$p); $d=$p[0]; $d=explode('@',$d); $d=array_pop($d);  if(strpos($d,'.')===false){return false;};
-      $d=swap($d,'.',''); if(test($d,'/^[a-z0-9-]{4,36}$/')){return true;}; if(!test($d,'/^[0-9]{5,12}$/')){return false;};
-      if(!is_numeric($d)){return false;}; return true;
+      if(($l<9)||(strlen($d)!==mb_strlen($d))){return false;}; if(!isin($d,['://','::'])){return false;};
+      return isKnob(path::info($d,0));
    }
 
    function isFold($d,$g=null,$l=null){$p=isPath($d,D); if(!$p){return;}; return $p;}
@@ -772,11 +767,11 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    class path
    {
-      static function info($d)
+      static function info($d, $fail=true)
       {
          if(!isText($d,1)){fail('expecting non-empty text');}; $n=null; $h=HOSTNAME; if(path($d)){$d=crop($d); $d="file://{$h}{$d}";};
          if(isin($d,'::')){$s=stub($d,'::'); $d="{$s[0]}://{$h}{$s[2]}";}; $i=knob(parse_url($d)); $p=$i->path; $q=$i->query;
-         if(!$i->scheme||!$i->host){fail('expecting valid path-string -or URL-string');}; $x=stub($d,['#','&','?','@',':']);
+         if(!$i->scheme||!$i->host){if(!$fail){return;}; fail('expecting valid path-string -or URL-string');}; $x=stub($d,['#','&','?','@',':']);
          if(isin($d,'@')){$x=stub($d,'@')[0]; if(isin($x,['#','&','?'])){fail('invalid URL');}};
          $r=knob(['plug'=>$n,'user'=>$n,'pass'=>$n,'host'=>$n,'path'=>$n,'levl'=>0,'stem'=>$n,'twig'=>$n,'leaf'=>$n,'type'=>$n,'vars'=>$n]);
          $r->plug=$i->scheme; $r->user=$i->user; $r->pass=$i->pass; $r->host=$i->host; $r->path=$p; $r->frag=$n; $s='/'; if($p)

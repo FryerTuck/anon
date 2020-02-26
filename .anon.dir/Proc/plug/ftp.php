@@ -38,7 +38,8 @@ namespace Anon;
       function vivify($chdr=true)
       {
          if($this->link){return $this->link;}; $I=$this->mean; $L=(new ftp($I->host,$I->port,$I->user,$I->pass));
-         if($L->fail){fail($L->fail);}; $L->pasv(true); $this->link=$L; if(!$I->path){return $this->link;};
+         if($L->fail){fail($L->fail);}; $L->pasv(true); $this->link=$L;
+         if(!$I->path||($I->path==='/')){$this->mean->type='fold'; return $this->link;};
          if(!$chdr){return $this->link;}; $L->chdir($I->path); if(!$L->fail){$this->mean->type='fold'; return $this->link;};
 
          $F=$L->fail; if(isin($F,'No such file or directory'))
