@@ -232,6 +232,7 @@ There is a lot more info available in the "Help" docs and each stem can have its
 
 ***
 
+<br>
 
 ## Installation
 - You'll need a Linux OS with Apache & PHP installed.
