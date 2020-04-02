@@ -228,8 +228,7 @@ The above example has the advantage of having event-functions as actual JavaScri
 
 
 #### Intro conclusion
-There is a lot more info available in the "Help" docs and each stem can have its own "docs" folder -which is part of the "Help" docs on the Anon ***WorkPanel*** -up next ;)
-Now that you know more about "the boring tech stuff", next we explore the productivity tools and collaboration integration built into Anon.
+There is a lot more info available in the "Help" docs and each stem can have its own "docs" folder -which becomes part of the "Help" docs on the Anon ***WorkPanel***
 
 ***
 
