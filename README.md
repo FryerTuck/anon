@@ -6,48 +6,158 @@
 <!--[/User/note/homePageWorx.md]--->
 
 ## Introduction
-To capture an intellectual audience within the first paragraph is tricky, but have a read, you're about to get blown away!
-Even though Anon is a "general purpose" framework, it's tiny, yet built to be secure both in back-end and front-end.
+Anon is a remote business management system with built-in productivity tools such as a **Task**-manager, a **Draw**ing app, a **Code**-editor, a **Data**base management system, auto-**Time**-tracking and many more.
 
-As you probably know, security comes at the cost of speed and complexity; however, Anon is made to be as simple as possible, to save you (dear reader) the hassle of over-complicated nonsense so you can focus on the task at hand. That sounded like a cheesy sales pitch, but bare with me as the *devl* is in the details. If you're not in the mood to read much, or you're not a programmer, ogle the pictures; else if you just want to install then scroll ahead.
+This public open-source version of Anon is free and runs on the **LAMP**-stack (Linux Apache MySQL PHP/Perl/Python).
 
-Anon is built on a set of simple principles expressed in the acronym: ***CANDRYKIS*** .. which is:
-- **Compartmentalized And Nomadic** - modular design, each module (folder) can just be copied to another place and edited as you wish
-- **Don't Repeat Yourself** - keeping code as short as possible, focusing on either no -or minimal word/line/block-duplication
-- **Keep It Simple** - less complex, few levels of indentation, using small functions and/or constants as technical syntax
+The built-in ***WorkPanel*** -accessible only by secure login, exhibit applications that you as a user have access to, see the large icons on the left in the image below:
 
-In order to describe what Anon is about, I'll use the same principle above, so without further word-crud, let's get into it.
+![Imgur](https://i.imgur.com/mXHntNl.png)
+>***Above:*** *screen-shot of the Draw app in the WorkPanel (GUI)*
 
 
-#### File Structure
-Anon's initial file structure is (wait for it) ... "hidden".
-After installing Anon, the only file you should see in your file-browser is the "README" - granted that your "show hidden files" option is off.
-![Imgur](https://i.imgur.com/B2uW2ZU.png)
+<br>
 
-This means that you can just create/drop your code in the main *web-root* of your web-server and not worry about over-writing anything.
-The same applies if you just want to delete all of it, just select-all and delete, no worries; remember to keep your "show hidden files off" though.
-This is not "the way" to use Anon; the actual way is to use the built-in tree-menu and "Code" editor, but this is to illustrate that the "built-in apps" do not interfere when Anon is used the "traditional" way web-developers are used to; except, don't mess with the "hidden" files, such as the `.htaccess` -unless you know exactly what the code in there does and why.
 
-The rest (below) describes how Anon works "under the hood" - if you use it as intended.
+Even though MySQL/Maria-db is not required by Anon, it's available on many web hosting packages for a price, hence Anon can work without it just fine.
 
-Every folder (directory) in your web-root can potentially be a "stem"; botanically - stems grow from "root"; this simply means that you have a folder in the web-root of your server and inside it a file named "index.php" (-or aard.php).
-> If you use "aard" it shows up first in your code-editor, so you don't have to fumble around to find it.
+The reason why the LAMP-stack is so popular is because: that specific software stack is free for every hosting company -or programmer to install and use to provide a service the world wide web; this stack has been the web platform basis of choice by many businesses and corporate giants for the past 2 decades *-since the time of this writing* .. yet remains steady and current as its constituents upgrade over time.
 
-Every **stem** can have its own configuration; the config-folder-name in a stem can be any of these: `conf config settings cfg cnf`.
-If you have a "crawler" file in a stem's config-folder, then its directives are used cumulatively with all the other stems' crawler-config in order to dynamically serve a "robots.txt" file -but this only happens upon request of said "robots.txt" explicitly.
+>Anon is ***self-hosted***, meaning you can host it yourself as it's not a public service; it exists as a free software package for anybody to install and use personally, or for their business, or school.
 
-Lastly, Anon is fully integrated with ***Git*** and each stem can be a "normal" repository as the primary git-repository-config ignores `.git` folders.
-Every (non-public)-user also has their "own local clone" of the "web-root" repo, but it runs in a special branch called "tanker" -which is used to collect the work of all the collaborators when they "publish" their work. A sudoer can merge the `tanker` with `master` when all is well.
+<br>
 
-#### Interfaces
-Anon responds to each request in a way that compliments the request; these "interfaces" are identified automatically per request:
+#### The WorkPanel
+As shown in the picture below, each of those icons represent an application that the ***logged-in*** user have permission to access.
+
+The permission-system is rather simple as it works by group-names, called "**clan**s". In every app one can list for which clans an app is for; so if a user does not belong to any of the clans specified, they don't have access.
+
+The **terminal** is part of the WorkPanel and is used for login and general commands, such as to  ***invite*** -or ***banish*** a user from a clan; though you can only banish somebody if you belong to clans like: `sudo`, `lead`, or `gang`.
+
+![WorkPanelScreenShot](https://i.imgur.com/BF2esAD.png)
+
+Each of those icons also represent a folder as each app there is a folder with a `pack.inf` (plain text) file inside -which can be edited with the (built-in) code-editor, or your own favorite code-editor; we'll get to the file structure in a bit, prepare to sense hollow-man vibes, but the `pack.inf` contents look like this:
+
+```
+needsPHP: 5.6
+needsExt:
+packVrsn: 0.1.0
+panlIcon: accessibility
+ethereal: true
+forClans: *
+
+```
+
+>This elegant design of "folder = app" is based on the ***CANDRYKIS*** principle described below; however, the ***ethereal*** property above hides it from the WorkPanel, if `true`.
+
+<br>
+
+#### Task
+The *Task* app is used to see if you have anything "TODO", or move along any work you've done to the "TEST" users for quality control (peer review).
+
+![Imgur](https://i.imgur.com/TaDS7no.png)
+
+You can configure an email address to use for tasks. New tasks come in either via email, or directly from within the code - where a task is identified by `title + filename` and each time that specific "todo" is called within the code, then the "hits" increment - as indicated in the picture.
+
+Tasks can also be assigned (-or incremented) this way via the front-end when a user clicks to "report bug and refresh" when an error pops up.
+
+Every task starts with its initial text as first comment - upon which you can reply. If the task was sent via email then your response will automatically be sent via email; upon email-reply it will come in as another comment in the same task.
+
+Comments can be rated. This is a way to decide (vote) on ideas, or to up-vote (or down-vote) a client. You also earn "ranking" this way, which ties in together with the user-privilege system, again, so; this is a way to prevent "noobs" from accessing/editing/deleting the wrong (sensitive) config/data.
+
+<br>
+
+When a task is opened (double-click) it can be edited. If the sender's email address is one of the registered users in the "work" clan, then the company assigned is your company name (configurable). If the email address has not been tagged with a company-name before, you can set that. You can also set a "workPath" and all the work you do inside this "path" (folder or file) will be used to calculate time spent on it by company/task. So this can be used for billing, accurately.
+
+>Every time you access or edit a file in the *Code* editor, or *Draw* (graphics editor), or *Data* minding, then that action is recorded along with the user and timestamp.
+
+<br>
+
+### Code
+The code editor is nothing short of pure awesomeness (biased opinion). It "feels" a lot like Atom (inspiration) and it also comes with bulk-find/replace - which can be used by folder -or file path.
+
+Have a close look at the image below, I'm sure you can figure out the (intentional) details:
+
+![Imgur](https://i.imgur.com/IKpMOUZ.png)
+
+You can also edit database sprocs (stored procedures and functions) with it when you `Ctrl click` it from within a DB-tree (tree-menu).
+
+
+### Data
+You can explore/edit data quite easily via "plugs" -and run queries using the terminal.
+To edit a field in a row, just `Ctrl click` it, change what you want and hit Enter to save. Currently it's compatible with MySQL and SQLite; the latter is used by Anon for time-tracking.
+
+![Imgur](https://i.imgur.com/VWCvsSO.png)
+
+<br>
+
+#### Under the hood
+Anon is based upon a rather simple set of rules that can be defined as a "software bios". BIOS (as you may know .. in this context) is: Basic Input Output System. What makes it a "system" is defined by its senses, function and peripherals.
+
+**On the host (server) side**, Anon identifies each request in a way that compliments the request; these "interfaces" are identified automatically per request:
 - **BOT** - `web-crawler/robot` ~ if a visitor identifies itself as a robot, then it is served with content intended for web-crawlers
 - **GUI** - `Graphical User Interface` ~ happens once per session, or upon refresh; Anon works as Single-Page-Application (SPA) -hybrid
 - **DPR** - `Direct Path Request` ~ any request after ***GUI*** that is NOT *API* -or *SSE*
 - **SSE** - `Server Side Event` ~ the server responds with "event-signals" as expected
 - **API** - `Application Programming Interface` ~ response is in "plain text" (-or JSON), but only if XHR requests were made *FUBU* (for us by us) -or from another server -if an API-key is provided along with required headers such as "INTRFACE" and the key exists as file in your Anon server API-keys.
 
+**On the view (client) side**, Anon deploys as a Javascript-based HTML CSS "view manager" -which can be used to construct anything and be  deployed over web and mobile simultaneously. Client->Server talk happens in JSON requests over HTTPS-only.
 
+Anon's parts are built in plain text, mostly JavaScript, but also organized together with other languages, like PHP, which run on many servers, (depending on what is installed on the host); however each code file and folder structure is designed on a set of simple principles expressed as the acronym: ***CANDRYKIS*** .. which is:
+- **Compartmentalized And Nomadic** - modular design, each module (folder) contains everything it needs and can just be copied to another place and edited as you wish; this makes packaging as simple as Zip.
+- **Don't Repeat Yourself** - keeping code and resources lean, as short as possible, focusing on either no -or minimal duplication
+- **Keep It Simple** - less complex, few levels of indentation, using small functions and/or constants as technical syntax, and avoid scope creep.
+
+Anon's initial file structure is (wait for it) ... "hidden".
+After installing Anon, the only file you should see in your file-browser is the "README" - granted that your "show hidden files" option is off. You can delete this file when you have some other "index-ish" file in there. When a folder is visited (incl. the *web-root* `/`), Anon looks for any "aard or index" (-or README) -prefixed file-names in the order of file-extensions
+1. `.php` .. or another server-side handler like: `.pl` `.py`
+2. `.html`
+2. `.js`
+3. `.md`
+
+![Imgur](https://i.imgur.com/B2uW2ZU.png)
+
+
+Every folder in your web-root can potentially be a "stem"; botanically - stems grow from "root"; this simply means that you have a folder in the web-root of your server and inside it a file named `pack.inf`.
+
+Every **stem** can have its own configuration; the config-folder-name in a stem can be any of these: `conf config settings cfg cnf`.
+If you have a "crawler" file in a stem's config-folder, then its directives are used cumulatively with all the other stems' crawler-config in order to dynamically serve a "robots.txt" file -but this only happens upon request of said "robots.txt" explicitly.
+
+Anon is fully integrated with ***Git*** and each stem can be a "normal" repository as Anon makes sure that any repo in the system ignores `.git` folders locally.
+Every (non-public)-user also has their "own local clone" of the "web-root" repo, but it runs in a special branch called "tanker" -which is used to collect the work of all the collaborators when they "publish" their work. A **sudo**er can merge the `tanker` with `master` when all is well.
+
+<br>
+
+#### Plugs
+In Anon you can create a special kind of link called a "plug". These plugs are all defined the same way that a URL is presented in a web-browser's address-bar. In this same URL-format you can specify credentials for secure login. The contents of the file cannot be seen, nor edited by anyone without permission to do so. So you can have a plug that points to a remote FTP resource, and the contents of that can be browsed or edited -without giving away the FTP credentials to anybody. This is true for databases too, see the following examples:
+
+```
+
+   ftp://user:pass@example.com
+
+   mail://user:pass@example.com
+
+   mysql://user:pass@example.com/db1
+
+   sqlite:///path/to/db2.sdb
+```
+
+On the server-side these plugs are all accessed the same way, using the same ***CRUD***-like syntax and on the client-side any plug is readable as a folder-tree in the ***tree-menu***, granted that you have access to use the tree-menu.
+
+Here's an example of how to read the contents of a plug (server-side only):
+
+```javascript
+$data = crud("ftp://user:pass@example.com")->select('*');
+
+$data = crud("mysql://user:pass@example.com/db1")->select
+([
+   using => "users",
+   fetch => "email",
+   where => "name = Sam",
+]);
+```
+
+<br>
 
 #### Security
 On the server side, if any of the "interface" requirements are violated, then the server responds with `503 Service Unavailable`. Such violation can be triggered upon various criteria, but 1 example is: when you have a rule in your "robots.txt" that denies access to some folder/file (path) -and a visitor tries to visit said path -then a *kban* is raised and that visitor is shut out for some time -which is configurable.
@@ -77,16 +187,29 @@ In the case of an error and if you are only a "surfer" -or "backer", then all yo
 ![Imgur](https://i.imgur.com/vcVwfi3.png)
 
 On the server-side, Anon is "name-spaced", so if you want to use Anon's features in a PHP file, just use `namespace Anon;`.
+
+In the back-end, you can grant access to all of this very easily, per file on class-method, or function like the following PHP examples:
+
+```javascript
+// by rank
+   permit::rank(12);
+
+// by clan
+   permit::clan('work');
+
+// in bulk
+   permit::fubu('clan:geek,mind,lead','rank:12');
+```
+
+This way you can keep out those who don't know what they are doing (yet) in order to prevent nasty accidental issues.
+
 >More info in the *Help* docs.
 
-#### Utility
-When a folder is visited (incl. the *web-root* `/`), Anon looks for any "aard or index" (-or README) -prefixed file-names in the order of file-extensions
-1. `.php`
-2. `.js`
-3. `.md`
+<br>
 
-If that last one got your attention, you're right; you can have sub-repositories in Anon and your `markdown` files are rendered as web pages on the fly. This "rendering" happens client-side to save the server from extra work-load; (same reason why bots are served what they need).
-Directory-listing (raw folder viewing) is disabled (config) by default.
+#### Utility
+Your `markdown` files are rendered as web pages on the fly. This "rendering" happens client-side to save the server from extra work-load; (same reason why bots are served what they need).
+Directory-listing (raw folder browsing) is disabled in the settings by default.
 
 You can also have `.js` files be served as web-pages, like this:
 
@@ -107,82 +230,6 @@ The above example has the advantage of having event-functions as actual JavaScri
 #### Intro conclusion
 There is a lot more info available in the "Help" docs and each stem can have its own "docs" folder -which is part of the "Help" docs on the Anon ***WorkPanel*** -up next ;)
 Now that you know more about "the boring tech stuff", next we explore the productivity tools and collaboration integration built into Anon.
-
-
-
-## WorkPanel
-Anon's *WorkPanel* is a collection of productivity apps which you can use to do your work directly on the server, while Anon tracks your time for you and you can use the Task-manager (kan-board) to organize what you need *TODO* or what you're *BUSY* with.
-
-![Imgur](https://i.imgur.com/BF2esAD.png)
-
-You can of coarse style your workpanel any way you want - just as you can style any of its "apps" (icons on the left) by using your own (personal) "skin.css" file - (more on that later).
-
-Every **stem** can have its own "pack.inf" file - in which you can specify some dependencies, or permissions, etc. If you want your app to be shown in this workpanel, then you can simply give your app a "panlIcon" name in there (font icons are built in and browse-able).
-
-The "terminal" (console, or simply CLI) you see there is very useful, you also use it to log in, or to pull updates from your remote repository, (-but you'll need "sudo" permission for that) .. This is NOT the "root" user/group in the underlying operating system, and Anon's users are "synthetic" - not part of the OS (at all).
-
-
-### TreeMenu
-This can be used to import/upload/create/delete repositories, files, folders and *plugs*.
-A "plug" in anon is like a link, but, more like a "hyper-conduit" -which specifies credentials to use for remote resource access such as FTP-directory or MySQL-database.
-> More info in the *Help* docs
-
-![Imgur](https://i.imgur.com/nLQkRy5.png)
-
-#### Task
-The *Task* app is used to see if you have anything "TODO", or move along any work you've done to the "TEST" users for quality control (peer review).
-
-![Imgur](https://i.imgur.com/TaDS7no.png)
-
-You can configure an email address to use for tasks. New tasks come in either via email, or directly from within the code - where a task is identified by `title + filename` and each time that specific "todo" is called within the code, then the "hits" increment - as indicated in the picture.
-
-Tasks can also be assigned (-or incremented) this way via the front-end when a user clicks to "report bug and refresh" when an error pops up.
-
-Every task starts with its initial text as first comment - upon which you can reply. If the task was sent via email then your response will automatically be sent via email; upon email-reply it will come in as another comment in the same task.
-
-Comments can be rated. This is a way to decide (vote) on ideas, or to up-vote (or down-vote) a client. You also earn "ranking" this way, which ties in together with the user-privilege system, again, so; this is a way to prevent "noobs" from accessing/editing/deleting the wrong (sensitive) config/data.
-
-In the back-end, you can grant access to all of this very easily, per file on class-method, or function like this:
-
-```javascript
-// by rank
-   permit::rank(12);
-
-// by clan
-   permit::clan('work');
-
-// in bulk
-   permit::fubu('clan:geek,mind,lead','rank:12');
-```
-
-This way you can keep out those who don't know what they are doing (yet) in order to prevent nasty accidental issues.
-
-When a task is opened (double-click) it can be edited. If the sender's email address is one of the registered users in the "work" clan, then the company assigned is your company name (configurable). If the email address has not been tagged with a company-name before, you can set that. You can also set a "workPath" and all the work you do inside this "path" (folder or file) will be used to calculate time spent on it by company/task. So this can be used for billing, accurately.
-
->Every time you access or edit a file in the *Code* editor, or *Draw* (graphics editor), or *Data* minding, then that action is recorded along with the user and timestamp.
-
-
-### Code
-The code editor is nothing short of pure awesomeness (biased opinion). It "feels" a lot like Atom (inspiration) and it also comes with bulk-find/replace - which can be used by folder -or file path.
-
-Have a close look at the image below, I'm sure you can figure out the (intentional) details:
-
-![Imgur](https://i.imgur.com/IKpMOUZ.png)
-
-You can also edit database sprocs (stored procedures and functions) with it when you `Ctrl click` it from within a DB-tree (tree-menu).
-
-
-### Draw
-The image editor is "simple yet effective". It has basic graphics editing functions such as zoom, crop, layers, hue, blur, glow/shadow, (gradient)-fill, stroke, etc. With little practice you'll find it quite useful.
-
-![Imgur](https://i.imgur.com/mXHntNl.png)
-
-
-### Data
-You can explore/edit data quite easily via "plugs" -and run queries using the terminal.
-To edit a field in a row, just `Ctrl click` it, change what you want and hit Enter to save. Currently it's compatible with MySQL and SQLite; the latter is used by Anon for time-tracking.
-
-![Imgur](https://i.imgur.com/VWCvsSO.png)
 
 ***
 
