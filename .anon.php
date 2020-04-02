@@ -34,7 +34,7 @@
    if(FALSE == isset($_SERVER)){harakiri("invalid platform");};            // YOU HAVE DIED
    if(FALSE == isset($_COOKIE)){harakiri("invalid platform");};            // YOU HAVE DIED
 
-   $r=$_SERVER['DOCUMENT_ROOT']; chdir($r); $_SERVER['ROOTPATH']=$r; $c="$r/.anon.dir"; $_SERVER['COREPATH']=$c;
+   $r=__DIR__; chdir($r); $_SERVER['ROOTPATH']=$r; $c="$r/.anon.dir"; $_SERVER['COREPATH']=$c;
    if(!is_readable("$c/Proc/base/aard.php")){harakiri("framework structure compromised, check permissions, or re-install");}; // YOU HAVE DIED
 
    unset($m,$r,$c); require ($_SERVER['COREPATH'].'/Proc/base/aard.php'); // whew .. made it out of "the mud" .. now we face "the swamp"

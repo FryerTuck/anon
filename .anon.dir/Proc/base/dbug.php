@@ -45,12 +45,13 @@ namespace Anon;
 
       static function view($o)
       {
-         $o->mesg=str_replace([COREPATH,ROOTPATH],'',$o->mesg);
-         $o->file=crop($o->file); if($o->file==='/Proc/base.php'){$q=$o->stak[0]; $o->file=$q->file; $o->line=$q->line;};
-         if(facing('BOT')||facing('SYS')){finish(503);}; $n=$o->name; $m=$o->mesg; $f=$o->file; $l=$o->line; $j=JSON_UNESCAPED_SLASHES;
+         $o->mesg=str_replace([COREPATH,ROOTPATH],'',$o->mesg); $s=$o->stak; $j=JSON_UNESCAPED_SLASHES;
+         $o->file=crop($o->file); if($o->file==='/Proc/base.php'){$q=$s[0]; $o->file=$q->file; $o->line=$q->line;};
+         $s=base64_encode(json_encode($s,$j));
+         if(facing('BOT')||facing('SYS')){finish(503);}; $n=$o->name; $m=$o->mesg; $f=$o->file; $l=$o->line;
          if(facing('DPR')){$m=str_replace(["\n",'"'],['',"`"],$m); $m=crop($m,64); halt(500,"$n - $m - $f - $l",$f,$l,tval($o));};
          if(facing('SSE')&&envi('SSEREADY')){$r=base64_encode(tval($o)); print_r("event: fail\ndata: $r\n\n"); flush(); return;};
-         if(facing('API')){$r=((USERMIME==='application/json')?json_encode($o,$j):"evnt: fail\nmesg: $n - $m\nfile: $f\nline: $l"); die($r);};
+         if(facing('API')){$r=((USERMIME==='application/json')?json_encode($o,$j):"evnt: fail\nmesg: $n - $m\nfile: $f\nline: $l\nstak: $s"); die($r);};
          $d=base64_encode(tval($o)); $r=pget(envi('DBUGPATH')); $r=str_replace('{:(DBUGDATA):}',$d,$r); print_r($r); die(); // GUI
       }
 

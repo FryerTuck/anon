@@ -41,10 +41,13 @@
 # -----------------------------------------------------------------------------------------------------------------------------
    <IfModule mod_rewrite.c>
       RewriteEngine On
-      RewriteBase /
+      # RewriteBase /
 
       RewriteCond %{HTTP_HOST} ^[^.]+\.[^.]+$
       RewriteRule ^ %{REQUEST_SCHEME}://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+      RewriteCond %{REQUEST_URI}::$1 ^(.*?/)(.*)::\2$
+      RewriteRule ^(.*)$ - [E=BASE:%1]
 
       RewriteRule .* - [E=DBUGPATH:.anon.dir/Proc/base/dbug.htm]
       RewriteRule .* - [E=BOTMATCH:bot|crawl|fetch|find|grab|scan|search|site|slurp|spider|wget|curl]
@@ -69,15 +72,17 @@
          </If>
 
          RewriteCond %{ENV:MODPHP} ^1$
-         RewriteCond %{DOCUMENT_ROOT}/.anon.php -f
+         RewriteCond %{DOCUMENT_ROOT}/%{ENV:BASE}/.anon.php -f
          RewriteRule ^(.*)$ .anon.php [L]
+
 #        we made it out of "the pit" .. now we trudge forward through "the mud"
       </IfModule>
 
       RewriteCond %{HTTP_USER_AGENT} %{ENV:BOTMATCH} [NC,OR]
-      RewriteCond %{DOCUMENT_ROOT}/%{ENV:DBUGPATH} !-f
+      RewriteCond %{DOCUMENT_ROOT}/%{ENV:BASE}/%{ENV:DBUGPATH} !-f
       RewriteRule ^ - [R=503,L,S=1]
       RewriteRule ^(.*)$ %{ENV:DBUGPATH} [L]
+
 #     ... YOU HAVE DIED ... let's be discreet about it; world does not need to know our shame
    </IfModule>
 # -----------------------------------------------------------------------------------------------------------------------------

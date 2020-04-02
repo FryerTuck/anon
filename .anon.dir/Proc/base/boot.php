@@ -26,6 +26,7 @@ namespace Anon;
 # refs :: constants : short-hand references to values that are frequently used
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    $h=pget('/Proc/conf/hostName'); if(!$h){$h=envi('SERVER_NAME'); if(!$h){$h=envi('HOST');}};
+   $p=envi('URL'); $b=envi('BASEPATH'); if($b!=='/'){$p=lshave($p,$b);}; if(!$p){$p='/';};
    defn
    ([
       'ROOTPATH' => envi('ROOTPATH'),
@@ -43,12 +44,13 @@ namespace Anon;
       'HOSTADDR' => envi('SERVER_ADDR'),
       'USERDEED' => envi('USERDEED'),
       'NAVIPURL' => envi('URI'),
-      'NAVIPATH' => envi('URL'),
+      'NAVIPATH' => $p,
+      'BASEPATH' => envi('BASEPATH'),
       'MADEFUBU' => envi('MADEFUBU'),
    ]);
 
    defn(['PROCHASH'=>sha1(random(6).microtime(true).USERADDR.getmypid().random(6))]); // this is unique .. any doubts?
-   $s=trim(NAVIPATH,'/'); if(!$s){$s='/';}elseif(strpos($s,'/')){$s=explode('/',$s)[0];}; defn(['NAVISTEM'=>$s]); unset($s,$h);
+   $s=trim(NAVIPATH,'/'); if(!$s){$s='/';}elseif(strpos($s,'/')){$s=explode('/',$s)[0];}; defn(['NAVISTEM'=>$s]); unset($s,$h,$p,$b);
    defn(['EXPROPER'=>'!= !~ >= <= << >> /* */ // ## : = ~ < > & | ! ? + - * / % ^ @ . , ; # ( ) [ ] { } `']);
    defn(['SPECIALS'=>'_^~|.-*+=#$@$!%?:;&/']);
 # ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -218,7 +220,7 @@ namespace Anon;
    {
       $p=isee($p); if(!$p){return;}; $c=COREPATH; $r=ROOTPATH; if(($p===$c)||($p===$r)||($p===("$c/Proc"))||($p===("$c/User"))){return;};
       if(!is_dir($p)){lock::awaits($p); $r=unlink($p); lock::remove($p); return $r;};
-      $h=twig($p); $l=explode('/',$p); $l=array_pop($l); lock::awaits($p); exec::{"rm -rf ./$l"}($h); lock::remove($p); 
+      $h=twig($p); $l=explode('/',$p); $l=array_pop($l); lock::awaits($p); exec::{"rm -rf ./$l"}($h); lock::remove($p);
       return (!is_dir($p));
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -360,12 +362,12 @@ namespace Anon;
    {
       $h=sesn('HASH'); $v=knob(['WACKMESG'=>base64_encode(pget('/Proc/info/hack.inf'))]); $p='/Proc/base/aard.js'; $d=[];
       if(!$u){$u=sesn('USER');}; $v->SESNUSER=$u; $v->SESNCLAN=pget("/User/data/$u/clan");
-      foreach($_COOKIE as $cn => $cv){if(test($cn,'/^[a-z0-9]{40}$/')&&($cn!==$h)){kuki($cn,VOID);}};
+      foreach($_COOKIE as $cn => $cv){if(test($cn,'/^[a-z0-9]{40}$/')&&($cn!==$h)){kuki($cn,VOID,BASEPATH);}};
       $c=pget('/User/data/master/pass'); if(!$c){wack();}; if(password_verify('0m1cr0n!',$c)){$d[]='editRootPass';};
       $c=pget('/Proc/conf/autoMail'); if(!isin($c,'mail://')||!isin($c,'@')||!isin($c,'.')){$d[]='confAutoMail';}; // debug automail
       $r=base64_encode(tval($d)); $v->badCfg=$r; $c=import($p,$v); $c=base64_encode(strrev($c)); $m=4000;
       $f="after encoding, `$p` exceeds maximum cookie size of $m bytes .. technically, it's 4096, but there are overhead issues";
-      if(span($c)>$m){fail::usage($f);}; if($sc){kuki($h,$c);return true;}; return $c;
+      if(span($c)>$m){fail::usage($f);}; if($sc){kuki($h,$c,BASEPATH);return true;}; return $c;
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 

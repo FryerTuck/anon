@@ -47,8 +47,8 @@ namespace Anon;
       # cond :: init : protect the framework core and limit browsing freedom according to config
       # ---------------------------------------------------------------------------------------------------------------------------------------
          self::$vars=knob(['faceList'=>['API','BOT','DPI','GUI','SSE']]);
-
          $s=test::{NAVIPATH}(conf('Proc/redirect')); // get redirect config for the current web URL
+
          if(is_int($s)&&($s!==200)){finish($s);}; // explicitly configured to echo status
          if($s&&!is_int($s)){finish($s);}; // explicitly configured to bypass any stem/module controllers
 

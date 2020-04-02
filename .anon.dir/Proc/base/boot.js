@@ -144,6 +144,8 @@
             let np=location.href; render(np,(r)=>
             {
                let mv=select('#anonMainView'); mv.insert(r);
+               tick.after(250,()=>{signal("boot")});
+               listen("boot",()=>{console.clear()});
                Busy.done();
             });
          });

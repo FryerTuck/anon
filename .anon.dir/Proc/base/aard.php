@@ -309,12 +309,12 @@ namespace Anon;
 
 # func :: kuki : get/set/rip raw session-only cookie at host root without hassle .. 1 arg = get .. 2 args = set .. returns null if invalid
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   function kuki($k,$v='<:(/*\):>')
+   function kuki($k,$v='<:(/*\):>',$p='/')
    {
       if(!is_string($k)){return;}; if(strlen($k)!==strlen(trim($k))){return;}; // validate cookie-name
       if($v==='<:(/*\):>'){if(!isset($_COOKIE[$k])){return;}; return $_COOKIE[$k];}; // get
-      if(($v==='')||($v===':VOID:')){$v=null;}; if($v===null){setcookie($k,$v,-1,'/',envi('HOST')); unset($_COOKIE[$k]);}; // delete
-      setrawcookie($k,$v,0,'/',envi('HOST')); $_COOKIE[$k]=$v; return true; // set
+      if(($v==='')||($v===':VOID:')){$v=null;}; if($v===null){setcookie($k,$v,-1,$p,envi('HOST')); unset($_COOKIE[$k]); return;}; // delete
+      setrawcookie($k,$v,0,$p,envi('HOST')); $_COOKIE[$k]=$v; return true; // set
    };
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -514,14 +514,16 @@ namespace Anon;
 
 # dbug :: pre-flight : check essential server vars .. set roots .. get rid of bad bots .. check if web-server passed us the right stuff
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   if(envi('DOCUMENT_ROOT DBUGPATH HOST SCHEME BOTMATCH')!==1){header("HTTP/1.1 424 Failed Dependency - server vars"); die();}; // bad vars
-   $d=envi('DOCUMENT_ROOT'); $s=skey(); $u=''; $c=explode('/',envi('COREPATH')); $c=array_pop($c);
-   $g=envi('DBUGPATH'); $_SERVER['DBUGPATH']="/$g"; unset($g);
+   if(envi('ROOTPATH DBUGPATH HOST SCHEME BOTMATCH')!==1){header("HTTP/1.1 424 Failed Dependency - server vars"); die();}; // bad vars
+   $d=envi('ROOTPATH'); $s=skey(); $u=''; $c=envi('COREPATH'); //$c=explode('/',envi('COREPATH')); $c=array_pop($c);
+   $g=envi('DBUGPATH'); $b=rshave(str_replace($d,'',envi('BASE')),'/'); if(!$b){$b='/';}; $_SERVER['BASEPATH']=$b;
+   $_SERVER['DBUGPATH']=lshave($g,'.anon.dir'); unset($b,$g);
 
-   if($s){$s="$d/$c/Proc/temp/sesn/$s/USER"; if(file_exists($s)){$u=file_get_contents($s);}};
-   if(!$u){$u='anonymous';}; $_SERVER['USERNAME']=$u; $_SERVER['USERPATH']="$d/$c/User/data/$u/home";
+   if($s){$s="$c/Proc/temp/sesn/$s/USER"; if(file_exists($s)){$u=file_get_contents($s);}};
+   if(!$u){$u='anonymous';}; $_SERVER['USERNAME']=$u; $_SERVER['USERPATH']="$c/User/data/$u/home";
 
-   $q=envi('URL'); if((strlen($q)>8)&&((substr($q,-7,7)==='.js.map')||(substr($q,-8,8)==='.css.map'))){die('');}; unset($q); // hands off!!
+   $q=envi('URL');
+   if((strlen($q)>8)&&((substr($q,-7,7)==='.js.map')||(substr($q,-8,8)==='.css.map'))){die('');}; unset($q); // hands off!!
    $b=cbot(true); // check for bad robot .. if facing bad-robot then bot is "served" and the process exits here ... rinse and repeat
 
    $h=sha1(envi('USERADDR').envi('USER_AGENT')); $p=path("/Proc/temp/kban/$h"); if(is_link($p))
