@@ -101,6 +101,7 @@ After installing Anon, the only file you should see in your file-browser is the 
 
 ![Imgur](https://i.imgur.com/B2uW2ZU.png)
 
+What this really means is that you can create (or copy+paste) website templates from anywhere and they will work as expected.
 
 Every folder in your web-root can potentially be a "stem"; botanically - stems grow from "root"; this simply means that you have a folder in the web-root of your server and inside it a file named `pack.inf`.
 
