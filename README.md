@@ -91,7 +91,25 @@ To edit a field in a row, just `Ctrl click` it, change what you want and hit Ent
 
 <br>
 
-#### Under the hood
+### Under the hood
+Anon's initial file structure is (wait for it) ... "hidden".
+After installing Anon, the only file you should see in your file-browser is the "README" - granted that your "show hidden files" option is off. You can delete this file when you have some other "index-ish" file in there. When a folder is visited (incl. the *web-root* `/`), Anon looks for any "aard" -or "index" (-or README) -named file-names in the order of file-extensions
+1. `.php` .. or another server-side handler like: `.pl` `.py`
+2. `.html`
+2. `.js`
+3. `.md`
+
+![Imgur](https://i.imgur.com/B2uW2ZU.png)
+
+
+Every folder in your web-root can potentially be a "stem"; botanically - stems grow from "root"; this simply means that you have a folder in the web-root of your server and inside it a file named `pack.inf`.
+
+Every **stem** can have its own configuration; the config-folder-name in a stem can be any of these: `conf config settings cfg cnf`.
+If you have a "crawler" file in a stem's config-folder, then its directives are used cumulatively with all the other stems' crawler-config in order to dynamically serve a "robots.txt" file -but this only happens upon request of said "robots.txt" explicitly.
+
+Anon is fully integrated with ***Git*** and each stem can be a "normal" repository as Anon makes sure that any repo in the system ignores `.git` folders locally.
+Every (non-public)-user also has their "own local clone" of the "web-root" repo, but it runs in a special branch called "tanker" -which is used to collect the work of all the collaborators when they "publish" their work. A **sudo**er can merge the `tanker` with `master` when all is well.
+
 Anon is based upon a rather simple set of rules that can be defined as a "software bios". BIOS (as you may know .. in this context) is: Basic Input Output System. What makes it a "system" is defined by its senses, function and peripherals.
 
 **On the host (server) side**, Anon identifies each request in a way that compliments the request; these "interfaces" are identified automatically per request:
@@ -108,23 +126,6 @@ Anon's parts are built in plain text, mostly JavaScript, but also organized toge
 - **Don't Repeat Yourself** - keeping code and resources lean, as short as possible, focusing on either no -or minimal duplication
 - **Keep It Simple** - less complex, few levels of indentation, using small functions and/or constants as technical syntax, and avoid scope creep.
 
-Anon's initial file structure is (wait for it) ... "hidden".
-After installing Anon, the only file you should see in your file-browser is the "README" - granted that your "show hidden files" option is off. You can delete this file when you have some other "index-ish" file in there. When a folder is visited (incl. the *web-root* `/`), Anon looks for any "aard or index" (-or README) -prefixed file-names in the order of file-extensions
-1. `.php` .. or another server-side handler like: `.pl` `.py`
-2. `.html`
-2. `.js`
-3. `.md`
-
-![Imgur](https://i.imgur.com/B2uW2ZU.png)
-
-
-Every folder in your web-root can potentially be a "stem"; botanically - stems grow from "root"; this simply means that you have a folder in the web-root of your server and inside it a file named `pack.inf`.
-
-Every **stem** can have its own configuration; the config-folder-name in a stem can be any of these: `conf config settings cfg cnf`.
-If you have a "crawler" file in a stem's config-folder, then its directives are used cumulatively with all the other stems' crawler-config in order to dynamically serve a "robots.txt" file -but this only happens upon request of said "robots.txt" explicitly.
-
-Anon is fully integrated with ***Git*** and each stem can be a "normal" repository as Anon makes sure that any repo in the system ignores `.git` folders locally.
-Every (non-public)-user also has their "own local clone" of the "web-root" repo, but it runs in a special branch called "tanker" -which is used to collect the work of all the collaborators when they "publish" their work. A **sudo**er can merge the `tanker` with `master` when all is well.
 
 <br>
 
