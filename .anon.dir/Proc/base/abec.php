@@ -856,8 +856,8 @@ namespace Anon;
       static function indx($p)
       {
          $p=isee($p); if(!$p){return;}; if(!is_dir($p)){$p=self::twig($p);};
-         $c=knob(["name"=>["aard","index","auto"],"type"=>["php","htm","html","js","md"]]);
-         $a=[]; foreach($c->name as $cn){foreach($c->type as $ct){$a[]="$cn.$ct";}}; $a[]='README.md';
+         $c=knob(["name"=>["aard","index","README"],"type"=>["php","htm","html","js","md"]]);
+         $a=[]; foreach($c->name as $cn){foreach($c->type as $ct){$a[]="$cn.$ct";}};
          $r=null; foreach($a as $n){if(is_file("$p/$n")){$r=$n;break;};}; return $r;
       }
 

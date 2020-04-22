@@ -601,7 +601,7 @@ namespace Anon;
 
 
 
-# func :: crud : standard interface for many URL schemas
+# func :: crud/plug : standard interface for many URL schemas
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function crud($d)
    {
@@ -609,6 +609,11 @@ namespace Anon;
       if((($x->type==='git')&&isin($o,'http'))||(($o==='file')&&($x->type==='fold')&&isee("$p/.git"))){$o='git';}; $c="Anon\\{$o}_plug";
       if(!is_class($c)){$p="/Proc/plug/$o.php"; requires::path($p); if(!is_class($c)){$p=crop($p); fail("expecting class `$c` in: `$p`");}};
       $i=(new $c($x)); return $i;
+   }
+
+   function plug($d)
+   {
+      return crud($d);
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
