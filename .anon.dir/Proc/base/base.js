@@ -437,10 +437,11 @@
 
 // func :: loadFont : preloads a font
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   const loadFont = function(fp,cb, s,d,i,t)
+   const loadFont = function(fp,cb,tn, s,d,i,t,c)
    {
       if(!isText(fp)||!fp){fail("expecting text");return}; s=this;
       if(!!s[fp]){cb(s[fp]);return}; // already loaded
+      tn=(tn||1); // try-number .. count how many times openFont tried to load the font
 
       d=opentype.load(fp,function(err,fnt)
       {
@@ -448,8 +449,12 @@
          s[fp]=fnt;
       });
 
-      i=setInterval(()=>{if(!d||!s[fp]){return}; clearInterval(i); clearTimeout(t); cb(s[fp])},5);
-      t=setTimeout(()=>{clearInterval(i); clearTimeout(t); loadFont(fp,cb)},250);
+      wait(255,()=>
+      {
+         if(tn>12){alert("check your internet connection and refresh"); return};
+         if(!d||!s[fp]){loadFont(fp,cb,(tn+1)); return};
+         cb(s[fp]);
+      });
    }.bind({});
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
