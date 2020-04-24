@@ -38,7 +38,7 @@ const script=function(p,f, n){n=document.createElement('script'); n.src=`${p}`; 
       script('/Proc/base/base.js',()=>{requires
       ([
          '/Proc/base/busy.htm','/Proc/dcor/aard.css','/Proc/base/xtag.js','/Proc/base/xatr.js',
-         '/Proc/libs/opentype/font.js','/Proc/base/boot.js'
+         '/Proc/libs/opentype/opentype.min.js','/Proc/base/boot.js'
       ])});
    });
 }());
