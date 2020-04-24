@@ -449,7 +449,7 @@
          s[fp]=fnt;
       });
 
-      wait(255,()=>
+      tick.after(255,()=>
       {
          if(tn>12){alert("check your internet connection and refresh"); return};
          if(!d||!s[fp]){dump(`retry : ${(tn+1)}`); loadFont(fp,cb,(tn+1)); return};
