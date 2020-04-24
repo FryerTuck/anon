@@ -453,7 +453,7 @@
       tick.after(255,()=>
       {
          if(tn>16){alert("check your internet connection and refresh"); return};
-         if(!d||!s[fp]){dump(`retry : ${(tn+1)}`); loadFont(fp,cb,(tn+1)); return};
+         if(!d||!s[fp]){loadFont(fp,cb,(tn+1)); return};
          cb(s[fp]);
       });
    }.bind({});
