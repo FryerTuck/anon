@@ -30,7 +30,7 @@
 
 
 
-// shiv :: Cookies : https://github.com/js-cookie/js-cookie
+// shiv :: Cookies : https://github.com/js-cookie/js-cookie .. the `Cookies` global has been defined in `aard.htm`
 // --------------------------------------------------------------------------------------------------------------------------------------------
    harden('Cookies');
 
@@ -38,10 +38,11 @@
    ({
       cookie:
       {
+         domain:Cookies.defaults.path,
          exists:function(b,v){v=Cookies.get(b); return isVoid(v);},
-         create:function(b,a,c,d){Cookies.set(b,btoa(JSON.stringify(a)),{expires:c||null,path:d||"/"}); return true;},
-         update:function(b,a,c,d){Cookies.set(b,a,{expires:c||null,path:d||"/"}); return true;},
-         delete:function(b,a){return Cookies.remove(b,{path:a||"/"})},
+         create:function(b,a,c,d){Cookies.set(b,btoa(JSON.stringify(a)),{expires:c||null,path:d||this.domain}); return true;},
+         update:function(b,a,c,d){Cookies.set(b,a,{expires:c||null,path:d||this.domain}); return true;},
+         delete:function(b,a){return Cookies.remove(b,{path:a||this.domain})},
          select:function(b, r,v,t)
          {
             if(b=='*'){b=VOID}; r=Cookies.get(b); if(isVoid(r)){return}; if((b==VOID)){try{v=JSON.parse(atob(r))}catch(e){v=r}; return v};
@@ -451,7 +452,7 @@
 
       tick.after(255,()=>
       {
-         if(tn>12){alert("check your internet connection and refresh"); return};
+         if(tn>16){alert("check your internet connection and refresh"); return};
          if(!d||!s[fp]){dump(`retry : ${(tn+1)}`); loadFont(fp,cb,(tn+1)); return};
          cb(s[fp]);
       });

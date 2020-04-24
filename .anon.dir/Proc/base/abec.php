@@ -853,12 +853,13 @@ namespace Anon;
       }
 
 
-      static function indx($p)
+      static function indx($p,$o=null)
       {
-         $p=isee($p); if(!$p){return;}; if(!is_dir($p)){$p=self::twig($p);};
+         $p=isee($p); if(!$p){return;}; if(!is_dir($p)){$p=self::twig($p);}; if(isText($o,2)){$o=[$o];}; if(!isNuma($o)){$o=[];};
          $c=knob(["name"=>["aard","index","README"],"type"=>["php","htm","html","js","md"]]);
          $a=[]; foreach($c->name as $cn){foreach($c->type as $ct){$a[]="$cn.$ct";}};
-         $r=null; foreach($a as $n){if(is_file("$p/$n")){$r=$n;break;};}; return $r;
+         $r=null; foreach($a as $n){if(isin($o,$n)){continue;}; if(is_file("$p/$n")){$r=$n;break;};};
+         return $r;
       }
 
 
