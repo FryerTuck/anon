@@ -1,7 +1,7 @@
 "use strict";
 
-requires(['/Proc/dcor/panl.css']);
 
+requires(['/Proc/dcor/aard.css']);
 
 
 
@@ -13,23 +13,23 @@ select('#AnonAppsView').insert
       [
          {row:
          [
-            {col:'.sideMenuView', contents:
+            {col:'.treeMenuView', contents:
             [
                {grid:
                [
                   {row:[{col:'.slabMenuHead', contents:'proc'}]},
                   {row:[{col:'.panlHorzLine', contents:{hdiv:''}}]},
-                  {row:[{col:'.slabMenuBody', contents:{panl:'#ProcToolMenu'}}]},
+                  {row:[{col:'.slabMenuBody', contents:{panl:'#ProcTreePanl'}}]},
                ]}
             ]},
-            {col:'.panlVertDlim', contents:{vdiv:''}},
+            {col:'.panlVertDlim', role:'gridFlex', axis:X, target:'<', contents:{vdiv:''}},
             {col:
             [
                {grid:
                [
-                  {row:[{col:'.slabMenuHead'}]},
+                  {row:[{col:'#ProcHeadView .slabViewHead', contents:[{tabber:'#ProcTabber', theme:'.dark', target:'#ProcBodyPanl'}]}]},
                   {row:[{col:'.panlHorzLine', contents:{hdiv:''}}]},
-                  {row:[{col:'.slabMenuBody', contents:{panl:'#ProcToolView'}}]},
+                  {row:[{col:'.slabViewBody', contents:{panl:'#ProcBodyPanl'}}]},
                ]}
             ]},
          ]}
@@ -48,7 +48,7 @@ extend(Anon)
       {
          select('#ProcTabber').closeAll((tv)=>
          {
-            tv=select('#ProcTreeView').select('treeview');
+            tv=select('#ProcTreeMenu').select('treeview');
             if(tv){tv[0].remove()}; tick.after(60,cbf);
          });
       },
@@ -57,36 +57,33 @@ extend(Anon)
 
       init:function()
       {
-         purl('/Proc/toolMenu',(r)=>
-         {
-            r=decode.jso(r.body);
-            r.each((i)=>
+         select('#ProcTreePanl').insert
+         ([
+            {treeview:'#ProcTreeMenu', source:'/Proc/treeMenu', listen:
             {
-               select('#ProcToolMenu').insert
-               ([{
-                  butn:'.procMenuButn', contents:i.split('_').join(' '), trgt:i,
-                  listen:
-                  {
-                     click:function(){Anon.Proc.open(this.trgt);},
-                     focus:function(){select('.procMenuButn').each((n)=>{n.declan('procActvButn')}); this.enclan('procActvButn');},
-                  }
-               }]);
-            });
+               'LeftClick':function()
+               {
+                  if(this.info.type=='fold'){return};
+                  Anon.Proc.open(this.info.path);
+               },
+            }}
+         ]);
+
+         select('#ProcTreePanl').select('treeview')[0].listen('loaded',ONCE,()=>
+         {
             Busy.edit('/Proc/panl.js',100);
          });
       },
 
 
-      vars:{},
-
-
-      open:function(n, tn,et)
+      open:function(pth, drv,tab,ttl)
       {
-         (select('.procActvTool')||[]).each((n)=>{n.style.display='none'});
-         tn=('#ProcTool_'+n); et=select(tn); if(et){et.style.display='block';return};
-         purl(('/Proc/userTool/'+n+'/init'),(r)=>
+         drv=select('#ProcTabber').driver; ttl=(pth+'');
+         tab=drv.select(ttl); if(!!tab){return};
+
+         purl('/Proc/openConf',{path:pth},function(rsp)
          {
-            document.head.insert([{script:'',innerHTML:r.body}]);
+             dump(rsp.body);
          });
       },
    }

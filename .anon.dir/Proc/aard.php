@@ -33,6 +33,35 @@ namespace Anon;
 
 
 
+      static function treeMenu()
+      {
+         $cn='name,path,mime,type';
+         $al=path::ogle([using=>'$',fetch=>$cn,limit=>['type'=>'fold','levl'=>0]]);
+         $ul=path::ogle([using=>'/',fetch=>$cn,limit=>['type'=>'fold','levl'=>0]]);
+         $sl=fuse($al,$ul); $rl=[]; foreach($sl as $so)
+         {
+            $sc=path::conf($so->path); if(!$sc){continue;};
+            $so->data=path::ogle([using=>$sc,fetch=>"$cn,data"]);
+            $rl[]=$so;
+         };
+         ekko($rl);
+      }
+
+
+
+      static function openConf()
+      {
+          $v=knob($_POST); $p=$v->path; expect::path($p,[R,F]); $r=pget($p); ekko($r);
+      }
+
+
+
+      static function saveConf()
+      {
+      }
+
+
+
       static function impede($a)
       {
          if(!isText($a,1)){return;}; self::$meta->hush->$a=1;
