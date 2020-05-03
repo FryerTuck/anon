@@ -20,7 +20,7 @@
       c={ {:'/User/conf/viewConf':} }; c.each((v,k)=>{if(conf[k]){fail('`conf.'+k+'` is already defined');return}; conf[k]=v});
 
       c=getBadConf(); if(!c){return}; // check for bad config, if none then all is good
-      c=(location.protocol+'//'+location.host); m=rtrim(location.href,'/'); if(m!=c){newGui('/'); return};
+      c=(location.protocol+'//'+location.host); m=rtrim(location.href,'/'); if(m!=c){dump("newGui - from User/boot.js"); newGui('/'); return};
       tick.after(999,()=>
       {
          m="!!! WARNING !!!\nYou are about to be infected with the nastiest virus on the planet!\n\nKidding, but now that "+

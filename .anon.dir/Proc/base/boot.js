@@ -96,16 +96,6 @@
          }));
 
 
-         // ordain('.parentSize')
-         // ({
-         //    onidle:function()
-         //    {
-         //       let bx=rectOf(this.parentNode); if(!bx){return};
-         //       this.setStyle({width:bx.width,height:bx.height});
-         //    },
-         // });
-
-
          listen('procFail',function(e)
          {
             Busy.done();
@@ -138,33 +128,18 @@
          });
 
 
-
-         l=decode.JSON(('{:bootList:}'||'[]')); requires(l,()=>
+         globVars({focussed:{hash:VOID,node:VOID}});
+         tick.every(50,function()
          {
-            let np=location.href; render(np,(r)=>
-            {
-               let mv=select('#anonMainView'); mv.insert(r);
-               tick.after(250,()=>{signal("boot")});
-               listen("boot",()=>{console.clear()});
-               Busy.done();
-            });
+            let e=document.activeElement; if(!e){return}; if(!e.UniqueID){e.modify({UniqueID:('NODE'+fash())}); harden('UniqueID',e)};
+            if(globVars('focussed').hash==e.UniqueID){return};
+            globVars('focussed').hash=e.UniqueID; globVars('focussed').node=e; signal('focuschange',e);
          });
+
+
+         tick.after(500,()=>{signal("ready")});
       });
    }());
-// --------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-
-// defn :: (event:focuschange) : define an event emitter that signals "focuschange" when focus changes on any node
-// --------------------------------------------------------------------------------------------------------------------------------------------
-   globVars({focussed:{hash:VOID,node:VOID}});
-   tick.every(10,function()
-   {
-      let e=document.activeElement; if(!e){return}; if(!e.UniqueID){e.modify({UniqueID:('NODE'+fash())}); harden('UniqueID',e)};
-      if(globVars('focussed').hash==e.UniqueID){return};
-      globVars('focussed').hash=e.UniqueID; globVars('focussed').node=e; signal('focuschange',e);
-   });
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -183,4 +158,27 @@
       let mdl=select('modal'); if(mdl){vals(mdl,-1).exit();return};
       AnonPanl.hide();
    })});
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+// evnt :: ready : fires once when dependencies are loaded
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   listen("ready",function()
+   {
+      requires(decode.JSON(('{:bootList:}'||'[]')),()=>
+      {
+         let np=location.href; render(np,(r)=>
+         {
+            let mv=select('#anonMainView'); mv.insert(r);
+            tick.after(250,()=>
+            {
+               signal("boot");
+               console.clear();
+               Busy.done();
+            });
+         });
+      });
+   });
 // --------------------------------------------------------------------------------------------------------------------------------------------
