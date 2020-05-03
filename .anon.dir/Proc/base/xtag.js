@@ -155,6 +155,7 @@ extend(custom.domtag)
             radd(l,{item:'$repo-push', text:'publish changes', onclick:function(){this.context.info.root.adjure('update','push',this.context)}});
             radd(l,{item:'$warning', text:'discard changes', onclick:function(){this.context.info.root.adjure('update','anew',this.context)}});
             radd(l,{item:'$history1', text:'revert previous', onclick:function(){this.context.info.root.adjure('update','prev',this.context)}});
+            radd(l,{item:'$cog', text:'modify origin', onclick:function(){this.context.info.root.adjure('modify','repo',this.context)}});
          };
 
          if(t=='plug')

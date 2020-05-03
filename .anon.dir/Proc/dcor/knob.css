@@ -216,7 +216,7 @@
    dropmenu>h1
    {
       display:block !important; position:relative !important; box-sizing:border-box !important;
-      min-width:120px !important; max-width:400px !important;
+      min-width:130px !important; max-width:400px !important;
       padding:6px !important;
       margin:0px !important;
       font-size:11px !important;
@@ -242,7 +242,7 @@
 
    dropmenu>item
    {
-      min-width:120px !important; max-width:400px !important;
+      min-width:130px !important; max-width:400px !important;
       padding:2px !important;
       padding-top:4px !important;
       padding-left:6px !important;

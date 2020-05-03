@@ -265,6 +265,7 @@ namespace Anon;
          {
             permit::clan('geek'); $r=self::ratingOf(user('mail'));
             if(($r<12)&&!isin(user('clan'),'sudo')){done("this feature is not available for rookies\n.. unless you know sudo-fu");};
+            if($t==="repo"){done(repo::origin($h));};
             done(pget($h));
          };
 

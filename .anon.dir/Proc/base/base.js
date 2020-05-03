@@ -436,31 +436,6 @@
 
 
 
-// func :: loadFont : preloads a font
-// --------------------------------------------------------------------------------------------------------------------------------------------
-   const loadFont = function(fp,cb,tn, s,d,i,t,c)
-   {
-      if(!isText(fp)||!fp){fail("expecting text");return}; s=this;
-      if(!!s[fp]){cb(s[fp]);return}; // already loaded
-      tn=(tn||1); // try-number .. count how many times openFont tried to load the font
-
-      d=opentype.load(fp,function(err,fnt)
-      {
-         if(err){console.log(err);return};
-         s[fp]=fnt;
-      });
-
-      tick.after(255,()=>
-      {
-         if(tn>16){alert("check your internet connection and refresh"); return};
-         if(!d||!s[fp]){loadFont(fp,cb,(tn+1)); return};
-         cb(s[fp]);
-      });
-   }.bind({});
-// --------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
 // func :: requires : versatile preloader
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const requires = function(l,cbfn,cbpi, s,a,slf,d)
@@ -485,23 +460,8 @@
 
          if(x=='js')
          {
-            // if(p)
-            // {
-            //    let ps=p.split('.'); let rm=ps.shift(); let hp=twig(i); let pn=((ps.length<1)?rm:ps.pop());
-            //    require.config({baseUrl:hp,paths:{[rm]:i}});
-            //    require([i],function(m)
-            //    {
-            //       let n=this.nick; let mm=this.root; if(isVoid(m)&&!isVoid(MAIN[mm][n])){m=MAIN[mm][n]};
-            //       if(isVoid(m)&&isVoid(MAIN[n])){fail(`invalid "${n}" definition in: "${this.purl}"`);return};
-            //       if(!!m){extend(MAIN)({[n]:m})}; d--; slf.done[this.purl]=1; a[this.nick]=m;
-            //    }
-            //    .bind({root:rm,nick:pn,purl:i}));
-            // }
-            // else
-            // {
-               let n=create('script'); n.purl=i; n.listen('ready',function(){d--; slf.done[this.purl]=1; cbpi(this.purl);});
-               n.modify({src:i}); document.head.insert(n);
-            // };
+            let n=create('script'); n.purl=i; n.listen('ready',function(){d--; slf.done[this.purl]=1; cbpi(this.purl);});
+            n.modify({src:i}); document.head.insert(n);
             return;
          };
 
@@ -525,9 +485,14 @@
          {
             tick.after(1,function()
             {
-               loadFont(i,function(fnt)
+               tick.after(1,()=>
                {
-                  d--; slf.done[this.pth]=1; let fln,fam,mim,css,hsh,fmt,ico,reg;
+                  if(!!this.otl){return};
+                  alert("Connection issue.\nTry to reset your connection, then hit refresh");
+               });
+               this.otl=opentype.load(i,function(err,fnt)
+               {
+                  d--; slf.done[this.pth]=1; if(err){console.log(err);return}; let fln,fam,mim,css,hsh,fmt,ico,reg;
                   fln=this.pth.split('/').pop().split('.')[0]; fam=this.fam;if(!fam){fam=(fnt.names.fontFamily.en||fln)};fam=swap(fam,' ','-');
                   hsh=md5(this.pth); fmt=fnt.outlinesFormat; ico=(isin(lowerCase(fam),'icon')||isin(lowerCase(fln),'icon'));
                   reg=(ico||isin(lowerCase(fnt.names.fontSubfamily),'regular')); reg=((reg||ico)?` font-weight:normal; font-style:normal;`:'');
