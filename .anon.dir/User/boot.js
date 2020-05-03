@@ -77,6 +77,12 @@
    {
       server.listen('sesnFade',function(obj)
       {
+         if(!globVars("activity").idle)
+         {
+            Cookies.set(sesn('HASH'),'...'); navigator.sendBeacon('/User/isActive','1');
+            return; // user is active
+         };
+
          popModal('Idle :: Your session is about to expire.',obj.time)
          ([
             {"good :: I'm here":function(){this.root.exit()}},
@@ -86,6 +92,13 @@
             gone:function(){repl.exit();},
             exit:function(){Cookies.set(sesn('HASH'),'...'); navigator.sendBeacon('/User/isActive','1');},
          });
+      });
+
+      tick.every(1000,function()
+      {
+         let tl=globVars("activity").last;
+         let tn=time();
+         if((tn-tl)>3600){globVars("activity").idle=1};
       });
 
       initPanl();

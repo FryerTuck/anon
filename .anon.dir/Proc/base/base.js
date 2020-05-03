@@ -1846,8 +1846,17 @@
       }
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   document.addEventListener("mousemove", function(e){cursor.move(e.clientX,e.clientY);},false);
+   globVars({activity:{idle:0,last:time()}});
+
+   const imHere = function()
+   {
+      globVars("activity").idle=0;
+      globVars("activity").last=time();
+   };
+
+   document.addEventListener("mousemove", function(e){imHere(); cursor.move(e.clientX,e.clientY);},false);
    document.addEventListener("dragover", function(e){cursor.move(e.pageX,e.pageY);},false);
    document.addEventListener("mousedown", function(e){if(isin(e.signal,'LeftClick')){cursor.grab=1;};},false);
-   document.addEventListener("mouseup", function(e){cursor.grab=0;},false);
+   document.addEventListener("mouseup", function(e){imHere(); cursor.grab=0;},false);
+   document.addEventListener("keyup", function(e){imHere();},false);
 // --------------------------------------------------------------------------------------------------------------------------------------------
