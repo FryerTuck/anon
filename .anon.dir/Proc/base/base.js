@@ -463,7 +463,7 @@
 
 // func :: requires : versatile preloader
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   const requires = function(l,cbfn,cbpi, s,a,slf,tprc,d)
+   const requires = function(l,cbfn,cbpi, s,a,slf,bzy)
    {
       // if(MAIN.HALT){return};
       if(!stak(0)){wack();return};
@@ -476,26 +476,28 @@
          return;
       };
 
-      if(!l||(span(l)<1)){cbfn();return}; if(!isList(l)){l=[l]}; d=0;
+      if(!l||(span(l)<1)){cbfn();return}; if(!isList(l)){l=[l]}; bzy={todo:0,done:0,jobs:l,hash:md5(l.join(""))};
+      if(slf.seen[bzy.hash]){return}; slf.seen[bzy.hash]=1;
+
       l.each((i)=>
       {
          let p=stub(i,':'); if(p){i=p[2]; p=p[0]; a[p]=VOID}; let x=fext(i);
          if(x=='fnt'){x='css'}; if(!x){fail('expecting valid path');return STOP}; // validate
-         if(slf.done[i]){cbpi(i);return}; // already loaded
-         slf.jobs.ttl++;
+         bzy.todo++; if(slf.done[i]){bzy.done++; cbpi(i);return}; // already loaded
          let t=VOID;
 
          if(x=='js')
          {
             let n=create('script'); n.purl=i;
-            n.listen('ready',function(){slf.done[this.purl]=1; slf.jobs.dne++; cbpi(this.purl);});
+            n.listen('ready',function(){slf.done[this.purl]=1; bzy.done++; cbpi(this.purl);});
             n.modify({src:i}); document.head.insert(n);
             return;
          };
 
          if(x=='css')
          {
-            let n=create('link'); n.purl=i; n.listen('ready',function(){slf.done[this.purl]=1; slf.jobs.dne++; cbpi(this.purl);});
+            let n=create('link'); n.purl=i;
+            n.listen('ready',function(){slf.done[this.purl]=1; bzy.done++; cbpi(this.purl);});
             n.modify({rel:'stylesheet',href:i}); document.head.insert(n); return;
          };
 
@@ -505,7 +507,7 @@
             {
                dm=(xdom(r.body)||[]); dm.forEach((n)=> // html - insert each element into its implied DOM parent
                {document[(isin(['script','style'],nodeName(n))?'head':'body')].insert(n);});
-               tick.after(50,()=>{slf.done[r.path]=1; slf.jobs.dne++; cbpi(r.path);})
+               tick.after(50,()=>{slf.done[r.path]=1; bzy.done++; cbpi(r.path);})
             }); return;
          };
 
@@ -513,7 +515,7 @@
          {
             loadFont(i,function(fnt)
             {
-               slf.done[this.pth]=1; slf.jobs.dne++;
+               if(!!slf.done[this.pth]){return}; slf.done[this.pth]=1; bzy.done++;
                let fln,fam,mim,css,hsh,fmt,ico,reg;
                fln=this.pth.split('/').pop().split('.')[0]; fam=this.fam;if(!fam){fam=(fnt.names.fontFamily.en||fln)};fam=swap(fam,' ','-');
                hsh=md5(this.pth); fmt=fnt.outlinesFormat; ico=(isin(lowerCase(fam),'icon')||isin(lowerCase(fln),'icon'));
@@ -542,19 +544,14 @@
       });
 
 
-      wait.until
-      (
-         ()=>
-         {
-            // if(slf.jobs.dne>slf.jobs.ttl){slf.jobs.ttl=slf.jobs.dne};
-            tprc=Math.floor((slf.jobs.dne/slf.jobs.ttl)*100);
-            if((typeof Busy)!="undefined"){Busy.edit("/requires",tprc)};
-            return (tprc>99)
-         },
-         ()=>{tick.after(50,()=>{cbfn()})},
-      );
+      let ticr=setInterval(()=>
+      {
+         let tprc=Math.ceil((bzy.done/bzy.todo)*100);
+         if((typeof Busy)!="undefined"){Busy.edit(`/${bzy.hash}`,tprc)};
+         if(tprc>99){clearInterval(ticr); cbfn()};
+      },1000);
    }
-   .bind({call:{},done:{},jobs:{ttl:0,dne:0}});
+   .bind({call:{},done:{},seen:{}});
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -920,7 +917,7 @@
       // if(MAIN.HALT){return};
       if(!p){p='/'};
       // expect({path:p,func:f});
-      s=this; purl({target:p,header:{Accept:'text/plain'}},(r)=>
+      s=this; purl(p,(r)=>
       {
          // if(MAIN.HALT){return};
          let m,q,t,x; m=r.head.ContentType.split(';')[0].split('/x-').join('/'); q=m.split('/'); t=q[0]; x=q[1];

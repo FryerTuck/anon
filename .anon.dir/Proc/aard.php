@@ -25,9 +25,8 @@ namespace Anon;
          self::$meta->hush=knob(); self::$meta->hook=knob(); self::$meta->wait=500; $i=0;
          $p=NAVIPATH; Time::logEvent(); if(strpos($p,'/~/')===0){$p=lshave($p,'/~/'); $u=user('name'); $p="/User/data/$u/home/$p";};
          $r=path::call($p,__FILE__); // run PHP controller found in path .. this should exit here - else we handle it below:
-         if(($r!==null)&&($r!==true)){if(defn('HALT')||envi('HALT')){done($r);}; ekko($r);}; // respond with contents from controller
+         if(($r!==null)&&($r!==true)&&!is_class($r)){if(defn('HALT')||envi('HALT')){done($r);}; ekko($r);}; // respond with controller response
          if(isFold($p)){$i=path::indx($p,'aard.php'); if($i){$p=(rshave($p,'/')."/$i");}}; // if folder, check for index-file
-         // if((($r===true)||($r===null))&&$i&&(fext($p)==='php')){dump($p,$r);};
          finish($p); // handle regular path
       }
 

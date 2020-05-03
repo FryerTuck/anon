@@ -34,12 +34,7 @@ const script=function(p,f, n){n=document.createElement('script'); n.src=`${p}`; 
    document.cookie=`{:SESNHASH:}=...;domain=${HOSTNAME};path=/`;
    s=HOSTNAME.split('.'); c=location.host.split('.'); if((s.length<3)||(c.length<3)){wack();return};
    s.shift(); s=s.join('.'); c.shift(); c=c.join('.');if((location.host!=s)&&(c!=s)){wack();return};
-   script('/Proc/base/abec.js',()=>
-   {
-      script('/Proc/base/base.js',()=>{requires
-      ([
-         '/Proc/base/busy.htm','/Proc/dcor/aard.css','/Proc/base/xtag.js','/Proc/base/xatr.js',
-         '/Proc/libs/opentype/opentype.min.js','/Proc/base/boot.js'
-      ])});
-   });
+   script('/Proc/base/abec.js',()=>{script('/Proc/base/base.js',()=>
+   {requires(['/Proc/base/busy.htm'],()=>{script('/Proc/libs/opentype/opentype.min.js',()=>
+   {Busy.edit('/anonBoot',20); script('/Proc/base/boot.js')})})})});
 }());

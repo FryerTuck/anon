@@ -945,8 +945,7 @@
    {
       after:function(ws,cf){let rt = setTimeout(cf,ws); return rt},
       every:function(ws,cf){let rt = setInterval(cf,ws); return rt},
-      while:function(w,c,i){let rt = setInterval((r)=>{r=w(); if(r){c(r)}else{clearInterval(rt);}},(i||1)); return rt;},
-      until:function(w,c,i){let rt = setInterval((r)=>{r=w(); if(r===true){return}; clearInterval(rt); c(r)},(i||10)); return rt;},
+      while:function(w,c,i){let rt = setInterval((r)=>{r=w(); if(r===true){return}; clearInterval(rt); c(r)},(i||10)); return rt;},
    };
 
    const wait = // object

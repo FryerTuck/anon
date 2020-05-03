@@ -108,8 +108,10 @@
 
                       What will you do?`;
 
-            let info=e.detail; let mesg=info.mesg; if(!userDoes('geek','sudo')){mesg=hint}
-            else{mesg+=("<br><br>\n\n```"+`\nfile: ${info.file}\nline: ${info.line}\n`+"```\n\n<br>")};
+            let info=e.detail; let mesg=info.mesg;
+
+            if(!userDoes('geek','sudo')){mesg=hint; console.error(hint);}
+            else{console.error(info); mesg+=("<br><br>\n\n```"+`\nfile: ${info.file}\nline: ${info.line}\n`+"```\n\n<br>")};
             mesg+=`\n\n${apnd}`;
             popConfirm(`${info.name} Fail`,mesg,`dark`,`harm`,`bug`,`500x260`)
             ({
@@ -167,14 +169,19 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    listen("ready",function()
    {
-      requires(decode.JSON(('{:bootList:}'||'[]')),()=>
+      let bl=decode.JSON(('{:bootList:}'||'[]'));
+      Busy.edit('/anonBoot',40);
+      requires(bl,()=>
       {
+         Busy.edit('/anonBoot',60);
          let np=location.href; render(np,(r)=>
          {
             let mv=select('#anonMainView'); mv.insert(r);
+            Busy.edit('/anonBoot',80);
             tick.after(250,()=>
             {
                signal("boot");
+               Busy.edit('/anonBoot',100);
                console.clear();
                Busy.done();
             });
