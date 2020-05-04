@@ -617,7 +617,6 @@ extend(Anon)
 
       shut:function(drv,tgt, inf,dne)
       {
-         console.log(tgt.head.anon);
          inf=tgt.head.editor.anon; dne=inf.saved;
          if(!dne){dne=confirm('Discard unsaved changes?')};
 
