@@ -27,9 +27,9 @@
          {
             wait.until(()=>{return (((typeof marked)!='undefined')&&((typeof Prism)!='undefined'))},()=>
             {
-               d=d.split('\n...\n').join('\n<br><br><br>\n');
-               d=d.split('\n..\n').join('\n<br><br>\n');
-               d=d.split('\n.\n').join('\n<br>\n');
+               d=d.split("\n\n\n\n").join("\n\n<br><br>\n\n");
+               d=d.split("\n\n\n").join("\n\n<br>\n\n");
+               d=d.split("\n\n\n\n").join("\n\n");
                marked(d,{gfm:true,breaks:true},function(e,r)
                {
                   if(e){throw (e); return}; let n,p,c,h; h=('#MD'+hash());

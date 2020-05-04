@@ -14,7 +14,7 @@ namespace Anon;
       {
          $cn='name,path,mime,type'; $al=path::ogle([using=>'$',fetch=>$cn,limit=>['type'=>'fold','levl'=>0]]);
          $ul=path::ogle([using=>'/',fetch=>$cn,limit=>['type'=>'fold','levl'=>0]]);
-         $sl=fuse($al,$ul); $rl=[]; $cl=frag(user('clan'),','); foreach($sl as $so)
+         $sl=array_merge($al,$ul); $rl=[]; $cl=frag(user('clan'),','); foreach($sl as $so)
          {
             $pi="$so->path/pack.inf"; if(!isee($pi)){continue;}; $pi=knob(dval(pget($pi))); $fc=$pi->forClans;
             if($fc&&($fc!=='*')&&!isin($fc,$cl)){continue;}; $so->path=ltrim($so->path,'$'); $sp=$so->path; $so->data=[];
