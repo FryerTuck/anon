@@ -14,6 +14,7 @@
       box-shadow:0px 0px 6px hsla(0,0%,50%,0.2);
       white-space:nowrap !important;
       cursor:pointer;
+      user-select:none;
    }
 
    butn:hover
@@ -727,7 +728,7 @@
    modal .modalBox .head .shut
    {
       position:absolute; top:5px; right:4px;
-      font-size:10px !important; line-height:10px !important;
+      font-size:10px; line-height:10px;
       color:hsla(0,0%,50%,1);
       cursor:pointer;
    }
@@ -759,6 +760,7 @@
 
    modal .modalBox .body .info
    {
+      width:100px;
       padding:4px;
       padding-left:8px;
       font-size:13px; color:hsla(0,0%,20%,1);
@@ -801,7 +803,7 @@
    }
 
    modal .modalBox .body .modlInfoItem>icon
-   {font-size:10px !important; margin-right:4px !important}
+   {font-size:16px !important; margin-right:4px !important}
 
    modal .modalBox .view>page.hide{display:none;}
    modal .modalBox .view>panl.hide{display:none;}
@@ -869,6 +871,12 @@
       color:hsla(0,0%,80%,1) !important;
       background:hsla(210,3%,24%,1) !important;
       border:1px solid hsla(0,0%,32%,1);
+   }
+
+   modal .modalBox.dark .body .info
+   {
+      color:hsla(0,0%,80%,1) !important;
+      border-right:1px solid hsla(0,0%,25%,1);
    }
 
    modal .modalBox.dark .foot

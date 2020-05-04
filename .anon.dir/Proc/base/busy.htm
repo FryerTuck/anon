@@ -73,13 +73,20 @@
    Busy.done = function(p,w,x,o,f,t,n,p)
    {
       p=document.getElementById('busyPane'); if(!p||!Busy.node){return;}; Busy.jobs={}; Busy.dead=true; w=(Busy.fail?'fail':'done');
-      n=Busy.node; n.style.opacity=1; x=100; o=1; f=((o/x)*2); p=n.parentNode;
-      setTimeout(function(){t=setInterval(function()
+      n=Busy.node; n.style.opacity=1; x=100; o=1; f=round(((o/x)*5),3); p=n.parentNode;
+      setTimeout(function()
       {
-         if(!Busy.dead){clearInterval(t); p.style.opacity=1; return}; Busy.signal(w,ONCE); o-=f; if(o>0){p.style.opacity=o; return};
-         clearInterval(t); p.style.opacity=0; p=document.getElementById('busyPane'); if(p&&p.parentNode){p.parentNode.removeChild(p)};
-         Busy.fail=false; Busy.node=null; n=null; p=null; Busy.data=0; tick.after(150,()=>{Busy.actv=0});
-      },5);},260);
+         t=setInterval(function()
+         {
+            if(!Busy.dead){clearInterval(t); p.style.opacity=1; return}; Busy.signal(w,ONCE); o-=f; if(o>0){p.style.opacity=o; return};
+            clearInterval(t); p.style.opacity=0; p=document.getElementById('busyPane'); if(p&&p.parentNode){p.parentNode.removeChild(p)};
+            Busy.fail=false; Busy.node=null; n=null; p=null; Busy.data=0; tick.after(150,()=>{Busy.actv=0});
+         },5);
+         setTimeout(()=>
+         {
+            if(Busy.dead&&document.getElementById('busyPane')){Busy.kill()};
+         },1250);
+      },260);
    };
 
 

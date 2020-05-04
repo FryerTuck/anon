@@ -33,9 +33,9 @@
                marked(d,{gfm:true,breaks:true},function(e,r)
                {
                   if(e){throw (e); return}; let n,p,c,h; h=('#MD'+hash());
-                  let el=expose(r,':',':',/^[a-z]+$/);
+                  let el=expose(r,':',':',/^[a-zA-Z0-9\-]+$/);
                   (el||[]).forEach((en)=> // check for emoji
-                  {let ef=(':'+en+':'); let er=('<i class="icon-'+en+'"></i>'); r=r.split(ef).join(er);}); // implement emoji
+                  {let ef=(':'+en+':'); let er=('<i class="icon-'+en+'" style="font-size:1.2em"></i>'); r=r.split(ef).join(er);}); // implement emoji
 
                   n=create({div:(h+' .markdown-body'),contents:r});
 
