@@ -477,7 +477,7 @@
       };
 
       if(!l||(span(l)<1)){cbfn();return}; if(!isList(l)){l=[l]}; bzy={todo:0,done:0,jobs:l,hash:md5(l.join(""))};
-      if(slf.seen[bzy.hash]){return}; slf.seen[bzy.hash]=1;
+      if(slf.seen[bzy.hash]){cbfn();return}; slf.seen[bzy.hash]=1;
 
       l.each((i)=>
       {
@@ -543,13 +543,14 @@
          console.error('requires() :: unsupported file-extension `'+x+'`'); return STOP; // loop must not reach here
       });
 
+      if(bzy.done==bzy.todo){cbfn();return}; // already loaded
 
       let ticr=setInterval(()=>
       {
          let tprc=Math.ceil((bzy.done/bzy.todo)*100);
          if((typeof Busy)!="undefined"){Busy.edit(`/${bzy.hash}`,tprc)};
          if(tprc>99){clearInterval(ticr); cbfn()};
-      },1000);
+      },10);
    }
    .bind({call:{},done:{},seen:{}});
 // --------------------------------------------------------------------------------------------------------------------------------------------
@@ -900,7 +901,8 @@
       if(!isText(x)){fail('expecting 2nd arg as text');return};
       if(!isin(keys(parser),x)){fail('no parser defined for mimeType `'+x+'`');return};
       if(!isFunc(parser[x])){fail('expecting parser extension `'+x+'` as a function');return};
-      if(!isFunc(f)){fail('expecting 3rd arg as callback-function');return}; return parser[x](v,f);
+      if(!isFunc(f)){fail('expecting 3rd arg as callback-function');return};
+      return parser[x](v,f);
    };
 
    const parser = {};
@@ -1854,9 +1856,9 @@
       globVars("activity").last=time();
    };
 
-   document.addEventListener("mousemove", function(e){imHere(); cursor.move(e.clientX,e.clientY);},false);
+   document.addEventListener("mousemove", function(e){cursor.move(e.clientX,e.clientY); imHere(); },false);
    document.addEventListener("dragover", function(e){cursor.move(e.pageX,e.pageY);},false);
    document.addEventListener("mousedown", function(e){if(isin(e.signal,'LeftClick')){cursor.grab=1;};},false);
-   document.addEventListener("mouseup", function(e){imHere(); cursor.grab=0;},false);
+   document.addEventListener("mouseup", function(e){cursor.grab=0; imHere(); },false);
    document.addEventListener("keyup", function(e){imHere();},false);
 // --------------------------------------------------------------------------------------------------------------------------------------------

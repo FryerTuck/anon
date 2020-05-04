@@ -258,6 +258,7 @@ extend(Anon)
                },
                ()=>
                {
+                  dump(e.detail.target.head.title);
                   Anon.Code.vars.activeInst=e.detail.target.head.editor;
                   Anon.Code.info(e.detail.target.head.editor.anon);
                   let tlv,hdn,fnd,val; tlv=select('#CodeToolHold'); hdn=(isin(tlv.className,'hide')?1:0); if(hdn){return};
@@ -304,7 +305,7 @@ extend(Anon)
 
          requires(lng,()=>{purl(ofp,{path:pth,type:tpe},(r)=>
          {
-            wrp.textContent=r.body; select('#CodeBodyPanl').focus();
+            wrp.textContent=r.body;
             tab.head.editor=ace.edit(wrp); tab.head.editor.setTheme('ace/theme/tomorrow_night');
             mde=ace.require(`ace/mode/${mde}`).Mode; tab.head.editor.session.setMode(new mde());
 
@@ -341,6 +342,7 @@ extend(Anon)
                ed.anon.ipick=[sl,sc]; Anon.Code.info(ed.anon);
             });
 
+            select('#CodeBodyPanl').focus();
          })});
       },
 
@@ -615,6 +617,7 @@ extend(Anon)
 
       shut:function(drv,tgt, inf,dne)
       {
+         console.log(tgt.head.anon);
          inf=tgt.head.editor.anon; dne=inf.saved;
          if(!dne){dne=confirm('Discard unsaved changes?')};
 
