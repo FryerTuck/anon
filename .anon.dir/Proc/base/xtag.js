@@ -696,11 +696,12 @@ extend(custom.domtag)
 
 
 
-   dropzone:function(n,a,c)
+   dropzone:function(n,a,c, x,f)
    {
-      if(!c){c=[];}; if(span(c)<1){radd(c,{h3:'drop zone'})};
-      n.insert({div:c});
-      n.listen('drop',(a.feed||a.onfeed||a.onFeed||a.drop||a.ondrop||a.onDrop));
+      if(!c){c=[];}; if(span(c)<1){radd(c,{h3:'drop zone', style:{margin:0}})}; n.insert({div:c});
+      x="drop,ondrop,onDrop,feed,onfeed,onFeed"; f=isin(a,x.split(","));
+      if(!f||!isFunc(a[f])){fail(`expecting attribute like: ${x} -as function to handle drops`);return};
+      f=a[f]; delete a[f]; n.listen('drop',f); n.modify(a);
       return DONE;
    },
 });

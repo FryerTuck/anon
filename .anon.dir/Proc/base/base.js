@@ -188,7 +188,11 @@
       Listen:
       {
          jobs:{},
-         hash:function(f,x){this.x+=1; return sha1(this.x+f.toString())}.bind({x:0}),
+         hash:function(f)
+         {
+            if(!isFunc(f)){fail("expecting function");return};
+            this.x+=1; return sha1(this.x+f.toString());
+         }.bind({x:0}),
          keys:
          {
             from:function(e, r)
@@ -212,6 +216,7 @@
    document.body.addEventListener('keyup',function(evnt)
    {
       let butn=Listen.keys.from(evnt); delete Listen.keys.down[butn];
+      imHere();
    });
 
 
@@ -646,7 +651,7 @@
          if(isText(v)&&(wrapOf(trim(v))=='<>')){this.innerHTML=v; return this}; // convert html to nodes and try again
          if(!isText(v)){v=tval(v);}; // convert any non-text to text .. circular, boolean, number, function, etc.
          if(isin(['code','text'],t)){this.textContent=v; return this;}; // insert as TEXT
-         if(isin(['style','script','pre','span','p','a','i','b'],t)){this.innerHTML=v; return this}; // insert as HTML
+         if(isin("style,script,pre,span,h1,h2,h3,h4,h5,h6,p,a,i,b",t)){this.innerHTML=v; return this}; // insert as HTML
          let n=document.createElement('span'); n.innerHTML=v; this.appendChild(n); return this; // append text as span-node
       },
    });
@@ -1856,9 +1861,8 @@
       globVars("activity").last=time();
    };
 
-   document.addEventListener("mousemove", function(e){cursor.move(e.clientX,e.clientY); imHere(); },false);
+   document.addEventListener("mousemove", function(e){cursor.move(e.clientX,e.clientY);},false);
    document.addEventListener("dragover", function(e){cursor.move(e.pageX,e.pageY);},false);
    document.addEventListener("mousedown", function(e){if(isin(e.signal,'LeftClick')){cursor.grab=1;};},false);
    document.addEventListener("mouseup", function(e){cursor.grab=0; imHere(); },false);
-   document.addEventListener("keyup", function(e){imHere();},false);
 // --------------------------------------------------------------------------------------------------------------------------------------------
