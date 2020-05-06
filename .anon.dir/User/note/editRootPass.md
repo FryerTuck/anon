@@ -1,12 +1,10 @@
-!!! WARNING !!!
+#### Master Password
 
-The master password is still "stock standard".
-  Anyone who knows this can login remotely and run mucks.
-  You need to change this ASAP!
+When Anon is installed, the `master` user's password is stock-standard.
+For brevity, use the following command:
+  passwd master
 
-To find out how to login as master, use this command:
+
+To find out more, use this command:
   help login
 -then scroll to the end of the help info
-
-Once you are master, use this command:
-  passwd master

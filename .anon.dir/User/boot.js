@@ -21,12 +21,13 @@
 
       c=getBadConf(); if(!c){return}; // check for bad config, if none then all is good
       c=(location.protocol+'//'+location.host); m=rtrim(location.href,'/'); if(m!=c){dump("newGui - from User/boot.js"); newGui('/'); return};
+
       tick.after(999,()=>
       {
-         m="!!! WARNING !!!\nYou are about to be infected with the nastiest virus on the planet!\n\nKidding, but now that "+
-           "I have your attention, if you're just a malicious (-or innocent) bystander then you'e welcome to come back later "+
-           "when this site is ready.\n\nIf you've just installed this site, you can stop panicking now, just read the README "+
-           "dock below this alert-box .. though, if you know how to login, you'll see the cause of this alert.";
+         m="!!! WARNING !!!\nSome configuration needs to be set in order for Anon to function properly.\n";
+         if(userDoes('sudo')){m+="See the terminal for more details."}
+         else{m+="Login as `master` -or a user in the `sudo` clan; for help: open the terminal and type: help login"};
+         m+="\nThis alert will go away when the required config has been set.";
          alert(m);
       });
    }());
@@ -54,7 +55,7 @@
                      if(!select('#busyPane')){return}; if(span(Busy.jobs)>0){Busy.tint('yellow'); dump(Busy.jobs)}; Busy.kill();
                   }); // but show that+why it was forced
 
-                  if(!isin(sesn('CLAN',1),'work')){return}; // we want to do something (next) that requires privileges
+                  if(!userDoes('work,sudo,lead')){return}; // we want to do something (next) that requires privileges
                   let c=getBadConf(); if(!c){return}; // check for bad config, if none then all is good
 
                   purl(('/User/readNote/'+c),(r)=>
