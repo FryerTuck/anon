@@ -11,18 +11,6 @@ namespace Anon;
 
 
 
-# refs :: constants : these help us express specific directives .. they all have the value of the word wrapped in `:` .. like :AUTO:
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-   defn('AUTO KEYS VALS WORD XACT VOID NONE STEM TOOL FUNC PATH FOLD FILE LINK DUMP DONE GOOD INFO WARN FAIL MINI MIDI MAXI SKIP STOP TODO');
-   defn('LOOP REPO DENY AFTR BFOR FLAT DEEP HIDN EMPT GONE NOFAIL NOINIT NOMAKE NOEXIT DOEXIT OK');
-   defn('A B C D E F G H I J K L M N O P Q R S T U V W X Y Z');
-   defn('count fetch using alter write claim touch where group order limit parse shape apply erase purge debug dbase table field sproc funct after basis named param parts');
-   defn('NATIVE REMOTE ORIGIN ALL');
-   defn('ASC DSC API BOT DPI GUI SSE');
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
 # refs :: constants : short-hand references to values that are frequently used
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    $h=pget('/Proc/conf/hostName'); if(!$h){$h=envi('SERVER_NAME'); if(!$h){$h=envi('HOST');}};

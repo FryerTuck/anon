@@ -1343,6 +1343,15 @@
             ]}]}];
          };
 
+         if(isList(obj.foot))
+         {
+            obj.foot.forEach((b,i)=>
+            {
+               if((lowerCase((b.text||b.contents)+"")=="cancel")&&!b.onclick&&!b.listen)
+               {obj.foot[i].onclick=function(){this.root.exit()}};
+            });
+         };
+
          box=create({grid:'', contents:
          [
             {row:[{col:'.head', contents:[{div:obj.head}]}]},

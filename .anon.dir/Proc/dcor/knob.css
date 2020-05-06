@@ -481,8 +481,8 @@
       color:hsla(0,0%,70%,1);
       overflow:hidden;
       opacity:0.8;
-      text-shadow:0px 0px 1px #000000;
-      box-shadow:0px 0px 1px #000000;
+      text-shadow:0px 0px 1px #000000, 0px 0px 2px #000000;
+      box-shadow:0px 0px 1px #000000, 0px 0px 2px #000000;
    }
    dropzone>div
    {

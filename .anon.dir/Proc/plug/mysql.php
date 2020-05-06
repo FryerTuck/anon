@@ -53,6 +53,7 @@ namespace Anon;
          if($this->link){return $this->link;}; $i=$this->mean; $r=$i->refs; $b=$r->dbase; if(!$b){$b='mysql';}; $m=null;
          try{$this->link=$this->engage($i->host,$i->user,$i->pass,$b);}catch(\Exception $e){$m=$e->getMessage();};
          if($m){if(isin($m,'using password: YES')){$m='invalid authorization credentials';}; fail($m);};
+         if(!$this->link){fail('some horrible bullshit is at foot here');return;};
          mysqli_set_charset($this->link,'utf8'); return $this->link;
       }
 
@@ -77,10 +78,11 @@ namespace Anon;
             $this->pacify(); fail("$m\n\nQuery used:\n$q");
          };
 
-         if(isin($a,['SELE','SHOW','DESC']))
+         if(isin('SELE,SHOW,DESC',$a))
          {$r=[]; $y=[]; $i=0; while($y[]=mysqli_fetch_assoc($x)){if($y[$i]!==null){$r[]=knob($y[$i]); $i++;}}; mysqli_free_result($x);}
-         else{$r=$x;}; if(!$l){$this->pacify();};  //if(!$r||(span($r)<1)){return;};
-         return $r;
+         elseif(isin('INSE',$a)){$r=mysqli_insert_id($this->link);}
+         elseif(isin('UPDA,DELE',$a)){$r=mysqli_affected_rows($this->link);};
+         if(!$l){$this->pacify();}; return $r;
       }
 
 
@@ -157,33 +159,38 @@ namespace Anon;
 
 
 
-      function descry($x='*', $l=null, $r=null)
+      function descry($x='*', $tm=true)
       {
-         $i=$this->mean; if($l===null){$l=$i->levl; $r=dupe($i->refs);}; $z=null; $b=$r->dbase;
+         $i=$this->mean; $l=$i->levl; $r=dupe($i->refs); $z=null; $b=$r->dbase;
+         if(isAsso($x)){$x=knob($x,1);}; // prep
+         if(isKnob($x)&&isText($x->using,1)){$x=$x->using;};
 
-         if($x==='*')
+         if(!isText($x,1)){fail("expecting non-empty text");return;};
+
+         if($x!=='*')
          {
-            if($l<1)
-            {
-               $z=padded(unbury($this->adjure("SHOW DATABASES"),"Database",['information_schema','mysql','performance_schema']),'dbase::','');
-               return $z;
-            };
-
-            if($l<2)
-            {
-               $dt=padded(unbury($this->adjure("SHOW TABLES"),"Tables_in_$b"),'table::','');
-               $sp=padded(unbury($this->adjure("SHOW PROCEDURE STATUS where Db = \"$b\""),'Name'),'sproc::','');
-               $fn=padded(unbury($this->adjure("SHOW FUNCTION STATUS where Db = \"$b\""),'Name'),'funct::','');
-               $z=concat($dt,$sp); $z=concat($z,$fn); return $z;
-            };
-
-            if($l<3){$z=padded(unbury($this->adjure("DESCRIBE $r->table"),'Field'),'field::',''); return $z;};
-            if($l<4){$i=$this->adjure("DESCRIBE $r->table"); foreach($i as $o){if($o->Field===$r->field){$z=$o;break;}}; return $z;};
+            $x=swap($x,'.','/'); $p=frag(trim($x,'/'),'/');
+            $x=['dbase','table','field']; if($l>0){lpop($x);}; if($l>1){lpop($x);};
+            foreach($p as $k => $v){$r->{$x[$k]}=$v;}; $l+=span($p);
          };
 
-         expect::text($x,2); $x=swap($x,'.','/'); $p=frag(trim($x,'/'),'/');
-         $x=['dbase','table','field']; foreach($p as $k => $v){$r->{$x[$k]}=$v;};
-         $l=(span($r)-1); if($l<0){$l=0;}; return $this->descry('*',$l,$r);
+
+         if($l<1)
+         {
+            $z=unbury($this->adjure("SHOW DATABASES"),"Database",['information_schema','mysql','performance_schema']);
+            if($tm){$z=padded($z,'dbase::','');}; return $z;
+         };
+
+         if($l<2)
+         {
+            $dt=unbury($this->adjure("SHOW TABLES"),"Tables_in_$b"); if($tm){$dt=padded($dt,'table::','');};
+            $sp=unbury($this->adjure("SHOW PROCEDURE STATUS where Db = \"$b\""),'Name'); if($tm){$sp=padded($sp,'sproc::','');};
+            $fn=unbury($this->adjure("SHOW FUNCTION STATUS where Db = \"$b\""),'Name'); if($tm){$fn=padded($fn,'funct::','');};
+            $z=concat($dt,$sp); $z=concat($z,$fn); return $z;
+         };
+
+         if($l<3){$z=unbury($this->adjure("DESCRIBE $r->table"),'Field'); if($tm){$z=padded($z,'field::','');}; return $z;};
+         if($l<4){$i=$this->adjure("DESCRIBE $r->table"); foreach($i as $o){if($o->Field===$r->field){$z=$o;break;}}; return $z;};
       }
 
 
@@ -198,15 +205,16 @@ namespace Anon;
 
       function insert($x,$t=null)
       {
-         if(!$this->link||!$t)
+         if(!$this->link){$this->vivify();};
+
+         if(!$t)
          {
-            if(isAsso($x)){$x=knob($x,U);}; if(!isKnob($x)){fail('expecting :scal: or :tron:');};
-            if(!isWord($x->using)){fail('expecting `using` as :word:');}; $t=$x->using; if(!$this->link){$this->vivify();};
-            $d=$this->descry($t); if(!$d){fail("table `$t` is undefined");}; $l=keys($d->cols); $this->{":$t:"}=$l; $w=$x->write;
-            $z=knob(['done'=>0,'last'=>0]); if(span($w)<1){return $z;}; expect::{'tupl tron scal'}($w);
+            if(isAsso($x)){$x=knob($x,1);}; if(!isKnob($x)){fail('expecting :asso: or :knob:');}; $t=$x->using;
+            if(!isWord($t)){fail('expecting value of `using` as word');return;};
+            $l=$this->descry($t); $this->{":$t:"}=$l; $w=$x->write; $z=knob(['done'=>0,'last'=>0]); if(span($w)<1){return $z;};
             if(isNuma($w)&&!isNuma($w[0])&&!isAsso($w[0])&&!isKnob($w[0])){$w=[$w];};
-            if(!isNuma($w)){$w=[$w];}; $z=knob(['deed'=>'INSERT','done'=>0,'last'=>0]); $this->mean->tabl=$x->using;
-            foreach($w as $i){$r=$this->insert($i,$x->using); $z->done++; $z->last=$r->last;}; $this->pacify(); return $z;
+            if(!isNuma($w)){$w=[$w];}; $z=knob(['deed'=>'INSERT','done'=>0,'last'=>0]); $this->mean->tabl=$t;
+            foreach($w as $i){$r=$this->insert($i,$t); $z->done++; $z->last=$r->last;}; $this->pacify(); return $z;
          }
 
          if(isNuma($x))
@@ -215,8 +223,9 @@ namespace Anon;
          };
 
          $ref=[]; $k=keys($x); $v=vals($x); $c=implode($k,', '); $sql="INSERT INTO $t ($c) VALUES"; foreach($v as $vk => $vv)
-         {$n=($k[$vk]); if(!isText($vv)&&!isNumr($vv)){$vv=tval($vv);}; $vr=":{$n}_write"; $ref[$vr]=$vv; $v[$vk]=$vr;};
-         $v=implode($v,', '); $sql.=" ($v)"; $r=$this->adjure($sql,$ref); if($r){return $r;}; return knob(['done'=>0,'last'=>0]);
+         {if(isText($vv)){$vv=mysqli_real_escape_string($this->link,$vv); $vv="'{$vv}'";}else{$vv=tval($vv);}; $v[$vk]=$vv;};
+         $v=implode($v,', '); $sql.=" ($v)"; $r=$this->adjure($sql,$ref); $z=knob(['done'=>0,'last'=>0]);
+         if($r){$z->done=1; $z->last=$r;}; return $z;
       }
 
 
@@ -394,7 +403,12 @@ namespace Anon;
 
          $x=$q->using; foreach($x as $k => $v){if(!isWord($v)){fail('expecting `using` as array of strings');}; $x[$k]=swap($v,':',' AS ');};
          $sql.=implode($x,', '); $sql.=' SET '; $z=[]; $this->mean->tabl=implode($x,', '); unset($x,$k,$v);
-         foreach($q->write as $k => $v){if(!isText($v)&&!isNumr($v)){$v=tval($v);}; if(isText($v)){$v="'$v'";}; $z[]="$k = $v";};
+         if(!$this->link){$this->vivify();};
+         foreach($q->write as $k => $v)
+         {
+            if(isText($v)){$v=mysqli_real_escape_string($this->link,$v); $v="'$v'";}
+            else{$v=tval($v);};  $z[]="$k = $v";
+         };
          $sql.=implode($z,', ');
 
          if($q->where)
@@ -410,14 +424,32 @@ namespace Anon;
          };
 
          if($q->limit){$x=$q->limit; $sql.=" LIMIT $x";};  //$sql.=";";
-         $r=$this->adjure($sql); $this->pacify(); return $r;
+         $r=$this->adjure($sql); $this->pacify(); if(!$r&&isNumr($r)){$r=true;};
+         $z=knob(['done'=>$r]); return $z;
       }
 
 
 
       function delete($a=null)
       {
-         $i=$this->mean; $l=$i->levl; $r=$i->refs; if(isAsso($a)){$a=knob($a,U);}; // prep
+         $i=$this->mean; $l=$i->levl; $r=$i->refs; if(isAsso($a)){$a=knob($a,1);}; // prep
+         $z=knob(['done'=>null]); $opr=padded((explode(' ',EXPROPER)),' ');
+
+         if(isKnob($a)&&$a->using&&$a->where)
+         {
+            if(!isNuma($a->where)){$a->where=[$a->where];};
+            $sql="DELETE FROM $a->using WHERE "; $r=null;
+            foreach($a->where as $k => $v)
+            {
+               $o=stub($v,$opr); if(!$o||(strlen($o[0])<1)||(strlen($o[2])<1)){fail('invalid `where` expression');}; $l=trim($o[0]);
+               $r=trim($o[2]); $o=$o[1]; if(($o===' ~ ')&&(($r[0]==='*')||(substr($r,-1,1)==='*'))){$o=' LIKE ';$r=swap($r,'*','%');};
+               $x=":{$l}_where"; $ref["$x"]=unwrap($r);
+               $q->where[$k]="{$l}{$o}{$r}";
+            };
+            $sql.=implode($q->where,' AND ');
+            $r=$this->adjure($sql); if(!$r&&isNumr($r)){$r=true;}; $z->done=$r;
+            return $z;
+         };
 
          if(isKnob($a))
          {
