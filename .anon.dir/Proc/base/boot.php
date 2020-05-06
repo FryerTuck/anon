@@ -377,8 +377,6 @@ namespace Anon;
    if(($tmn-$ldb)>$dbs){require(path('/Proc/base/keep.php')); upkeep($dbs,$ldb,$tmn);}; unset($dbs,$ldb,$tmn);
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
-// path::make('/Proc/dcor/zico.woff',decode::b64(pget('/Proc/dcor/icon.fnt')));
-// done('!');
 
 
 # cond :: flow : serve configured shortcuts .. tighten security .. if facing GUI -then boot the GUI

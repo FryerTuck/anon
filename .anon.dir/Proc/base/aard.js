@@ -28,9 +28,10 @@ const sesn = function(a)
 ({USER:'{:SESNUSER:}',CLAN:'{:SESNCLAN:}',HASH:'{:SESNHASH:}'});
 
 const script=function(p,f, n){n=document.createElement('script'); n.src=`${p}`; n.onload=f; document.head.appendChild(n);};
+const badCfg='{:badCfg:}';
+
 (function(s,c)
 {
-   // Cookies.set('{:SESNHASH:}','...');
    document.cookie=`{:SESNHASH:}=...;domain=${HOSTNAME};path=/`;
    s=HOSTNAME.split('.'); c=location.host.split('.'); if((s.length<3)||(c.length<3)){wack();return};
    s.shift(); s=s.join('.'); c.shift(); c=c.join('.');if((location.host!=s)&&(c!=s)){wack();return};
