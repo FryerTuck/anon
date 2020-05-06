@@ -37,5 +37,11 @@
    $r=__DIR__; chdir($r); $_SERVER['ROOTPATH']=$r; $c="$r/.anon.dir"; $_SERVER['COREPATH']=$c;
    if(!is_readable("$c/Proc/base/aard.php")){harakiri("framework structure compromised, check permissions, or re-install");}; // YOU HAVE DIED
 
+   ini_set('expose_php',false);
+   ini_set('short_open_tag',true);
+   ini_set('display_errors',true);
+   ini_set('max_execution_time',60);
+   ini_set('default_charset','UTF-8');
+
    unset($m,$r,$c); require ($_SERVER['COREPATH'].'/Proc/base/aard.php'); // whew .. made it out of "the mud" .. now we face "the swamp"
 # ---------------------------------------------------------------------------------------------------------------------------------------------

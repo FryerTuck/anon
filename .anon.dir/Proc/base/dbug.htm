@@ -14,6 +14,11 @@
             padding:0px; margin:0px;
          }
 
+         body
+         {
+            background-size:cover;
+         }
+
          .nonhuman
          {
             display:inline-block; position:absolute;
@@ -187,6 +192,7 @@
       // --------------------------------------------------------------------------------------------------------
          !function(){function e(e){this.message=e}var t="undefined"!=typeof exports?exports:"undefined"!=typeof self?self:$.global,r="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";e.prototype=new Error,e.prototype.name="InvalidCharacterError",t.btoa||(t.btoa=function(t){for(var o,n,a=String(t),i=0,f=r,c="";a.charAt(0|i)||(f="=",i%1);c+=f.charAt(63&o>>8-i%1*8)){if(n=a.charCodeAt(i+=.75),n>255)throw new e("'btoa' failed: The string to be encoded contains characters outside of the Latin1 range.");o=o<<8|n}return c}),t.atob||(t.atob=function(t){var o=String(t).replace(/[=]+$/,"");if(o.length%4==1)throw new e("'atob' failed: The string to be decoded is not correctly encoded.");for(var n,a,i=0,f=0,c="";a=o.charAt(f++);~a&&(n=i%4?64*n+a:a,i++%4)?c+=String.fromCharCode(255&n>>(-2*i&6)):0)a=r.indexOf(a);return c})}();
       // --------------------------------------------------------------------------------------------------------
+         window.LDD=0;
       </script>
    </head>
    <body>
@@ -196,8 +202,8 @@
          </form>
          <a href="{:(GAGROBOT):}" rel="nofollow">contacts</a>
          <div id="prefetch">
-            <img id="wal1" src="/User/dcor/wal1.jpg" />
-            <img id="anm1" src="/User/dcor/anm1.gif" />
+            <img id="wal1" src="/User/dcor/wal1.jpg" onload="window.LDD++" />
+            <img id="anm1" src="/User/dcor/anm1.gif" onload="window.LDD++" />
          </div>
       </div>
 
@@ -340,7 +346,7 @@
          {
             a=Select('#anm1').src; w=Select('#wal1').src;
             document.body.style.backgroundImage=('url("'+a+'")');
-            setTimeout(function(){document.body.style.backgroundImage=('url("'+w+'")');},Math.rand(600,3000));
+            setTimeout(function(){document.body.style.backgroundImage=('url("'+w+'")');},Math.rand(900,3000));
          };
 
 
@@ -349,12 +355,13 @@
             data:'{:(DBUGDATA):}',
             dump:'{:(DUMPMESG):}',
 
-            fail:function(n, dd)
+            fail:function(n, dd,fd)
             {
-               Select('#'+n).style.display='inline-block'; dd=this.data; if(!dd.clan){return};
-               if(n=='auto'){dump('details hidden for '+dd.user+' ('+dd.clan+')');return;};
-               if(dd.clan.inexOf('geek')<0){return}; if((n=='hack')||(dd.name=='Usage')){slap();};
-               document.body.style.backgroundImage=('url("'+Select('#wal1').src+'")');
+               dd=this.data; fd=(dd.mesg&&((dd.mesg.indexOf("Failed dependency")>-1)||(n=="epic")));
+               Select('#'+n).style.display='inline-block'; if(!dd.clan&&!fd){return};
+               if((n=='auto')&&!fd){dump('details hidden for '+(dd.user||"anonymous")+' ('+(dd.clan||"surfer")+')');return;};
+               if(((dd.clan||"").indexOf('geek')<0)&&!fd){return}; if((n=='hack')||(dd.name=='Usage')||fd){slap();};
+               // document.body.style.backgroundImage=('url("'+Select('#wal1').src+'")');
                if(n=='hack'){console.error('stop breaking sh!t');return};
             },
 
@@ -372,7 +379,7 @@
                dd=dbug.data; try{dd=atob(dd); if(Select('#'+dd)){dbug.fail(dd);return}}catch(e){dbug.fail('hack');return;}; // direct or hack
                try{dd=JSON.parse(dd);}catch(e){dbug.fail('hack');return;}; // invalid dbug data
                dk=['name','mesg','file','line','stak','user','clan']; dk.forEach(function(k){if(!dd[k]){df='hack'}}); // validate dbug data
-               dump(dd);
+               dump(dd); dbug.data=dd;
                if((dd.name=='Boot')&&Select('#'+dd.mesg)){dbug.fail(dd.mesg);return;};
                if(df){dbug.fail('hack');return;}; // invalid dbug data
                if(dd.clan.indexOf('geek')<0){dbug.fail('auto');return;}; // not privileged to see error details
@@ -380,11 +387,14 @@
             },
          }
 
+         var tmi=function(){setTimeout(function(){dbug.init();},2000);};
 
-         if(window.addEventListener){window.addEventListener("load",dbug.init,false);}
-         else if(window.attachEvent){window.attachEvent("onload",dbug.init);}
-         else if(document.readyState == "complete"){dbug.init();}
-         else{window.onload = dbug.init};
+         var tmr=setInterval(function()
+         {
+            if(window.LDD>1){clearInterval(tmr); clearTimeout(tmo); tmi()};
+         },50);
+
+         var tmo=setTimeout(function(){clearInterval(tmr); tmi();},8000);
       </script>
    </body>
 </html>

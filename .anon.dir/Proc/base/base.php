@@ -255,7 +255,7 @@ namespace Anon;
 
       static function taskByPath($a)
       {
-         if(!isPath($a)){return;}; $h='/Task/data'; $l=pget($h); $r=null;
+         if(!isPath($a)){return;}; $h='/Task/data'; $l=pget($h); if(!$l){pset("$h/");}; $r=null;
          foreach($l as $i){$p=pget("$h/$i/workPath"); if($p&&isin($a,$p)){$r=$i;break;}};
          return $r;
       }

@@ -272,11 +272,12 @@ namespace Anon;
 
 # func :: spuf : simple http-request .. can be used for spoofing .. or not .. using a proxy is better for REMOTE_ADDR, blessed be the ignorant
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   function spuf($uri,$uas=null,$ref=null)
+   function spuf($uri,$uas=null,$ref=null,$tmo=12)
    {
       if(!is_string($uri)){return;}; if(strpos($uri,'http')===false){return;}; if(!isee('curl')){return;}; $ipa=envi('USERADDR');
       if(!$uas){$uas=envi('USER_AGENT');}; if(!$ref){$ref=envi('REFERER'); if(!$ref){$ref='http://example.com/index.html';}};
-      $o=array(CURLOPT_RETURNTRANSFER=>1,CURLOPT_SSL_VERIFYPEER=>false,CURLOPT_URL=>$uri,CURLOPT_USERAGENT=>$uas,CURLOPT_REFERER=>$ref);
+      $o=[CURLOPT_RETURNTRANSFER=>1,CURLOPT_SSL_VERIFYPEER=>false,CURLOPT_URL=>$uri,CURLOPT_USERAGENT=>$uas,CURLOPT_REFERER=>$ref,
+      CURLOPT_CONNECTTIMEOUT=>4,CURLOPT_TIMEOUT=>$tmo];
       $c=curl_init(); curl_setopt_array($c,$o); curl_setopt($c,CURLOPT_HTTPHEADER,array("REMOTE_ADDR: $ipa", "HTTP_X_FORWARDED_FOR: $ipa"));
       $r=curl_exec($c); $e=null; if(!$r){$x=curl_error($c); if($x){$e=$x;};}; curl_close($c);
       if($e){return "FAIL :: $e";}; return $r;
@@ -431,8 +432,8 @@ namespace Anon;
 
       header("HTTP/1.1 $c $t"); if(!$g){print_r($z); flush(); exit;}; if(!$p){die("FAIL :: $c : $m");}; $h=skey();
 
-      if(!isee('/Proc/temp/sesn')){$c=424; $m='Failed Dependency - readable temp.sesn'; $f=__FILE__; $l=__LINE__;}
-      elseif(!is_writable(isee('/Proc/temp/sesn'))){$c=417; $m='Expectation Failed - writable temp.sesn'; $f=__FILE__; $l=__LINE__;}
+      if(!isee('/Proc/temp/sesn')){pset('/Proc/temp/sesn/');};
+      if(!is_writable(isee('/Proc/temp/sesn'))){$c=417; $m='Expectation Failed - writable temp.sesn'; $f=__FILE__; $l=__LINE__;}
       else
       {
          if(!$h){$h=mksesn($u); kuki($h,'...');}
@@ -537,7 +538,9 @@ namespace Anon;
    if($s){$s="$c/Proc/temp/sesn/$s/USER"; if(file_exists($s)){$u=file_get_contents($s);}};
    if(!$u){$u='anonymous';}; $_SERVER['USERNAME']=$u; $_SERVER['USERPATH']="$c/User/data/$u/home";
 
-   $q=envi('URL');
+   $q=envi('URL'); $dbwp='/User/dcor/wal1.jpg'; $dbbs='/User/dcor/anm1.gif';
+   if((strpos($q,$dbwp)!==false)&&isee($dbwp)){header('Content-Type: image/jpeg'); readfile(isee($dbwp)); exit;};
+   if((strpos($q,$dbbs)!==false)&&isee($dbbs)){header('Content-Type: image/gif'); readfile(isee($dbbs)); exit;}; unset($dbwp,$dbbs);
    if((strlen($q)>8)&&((substr($q,-7,7)==='.js.map')||(substr($q,-8,8)==='.css.map'))){die('');}; unset($q); // hands off!!
    $b=cbot(true); // check for bad robot .. if facing bad-robot then bot is "served" and the process exits here ... rinse and repeat
 
@@ -571,11 +574,12 @@ namespace Anon;
    if((envi('USER_AGENT')==='SYS:Verify-SSL')&&(envi('SCHEME')==='https')){die('OK');}; // STILL ALIVE .. we took an introspection trip
    if(envi('SCHEME')!=='https')
    {
-      $a='SYS:Verify-SSL'; if(envi('USER_AGENT')===$a){die('?');}; $h=envi('HOST'); $p=("https://$h"); $r=spuf($p,$a,$h);
+      $a='SYS:Verify-SSL'; if(envi('USER_AGENT')===$a){die('?');}; $h=envi('HOST'); $p=("https://$h"); $r=spuf($p,$a,$h,3);
       if($r==='OK'){$p=($p.envi('QUERY_STRING')); header("Location: $p"); exit;}; // continue our journey on our new found sense of security
-      if(strpos($r,'Could not resolve')!==false){$q=spuf("http://$h",$a,$h); if($q!=='?'){halt(500,'epic');}}; // DIED .. invalid host config
+      if(strpos($r,'Could not resolve')!==false){$q=spuf("http://$h",$a,$h,3); if($q!=='?'){halt(500,'epic');}}; // DIED .. invalid host config
+      if(strpos($r,'timed out')!==false){halt(500,'epic');}; // YOU HAVE DIED .. missing/invalid SSL config
       if((strpos($r,'SSL')!==false)&&(strpos($r,'not match')!==false)){halt(500,'epic');}; // YOU HAVE DIED .. broken SSL certificate
-      halt(500,$r);  // YOU HAVE DIED ... our journey ended because we are too insecure ... invalid SSL
+      halt(500,"SSL check ~ $r");  // YOU HAVE DIED ... our journey ended because we are too insecure ... invalid SSL
    };
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -592,7 +596,7 @@ namespace Anon;
 
 # dbug :: path : required for expected functionality
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   if(!isee('/Proc/temp/sesn')){halt(424,'Failed Dependency - readable temp.sesn');};  // YOU HAVE DIED
+   if(!isee('/Proc/temp/sesn/')){pset('/Proc/temp/sesn/');}; // create if not exist
    if(!is_writable(isee('/Proc/temp/sesn'))){halt(417,'Expectation Failed - writable temp.sesn');};   // YOU HAVE DIED
    if(!isee('/Proc/base/boot.php')){halt(424,'Failed Dependency - boot');}; // YOU HAVE DIED
 # ---------------------------------------------------------------------------------------------------------------------------------------------

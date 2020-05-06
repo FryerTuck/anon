@@ -80,7 +80,9 @@ namespace Anon;
       {
          if(!$user){$user=user('name'); $clan=user('clan'); $face=envi('INTRFACE');}; $udef='?'; $pfat=''; $task=[];
          if(isin($face,['DPR','SSE'])||!isin($clan,['work','sudo'])){return;}; $npth=NAVIPATH; $lgfn=date("Y-m-d"); $vars=knob($_POST);
-         if(isin(['/Proc/enhook','/','/Proc/busy.htm'],$npth)){return;}; $data=crud("sqlite::/Time/data/$lgfn.sdb");
+         if(isin(['/Proc/enhook','/','/Proc/busy.htm'],$npth)){return;};
+         if(!isee('/Time/data/')){pset('/Time/data/');}; // TODO :: this needs to be done elsewhere
+         $data=crud("sqlite::/Time/data/$lgfn.sdb");
          $arg=$vars->args; if(!is_array($arg)||!isset($arg[0])){$arg=null;};
          $wpth=($vars->purl?$vars->purl:($vars->path?$vars->path:$vars->trgt)); $nt=find::taskByPath($npth); $wt=find::taskByPath($wpth);
          if(!$wpth&&$arg){$a=$arg[0]; $wpth=(rstub($npth,"/$a")?((isset($arg[1])?$arg[1]:null)):$a);}; if($nt){$task[]=[$nt,$npth,$wpth];};

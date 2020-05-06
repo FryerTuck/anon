@@ -12,9 +12,8 @@ namespace Anon;
 
 # dbug :: path : expected files
 # ---------------------------------------------------------------------------------------------------------------------------------------------
+   if(!isee('/Proc/vars/lastDbug')){pset('/Proc/vars/lastDbug','0');};
    depend('F:/Proc/base/dbug.htm','WF:/Proc/vars/lastDbug','WF:/User/conf/inactive','F:/Proc/base/abec.php','F:/Proc/base/base.php');
-   // if(!isee('/Proc/dbug.htm')||!isee('/Proc/vars/lastDbug')||!is_writable(path('/Proc/vars/lastDbug'))){halt(424,'Failed Dependency - dbug');};
-   // if(!isee('/User/conf/inactive')){halt(424,'Failed Dependency - dbug');}; // NB
    if(NAVIPATH===DBUGPATH){$r=pget(DBUGPATH); $r=str_replace('{:(TECHMAIL):}',TECHMAIL,$r); print_r($r); flush(); die();}; // must fail nicely
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 

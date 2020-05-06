@@ -251,30 +251,30 @@ namespace Anon;
 
       static function exists($p)
       {
-         if(!is_string($p)){return;}; $d=self::$dir; $h=sha1($p); $p=path("$d/$h"); if(!is_link($p)){return false;};
-         $a=aged($p); if($a<self::$max){return true;}; if(!is_link($p)){return false;};
+         if(!is_string($p)){return;}; $d=self::$dir; $h=sha1($p); $p="$d/$h"; if(!file_exists($p)){return false;};
+         $a=aged($p); if($a<self::$max){return true;}; if(!file_exists($p)){return false;};
          try{deFail(); unlink($p); enFail();}catch(\Exception $e){return false;}; return false;
       }
 
 
       static function create($p,$h=null)
       {
-         if(!$h){if(!is_string($p)){return;}; if(self::exists($p)){return false;}; $h=sha1($p); $d=self::$dir; $p=path("$d/$h");}
-         $m=umask(); umask(0); symlink(PROCHASH,$p); umask($m); return true;
+         if(!$h){if(!is_string($p)){return;}; if(self::exists($p)){return false;}; $h=sha1($p); $d=self::$dir; $p="$d/$h";}
+         $m=umask(); umask(0); file_put_contents($p,PROCHASH); umask($m); return true;
       }
 
 
       static function awaits($p,$m=true)
       {
-         if(!is_string($p)){return;}; $h=sha1($p); $d=self::$dir; $t=path("$d/$h");
+         if(!is_string($p)){return;}; $h=sha1($p); $d=self::$dir; $t="$d/$h";
          while(self::exists($p)){wait(10);}; $r=false; if($m){$r=self::create($t,1);}; return $r;
       }
 
 
       static function remove($p)
       {
-         if(!is_string($p)){return;}; $d=self::$dir; $h=sha1($p); $p=path("$d/$h"); if(!is_link($p)){return true;};
-         $d=readlink($p); if($d===PROCHASH){unlink($p); return true;}; return false;
+         if(!is_string($p)){return;}; $d=self::$dir; $h=sha1($p); $p="$d/$h"; if(!file_exists($p)){return true;};
+         $d=file_get_contents($p); if($d===PROCHASH){unlink($p); return true;}; return false;
       }
    }
 

@@ -447,9 +447,9 @@
    {
       if(!rt){rt=1}; slf=this; if(!!this.done[fp]){cb(this.done[fp]);return}; // already loaded
 
-      tick.after(500,()=>
+      tick.after(1000,()=>
       {
-         if(rt>24){alert("check your internet connection, then hit refresh");return};
+         if(rt>12){alert("check your internet connection, then hit refresh");return};
          if(!slf.rtrn[fp]||!slf.done[fp]){loadFont(fp,cb,(rt+1));return};
          cb(slf.done[fp]);
       });

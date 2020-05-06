@@ -15,6 +15,7 @@
 /Task/vars/*
 /Task/conf/autoMail
 /Time/data/*
+!/Time/data/defn.php
 /User/data/*
 /User/vote/*
 !/User/data/anonymous/*
