@@ -158,7 +158,7 @@
       if(Busy.node){Busy.kill(); return};
       let mnu=select('#AnonDropMenu'); if(mnu){remove(mnu);return};
       let mdl=select('modal'); if(mdl){vals(mdl,-1).exit();return};
-      AnonPanl.hide();
+      // AnonPanl.hide();
    })});
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
