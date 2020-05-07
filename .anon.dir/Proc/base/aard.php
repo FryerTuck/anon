@@ -518,9 +518,6 @@ namespace Anon;
 
 # dbug :: vars : USERADDR - ip address .. if no ip then the request is bogus .. get rid of unsupported requests
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   $sd=explode('.',envi('HOST')); $sd=array_shift($sd); $bn=shaved(envi('BASE'),'/');
-   $bp=explode('/',shaved(envi('URI'),'/')); $rb=array_shift($bp); $bp=implode('/',$bp);
-   if(($sd===$bn)&&($bn===$rb)){$h=envi('HOST'); $q=envi('QUERY_STRING'); $p=("https://$h/$bp{$q}"); header("Location: $p"); exit;};
    unset($sd,$bn,$bp,$rb); $l=explode(' ','CLIENT_IP FORWARDED_FOR FORWARDED REMOTE_ADDR'); $y=0; $s=count($l); for($i=0; $i<$s; $i++)
    {$v=$l[$i]; $x="X_$v"; $z="$v"; if(envi($x)){$y=$x;}elseif(envi($z)){$y=$z;}elseif(envi($v)){$y=$v;}else{$y=0;}; if($y){break;};};
    if(!$y){header("HTTP/1.1 400 Bad Request"); die();}; $_SERVER['USERADDR']=envi($y);  unset($l,$y,$s,$i,$v,$x,$z);
