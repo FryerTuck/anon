@@ -42,7 +42,7 @@
 </div>
 
 <script>
-   extend(MAIN)({Busy:entity()});
+   Object.defineProperty(window,'Busy',{writable:false,enumerable:false,configurable:false,value:(new EventTarget())});
    Busy.base = {skin:document.getElementById('busyPane').getAttribute('style'), gear:document.getElementById('busyPane').innerHTML};
    Busy.node = null;
    Busy.jobs = {};
@@ -94,14 +94,14 @@
    {
       if(!!Busy.node){Busy.node.style.opacity=1; Busy.edit(j,(v||0)); return}; var p=document.createElement('div'); p.id='busyPane';
       p.setAttribute('style',Busy.base.skin); p.innerHTML=Busy.base.gear; document.body.appendChild(p);
-      Busy.node=document.getElementById('busyGear'); let s=Busy.size; if(isNumr(s)){s+='rem'};
+      Busy.node=document.getElementById('busyGear'); let s=Busy.size; if((s*1)==s){s+='rem'};
       Busy.node.style.width=s; Busy.node.style.height=s; Busy.node.style.opacity=1; Busy.node.setAttribute('tabindex',-1);
       Busy.node.tabindex=-1; Busy.node.style.outline='none'; Busy.actv=1; Busy.edit(j,(v||0));
    };
 
    Busy.kill = function()
    {
-      Busy.jobs={}; Busy.dead=true; Busy.fail=false; Busy.node=VOID;
+      Busy.jobs={}; Busy.dead=true; Busy.fail=false; Busy.node=(function(){}());
       let p=document.getElementById('busyPane'); if(!p){return}; p.parentNode.removeChild(p);
    };
 

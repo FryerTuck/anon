@@ -28,14 +28,13 @@ const sesn = function(a)
 ({USER:'{:SESNUSER:}',CLAN:'{:SESNCLAN:}',HASH:'{:SESNHASH:}'});
 
 const script=function(p,f, n){n=document.createElement('script'); n.src=`${p}`; n.onload=f; document.head.appendChild(n);};
-const badCfg='{:badCfg:}';
+const bz=function(p){Busy.edit('/anonBoot',p);};
 
 (function(s,c)
 {
    document.cookie=`{:SESNHASH:}=...;domain=${HOSTNAME};path=/`;
    s=HOSTNAME.split('.'); c=location.host.split('.'); if((s.length<3)||(c.length<3)){wack();return};
    s.shift(); s=s.join('.'); c.shift(); c=c.join('.');if((location.host!=s)&&(c!=s)){wack();return};
-   script('/Proc/base/abec.js',()=>{script('/Proc/base/base.js',()=>
-   {requires(['/Proc/base/busy.htm'],()=>{script('/Proc/libs/opentype/opentype.min.js',()=>
-   {Busy.edit('/anonBoot',20); script('/Proc/base/boot.js')})})})});
+   bz(10); script('/Proc/base/abec.js',()=>{bz(20); script('/Proc/base/base.js',()=>
+   {bz(30); script('/Proc/libs/opentype/opentype.min.js',()=>{bz(40); script('/Proc/base/boot.js')})})});
 }());

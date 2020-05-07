@@ -18,7 +18,7 @@ Using `mailroom@{:HOSTNAME:}` as example, "mailroom" will be the `username` part
 
 Take care when you construct your own connection string as above, here's why:
 - every special character in that text has special meaning in a URL, no spaces allowed
-- you cannot use the `@` symbol in your password, anything else (except white-space) is fine
+- you cannot use the `@` -or `:` symbols in your password, anything else (except white-space) is fine
 - the password must be the exact password for this existing email account
 
 This URL standard is used everywhere in protocols such as FTP, HTTP, WS, etc.

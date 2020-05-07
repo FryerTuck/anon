@@ -351,9 +351,7 @@ namespace Anon;
       $h=sesn('HASH'); $v=knob(['WACKMESG'=>base64_encode(pget('/Proc/info/hack.inf'))]); $p='/Proc/base/aard.js'; $d=[];
       if(!$u){$u=sesn('USER');}; $v->SESNUSER=$u; $v->SESNCLAN=pget("/User/data/$u/clan");
       foreach($_COOKIE as $cn => $cv){if(test($cn,'/^[a-z0-9]{40}$/')&&($cn!==$h)){kuki($cn,VOID);}};
-      $c=pget('/User/data/master/pass'); if(!$c){wack();}; if(password_verify('0m1cr0n!',$c)){$d[]='editRootPass';};
-      $c=pget('/Proc/conf/autoMail'); if(!isin($c,'mail://')||!isin($c,'@')||!isin($c,'.')){$d[]='confAutoMail';}; // debug automail
-      $r=base64_encode(tval($d)); $v->badCfg=$r; $c=import($p,$v); $c=base64_encode(strrev($c)); $m=4000;
+      $c=import($p,$v); $c=base64_encode(strrev($c)); $m=4000;
       $f="after encoding, `$p` exceeds maximum cookie size of $m bytes .. technically, it's 4096, but there are overhead issues";
       if(span($c)>$m){fail::usage($f);}; if($sc){kuki($h,$c);return true;}; return $c;
    }
@@ -373,8 +371,11 @@ namespace Anon;
 
 # dbug :: keep : housekeeping
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   $dbs=(pget('/User/conf/inactive')*1); $ldb=(pget('/Proc/vars/lastDbug')*1); $tmn=time();
-   if(($tmn-$ldb)>$dbs){require(path('/Proc/base/keep.php')); upkeep($dbs,$ldb,$tmn);}; unset($dbs,$ldb,$tmn);
+   if(!facing('DPR')&&!facing('BOT'))
+   {
+      $dbs=(pget('/User/conf/inactive')*1); $ldb=(pget('/Proc/vars/lastDbug')*1); $tmn=time();
+      if(($tmn-$ldb)>$dbs){require(path('/Proc/base/keep.php')); upkeep($dbs,$ldb,$tmn);}; unset($dbs,$ldb,$tmn);
+   }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -387,7 +388,8 @@ namespace Anon;
    {
       guiStrap();
       //ekko::head(['Referrer-Policy'=>'origin','cache'=>false,'cookies'=>true]); // send bootStrap headers
-      $r=import('/Proc/base/aard.htm',['botHoney'=>conf('Proc/badRobot')->lure]);
+      $v=['botHoney'=>conf('Proc/badRobot')->lure,'busyGear'=>base64_encode(pget('/Proc/base/busy.htm'))]; 
+      $r=import('/Proc/base/aard.htm',$v);
       echo($r); done(); // send BootStrap GUI keeping headers intact
    };
 
@@ -409,7 +411,13 @@ namespace Anon;
          $d=$d['client']; if(!$d){continue;}; if(isText($d)){$d=[$d];}; if(!isNuma($d)){continue;};
          foreach($d as $f){if(!isText($f)){fail("invalid `autoboot` config in: `$p/autoboot`");}; $r[]=$f;};
       };
-      finish(NAVIPATH,['bootList'=>tval($r)]);
+
+      $v=knob(['bootList'=>tval($r)]); unset($d); $d=[];
+      $c=pget('/User/data/master/pass'); if(!$c){wack();}; if(password_verify('0m1cr0n!',$c)){$d[]='editRootPass';};
+      $c=pget('/Proc/conf/autoMail'); if(!isin($c,'mail://')||!isin($c,'@')||!isin($c,'.')){$d[]='confAutoMail';}; // debug automail
+      $v->badCfg=base64_encode(tval($d));
+
+      finish(NAVIPATH,$v);
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 

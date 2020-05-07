@@ -18,6 +18,8 @@
       {:'/Proc/conf/viewConf':}
    };
 
+   const badCfg='{:badCfg:}';
+
    globVars({mime:decode.jso(`{:conf('Proc/mimeType'):}`)});
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -168,18 +170,18 @@
    listen("ready",function()
    {
       let bl=decode.JSON(('{:bootList:}'||'[]'));
-      Busy.edit('/anonBoot',40);
+      bz(50);
       requires(bl,()=>
       {
-         Busy.edit('/anonBoot',60);
+         bz(60);
          let np=location.href; render(np,(r)=>
          {
             let mv=select('#anonMainView'); mv.insert(r);
-            Busy.edit('/anonBoot',80);
+            bz(80);
             tick.after(250,()=>
             {
                signal("boot");
-               Busy.edit('/anonBoot',100);
+               bz(100);
                console.clear();
                Busy.done();
             });
