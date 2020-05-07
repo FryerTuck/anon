@@ -1,6 +1,6 @@
 #### Master Password
 
-When Anon is installed, the `master` user's password is stock-standard.
+When Anon is installed, the `master` user's default password needs to change.
 For brevity, use the following command:
 
 ```
