@@ -50,7 +50,7 @@ extend(repl)
       repl.noprom();
       repl.mumble('verifying ...'); purl('/User/runRepel/login',{args:['passwd',s.un,s.pw]},(r,b)=>
       {
-         s.un=VOID; s.pw=VOID; repl.ENV.target='exec'; b=r.body; repl.mumble(b);
+         let un=s.un; s.un=VOID; s.pw=VOID; repl.ENV.target='exec'; b=r.body; repl.mumble(b);
          if(b!=':OK:') // change failed
          {
             repl.mumble(b); f.modify({type:'text'}); f.modify({value:''}); // notify & reset
@@ -58,6 +58,7 @@ extend(repl)
          };
 
          repl.mumble('password changed successfully'); // notify the user what's happening
+         if((un=='master')&&(getBadConf()=='editRootPass')){newGui('/');return}; // needs to refresh
          repl.reprom();
       });
    },
