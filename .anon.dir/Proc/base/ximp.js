@@ -17,6 +17,7 @@
       },
 
 
+
       markdown:function(d,f)
       {
          requires
@@ -48,8 +49,17 @@
       },
 
 
+
       html:function(d,f)
       {
          f(xdom(d));
+      },
+
+
+
+      javascript:function(d,f)
+      {
+         document.head.appendChild(create({script:d}));
+         tick.after(100,f);
       },
    });

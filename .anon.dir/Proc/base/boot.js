@@ -180,9 +180,9 @@
             bz(80);
             tick.after(250,()=>
             {
+               console.clear();
                signal("boot");
                bz(100);
-               console.clear();
                Busy.done();
             });
          });

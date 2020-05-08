@@ -80,6 +80,7 @@
    const isWord = function(v,g,l){if(!test(trim(v,'_'),/^([a-zA-Z])([a-zA-Z0-9_]{1,35})+$/)){return}; return (isVoid(g)||spanIs(v,g,l))};
    const isPath = function(v,g,l){if(!test(v,/^([a-zA-Z0-9-\/\._@~$]){1,432}$/)){return FALS}; return ((v[0]=='/')&&(isVoid(g)||spanIs(v,g,l)))};
    const isJson = function(v,g,l){return (isin(['[]','{}','""'],wrapOf(v))?TRUE:FALS);};
+   const isDurl = function(v,g,l){return (isText(v,20)&&(v.indexOf('data:')===0)&&isin(v,';base64,'));};
 
    const isList = function(v,g,l)
    {
@@ -435,8 +436,10 @@
 
    const pathOf = function(v)
    {
-      if(!isText(v,2)){return}; let r=v; if(isin(r,'://')){r=r.split('://')[1]}; r=stub(r,'/'); if(!r){return};
-      r=('/'+r[2]); r=r.split('//').join('/'); r=r.split(' ').join('_'); r=r.split('?')[0]; return (isPath(r)?r:VOID);
+      if(!isText(v)){return}; let r=trim(v); if(!r){return}; if(isPath(r)){return r;}; if(r.startsWith("~")){return ("/"+r);};
+      if(!isText(v,2)){return}; r=v; if(isin(r,'://')){r=r.split('://')[1]}; r=stub(r,'/'); if(!r){return};
+      r=('/'+r[2]); r=r.split('//').join('/'); r=r.split(' ').join('_'); r=r.split('?')[0];
+      return (isPath(r)?r:VOID);
    };
 
    const argval = function(v)

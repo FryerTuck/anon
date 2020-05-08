@@ -189,7 +189,7 @@ namespace Anon;
    {
       if(!is_string($p)){return;}; if(!test($p,'/^[a-zA-Z0-9-\/\.\$~@_]{1,432}$/')){return;}; $p=str_replace('//','/',$p);
       $r=envi('ROOTPATH'); $c=envi('COREPATH'); $u=envi('USERPATH'); if(($p==='/')||($p==='.')){return $r;}; $p=rshave($p,'/');
-      if(substr($p,-1,1)==='.'){return;};
+      if(substr($p,-1,1)==='.'){return;}; if(strpos($p,'/~')===0){$p=substr($p,1);};
       if(!$r||!$c||!$u){return $p;}; if($p===''){return $r;}; if($p==='$'){return $c;}; if($p==='~'){return $u;}; // works for: ./  $/  ~/
       if((strpos($p,$u)===0)||(strpos($p,$c)===0)||(strpos($p,$r)===0)){return $p;}; $s=substr($p,0,1); $p=ltrim($p,'$/'); $p=ltrim($p,'~/');
       if($s==='$'){return "$c/$p";}; if($s==='~'){return "$u/$p";}; if($s!=='/'){return;}; $p=ltrim($p,'/'); $t=explode('/',$p); $t=$t[0];
@@ -520,7 +520,8 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    $sd=explode('.',envi('HOST')); $sd=array_shift($sd); $bn=shaved(envi('BASE'),'/');
    $bp=explode('/',shaved(envi('URI'),'/')); $rb=array_shift($bp); $bp=implode('/',$bp);
-   if(($sd===$bn)&&($bn===$rb)){$h=envi('HOST'); $q=envi('QUERY_STRING'); $p=("https://$h/$bp{$q}"); header("Location: $p"); exit;};
+   if(($sd===$bn)&&($bn===$rb)){halt(424,"Failed Dependency - RewriteRule above this subdomain must point to: $sd/.anon.php");};
+
    unset($sd,$bn,$bp,$rb); $l=explode(' ','CLIENT_IP FORWARDED_FOR FORWARDED REMOTE_ADDR'); $y=0; $s=count($l); for($i=0; $i<$s; $i++)
    {$v=$l[$i]; $x="X_$v"; $z="$v"; if(envi($x)){$y=$x;}elseif(envi($z)){$y=$z;}elseif(envi($v)){$y=$v;}else{$y=0;}; if($y){break;};};
    if(!$y){header("HTTP/1.1 400 Bad Request"); die();}; $_SERVER['USERADDR']=envi($y);  unset($l,$y,$s,$i,$v,$x,$z);
@@ -651,7 +652,7 @@ namespace Anon;
       if(isset($_GET['k'])&&($_GET['k']===$k)){$i='DPR';};
    };
 
-   $_SERVER['INTRFACE']=$i; unset($a,$h,$p,$x,$r,$b,$s,$k,$i);
+   $_SERVER['INTRFACE']=$i; defn(['USERSKEY'=>$k]); unset($a,$h,$p,$x,$r,$b,$s,$k,$i);
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 

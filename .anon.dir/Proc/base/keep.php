@@ -24,6 +24,8 @@ namespace Anon;
          if(!path::indx('/')){path::copy('/Proc/dcor/README.md','/README.md');};
       };
 
+      if(!isRepo('/')){repo::create('/'); wait(50);};
+
       if(isRepo('/'))
       {
          $h='/.anon.dir'; $l=conf('Proc/gitIgnor'); unset($i);

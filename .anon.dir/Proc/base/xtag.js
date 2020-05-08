@@ -114,18 +114,19 @@ extend(custom.domtag)
       {
          n.feedMe=function(fp,fd)
          {
-            Busy.edit(fp,0);
-            purl('/User/treeExec',{exec:'upload',path:fp,bufr:fd},(r)=>
-            {Busy.edit(fp,100); if(r.body==OK){this.update(); return}; dump(r.body);});
+            upload(pathOf(fp),fd,()=>
+            {
+               this.update();
+            });
          };
 
          n.onFeed(function(fd,fn){this.feedMe(`${repl.PWD}/${fn}`,fd);});
 
-         n.events.feed=function(fd,fn, hp)
-         {
-            hp=this.info.path; if(!isin(['fold','plug'],this.info.type)){twig(hp)};
-            this.info.root.feedMe(`${hp}/${fn}`,fd);
-         };
+         // n.events.feed=function(fd,fn, hp)
+         // {
+         //    hp=this.info.path; if(!isin(['fold','plug'],this.info.type)){twig(hp)};
+         //    this.info.root.feedMe(`${hp}/${fn}`,fd);
+         // };
       };
 
 

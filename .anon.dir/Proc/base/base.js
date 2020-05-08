@@ -173,6 +173,34 @@
 
 
 
+// func :: upload : post string-chunks to server until done, then callback is called
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const upload = function(fp,fd,cb, ts,cs,ca)
+   {
+      if(!isPath(fp)){fail(`expecting path as 1st arg`);return};
+      if(!isDurl(fd)){fail(`expecting data-URL as 2nd arg`);return};
+      if(!isFunc(cb)){fail(`expecting callback as 3rd arg`);return};
+
+      cs=12000; ts=fd.length; ca=frag(fd,cs);
+      this.send(fp,ts,ca,cb,1);
+   }
+   .bind
+   ({
+      send:function(fp,fs,da,cb,fc, dc,tb,tn,bu)
+      {
+         if(fc){Busy.edit(fp,1);}; dc=lpop(da);
+         purl(`/User/upload`,{path:fp,size:fs,data:dc},(ra)=>
+         {
+            ra=ra.body; if(ra==FAIL){fail(`failed to upload: ${fp}`);};
+            if(!isJson(ra)){dump(ra);return}; ra=decode.jso(ra); let pp=Math.floor((ra[0]/ra[1])*100);
+            Busy.edit(fp,pp); if(pp==100){cb();return;}; this.send(fp,fs,da,cb);
+         });
+      },
+   });
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 // func :: entity : creates new event emitter .. o is (optional) properties object
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const entity = function(o, r)

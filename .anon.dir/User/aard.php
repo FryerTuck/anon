@@ -210,6 +210,16 @@ namespace Anon;
 
 
 
+      static function upload()
+      {
+         $po=knob($_POST); $fp=$po->path; $ph=md5($fp); $sk=USERSKEY; $tp="/Proc/temp/sesn/$sk/$ph";
+         $rp=path($tp); $br=file_put_contents($rp,$po->data,FILE_APPEND); if(!$br){ekko(FAIL);return;};
+         $cs=filesize($rp); $ts=$po->size; if($cs<$ts){dump([$cs,$ts]);return;};
+         $fd=furl(pget($tp))->data; path::make($fp,$fd); path::void($tp); dump([$cs,$ts]);
+      }
+
+
+
       static function treeExec()
       {
          permit::face(API); $q=knob($_POST); $h=$q->path; if(!isPath($h)||isin($h,['..','./'])){done('invalid path');};
