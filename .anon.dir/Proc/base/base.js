@@ -599,7 +599,7 @@
 
 // func :: create : create DOM nodes from string, list, object .. custom nodes are defined in `/Proc/base/xtag.js`
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   const create = function(t,a,c, r,x,n)
+   const create = function(t,a,c, r,x,n,ca)
    {
       // if(MAIN.HALT){return};
       if(isList(t)){r=[]; t.forEach((o)=>{r.push(create(o,a,c))}); return r}; // list of nodes
@@ -607,22 +607,18 @@
       if(isText(t,1)){t={[t]:(a||''),contents:c}}; if(!isKnob(t)){return}; // validate
 
       a=t; t=VOID; t=keys(a)[0]; n=document.createElement(t); // new element
-      let conatr=isin(a,["contents","children","$"]);
+      ca=isin(a,["contents","$","children"]);
       if(isList(a[t])){c=a[t];} // tag value is contents
       else if(isText(a[t],2)&&((a[t][0]=='#')||(a[t][0]=='.'))) // tag value is id and/or classes
       {
          x=a[t]; delete a[t]; if(!a.class){a.class=''}; a.class=a.class.split(' '); // quick id & non/existing classes
          x.split(' ').forEach((i)=>{c=i[0]; i=i.slice(1); if(c=='#'){a.id=i; a.name=i}else{a.class.push(i)}}); // set id/classes
          a.class=a.class.join(' ').trim(); // normalized classes string - now containing `.class` if defined
-         if(conatr){c=a[conatr];};
+         c=(ca?a[ca]:VOID);
       }
-      else
-      {
-         if(isText(a[t])&&(!conatr||isVoid(a[conatr]))){c=a[t];} // tag value is contents
-         else if(conatr&&!isVoid(a[conatr])){c=a[conatr];}; // contents define explicitly
-      };
-      delete a[t]; // tag-name is not an attribute
-      if(conatr){delete a[conatr];}; // contents is not an attribute
+      else if(isText(a[t])&&(!ca||isVoid(a[ca]))){c=a[t];} // tag value is contents
+      else if(ca&&!isVoid(a[ca])){c=a[ca]}; // contents explicitly defined
+      delete a[t]; if(ca){delete a[ca]}; // tag-name and `contents` are not attributes, get rid of them
 
       let fc=a.forClans; if(!isVoid(fc)){delete a.forClans; if(!userDoes(fc)){return}}; // ignore if not for this user's clan
       // if(isKnob(a.style)){a.style.each((v,k)=>{n.style[k]=v}); delete a.style}; // style object
