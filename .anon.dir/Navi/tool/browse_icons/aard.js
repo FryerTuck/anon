@@ -41,7 +41,7 @@ extend(Anon.Navi.tool)
          if(s<1){this.insert({p:'', style:'padding:10px', contents:`nothing matched "${w}" .. try: *`});return};
 
          Busy.edit('thinking',1);
-         tick.while(()=>{return (p<100)},()=>
+         tick.until(()=>{return (p>99)},()=>
          {
             i=l.shift();
             g.insert

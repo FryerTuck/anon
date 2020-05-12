@@ -37,6 +37,22 @@
 
 
 
+/* clan :: show/hide : standardize
+/* ------------------------------------------------------------------------------------------------------------- */
+   .hide
+   {
+      display:none;
+   }
+
+   .show
+   {
+      display:block;
+   }
+/* ------------------------------------------------------------------------------------------------------------- */
+
+
+
+
 /* tags :: base : standardize
 /* ------------------------------------------------------------------------------------------------------------- */
    div
@@ -48,8 +64,6 @@
       padding:0px;
       margin:0px;
    }
-   div.show{display:block !important;}
-   div.hide{display:none !important;}
 
    table,th,tr,td
    {
@@ -60,7 +74,6 @@
       vertical-align:top;
    }
    table.show{display:table !important;}
-   table.hide{display:none !important;}
 
    iframe,object
    {
@@ -73,8 +86,6 @@
       background:transparent;
       box-sizing:border-box;
    }
-   iframe.show{display:block !important;}
-   iframe.hide{display:none !important;}
 
    pre
    {
@@ -121,8 +132,6 @@
       font-family:monospace; font-size:12px; line-height:14px;
       border:1px solid #AAA; border-radius:2px;
    }
-   textarea.show{display:block !important;}
-   textarea.hide{display:none !important;}
 
    code
    {
@@ -164,14 +173,12 @@
       margin:0px; padding:0px;
    }
    grid.show{display:table !important;}
-   grid.hide{display:none !important;}
 
    row
    {
       display:table-row !important; height:auto;
    }
    row.show{display:table-row !important;}
-   row.hide{display:none !important;}
 
    col
    {
@@ -179,7 +186,6 @@
       width:unset; height:unset;
       vertical-align:top; text-align:left;
    }
-   col.hide{display:none !important;}
    col.show{display:table-cell !important;}
    col.tiny
    {
@@ -460,8 +466,6 @@
       outline:none;
       overflow:auto;
    }
-   panl.show {display:block !important;}
-   panl.hide {display:none !important;}
 
    slab
    {
@@ -470,8 +474,6 @@
       outline:none;
       overflow:hidden;
    }
-   slab.show {display:block !important;}
-   slab.hide {display:none !important;}
 
    wrap
    {
@@ -505,6 +507,15 @@
       display:inline-block; position:relative; box-sizing:border-box;
       font-size:10px; font-style:italic;
       opacity:0.7;
+   }
+
+   page
+   {
+      display:block; position:relative;
+      box-sizing:border-box; width:100%; height:100%;
+      user-select:text !important;
+      outline:none;
+      overflow:auto;
    }
 /* ------------------------------------------------------------------------------------------------------------- */
 

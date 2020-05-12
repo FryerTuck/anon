@@ -949,6 +949,15 @@
       after:function(ws,cf){let rt = setTimeout(cf,ws); return rt},
       every:function(ws,cf){let rt = setInterval(cf,ws); return rt},
       while:function(w,c,i){let rt = setInterval((r)=>{r=w(); if(r===true){return}; clearInterval(rt); c(r)},(i||10)); return rt;},
+      until:function(w,c,l, t,s,r,n)
+      {
+         s=time(); t=setInterval(()=>
+         {
+            r=w(); if(r){clearInterval(t);return}; c();
+            if(!l){return}; n=time(); if((n-s)>l){clearInterval(t)};
+         },10);
+         return t;
+      },
    };
 
    const wait = // object
@@ -1133,6 +1142,21 @@
          if(isText(f)){f*=1}; if(!isNumr(f)||(span(f)<10)){fail('invalid timestamp');return};
          if(span(f)<13){f=(f*1000)}; if(!o){o='toGMTString'}; d=(new Date(f)); r=d[o]();
          return r;
+      },
+   });
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: (money) : tools
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   extend(MAIN)
+   ({
+      currency:function(v, r,p)
+      {
+         if(!isNumr(v)){return}; r=round(v,2); r=(r+""); if(!isin(r,".")){r+="."};
+         p=r.split("."); if(p[1].length<1){p[1]="00"}else if(p[1].length<2){p[1]+="0"};
+         r=p.join("."); return r;
       },
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------

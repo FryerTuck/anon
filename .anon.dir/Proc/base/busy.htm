@@ -1,4 +1,4 @@
-<div id="busyPane" style="position:fixed; z-index:99999999; width:100%; height:100%; top:0px; left:0px; background:none">
+<div id="busyPane" style="position:fixed; z-index:99999999; width:100%; height:100%; top:0px; left:0px; background:hsla(0,0%,100%,0.9)">
    <svg id="busyGear" viewBox="0 0 100 100" style="width:5rem; height:5rem; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);">
       <style>
          path.line
@@ -52,7 +52,7 @@
 
    if(window.self===window.top)
    {
-      Busy.base.skin=Busy.base.skin.split("background:none").join("background:hsla(0,0%,15%,0.9)");
+      Busy.base.skin=Busy.base.skin.split("background:hsla(0,0%,100%,0.9)").join("background:hsla(0,0%,15%,0.9)");
       Busy.base.gear=Busy.base.gear.split("stroke:#444;").join("stroke:#AAA;").split("fill:#444;").join("fill:#AAA;");
    };
 
@@ -97,7 +97,13 @@
 
    Busy.init = function(j,v)
    {
-      if(!!Busy.node){Busy.node.style.opacity=1; Busy.edit(j,(v||0)); return}; var p=document.createElement('div'); p.id='busyPane';
+      if(!!document.getElementById("AnonAppsMenu"))
+      {
+         Busy.base.skin=Busy.base.skin.split("background:hsla(0,0%,100%,0.9)").join("background:hsla(0,0%,15%,0.9)");
+         Busy.base.gear=Busy.base.gear.split("stroke:#444;").join("stroke:#AAA;").split("fill:#444;").join("fill:#AAA;");
+      };
+      if(!!Busy.node){Busy.node.style.opacity=1; Busy.edit(j,(v||0)); return};
+      var p=document.createElement('div'); p.id='busyPane';
       p.setAttribute('style',Busy.base.skin); p.innerHTML=Busy.base.gear; document.body.appendChild(p);
       Busy.node=document.getElementById('busyGear'); let s=Busy.size; if((s*1)==s){s+='rem'};
       Busy.node.style.width=s; Busy.node.style.height=s; Busy.node.style.opacity=1; Busy.node.setAttribute('tabindex',-1);

@@ -170,17 +170,17 @@
    listen("ready",function()
    {
       let bl=decode.JSON(('{:bootList:}'||'[]'));
-      bz(50);
+      extend(MAIN)({Anon:{}}); bz(50);
       requires(bl,()=>
       {
          bz(60);
+            console.clear();
          let np=location.href; render(np,(r)=>
          {
             let mv=select('#anonMainView'); mv.insert(r);
             bz(80);
             tick.after(250,()=>
             {
-               console.clear();
                signal("boot");
                bz(100);
                Busy.done();
