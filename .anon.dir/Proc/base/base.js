@@ -156,8 +156,9 @@
          let h=dval(this.getAllResponseHeaders()); if((h!=null)&&h.Cookies){h.Cookies=decode.jso(decode.b64(h.Cookies))};
          let r={path:this.purl,head:h,body:this.response}; this.done=100;
          if(this.status==200){pe(100,this.purl);if(this.busy&&!!select("#busyPane")){Busy.edit(this.purl,100)};};
-         if(x.silent){tick.after(250,()=>{delete server.silent.busy})};
-         if(MAIN.HALT){return}; cb(r);
+         if(x.silent){tick.after(250,()=>{delete server.silent.busy})}; if(MAIN.HALT){return};
+         if(isin(r.body,"evnt: fail\nmesg: ")){this.signal("error",r.body); if(!o.listen.error){fail(r.body);return}};
+         cb(r);
       };
 
       if(o.silent){server.silent.busy=1};
@@ -404,7 +405,7 @@
             // this.stream.listen('open',function(evnt){});
             this.stream.listen('ping',function(evnt){server.sensor.live=1});
             this.stream.listen('shut',function(evnt){server.stream.close(); server.sensor.live=0});
-            this.stream.listen('fail',function(evnt){if(MAIN.Busy){Busy.tint('red')}; fail(decode.jso(atob(evnt.data)));});
+            this.stream.listen('fail',function(evnt){fail(decode.jso(atob(evnt.data)))});
 
             this.stream.listen('error',function(evnt) // this happens on reconnect -or "connection fail", only the latter is an error
             {
@@ -475,9 +476,9 @@
    {
       if(!rt){rt=1}; slf=this; if(!!this.done[fp]){cb(this.done[fp]);return}; // already loaded
 
-      tick.after(1000,()=>
+      tick.after(8000,()=>
       {
-         if(rt>12){alert("check your internet connection, then hit refresh");return};
+         if(rt>4){alert("check your internet connection, then hit refresh");return};
          if(!slf.rtrn[fp]||!slf.done[fp]){loadFont(fp,cb,(rt+1));return};
          cb(slf.done[fp]);
       });
@@ -496,7 +497,7 @@
 
 // func :: requires : versatile preloader
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   const requires = function(l,cbfn,cbpi, s,a,slf,bzy)
+   const requires = function(l,cbfn,cbpi, s,a,slf,bzy,ztst)
    {
       // if(MAIN.HALT){return};
       if(!stak(0)){wack();return};
@@ -512,6 +513,7 @@
       if(!l||(span(l)<1)){cbfn();return}; if(!isList(l)){l=[l]}; bzy={todo:0,done:0,jobs:l,hash:md5(l.join(""))};
       if(slf.seen[bzy.hash]){cbfn();return}; slf.seen[bzy.hash]=1;
 
+
       l.each((i)=>
       {
          let p=stub(i,':'); if(p){i=p[2]; p=p[0]; a[p]=VOID}; let x=fext(i);
@@ -523,8 +525,7 @@
          {
             let n=create('script'); n.purl=i;
             n.listen('ready',function(){slf.done[this.purl]=1; bzy.done++; cbpi(this.purl);});
-            n.modify({src:i}); document.head.insert(n);
-            return;
+            n.modify({src:i}); document.head.insert(n); return;
          };
 
          if(x=='css')
@@ -581,11 +582,11 @@
       let ticr=setInterval(()=>
       {
          let tprc=Math.ceil((bzy.done/bzy.todo)*100);
-         if((typeof Busy)!="undefined"){Busy.edit(`/${bzy.hash}`,tprc)};
-         if(tprc>99){clearInterval(ticr); cbfn()};
+         if(((typeof Busy)!="undefined")&&(slf.tprc!=tprc)){Busy.edit(`/${bzy.hash}`,tprc)};
+         slf.tprc=tprc; if(tprc>99){clearInterval(ticr); slf.tprc=0; cbfn()};
       },10);
    }
-   .bind({call:{},done:{},seen:{}});
+   .bind({call:{},done:{},seen:{},tprc:0});
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -937,6 +938,7 @@
       if(!isin(keys(parser),x)){fail('no parser defined for mimeType `'+x+'`');return};
       if(!isFunc(parser[x])){fail('expecting parser extension `'+x+'` as a function');return};
       if(!isFunc(f)){fail('expecting 3rd arg as callback-function');return};
+
       return parser[x](v,f);
    };
 
@@ -1479,7 +1481,6 @@
          txt=trim(this.msg); txt=txt.split('\n'); txt.forEach((l,x)=>{txt[x]=l.trim()}); txt=txt.join('\n'); btn=[];  butn.each((v,k)=>
          {let p,t; p=stub(k,'::'); if(p){t=trim(p[0]); k=trim(p[2])}else{t='auto'}; radd(btn,{butn:`.${t}`, text:k, onclick:v})});
          if(btn.length<2){radd(btn,{butn:'', text:'Cancel', onclick:function(){this.root.exit()}})};
-
          parsed(txt,'markdown',(msg)=>
          {
             popModal({class:'AnonPopAlert', theme:this.skn, size:this.sze})

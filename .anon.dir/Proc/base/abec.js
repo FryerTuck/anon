@@ -282,12 +282,31 @@
 
 // func :: fail : trigger error
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   const fail = function(m, n,e)
+   const fail = function(m, a,n,f,l,s,p,o)
    {
-      if(isKnob(m)){if(!m.name){m.name='Usage'}; MAIN.dispatchEvent((new CustomEvent('procFail',{detail:m})));return};
-      if(!isin(m,' :: ')){m=('Usage :: '+m);}; n=stub(m,' :: '); m=n[2]; n=n[0]; e=(new Error(m)); e.name=n;
-      throw e;
+      if(MAIN.HALT){return}; MAIN.HALT=1; if(MAIN.Busy){Busy.tint('red')}; tick.after(2000,()=>{MAIN.HALT=0});
+      if(isText(m))
+      {
+          if(isin(m,"evnt: ")&&isin(m,"\nmesg: "))
+          {
+              a=m.split("\n"); lpop(a); m=stub(a[0],": ")[2]; n=stub(m,' - '); m=(n?n[2]:m); n=(n?n[0]:"Undefined");
+              f=stub(a[1],": ")[2]; l=stub(a[2],": ")[2]; a=decode.jso(atob(stub(a[3],": ")[2]));
+              s=[]; a.forEach((i)=>{radd(s,`${i.func} ${i.file} ${i.line}`)}); o={evnt:n,mesg:m,file:f,line:l,stak:s};
+              if(seenFail(o)){return}; MAIN.dispatchEvent((new CustomEvent('procFail',{detail:o}))); return;
+          };
+          if(!isin(m,' :: ')){m=('Usage :: '+m);}; n=stub(m,' :: '); m=n[2]; n=n[0]; s=stak(); p=(s[0]||"").split(" ");
+          o={evnt:n,mesg:m,file:p[1],line:p[2],stak:s}; if(seenFail(o)){return};
+          MAIN.dispatchEvent((new CustomEvent('procFail',{detail:o}))); return;
+      };
+      if(!isKnob(m)){console.error("wrong usage of fail()"); alert("an error has occurred, sorry for inconvenience"); return};
+      m.evnt=(m.evnt||m.name||"Usage"); m.stak=stak(); if(seenFail(m)){return};
+      MAIN.dispatchEvent((new CustomEvent('procFail',{detail:m})));
    };
+
+   const seenFail=function(d, r)
+   {
+       d=md5(`${d.evnt}${d.mesg}${d.file}${d.line}`); r=(this.hash==d); this.hash=d; return r;
+   }.bind({hash:""});
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -822,8 +841,8 @@
          var e,m,f,l,s,i,n,h,o; event.preventDefault(); event.stopPropagation(); if(MAIN.HALT){return}; MAIN.HALT=1; e=event.error;
          f=event.filename; l=event.lineno; if(!e||isText(e)||((e.stack+'').indexOf('\n')<0)){e=(new Error((e+'')))}; n=(e.name||'usage');
          m=e.message; if(!f){f=fail.maybe;}; if(!l){l=0;}; s=stak(); h=`https://${HOSTNAME}`; f=ltrim(f,h); f=rtrim(f,'?n=script');
-         o={name:n, mesg:m, file:f, line:l, stak:s};
-         tick.after(500,()=>{MAIN.HALT=VOID}); MAIN.dispatchEvent((new CustomEvent('procFail',{detail:o})));
+         o={name:n, mesg:m, file:f, line:l, stak:s}; if(MAIN.Busy){Busy.tint('red')}; tick.after(2000,()=>{MAIN.HALT=0});
+         if(seenFail(o)){return}; MAIN.dispatchEvent((new CustomEvent('procFail',{detail:o})));
       });
    }());
 // --------------------------------------------------------------------------------------------------------------------------------------------
@@ -1009,7 +1028,6 @@
 
       for (var k in d)
       {
-         // if(MAIN.HALT){return};
          if(((k+'').length<1)||!d.hasOwnProperty(k)){continue}; if((t=='arr')&&!isNaN(k)){k=(k*1)};
          var z = f.apply(d,[d[k],k]);  if((z!==VOID)&&(z!==NEXT)&&(z!==SKIP)){break};
       };

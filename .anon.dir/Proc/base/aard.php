@@ -510,8 +510,8 @@ namespace Anon;
    defn('LOOP REPO DENY AFTR BFOR FLAT DEEP HIDN EMPT GONE NOFAIL NOINIT NOMAKE NOEXIT DOEXIT OK');
    defn('A B C D E F G H I J K L M N O P Q R S T U V W X Y Z');
    defn('count fetch using alter write claim touch where group order limit parse shape apply erase purge debug dbase table field sproc funct after basis named param parts');
-   defn('NATIVE REMOTE ORIGIN ALL');
-   defn('ASC DSC API BOT DPI GUI SSE');
+   defn('NATIVE REMOTE ORIGIN');
+   defn('ANY ALL ASC DSC API BOT DPI GUI SSE');
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 

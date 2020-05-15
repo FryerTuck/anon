@@ -180,7 +180,6 @@ namespace Anon;
 
          if(isin(['ftp','ftps'],$i->plug))
          {
-            foreach($r as $x => $o){$s=rstub($o->path,'/'); if($s){$r[$x]->path=$s[2];}; unset($s);};
             ekko($r);
          };
 
@@ -214,8 +213,18 @@ namespace Anon;
       {
          $po=knob($_POST); $fp=$po->path; $ph=md5($fp); $sk=USERSKEY; $tp="/Proc/temp/sesn/$sk/$ph";
          $rp=path($tp); $br=file_put_contents($rp,$po->data,FILE_APPEND); if(!$br){ekko(FAIL);return;};
-         $cs=filesize($rp); $ts=$po->size; if($cs<$ts){dump([$cs,$ts]);return;};
-         $fd=furl(pget($tp))->data; path::make($fp,$fd); path::void($tp); dump([$cs,$ts]);
+         $cs=filesize($rp); $ts=$po->size; if($cs<$ts){dump([$cs,$ts]);return;}; // in progress
+         $fd=furl(pget($tp))->data; path::void($tp); // done .. we have the raw data and temp-file is deleted
+
+         $XL=xeno::showHyperConduit($fp); $XO=xeno::showHyperConduit($fp,parts); // plug info
+         $XI=(!$XL?null:path::info($XL)); $XP=(!$XI?null:$XI->plug); // plug details
+         $pt=rstub($fp,'/')[0]; $fn=rstub($fp,'/')[2]; // path-tree & file-name
+         $fm="failed to upload `$fn` to `$pt`";
+
+         if(!$XL){path::make($fp,$fd); dump([$cs,$ts]); return;}; // no plug
+         $pt=rstub($XL,'/')[0];
+
+         $r=crud($pt)->insert(["$fn"=>$fd]); if($r){dump([$cs,$ts]);}; fail($fm);
       }
 
 

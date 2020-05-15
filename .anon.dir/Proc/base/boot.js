@@ -52,7 +52,8 @@
       {
          listen('mutation',function(e, l)
          {
-            if(MAIN.HALT){return}; if(!e.detail||(e.detail.type!='childList')){return};
+            // if(MAIN.HALT){return};
+            if(!e.detail||(e.detail.type!='childList')){return};
             l=e.detail.addedNodes; if(isList(l)){l=listOf(l);}else{return}; if(l.length<1){return}; // validate
             this.walk(l); // check all new nodes - including their children
             tick.after(50,()=>{ordained.vivify()}); // anoint the ordained ones (if any)
@@ -98,7 +99,7 @@
 
          listen('procFail',function(e)
          {
-            Busy.done();
+            Busy.done(); MAIN.HALT++; if(MAIN.HALT>2){return};
             let hint=`An error was triggered and for some reason it was not handled.`;
 
             let apnd=`This could be trivial, but may cause issues with your session.
@@ -108,12 +109,15 @@
 
                       What will you do?`;
 
-            let info=e.detail; let mesg=info.mesg;
+            let info=e.detail; let mesg=info.mesg; console.error(info);
 
-            if(!userDoes('geek','sudo')){mesg=hint; console.error(hint);}
-            else{console.error(info); mesg+=("<br><br>\n\n```"+`\nfile: ${info.file}\nline: ${info.line}\n`+"```\n\n<br>")};
+            if(!userDoes('geek','sudo')){mesg=hint;}else
+            {
+                mesg+=("<br><br>\n\n```\n"+`file: ${info.file}\nline: ${info.line}`+"\n```\n\n<br>");
+                mesg+=("\n\n```\n"+info.stak.join("\n")+"\n```\n\n<br>");
+            };
             mesg+=`\n\n${apnd}`;
-            popConfirm(`${info.name} Fail`,mesg,`dark`,`harm`,`bug`,`500x260`)
+            popConfirm(`${info.evnt} Fail`,mesg,`dark`,`auto`,`bug`,`500x260`)
             ({
                'need::report bug and refresh':function(ce, fm)
                {

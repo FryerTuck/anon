@@ -2,6 +2,8 @@
 namespace Anon;
 
 
+// require_once(path('/Proc/libs/ftp/ftp.php'));
+
 
 # tool :: ftp_plug : embedded database abstraction
 # ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -37,8 +39,11 @@ namespace Anon;
 
       function vivify($chdr=true)
       {
-         if($this->link){return $this->link;}; $I=$this->mean; $L=(new ftp($I->host,$I->port,$I->user,$I->pass));
-         if($L->fail){fail($L->fail);}; $L->pasv(true); $this->link=$L;
+         if($this->link){return $this->link;}; $I=$this->mean; $S=(($I->port===21)?false:true);
+         $L=(new ftp($I->host,$I->port,$I->user,$I->pass,$S)); if($L->fail){fail($L->fail);};
+         // $L->set_option(FTP_USEPASVADDRESS,false);
+         $L->pasv(true);
+         $this->link=$L;
          if(!$I->path||($I->path==='/')){$this->mean->type='fold'; return $this->link;};
          if(!$chdr){return $this->link;}; $L->chdir($I->path); if(!$L->fail){$this->mean->type='fold'; return $this->link;};
 
@@ -74,10 +79,16 @@ namespace Anon;
 
          if($I->type==='fold')
          {
-            $D=$L->mlsd('.'); if($L->fail){fail($L->fail);}; $R=[]; $dl=[]; $fl=[]; foreach($D as $i)
+            $A=0; $R=[]; $dl=[]; $fl=[]; $D=$L->mlsd('.');
+            if(!$D||$L->fail){$L->fail=null; $D=$L->nlist('.'); if($L->fail){fail($L->fail);return;}; $A=1;};
+
+            if($A){fail("FTP_plug .. dir listing via nlist succeeded mlsd .. this needs filtering");};
+
+            foreach($D as $i)
             {
                if(substr($i['name'],0,1)==='.'){continue;}; $n=null; $p=("$P/".$i['name']); $t=$i['type']; if($t==='dir'){$t='fold';};
-               $z=path::levl($p); $m=(($t=='fold')?mime($t):mime($p)); $s=(isset($i['size'])?$i['size']:null); $q=strtotime($i['modify']);
+               $m=(($t=='fold')?mime($t):mime($p)); if(isin($t,'link')){$t='link'; $m='link/resource';};
+               $z=path::levl($p); $s=(isset($i['size'])?$i['size']:null); $q=strtotime($i['modify']);
                $x=$i['UNIX.mode']; $o=knob
                ([
                   'repo'=>$n,'path'=>$p,'name'=>$i['name'],'mime'=>$m,'type'=>$t,'size'=>$s,'time'=>$q,'mode'=>$x,'levl'=>$z,'data'=>$n
@@ -88,7 +99,8 @@ namespace Anon;
          }
          else
          {
-            $R=$L->read(path::leaf($P)); if($L->fail){fail($L->fail);};
+            $pt=path::twig($P); $fn=path::leaf($P); $L->chdir($pt);
+            $R=$L->read($fn); if($L->fail){fail($L->fail);};
          };
 
 

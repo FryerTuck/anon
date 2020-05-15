@@ -5,7 +5,8 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function upkeep($dbs,$ldb,$tmn)
    {
-      $h='/Proc/temp'; $x=['file','kban','lock','refs','sesn'];  $cln=user('clan'); $hsh=sesn('HASH'); $usr=sesn('USER');
+      $h='/Proc/temp'; $x=['file','kban','lock','logs','refs','sesn'];
+      $cln=user('clan'); $hsh=sesn('HASH'); $usr=sesn('USER');
 
       foreach($x as $d)
       {

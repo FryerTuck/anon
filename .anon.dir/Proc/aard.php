@@ -23,6 +23,35 @@ namespace Anon;
       static function init()
       {
          self::$meta->hush=knob(); self::$meta->hook=knob(); self::$meta->wait=500; $i=0;
+         boot(); // boot all bootable stems
+
+           if(facing('GUI'))
+           {
+              guiStrap();
+              //ekko::head(['Referrer-Policy'=>'origin','cache'=>false,'cookies'=>true]); // send bootStrap headers
+              $v=['botHoney'=>conf('Proc/badRobot')->lure,'busyGear'=>base64_encode(pget('/Proc/base/busy.htm'))];
+              $r=import('/Proc/base/aard.htm',$v);
+              echo($r); done(); // send BootStrap GUI keeping headers intact
+           };
+
+           if(facing('DPR')&&(NAVIPATH==='/Proc/base/boot.js'))
+           {
+              $a=scan('$'); $b=scan('/',FOLD); $l=concat($a,$b); $r=[]; foreach($l as $i)
+              {
+                 $p=path::conf($i); if(!$p){continue;}; $d=dval(pget("$p/autoboot"));
+                 if(!is_assoc_array($d)||!isset($d['client'])){continue;};
+                 $d=$d['client']; if(!$d){continue;}; if(isText($d)){$d=[$d];}; if(!isNuma($d)){continue;};
+                 foreach($d as $f){if(!isText($f)){fail("invalid `autoboot` config in: `$p/autoboot`");}; $r[]=$f;};
+              };
+
+              $v=knob(['bootList'=>tval($r)]); unset($d); $d=[];
+              $c=pget('/User/data/master/pass'); if(!$c){wack();}; if(password_verify('0m1cr0n!',$c)){$d[]='editRootPass';};
+              $c=pget('/Proc/conf/autoMail'); if(!isin($c,'mail://')||!isin($c,'@')||!isin($c,'.')){$d[]='confAutoMail';}; // debug automail
+              $v->badCfg=base64_encode(tval($d));
+
+              finish(NAVIPATH,$v);
+           }
+
          $p=NAVIPATH; Time::logEvent(); if(strpos($p,'/~/')===0){$p=lshave($p,'/~/'); $u=user('name'); $p="/User/data/$u/home/$p";};
          $r=path::call($p,__FILE__); // run PHP controller found in path .. this should exit here - else we handle it below:
          if(($r!==null)&&($r!==true)&&!is_class($r)){if(defn('HALT')||envi('HALT')){done($r);}; ekko($r);}; // respond with controller response

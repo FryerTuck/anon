@@ -552,6 +552,8 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    class flog
    {
+      static $path;
+
       static function __callStatic($p,$a)
       {
          expect::path($p); if(isset($a[0])&&isNuma($a[0])){$a=$a[0];}; foreach($a as $k => $v){$a[$k]=tval($v);}; $ct=time(); ladd($a,$ct);
@@ -560,6 +562,15 @@ namespace Anon;
          ladd($r,$l); $r=fuse($r,"\n"); path::make($p,$r); return OK;
       }
    }
+
+   function flog()
+   {
+       $lp=flog::$path; $pt='/Proc/temp/logs'; $ol=pget($pt);
+       foreach($ol as $fn){$tp="$pt/$fn"; if($tp !== $lp){path::void($tp);}}; // get rid of old logs
+       flog::{"$lp"}(func_get_args());
+   }
+
+   flog::$path=('/Proc/temp/logs/'.date("Y-m-d"));
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -605,8 +616,8 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function crud($d)
    {
-      $x=path::info($d); if(!isKnob($x)){fail('expecting path, or URL');}; $o=$x->plug; $p=$x->path;
-      if((($x->type==='git')&&isin($o,'http'))||(($o==='file')&&($x->type==='fold')&&isee("$p/.git"))){$o='git';}; $c="Anon\\{$o}_plug";
+      $x=path::info($d); if(!isKnob($x)){fail('expecting path, or URL');}; $o=$x->plug; $p=$x->path; if($o==='https'){$o='http';};
+      if((($x->type==='git')&&($o==='http'))||(($o==='file')&&($x->type==='fold')&&isee("$p/.git"))){$o='git';}; $c="Anon\\{$o}_plug";
       if(!is_class($c)){$p="/Proc/plug/$o.php"; requires::path($p); if(!is_class($c)){$p=crop($p); fail("expecting class `$c` in: `$p`");}};
       $i=(new $c($x)); return $i;
    }
@@ -632,10 +643,10 @@ namespace Anon;
       private $lock;
 
 
-      function __construct($hn,$pn=null,$un=null,$pw=null)
+      function __construct($hn,$pn=null,$un=null,$pw=null,$sm=false)
       {
-         if($pn===null){$pn=21;}; $C=$this->connect($hn,$pn,$un,$pw,1);
-         if(!$C&&isin($this->fail,'AUTH not understood')){$C=$this->connect($hn,$pn,$un,$pw,0);};
+         if($pn===null){$pn=21;}; $C=$this->connect($hn,$pn,$un,$pw,$sm);
+         if(!$C&&isin($this->fail,'AUTH not understood')&&$sm){$C=$this->connect($hn,$pn,$un,$pw,0);};
          return $this;
       }
 

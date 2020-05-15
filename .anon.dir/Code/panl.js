@@ -210,7 +210,7 @@ extend(Anon)
       init:function(ini, mnu)
       {
          ini=(ini||{}); this.vars.external=ini;
-         mnu={treeview:'#CodeTreeMenu', source:'/User/treeMenu', uproot:true, listen:
+         mnu={treeview:'#CodeTreeMenu', source:'/User/treeMenu', uproot:true, draggable:true, feedable:true, listen:
          {
             'LeftClick':function(evnt)
             {
@@ -258,7 +258,7 @@ extend(Anon)
                },
                ()=>
                {
-                  dump(e.detail.target.head.title);
+                  // dump(e.detail.target.head.title);
                   Anon.Code.vars.activeInst=e.detail.target.head.editor;
                   Anon.Code.info(e.detail.target.head.editor.anon);
                   let tlv,hdn,fnd,val; tlv=select('#CodeToolHold'); hdn=(isin(tlv.className,'hide')?1:0); if(hdn){return};

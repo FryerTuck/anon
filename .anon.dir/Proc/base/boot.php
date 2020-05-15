@@ -359,12 +359,29 @@ namespace Anon;
 
 
 
+# func :: boot : boot all non-intrinsic stems .. keeping scope clean
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+    function boot()
+    {
+       $_SL=pget('/'); $_RP=ROOTPATH; foreach($_SL as $_SD)
+       {
+           if(is_dir("$_RP/$_SD")&&file_exists("$_RP/$_SD/boot.php"))
+           {
+               ob_start(); require_once("$_RP/$_SD/boot.php"); $OB=ob_get_clean();
+           };
+       };
+    };
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 # need :: tools : load dependencies
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    depend('F:/Proc/base/dbug.php');   // check if dbug exists .. with fail if not
    require(path('/Proc/base/dbug.php')); // this will take care of any further issues with the framework and any subsequent runtime errors
    require(path('/Proc/base/abec.php')); // basic tools for heavy lifting .. if anything goes wrong in here, dbug will handle it .. awesomeness
    require(path('/Proc/base/base.php')); // ABEC is full .. extend any other essential functions in here
+   require(path('/Proc/base/fwal.php')); // essential security .. right of passage through "the pass"
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -376,49 +393,11 @@ namespace Anon;
       $dbs=(pget('/User/conf/inactive')*1); $ldb=(pget('/Proc/vars/lastDbug')*1); $tmn=time();
       if(($tmn-$ldb)>$dbs){require(path('/Proc/base/keep.php')); upkeep($dbs,$ldb,$tmn);}; unset($dbs,$ldb,$tmn);
    }
-# ---------------------------------------------------------------------------------------------------------------------------------------------
 
-
-
-# cond :: flow : serve configured shortcuts .. tighten security .. if facing GUI -then boot the GUI
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-   require(path('/Proc/base/fwal.php')); // essential security .. right of passage through "the pass"
-
-   if(facing('GUI'))
-   {
-      guiStrap();
-      //ekko::head(['Referrer-Policy'=>'origin','cache'=>false,'cookies'=>true]); // send bootStrap headers
-      $v=['botHoney'=>conf('Proc/badRobot')->lure,'busyGear'=>base64_encode(pget('/Proc/base/busy.htm'))]; 
-      $r=import('/Proc/base/aard.htm',$v);
-      echo($r); done(); // send BootStrap GUI keeping headers intact
-   };
+   defn(['AUTOMAIL'=>pget('/Proc/conf/autoMail')]); // needed
 
    if((envi('METHOD')==='POST')&&facing('API')){$d=file_get_contents('php://input'); if(wrapOf($d)==='{}')
    {$d=json_decode($d); foreach($d as $k => $v){$_POST[$k]=$v;}}; unset($d,$k,$v);};
-
-   defn(['AUTOMAIL'=>pget('/Proc/conf/autoMail')]); // needed
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-# cond :: flow : boot client - which in turn loads the client-boot-files of every STEM's config/autoboot
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-   if(facing('DPR')&&(NAVIPATH==='/Proc/base/boot.js'))
-   {
-      $a=scan('$'); $b=scan('/',FOLD); $l=concat($a,$b); $r=[]; foreach($l as $i)
-      {
-         $p=path::conf($i); if(!$p){continue;}; $d=dval(pget("$p/autoboot")); if(!is_assoc_array($d)||!isset($d['client'])){continue;};
-         $d=$d['client']; if(!$d){continue;}; if(isText($d)){$d=[$d];}; if(!isNuma($d)){continue;};
-         foreach($d as $f){if(!isText($f)){fail("invalid `autoboot` config in: `$p/autoboot`");}; $r[]=$f;};
-      };
-
-      $v=knob(['bootList'=>tval($r)]); unset($d); $d=[];
-      $c=pget('/User/data/master/pass'); if(!$c){wack();}; if(password_verify('0m1cr0n!',$c)){$d[]='editRootPass';};
-      $c=pget('/Proc/conf/autoMail'); if(!isin($c,'mail://')||!isin($c,'@')||!isin($c,'.')){$d[]='confAutoMail';}; // debug automail
-      $v->badCfg=base64_encode(tval($d));
-
-      finish(NAVIPATH,$v);
-   }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
