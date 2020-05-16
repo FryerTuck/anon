@@ -48,19 +48,20 @@ namespace Anon;
       {
          if($this->link){return $this->link;}; $i=$this->mean; $h=$i->host; $s=stub($h,'.'); $h=$s[2]; $s=$s[0]; $ca=[];
          if(!isin(['mail','imap'],$s)){fail('invalid plug `subdomain`');}; $u="$i->user@$h"; $p=$i->pass; $n=$i->port;
-         if(!$b){$b='INBOX';}; if(!isVoid($b)&&!isText($b,1)){fail('invalid mailbox specification');}; $y='novalidate-cert';
+         if(!isVoid($b)&&!isText($b,1)){fail('invalid mailbox specification');}; $y='novalidate-cert';
+         // if(!$b){$b='INBOX';};
          // if(!$n){$n=993;}elseif(($n!==993)&&($n!==143)){fail('invalid IMAP port');};
 
          $ca=array_merge($ca,["{{$s}.$h:993/imap/ssl}$b","{{$s}.$h:993/imap/ssl/$y}$b","{{$s}.$h:993/imap}$b","{{$s}.$h:993/imap/$y}$b"]);
          $ca=array_merge($ca,["{{$s}.$h:143/imap}$b","{{$s}.$h:143/imap/$y}$b"]);
 
-         $fm=['Certificate failure','Retrying PLAIN authentication','Can not authenticate','IMAP connection broken'];
-         $uf="unhandled IMAP connection error.\n\nThis spilled out:";
+         $fm=['Certificate failure','Can not authenticate','Retrying PLAIN authentication','IMAP connection broken'];
+         $uf="unhandled IMAP connection error.\n\nThis spilled out:"; $ff=''; $lf='';
 
          foreach($ca as $cs)
          {
              $r=$this->engage($cs,$u,$p,$o); $f=$r->fail; if($r->link){$this->link=$r->link; return $this->link;};
-             $f=($f?$f:'?'); if(!isin($f,$fm)){fail("$uf $f"); return;}; wait(250);
+             if($f&&!$ff){$ff=$f;}; $f=($f?$f:''); if(!isin($f,$fm)){fail("$uf $f"); return;}; wait(250);
          };
 
          reset($ca); unset($cs);
@@ -69,10 +70,11 @@ namespace Anon;
          {
              $r=$this->engage($cs,$u,$p,$o,1,['DISABLE_AUTHENTICATOR'=>'PLAIN']); $f=$r->fail;
              if($r->link){$this->link=$r->link; return $this->link;};
-             $f=($f?$f:'?'); if(!isin($f,$fm)){fail("$uf $f"); return;}; wait(250);
+             $f=($f?$f:''); if(!isin($f,$fm)){fail("$uf $f"); return;}; wait(250);
          };
 
-         fail("exhausted all IMAP connection options");
+         if($f&&!$lf){$lf=$f;}; $f=trim("$ff\n$lf"); if($f){$f="\n\n```$f```";};
+         fail("all IMAP connection options failed $f");
       }
 
 
@@ -209,7 +211,8 @@ namespace Anon;
 
          foreach($mail as $x)
          {
-            $i=imap_headerinfo($L,$x); if(is_array($i)){$i=$i[0];}; $o=knob(); $t=$i->to[0]; $f=$i->sender[0]; $y=$i->reply_to[0];
+            $i=imap_headerinfo($L,$x); if(is_array($i)){$i=$i[0];}; $o=knob(); $i=knob($i); $t=$i->to[0]; $f=$i->sender[0]; $y=$i->reply_to[0];
+if(!$t){fail('mail_plug has issues and needs to be fixed');};
             if(isin($fltr,'destAddy')){$o->destAddy="$t->mailbox@$t->host";};
             if(isin($fltr,'destName')){$o->destName=(isin($t,'personal')?$t->personal:null);};
             if(isin($fltr,'fromAddy')){$o->fromAddy="$f->mailbox@$f->host";};

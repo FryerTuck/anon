@@ -95,7 +95,7 @@
 /* ----------------------------------------------------------------------------------------------------------------------------------------- */
    #AnonReplView
    {
-      height:100px;
+      height:40px;
       vertical-align:top;
       background:url('/User/dcor/blue.jpg');
       background-size:cover;
@@ -108,6 +108,36 @@
       font-size:16px;
       line-height:16px;
       background:hsla(0,0%,3%,0.9);
+   }
+
+   .replEchoProm::selection
+   {
+       color:hsla(0,0%,0%,1);
+       background:hsla(0,0%,100%,0.5);
+   }
+
+   .replEchoCmnd::selection
+   {
+       color:hsla(0,0%,0%,1);
+       background:hsla(0,0%,100%,0.5);
+   }
+
+   .replEchoMumb::selection
+   {
+       color:hsla(0,0%,0%,1);
+       background:hsla(0,0%,100%,0.5);
+   }
+
+   #AnonReplProm::selection
+   {
+       color:hsla(0,0%,0%,1);
+       background:hsla(0,0%,100%,0.5);
+   }
+
+   #AnonReplFeed::selection
+   {
+       color:hsla(0,0%,0%,1);
+       background:hsla(0,0%,100%,0.5);
    }
 
    #AnonReplPanl grid

@@ -54,7 +54,10 @@
             [
                {col:'#AnonReplView', contents:
                [
-                  {panl:'#AnonReplPanl', onmouseup:function(){select('#AnonReplFeed').focus()}, contents:
+                  {panl:'#AnonReplPanl', onmouseup:function()
+                  {
+                      if(!this.getSelection()){select('#AnonReplFeed').focus()};
+                  }, contents:
                   [
                      {pre:'#AnonReplFlog'},
                      {grid:'.noSpanVert', contents:
@@ -68,7 +71,15 @@
                               'key:Enter':function(){repl.exec(this.value)},
                               'key:ArrowUp':function(){repl.ENV.cmdlog.seek(-1)},
                               'key:ArrowDown':function(){repl.ENV.cmdlog.seek(1)},
-                              'Control c':function(){repl.echo('')},
+                              'Control c':function(){repl.echo('yoohoo')},
+                              'focus':function(){tick.after(50,()=>
+                              {
+                                  select("#AnonReplView").setStyle({height:200});
+                              })},
+                              'blur':function(){tick.after(50,()=>
+                              {
+                                  select("#AnonReplView").setStyle({height:(!globVars('focussed').node.contains(this)?40:200)});
+                              })},
                            }}]},
                         ]}
                      ]}
@@ -132,7 +143,7 @@
          show:function()
          {
             select('#anonPanlView').reclan('hide:show'); this.actv=1;
-            select('#AnonReplFeed').focus();
+            if(isin("anonymous master",sesn("USER"))){select('#AnonReplFeed').focus();}
          },
          hide:function()
          {

@@ -109,7 +109,7 @@
 
                       What will you do?`;
 
-            let info=e.detail; let mesg=info.mesg; let nick=(info.evnt||info.name||"Unknown").split("Error").join(""); 
+            let info=e.detail; let mesg=info.mesg; let nick=(info.evnt||info.name||"Unknown").split("Error").join("");
             console.error(info);
 
             if(!userDoes('geek','sudo')){mesg=hint;}else
@@ -144,7 +144,7 @@
          });
 
 
-         tick.after(500,()=>{signal("ready")});
+         tick.after(250,()=>{signal("ready")});
       });
    }());
 // --------------------------------------------------------------------------------------------------------------------------------------------
@@ -186,6 +186,7 @@
             bz(80);
             tick.after(250,()=>
             {
+               window.BOOTED=1;
                signal("boot");
                bz(100);
                Busy.done();

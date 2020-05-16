@@ -894,17 +894,17 @@
 
    extend(Element.prototype)
    ({
-      // oSelect:Element.prototype.select,
       select:function(x)
       {
          // if(isin('textarea,input',nodeName(this))&&!isText(x,1)){return this.oSelect.apply(this,listOf(arguments))};
          return select(x,this);
       },
-      //
-      // Select:function(x)
-      // {
-      //    return select(x,this);
-      // },
+
+      getSelection:function(fn, so,sn)
+      {
+          so=getSelection(); if(so.isCollapsed){return ""}; sn=so.focusNode; if(!this.contains(sn)){return ""};
+          return (so+"");
+      },
 
       lookup:function(c,n, r,w)
       {
@@ -913,6 +913,14 @@
          if(!isText(c,1)){return}; if(c=='^^'){c='^',n=2}; n=(n*1); if(!isin(['^','<','>'],c)||!isInum(n)||(n<1)){return this}; // validate
          r=this; w=((c=='^')?'parentNode':((c=='<')?'previousSibling':'nextSibling')); while(n){n--; if(!!r[w]){r=r[w]}else{break}}; // find
          return r; // returns found-relative, or self if relative-not-found
+      },
+
+      getElder:function(d, p,c,f,v,r)
+      {
+          if(isNumr(d)){return this.lookup("^",d);}; if(!isText(d,1)){return}; c=d[0]; f=(isin("#.",c)?d.slice(1):d);
+          p=this.parentNode; if(!p){return}; v=((c=="#")?p.id:((c==".")?p.className:nodeName(p))); if(v==f){return p}; do
+          {p=p.parentNode; if(!p){break; return}; v=((c=="#")?p.id:((c==".")?p.className:nodeName(p))); if(v==f){r=p;break}}
+          while(!r&&!!p); return r;
       },
 
       houses:function(n, h,p,r)

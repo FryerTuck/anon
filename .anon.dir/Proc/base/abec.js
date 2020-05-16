@@ -347,6 +347,7 @@
 // defn :: flag : words .. do NOT define these earlier (up) .. defn() needs all the above
 // --------------------------------------------------------------------------------------------------------------------------------------------
    defn('AUTO COOL DARK LITE INFO GOOD NEED WARN FAIL NEXT SKIP STOP DONE ACTV NONE BUSY KEYS VALS ONCE EVRY BFOR AFTR UNTL EVNT FILL TILE SPAN OPEN SHUT');
+   // defn('TEXT NODE');
    defn('TL TM TR RT RM RB BR BM BL LB LM LT');
    defn('A B C D E F G H I J K L M N O P Q R S T U V W X Y Z');
    defn('OK NA ANY ALL');

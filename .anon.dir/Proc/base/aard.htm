@@ -10,7 +10,8 @@
       </style>
 
       <script>
-         // window.onerror=function(em){console.error(em);};
+         window.onerror=function(m,f,l)
+         {if(window.BOOTED){return}; console.error("Unhandled boot error!\n"+m+"\n"+f+"  "+l);};
       </script>
 
       <script>
