@@ -289,7 +289,7 @@
       {
           if(isin(m,"evnt: ")&&isin(m,"\nmesg: "))
           {
-              a=m.split("\n"); lpop(a); m=stub(a[0],": ")[2]; n=stub(m,' - '); m=(n?n[2]:m); n=(n?n[0]:"Undefined");
+              a=m.split("\n"); lpop(a); m=stub(a[0],": ")[2]; n=stub(m,' - '); if(n&&isWord(n[0])){m=n[2];n=n[0]}else{n="Undefined"};
               f=stub(a[1],": ")[2]; l=stub(a[2],": ")[2]; a=decode.jso(atob(stub(a[3],": ")[2]));
               s=[]; a.forEach((i)=>{radd(s,`${i.func} ${i.file} ${i.line}`)}); o={evnt:n,mesg:m,file:f,line:l,stak:s};
               if(seenFail(o)){return}; MAIN.dispatchEvent((new CustomEvent('procFail',{detail:o}))); return;
@@ -298,8 +298,10 @@
           o={evnt:n,mesg:m,file:p[1],line:p[2],stak:s}; if(seenFail(o)){return};
           MAIN.dispatchEvent((new CustomEvent('procFail',{detail:o}))); return;
       };
-      if(!isKnob(m)){console.error("wrong usage of fail()"); alert("an error has occurred, sorry for inconvenience"); return};
-      m.evnt=(m.evnt||m.name||"Usage"); m.stak=stak(); if(seenFail(m)){return};
+      if(!isKnob(m)){console.error("wrong usage of fail()"); alert("an error has occurred, mistakes were made, me scuzi"); return};
+      m.evnt=(m.evnt||m.name); if(!m.evnt){p=stub(m.mesg," - "); if(p&&isWord(p[0])){m.evnt=p[0]; m.mesg=p[2]}};
+      m.stak=(m.stak||stak()); if(isKnob(m.stak[0])){s=[]; m.stak.forEach((i)=>{radd(s,`${i.func} ${i.file} ${i.line}`)}); m.stak=s};
+      if(seenFail(m)){return};
       MAIN.dispatchEvent((new CustomEvent('procFail',{detail:m})));
    };
 
@@ -331,35 +333,11 @@
 
 
 
-// func :: isin : check if haystack contains needle, returns first needle found, or false if not found, or void if invalid
-// --------------------------------------------------------------------------------------------------------------------------------------------
-   const isin = function(h,n)
-   {
-      if((span(h)<1)||isBool(h)){return;}; if(isNumr(h)){h+=''}; if(!isText(h)&&!isList(h)&&!isKnob(h)){return};
-      if(isKnob(h)){let r=false; if(!isList(n)){n=[n]}; n.each((i)=>{if(h.hasOwnProperty(i)){r=i; return STOP}}); return r};
-      if(isText(n)){return ((h.indexOf(n)>-1)?n:FALS);}; if(isKnob(h)){h=keys(h);};
-      if(isList(n)){let r=false; n.each((i)=>{if(h.indexOf(i)>-1){r=i; return STOP}}); return r};
-      return (h.indexOf(n)>-1);
-   };
-// --------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-// func :: pick : look in haystack and return the 1st needle found in haystack from list of needles
-// --------------------------------------------------------------------------------------------------------------------------------------------
-   const pick = function(h,n, r)
-   {
-      if(isText(n)){n=n.split(',')}; if(!isList(n,1)){return}; r=isin(h,n); return r;
-   };
-// --------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
 // func :: defn : constants .. if text given with no spaces it returns a defined constant -or undefined .. else sets constans
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   const defn = function(v)
+   const defn = function(v, d)
    {
-      if(isText(v)){if(!isin(v,' ')){return MAIN[v]}; var d={}; v=v.split(' '); v.forEach((i)=>{d[i]=(':'+i+':')}); return extend(MAIN)(d);};
+      if(isText(v)){if(v.indexOf(" ")<0){return MAIN[v]}; d={}; v=v.split(' '); v.forEach((i)=>{d[i]=(':'+i+':')}); return extend(MAIN)(d);};
       if(isKnob(v)){return extend(MAIN)(v);};
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
@@ -371,7 +349,33 @@
    defn('AUTO COOL DARK LITE INFO GOOD NEED WARN FAIL NEXT SKIP STOP DONE ACTV NONE BUSY KEYS VALS ONCE EVRY BFOR AFTR UNTL EVNT FILL TILE SPAN OPEN SHUT');
    defn('TL TM TR RT RM RB BR BM BL LB LM LT');
    defn('A B C D E F G H I J K L M N O P Q R S T U V W X Y Z');
-   defn('OK NA');
+   defn('OK NA ANY ALL');
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: isin : check if haystack contains needle, returns first needle found, or false if not found, or void if invalid
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const isin = function(h,n,aa, ht,nt,l,r,s,f,x)
+   {
+      if((!h&&(h!==0))||(h===null)||(h===true)||(h==="")||(n=="")||(h==[])){return}; if(aa!=ALL){aa=VOID}; ht=(typeof h);
+      if(ht=="number"){h+=""}else if((ht=="object")&&(!h.forEach||!h.pop)){h=Object.getOwnPropertyNames(h);}; // str & arr only
+      ht=(typeof h); nt=(typeof n); if((ht=="string")&&(nt==ht)){return ((h.indexOf(n)<0)?false:n)}; // strings implicit
+      if(!h.length||!h.indexOf){return false}; l=(!!n&&(n!=null)&&((typeof n)!="string")&&!!n.forEach&&!!n.pop); // l == array
+      if(!l){x=h.indexOf(n); r=h[x]; return ((x<0)?false:(r?r:(r+"")))}; f=0; s=n.length; r=VOID;
+      for(let i in n){if(!n.hasOwnProperty(i)||(h.indexOf(n[i])<0)){continue}; r=n[i]; f++; if((r!==VOID)&&!aa){return (r?r:(r+""))}};
+      return (aa?(f==s):((r===VOID)?false:(r?r:(r+""))));
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: pick : look in haystack and return the 1st needle found in haystack from list of needles
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const pick = function(h,n, r)
+   {
+      if(isText(n)){n=n.split(',')}; if(!isList(n,1)){return}; r=isin(h,n); return r;
+   };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 

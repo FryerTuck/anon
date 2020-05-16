@@ -154,7 +154,11 @@ namespace Anon;
       $r=''; $l=func_get_args(); foreach($l as $i){$r.=tval($i,DUMP);};
       if(facing('BOT')||facing('SYS')){if(!headers_sent()){header('HTTP/1.1 503 Service Unavailable');}; die();}; // crawler
 
-      if(facing('SSE')&&envi('SSEREADY')){$r=base64_encode($r); print_r("event: dump\ndata: $r\n\n"); flush(); return;}; // server-side event
+      if(facing('SSE'))
+      {
+          if(!envi('SSEREADY')){done("dump() called in SSE before Proc was ready.\n\n$r");return;};
+          defn(['HALT'=>1]); Proc::emit('dump',$r); exit;
+      };
 
       if(!headers_sent()){header('HTTP/1.1 200 OK');};
       if(facing('GUI')){sesn('USER');};

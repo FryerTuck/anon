@@ -388,8 +388,10 @@ extend(custom.domtag)
          if(tpe=='fold'){delete into.data}; if(!!kds&&!slf.status.fold[pth]){slf.status.fold[pth]='shut'};
 
          let aro = (!kds?VOID:('chevron-'+((slf.status.fold[pth]=='shut')?'right':'down')));
-         let rpo = into.repo; if(rpo&&rpo.host){ext=((rpo.host.fork==rpo.head.fork)?'repoMain':'repoFork');}; let flg=(rpo?rpo.flag:'XX');
+             aro = {i:('.icon-'+(kds?aro:"primitive-dot"))}; if(!kds){aro.style={opacity:0.2}};
 
+         let rpo = into.repo; if(rpo&&rpo.host){ext=((rpo.host.fork==rpo.head.fork)?'repoMain':'repoFork');};
+         let flg=(rpo?rpo.flag:'XX');
          let ico = (lib[ext]?lib[ext]:lib.auto); let isr=(isin(['repoMain','repoFork'],ext)?' .isRepo':'');
          let txt = {input:'',type:'text',disabled:true,value:val,tabindex:null};
          let tid = (into.path||into.purl); if(!tid&&!!into.root&&!!into.root.initVars){tid=into.root.initVars.purl};
@@ -413,7 +415,7 @@ extend(custom.domtag)
             {grid:('.diff'+flg), contents:[{row:
             [
                {col:'.treeTwigDent', style:('width:'+((levl<=0)?0:(levl*16))+'px')},
-               {col:'.treeTwigArro', contents:[(kds?{i:('.icon-'+aro)}:VOID)]},
+               {col:'.treeTwigArro', contents:[aro]},
                {col:'.treeTwigIcon', contents:[{i:('.icon-'+ico)}]},
                {col:'.treeTwigText', contents:[txt]},
             ]}]},

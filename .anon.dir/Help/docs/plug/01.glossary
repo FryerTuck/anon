@@ -1,0 +1,21 @@
+# Plugs
+A ***plug*** in Anon is simply a URL; however, URLs point to a resource, either locally, or remotely and can be written in a way that includes authentication credentials.
+URLs are ubiquitous and must be written in a very specific way, else it makes no sense to computers.
+
+## Examples
+Here are a few examples of URLs, from simple to complex:
+
+```javascript
+// plain website
+   http://example.com
+
+// fully qualified domain
+   http://www.example.com
+```
+
+
+## Mail Plug
+
+```javascript
+   mail://username:password@imap.example.com
+```

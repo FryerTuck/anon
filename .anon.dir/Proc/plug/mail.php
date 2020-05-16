@@ -36,25 +36,43 @@ namespace Anon;
       }
 
 
-      function engage($h,$u,$p,$o)
+      function engage($h,$u,$p,$o,$y=null,$z=[])
       {
-         deFail(); $r=knob(); $r->link=@imap_open($h,$u,$p,$o); $me=imap_errors(); $ma=imap_alerts(); enFail(); if($r->link){return $r;};
-         $f=[imap_last_error()]; if($me){$f=array_merge($f,$me);}; if($ma){$f=array_merge($f,$ma);}; $f=implode("\n",$f);
-         $r->fail=$f; wait(250); return $r;
+         deFail(); $r=knob(); $r->link=imap_open($h,$u,$p,$o,$y,$z); $me=imap_errors(); $ma=imap_alerts(); $ob=enFail();
+         if($r->link){return $r;}; $f=[imap_last_error()]; if($me){$f=array_merge($f,$me);}; if($ma){$f=array_merge($f,$ma);};
+         $f=trim(implode("\n",$f)); if(!$f){$f=trim($ob);}; $r->fail=$f; wait(250); return $r;
       }
 
 
       function vivify($b,$o=null)
       {
-         if($this->link){return $this->link;}; $i=$this->mean; $h=$i->host; $u="$i->user@$h"; $p=$i->pass; $n=$i->port; $s='novalidate-cert';
-         if(!isVoid($b)&&!isText($b,1)){fail('invalid mailbox specification');}; if(!$n){$n=993;}elseif($n!==993){fail('invalid IMAP port');};
+         if($this->link){return $this->link;}; $i=$this->mean; $h=$i->host; $s=stub($h,'.'); $h=$s[2]; $s=$s[0]; $ca=[];
+         if(!isin(['mail','imap'],$s)){fail('invalid plug `subdomain`');}; $u="$i->user@$h"; $p=$i->pass; $n=$i->port;
+         if(!$b){$b='INBOX';}; if(!isVoid($b)&&!isText($b,1)){fail('invalid mailbox specification');}; $y='novalidate-cert';
+         // if(!$n){$n=993;}elseif(($n!==993)&&($n!==143)){fail('invalid IMAP port');};
 
-         $x="{imap.$h:$n/imap/ssl}$b"; $r=$this->engage($x,$u,$p,$o); $f=$r->fail; if(!$f){$this->link=$r->link; return $this->link;};
+         $ca=array_merge($ca,["{{$s}.$h:993/imap/ssl}$b","{{$s}.$h:993/imap/ssl/$y}$b","{{$s}.$h:993/imap}$b","{{$s}.$h:993/imap/$y}$b"]);
+         $ca=array_merge($ca,["{{$s}.$h:143/imap}$b","{{$s}.$h:143/imap/$y}$b"]);
 
-         if(isin($f,'Certificate failure'))
-         {$x=swap($x,'}',"/$s}");$r=$this->engage($x,$u,$p,$o); $f=$r->fail; if(!$f){$this->link=$r->link; return $this->link;};};
+         $fm=['Certificate failure','Retrying PLAIN authentication','Can not authenticate','IMAP connection broken'];
+         $uf="unhandled IMAP connection error.\n\nThis spilled out:";
 
-         dump($r->fail);
+         foreach($ca as $cs)
+         {
+             $r=$this->engage($cs,$u,$p,$o); $f=$r->fail; if($r->link){$this->link=$r->link; return $this->link;};
+             $f=($f?$f:'?'); if(!isin($f,$fm)){fail("$uf $f"); return;}; wait(250);
+         };
+
+         reset($ca); unset($cs);
+
+         foreach($ca as $cs)
+         {
+             $r=$this->engage($cs,$u,$p,$o,1,['DISABLE_AUTHENTICATOR'=>'PLAIN']); $f=$r->fail;
+             if($r->link){$this->link=$r->link; return $this->link;};
+             $f=($f?$f:'?'); if(!isin($f,$fm)){fail("$uf $f"); return;}; wait(250);
+         };
+
+         fail("exhausted all IMAP connection options");
       }
 
 
@@ -76,7 +94,7 @@ namespace Anon;
 
          if($a===null)
          {
-            $h=$this->mean->host; $c=imap_list($L,"{imap.$h}","*"); if(!is_array($c)){fail(imap_last_error());};
+            $h=$this->mean->host; $c=imap_list($L,"{{$h}}","*"); if(!is_array($c)){fail(imap_last_error());};
             $r=[]; foreach($c as $i){$b=imap_utf7_decode($i); $p=stub($b,'}'); if($p){$b=$p[2];}; $r[]=$b;};
             $this->pacify(); return $r;
          };

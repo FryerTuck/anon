@@ -147,8 +147,13 @@ namespace Anon;
          }
          else{fail('invalid args');}};
 
-         requires::stem('Mail'); while(ob_get_level()){ob_end_clean();}; if(facing('SSE')&&!headers_sent())
-         {header_remove(); header("Content-Type: text/event-stream\n\n"); header('Cache-Control: no-cache, must-revalidate'); flush();};
+         while(ob_get_level()){ob_end_clean();}; if(facing('SSE')&&!headers_sent())
+         {
+             header_remove(); header("Content-Type: text/event-stream\n\n");
+             header('Cache-Control: no-cache, must-revalidate'); flush();
+             $_SERVER['SSEREADY']='yes';
+         };
+         requires::stem('Mail');
 
          $wait=self::$meta->wait; $rtmx=(ini_get('max_execution_time')*1); $utmx=conf('User/inactive'); $utxs=$utmx; $tout=0; $fade=12;
          $sesn=('/Proc/temp/sesn/'.sesn('HASH')); $epth="$sesn/emit"; $tbgn=time(); $tlst=$tbgn; $cntr=0;

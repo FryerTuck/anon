@@ -109,7 +109,8 @@
 
                       What will you do?`;
 
-            let info=e.detail; let mesg=info.mesg; console.error(info);
+            let info=e.detail; let mesg=info.mesg; let nick=(info.evnt||info.name||"Unknown").split("Error").join(""); 
+            console.error(info);
 
             if(!userDoes('geek','sudo')){mesg=hint;}else
             {
@@ -117,7 +118,7 @@
                 mesg+=("\n\n```\n"+info.stak.join("\n")+"\n```\n\n<br>");
             };
             mesg+=`\n\n${apnd}`;
-            popConfirm(`${info.evnt} Fail`,mesg,`dark`,`auto`,`bug`,`500x260`)
+            popConfirm(`${nick} Fail`,mesg,`dark`,`auto`,`bug`,`500x260`)
             ({
                'need::report bug and refresh':function(ce, fm)
                {

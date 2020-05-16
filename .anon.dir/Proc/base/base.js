@@ -402,20 +402,28 @@
             if(!!this.stream&&isFunc(f)){f(this.stream);return}; let p=('/Proc/listen');
 
             this.stream=(new EventSource(p,{withCredentials:true})); this.stream.purl=p; server.sensor.live=0;
+            this.stream.onmessage=function(evnt)
+            {
+                let mesg=atob(evnt.data);
+                if(isJson(mesg)&&isin(mesg,[`"name":`,`"mesg":`,`"file":`,`"line":`],ALL)){fail(decode.jso(mesg));return};
+                dump("unhandled server mesg:\n"+atob(evnt.data));
+            };
             // this.stream.listen('open',function(evnt){});
             this.stream.listen('ping',function(evnt){server.sensor.live=1});
             this.stream.listen('shut',function(evnt){server.stream.close(); server.sensor.live=0});
-            this.stream.listen('fail',function(evnt){fail(decode.jso(atob(evnt.data)))});
+            // this.stream.listen('fail',function(evnt){fail(decode.jso(atob(evnt.data)))});
 
             this.stream.listen('error',function(evnt) // this happens on reconnect -or "connection fail", only the latter is an error
             {
                if(!server.sensor.live)
                {
                   server.stream.close(); // prevent reconnect flood for in case the server disconnects upon connect
-                  purl(evnt.Target.purl,(rsp)=>
+                  purl(evnt.Target.purl,(rsp,stb)=>
                   {
                      // debug this issue by visiting the event emitter via API interface
-                     console.log('server event emitter `'+evnt.Target.purl+'` has issues\n\nDetails:\n'+(rsp.body||'undefined'));
+                     rsp=(rsp.body||"undefined"); stb=stub(rsp,"event: fail\ndata: ");
+                     if(stb){rsp=trim(stb[2]); console.log(rsp); rsp=decode.jso(atob(rsp)); fail(rsp); return};
+                     fail('server event emitter `'+evnt.Target.purl+'` has issues\n\n'+rsp);
                   });
                };
             });
@@ -1478,7 +1486,8 @@
    {
       return function(butn, txt,btn)
       {
-         txt=trim(this.msg); txt=txt.split('\n'); txt.forEach((l,x)=>{txt[x]=l.trim()}); txt=txt.join('\n'); btn=[];  butn.each((v,k)=>
+         txt=trim(this.msg); txt=txt.split('\n'); txt.forEach((l,x)=>{txt[x]=l.trim()}); txt=txt.join('\n'); btn=[];
+         butn.each((v,k)=>
          {let p,t; p=stub(k,'::'); if(p){t=trim(p[0]); k=trim(p[2])}else{t='auto'}; radd(btn,{butn:`.${t}`, text:k, onclick:v})});
          if(btn.length<2){radd(btn,{butn:'', text:'Cancel', onclick:function(){this.root.exit()}})};
          parsed(txt,'markdown',(msg)=>
