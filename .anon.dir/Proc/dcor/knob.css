@@ -7,7 +7,8 @@
       min-width:80px; height:28px;
       background:linear-gradient(0deg, hsla(0,0%,85%,1) 0%, hsla(0,0%,95%,1) 100%);
       padding-left:0.5rem; padding-right:0.5rem; margin:0.5rem;
-      font-size:13px; font-weight:600; color:hsla(0,0%,30%,1); line-height:26px;
+      font-family:"butn" !important;
+      font-size:14px; color:hsla(0,0%,30%,1); line-height:26px;
       text-align:center;
       text-shadow:0px 0px 1px hsla(0,0%,0%,0.6);
       border:1px solid hsla(0,0%,70%,1); border-radius:3px !important;
@@ -15,6 +16,11 @@
       white-space:nowrap !important;
       cursor:pointer;
       user-select:none;
+   }
+
+   butn>span
+   {
+       font-family:"butn" !important;
    }
 
    butn:hover
@@ -34,7 +40,9 @@
    butn .butnIcon
    {
       width:10px !important;
-      text-align:center !important; vertical-align:middle !important;
+      text-align:center !important;
+      vertical-align:middle !important;
+      padding-bottom:3px;
    }
    butn .butnLine
    {
@@ -70,26 +78,48 @@
    }
 
 
+   butn.good
+   {
+      background:linear-gradient(0deg, hsla(120,90%,25%,1) 0%, hsla(120,90%,35%,1) 100%);
+      color:hsla(0,0%,95%,1);
+      border:1px solid hsla(120,100%,35%,1);
+   }
+
+   butn.good:hover
+   {
+      background:linear-gradient(0deg, hsla(120,90%,30%,1) 0%, hsla(120,90%,40%,1) 100%);
+      color:hsla(0,0%,100%,1);
+      border:1px solid hsla(120,100%,40%,1);
+   }
+
+   butn.hovrGood:hover
+   {
+      background:linear-gradient(0deg, hsla(120,90%,25%,1) 0%, hsla(120,90%,35%,1) 100%);
+      color:hsla(0,0%,95%,1);
+      border:1px solid hsla(120,100%,35%,1);
+   }
+
+
 
    butn.cool
    {
-      background:linear-gradient(0deg, hsla(220,90%,40%,1) 0%, hsla(220,90%,50%,1) 100%);
+      background:linear-gradient(0deg, hsla(220,90%,30%,1) 0%, hsla(220,90%,40%,1) 100%);
       color:hsla(0,0%,95%,1);
-      border:1px solid hsla(220,100%,35%,1);
+      border:1px solid hsla(220,100%,40%,1);
    }
 
    butn.cool:hover
    {
-      background:linear-gradient(0deg, hsla(220,90%,45%,1) 0%, hsla(220,90%,55%,1) 100%);
+      background:linear-gradient(0deg, hsla(220,90%,35%,1) 0%, hsla(220,90%,45%,1) 100%);
       color:hsla(0,0%,100%,1);
       border:1px solid hsla(220,100%,45%,1);
    }
 
    butn.hovrCool:hover
    {
-      background:linear-gradient(0deg, hsla(220,90%,40%,1) 0%, hsla(220,90%,50%,1) 100%);
+      background:linear-gradient(0deg, hsla(220,90%,30%,1) 0%, hsla(220,90%,40%,1) 100%);
       color:hsla(0,0%,95%,1);
-      border:1px solid hsla(220,100%,35%,1);
+      border:1px solid hsla(220,100%,40%,1);
    }
 
 
@@ -97,65 +127,65 @@
    {
       background:linear-gradient(0deg, hsla(280,60%,20%,1) 0%, hsla(280,60%,30%,1) 100%);
       color:hsla(0,0%,95%,1);
-      border:1px solid hsla(280,60%,10%,1);
+      border:1px solid hsla(280,60%,30%,1);
    }
 
    butn.need:hover
    {
       background:linear-gradient(0deg, hsla(280,60%,25%,1) 0%, hsla(280,60%,35%,1) 100%);
       color:hsla(0,0%,100%,1);
-      border:1px solid hsla(280,60%,15%,1);
+      border:1px solid hsla(280,60%,35%,1);
    }
 
    butn.hovrNeed:hover
    {
       background:linear-gradient(0deg, hsla(280,60%,20%,1) 0%, hsla(280,60%,30%,1) 100%);
       color:hsla(0,0%,95%,1);
-      border:1px solid hsla(280,60%,10%,1);
+      border:1px solid hsla(280,60%,30%,1);
    }
 
 
    butn.warn
    {
-      background:linear-gradient(0deg, hsla(35,100%,40%,1) 0%, hsla(35,100%,50%,1) 100%);
+      background:linear-gradient(0deg, hsla(35,100%,45%,1) 0%, hsla(35,100%,55%,1) 100%);
       color:hsla(0,0%,95%,1);
-      border:1px solid hsla(35,100%,35%,1);
+      border:1px solid hsla(35,100%,55%,1);
    }
 
    butn.warn:hover
    {
-      background:linear-gradient(0deg, hsla(35,100%,45%,1) 0%, hsla(35,100%,55%,1) 100%);
+      background:linear-gradient(0deg, hsla(35,100%,50%,1) 0%, hsla(35,100%,60%,1) 100%);
       color:hsla(0,0%,100%,1);
-      border:1px solid hsla(35,100%,40%,1);
+      border:1px solid hsla(35,100%,60%,1);
    }
 
    butn.hovrWarn:hover
    {
-      background:linear-gradient(0deg, hsla(35,100%,40%,1) 0%, hsla(35,100%,50%,1) 100%);
+      background:linear-gradient(0deg, hsla(35,100%,45%,1) 0%, hsla(35,100%,55%,1) 100%);
       color:hsla(0,0%,95%,1);
-      border:1px solid hsla(35,100%,35%,1);
+      border:1px solid hsla(35,100%,55%,1);
    }
 
 
    butn.harm
    {
-      background:linear-gradient(0deg, hsla(0,100%,40%,1) 0%, hsla(0,100%,50%,1) 100%);
+      background:linear-gradient(0deg, hsla(0,100%,35%,1) 0%, hsla(0,100%,45%,1) 100%);
       color:hsla(0,0%,95%,1);
-      border:1px solid hsla(0,100%,25%,1);
+      border:1px solid hsla(0,100%,45%,1);
    }
 
    butn.harm:hover
    {
-      background:linear-gradient(0deg, hsla(0,100%,45%,1) 0%, hsla(0,100%,55%,1) 100%);
+      background:linear-gradient(0deg, hsla(0,100%,40%,1) 0%, hsla(0,100%,50%,1) 100%);
       color:hsla(0,0%,100%,1);
-      border:1px solid hsla(0,100%,35%,1);
+      border:1px solid hsla(0,100%,50%,1);
    }
 
    butn.hovrHarm:hover
    {
-      background:linear-gradient(0deg, hsla(0,100%,40%,1) 0%, hsla(0,100%,50%,1) 100%);
+      background:linear-gradient(0deg, hsla(0,100%,35%,1) 0%, hsla(0,100%,45%,1) 100%);
       color:hsla(0,0%,100%,1);
-      border:1px solid hsla(0,100%,35%,1);
+      border:1px solid hsla(0,100%,45%,1);
    }
 /* ----------------------------------------------------------------------------------------------- */
 
@@ -1378,4 +1408,20 @@
        outline:auto !important;
        outline-color:hsla(220,100%,65%,1) !important;
    }
+/* ------------------------------------------------------------------------------------------------------------- */
+
+
+
+/* clan :: panlHeadBanr : to use anywhere
+/* ------------------------------------------------------------------------------------------------------------- */
+    .panlHeadBanr
+    {
+        width:100%; height:100%;
+        background:hsla(0,0%,90%,0.05);
+        padding:15px;
+        /* padding-top:12px; */
+        font-size:14px;
+        border-bottom:1px solid hsla(0,0%,22%,1);
+        box-shadow:0px 0px 6px hsla(0,0%,0%,0.3);
+    }
 /* ------------------------------------------------------------------------------------------------------------- */

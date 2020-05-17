@@ -46,9 +46,9 @@ namespace Anon;
 
       function vivify($b,$o=null)
       {
-         if($this->link){return $this->link;}; $i=$this->mean; $h=$i->host; $s=stub($h,'.'); $h=$s[2]; $s=$s[0]; $ca=[];
-         if(!isin(['mail','imap'],$s)){fail('invalid plug `subdomain`');}; $u="$i->user@$h"; $p=$i->pass; $n=$i->port;
-         if(!isVoid($b)&&!isText($b,1)){fail('invalid mailbox specification');}; $y='novalidate-cert';
+         if(!isVoid($b)&&!isText($b,1)){fail('invalid mailbox specification');};
+         if($this->link){return $this->link;}; $i=$this->mean; $h=$i->host; $s=$i->plug; $ca=[];
+         $u="$i->user@$h"; $p=$i->pass; $n=$i->port; $y='novalidate-cert';
          // if(!$b){$b='INBOX';};
          // if(!$n){$n=993;}elseif(($n!==993)&&($n!==143)){fail('invalid IMAP port');};
 
@@ -211,8 +211,10 @@ namespace Anon;
 
          foreach($mail as $x)
          {
-            $i=imap_headerinfo($L,$x); if(is_array($i)){$i=$i[0];}; $o=knob(); $i=knob($i); $t=$i->to[0]; $f=$i->sender[0]; $y=$i->reply_to[0];
-if(!$t){fail('mail_plug has issues and needs to be fixed');};
+            $i=imap_headerinfo($L,$x); if(isNuma($i)){$i=$i[0];}; $i=knob($i);
+            if(!isNuma($i->to)){$i->to=[knob(['host'=>$this->mean->host])];};
+            $o=knob(); $t=$i->to[0]; $f=$i->sender[0]; $y=$i->reply_to[0];
+
             if(isin($fltr,'destAddy')){$o->destAddy="$t->mailbox@$t->host";};
             if(isin($fltr,'destName')){$o->destName=(isin($t,'personal')?$t->personal:null);};
             if(isin($fltr,'fromAddy')){$o->fromAddy="$f->mailbox@$f->host";};
@@ -224,7 +226,7 @@ if(!$t){fail('mail_plug has issues and needs to be fixed');};
 
             if(isin($fltr,'flagTags'))
             {
-               $fo=imap_fetch_overview($L,$x); if(is_array($fo)){$fo=$fo[0];}; $fl=diff(keys($fo),$nf); $o->flagTags=[];
+               $fo=knob(imap_fetch_overview($L,$x)); if(is_array($fo)){$fo=$fo[0];}; $fl=diff(keys($fo),$nf); $o->flagTags=[];
                foreach($fl as $fn){if($fo->$fn===1){$o->flagTags[]=$fn;}}; $o->flagTags=fuse($o->flagTags,' ');
             };
 

@@ -31,6 +31,15 @@
                d=d.split("\n\n\n\n").join("\n\n<br><br>\n\n");
                d=d.split("\n\n\n").join("\n\n<br>\n\n");
                d=d.split("\n\n\n\n").join("\n\n");
+
+               let dl,cb,li,tl; dl=d.split("\n"); dl.forEach((l,x)=>
+               {
+                   tl="";  tl=(l+"").trim(); if(!tl){li=0; return};  if(tl.startsWith("```")){cb=(cb?0:1); return};
+                   if(cb){return}; if(tl.startsWith("- ")){li=1; dl[x]=tl; return}; if(!li){return};
+                   if(!tl.startsWith("- ")){dl[(x-1)]+=` ${tl}`; dl[x]=""};
+               });
+               let ul=[]; dl.forEach((l)=>{radd(ul,l)}); d=ul.join("\n");
+
                marked(d,{gfm:true,breaks:true},function(e,r)
                {
                   if(e){throw (e); return}; let n,p,c,h; h=('#MD'+hash());

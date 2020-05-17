@@ -153,7 +153,7 @@ namespace Anon;
       $b=stub($b,"\n"); $b=trim($b[2]); if(!isMail($o->destAddy)){fail('expecting `destAddy` as email address');}; requires::path($rp);
       $x=(new \Parsedown()); $x->setBreaksEnabled(true); $b=$x->text($b); $b=import('/Proc/libs/marked/page.htm',['parsed'=>$b]);
       $m=$o->destAddy; $c=$o->fromAddy; if(!$c){$c=conf('Proc/autoMail');}elseif(isMail($c)){$c=pget("/Mail/link/$c");};
-      if(!isin($c,'mail://')){fail('invalid plug specification .. make sure the `fromAddy` (autoMail -or plug) is valid');};
+      if(!isin($c,['mail://','imap://'])){dump(["Serellaaa!! hooHOO!!",$c]); fail('invalid plug specification .. make sure the `fromAddy` (autoMail -or plug) is valid');};
       if(!online()){fail('`'.HOSTNAME.'` is offline');};
 
       $r=crud($c)->insert

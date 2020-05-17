@@ -1,7 +1,7 @@
 "use strict";
 
 
-requires(['/Proc/dcor/aard.css']);
+requires(["/Proc/dcor/panl.css","/Proc/dcor/hack.woff"]);
 
 
 
@@ -76,14 +76,42 @@ extend(Anon)
       },
 
 
-      open:function(pth, drv,tab,ttl)
+      open:function(pth, drv,tab,ttl,cnf)
       {
          drv=select('#ProcTabber').driver; ttl=(pth+'');
          tab=drv.select(ttl); if(!!tab){return};
+         cnf=swap(ltrim(pth,'/$/'),'/conf','');
 
          purl('/Proc/openConf',{path:pth},function(rsp)
          {
-             dump(rsp.body);
+             rsp=rsp.body; if(!isJson(rsp)){dump(rsp);return}; rsp=decode.jso(rsp);
+
+             let rws=[]; rsp.each((v,k)=>{radd(rws,{row:
+             [
+                 {col:`.toolFeedCell .ProcConfName`, $:[{input:`#ProcConf_Name_${k} .toolTextFeed .dark`, value:k}]},
+                 {col:`.toolFeedCell .ProcConfValu`, $:[{input:`#ProcConf_Valu_${k} .toolTextFeed .dark`, value:v}]},
+                 {col:`.toolFeedCell .ProcConfVoid`, $:[{butn:`.toolButnTiny .harm`, icon:`cross`, title:`delete ${k}`}]},
+             ]})});
+
+             drv.create({title:ttl, contents:[{grid:
+             [
+                 {row:[{col:`.ProcPanlHead`, $:
+                 [
+                    {div:`.panlHeadBanr`, contents:
+                    [
+                        {b:[`Configure`]}, {span:[cnf]},
+                        {butn:`.dark .cool`, text:`Add`, onclick:function()
+                        {
+
+                        }},
+                        {butn:`.dark .good`, text:`Save`, onclick:function()
+                        {
+
+                        }},
+                    ]}
+                 ]}]},
+                 {row:[{col:[{panl:`.ProcPanlBody`, $:[{grid:`.noSpanVert`, $:[rws]}]}]}]},
+             ]}]});
          });
       },
    }

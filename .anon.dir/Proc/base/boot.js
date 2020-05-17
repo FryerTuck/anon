@@ -110,10 +110,10 @@
                       What will you do?`;
 
             let info=e.detail; let mesg=info.mesg; let nick=(info.evnt||info.name||"Unknown").split("Error").join("");
-            console.error(info);
 
             if(!userDoes('geek','sudo')){mesg=hint;}else
             {
+                console.error(info);
                 mesg+=("<br><br>\n\n```\n"+`file: ${info.file}\nline: ${info.line}`+"\n```\n\n<br>");
                 mesg+=("\n\n```\n"+info.stak.join("\n")+"\n```\n\n<br>");
             };

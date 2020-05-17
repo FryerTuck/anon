@@ -616,8 +616,9 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function crud($d)
    {
-      $x=path::info($d); if(!isKnob($x)){fail('expecting path, or URL');}; $o=$x->plug; $p=$x->path; if($o==='https'){$o='http';};
-      if((($x->type==='git')&&($o==='http'))||(($o==='file')&&($x->type==='fold')&&isee("$p/.git"))){$o='git';}; $c="Anon\\{$o}_plug";
+      $x=path::info($d); if(!isKnob($x)){fail('expecting path, or URL');}; $o=$x->plug; $p=$x->path;
+      if((($x->type==='git')&&($o==='http'))||(($o==='file')&&($x->type==='fold')&&isee("$p/.git"))){$o='git';}
+      elseif($o==='https'){$o='http';}elseif($o==='imap'){$o='mail';}; $c="Anon\\{$o}_plug";
       if(!is_class($c)){$p="/Proc/plug/$o.php"; requires::path($p); if(!is_class($c)){$p=crop($p); fail("expecting class `$c` in: `$p`");}};
       $i=(new $c($x)); return $i;
    }

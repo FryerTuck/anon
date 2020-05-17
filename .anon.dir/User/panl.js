@@ -5,7 +5,7 @@
 
 // init :: panl : view
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   requires(['/User/dcor/aard.css','/Proc/dcor/code.fnt','/Proc/dcor/head.fnt','/Proc/dcor/butn.fnt'],()=>
+   requires(['/User/dcor/aard.css','/Proc/dcor/code.fnt','/Proc/dcor/head.fnt'],()=>
    {
       select('#anonPanlView').enclan((userDoes('work')?'full':'part'));
       select('#anonPanlView').insert

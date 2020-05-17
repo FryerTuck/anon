@@ -307,10 +307,12 @@ modal .TaskDoktPage
 
 .DoktCmntWrap
 {
+   width:100%;
    border:1px solid hsla(0,0%,85%,1);
    border-radius:2px;
    background:hsla(0,0%,98%,1);
    margin-bottom:30px;
+   overflow-x:auto;
 }
 
 .DoktCmntText>div
@@ -318,6 +320,11 @@ modal .TaskDoktPage
    padding:10px;
 }
 
+.DoktCmntText .markdown-body code
+{
+    padding-left:10px !important;
+    font-size:12px;
+}
 
 .DoktCmntAtch
 {
@@ -491,6 +498,12 @@ modal .modalBox.DoktCmntModl.AtchSavePanl
    padding:6px !important;
    border-bottom:1px solid hsla(0,0%,22%,1) !important;
 }
+
+.DoktConfButnGrid
+{
+    height:unset !important;
+}
+
 
 /*
 .AtchSavePath>input

@@ -63,10 +63,11 @@ namespace Anon;
 
       static function treeMenu()
       {
+         permit::fubu('clan:work');
          $cn='name,path,mime,type';
          $al=path::ogle([using=>'$',fetch=>$cn,limit=>['type'=>'fold','levl'=>0]]);
          $ul=path::ogle([using=>'/',fetch=>$cn,limit=>['type'=>'fold','levl'=>0]]);
-         $sl=fuse($al,$ul); $rl=[]; foreach($sl as $so)
+         $sl=array_merge($al,$ul); $rl=[]; foreach($sl as $so)
          {
             $sc=path::conf($so->path); if(!$sc){continue;};
             $so->data=path::ogle([using=>$sc,fetch=>"$cn,data"]);
@@ -79,7 +80,9 @@ namespace Anon;
 
       static function openConf()
       {
-          $v=knob($_POST); $p=$v->path; expect::path($p,[R,F]); $r=pget($p); ekko($r);
+          permit::fubu('clan:lead,sudo,geek');
+          $v=knob($_POST); $p=$v->path; $p=swap(lshave($p,'/$/'),'/conf',''); $v=conf($p);
+          $n=stub($p,'/')[2]; if(!isKnob($v)){$v=knob(["($n)"=>$v]);}; ekko($v);
       }
 
 
@@ -106,6 +109,7 @@ namespace Anon;
 
       static function enhook($e=null,$p=null,$u=null)
       {
+         permit::fubu();
          $fc=0; if(!$e){$fc=1; $v=knob($_POST); $e=$v->emit; $p=$v->purl; $u=$v->uniq;}; // if from-client, or not
          if(!is_funnic($e)){fail::hooker('invalid event name');}; // must be a functional name
          if(!path($p)){fail::hooker('invalid path');}; $r=path::call($p,__FILE__); // call a closure or method by path
@@ -120,6 +124,7 @@ namespace Anon;
 
       static function dehook($e=null,$p=null)
       {
+         permit::fubu();
          $fc=0; if(!$e){$v=vars('client'); $e=$v->emit; $p=$v->purl;}; if(!is_funnic($e)){fail::hooker('invalid event name');};
          if(!path($p)){fail::hooker('invalid path');}; $s=sesn('HASH'); path::void("/Proc/temp/sesn/$s/hook/$e");
          if($fc){ekko(OK);};
@@ -129,6 +134,7 @@ namespace Anon;
 
       static function emit($e,$d='!')
       {
+         permit::fubu();
          if(!isText($e,1)){return;}; if(!is_string($d)){$d=tval($d);};
          $d=base64_encode($d); $b=": \nevent: {$e}\ndata: {$d}\n\n";
          $bpad=4096; if($bpad&&(strlen($b)<$bpad)){do{$b.=' ';}while(strlen($b)<$bpad);}; if(facing('SSE')&&!headers_sent())
@@ -140,6 +146,7 @@ namespace Anon;
 
       static function listen($evnt=null,$cbfn=null)
       {
+         permit::fubu();
          if(($evnt!==null)&&($cbfn!==null)){if(is_funnic($evnt)&&isFunc($cbfn))
          {
             // set blojob in file
@@ -197,6 +204,7 @@ namespace Anon;
 
       static function signal($e=null,$d=null,$t=null)
       {
+         permit::fubu();
          wait(1); // take a breather
          $fc=0; if($e===null){$v=knob($_POST); if($v->evnt){$fc=1; $e=$v->evnt; $d=json_decode(base64_decode($v->data)); $t=$v->trgt;}};
          if(!is_funnic($e)||self::$meta->hush->$e){return;}; // silence!!
@@ -220,6 +228,7 @@ namespace Anon;
 
       static function toolMenu()
       {
+         permit::fubu();
          $r=pget('/Proc/tool'); ekko($r);
       }
 
@@ -227,6 +236,7 @@ namespace Anon;
 
       static function userTool($t,$f)
       {
+         permit::fubu();
          $o=import("/Proc/tool/$t"); $r=$o->$f(); ekko($r);
       }
 

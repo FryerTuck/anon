@@ -31,3 +31,64 @@
       box-shadow:none; border:1px solid hsla(210,60%,50%,1);
    }
 /* ----------------------------------------------------------------------------------------------- */
+
+
+.ProcPanlHead
+{
+    height:60px;
+}
+
+.ProcPanlHead>.panlHeadBanr>span
+{
+    margin-left:15px;
+    margin-right:5px;
+    font-family:"hack";
+    font-weight:bold;
+    opacity:0.6;
+}
+
+.ProcPanlHead .panlHeadBanr butn
+{
+    margin-left:10px;
+}
+
+
+.ProcPanlBody
+{
+    padding:10px;
+}
+
+
+.ProcPanlBody .toolFeedCell
+{
+    height:24px !important;
+    padding:3px;
+    vertical-align:middle !important;
+}
+
+
+.ProcPanlBody .toolFeedCell input
+{
+    width:100% !important;
+    height:100% !important;
+    margin:0px !important;
+}
+
+
+.ProcConfName
+{
+    width:200px !important;
+}
+
+
+.ProcConfValu
+{
+}
+
+
+.ProcConfVoid
+{
+    width:24px;
+    padding-bottom:0px !important;
+    padding-top:6px !important;
+}

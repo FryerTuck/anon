@@ -81,6 +81,13 @@
    const isPath = function(v,g,l){if(!test(v,/^([a-zA-Z0-9-\/\._@~$]){1,432}$/)){return FALS}; return ((v[0]=='/')&&(isVoid(g)||spanIs(v,g,l)))};
    const isJson = function(v,g,l){return (isin(['[]','{}','""'],wrapOf(v))?TRUE:FALS);};
    const isDurl = function(v,g,l){return (isText(v,20)&&(v.indexOf('data:')===0)&&isin(v,';base64,'));};
+   const isHtml = function(v,g,l)
+   {
+       if(!isText(v)){return false}; v=v.trim(); if(!v){return false};
+       // if(!(v.startsWith("<")&&v.endsWith(">"))){return false};
+       let t="<a |<i |<b |<p |<span |<div |<pre |<code |<button |<style |<table ".split("|");
+       if(!isin(v,t)||!isin(v,">")){return false}; return true;
+   };
 
    const isList = function(v,g,l)
    {

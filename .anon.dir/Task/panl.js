@@ -46,7 +46,7 @@ select('#AnonAppsView').insert
             [
                {grid:
                [
-                  {row:[{col:'.slabMenuHead', contents:'test'}]},
+                  {row:[{col:'.slabMenuHead', contents:'done'}]},
                   {row:[{col:'.panlHorzLine', contents:{hdiv:''}}]},
                   {row:[{col:'.slabMenuBody', contents:{panl:'#testTaskList', role:'test', sorted:'jobcard::info.editTime:ASC'}}]},
                ]}
@@ -146,16 +146,19 @@ extend(Anon)
          render:function(o, c,s,d)
          {
             let l,x; l=keys(o.comments); s=span(l); c={}; x=l.shift(); c[x]=o.comments[x]; if(s>1){x=l.pop(); c[x]=o.comments[x]};
-            delete o.comments; d=0; c.each((v,k)=>
+            o.mesgHead=decode.b64(o.mesgHead); delete o.comments; d=0;
+            c.each((v,k)=>
             {
-               if(d<1){let pts=v.mesg.split('\n'); if(isin(pts[0],o.mesgHead)){pts.shift(); v.mesg=pts.join('\n')}};
-               parsed(v.mesg,'markdown',function(p){p.info=this.dat; c[this.ref]=p;d++}.bind({ref:k,dat:v}));
+               v.mesg=decode.b64(v.mesg); v.mesg=trim(v.mesg); v.mesg=trim(v.mesg,"<br>"); v.mesg=trim(v.mesg,"<br />");
+               v.mesg=trim(v.mesg); if(d<1){let pts=stub(v.mesg,"\n"); if(isin(pts[0],o.mesgHead)){v.mesg=pts[2]}};
+               if(isHtml(v.mesg)){c[k]=v}
+               else{parsed(v.mesg,'markdown',function(p){p.info=this.dat; c[this.ref]=p;d++}.bind({ref:k,dat:v}))};
             });
             wait.until(()=>{return !(d<s)},()=>
             {
                o.comments=c;
-               let jcid=('#JC'+o.docketID); if(!select(jcid)){Anon.Task.jobCards.create(o,jcid);return};
-               Anon.Task.jobCards.update(o,jcid);
+               let jcid=('#JC'+o.docketID); if(!select(jcid)){Anon.Task.jobCards.create(o,jcid)}
+               else{Anon.Task.jobCards.update(o,jcid)};
             });
          },
 
@@ -236,14 +239,15 @@ extend(Anon)
                      let x=fext(f); if(!x){x='auto'}; x=Anon.Task.vars.icon[x]; if(!x){x=Anon.Task.vars.icon.auto};
                      radd(a,{icon:'', face:x, size:16, hint:{peek:`/Task/data/${i.docketID}/comments/${v.cref}/atch/${f}`}});
                   });
-                  let p=v.mesg.split('\n'); (['# ','## ','### ','#### ']).forEach((h)=>{if(p[0].startsWith(h+i.mesgHead)){lpop(p)}});
-                  v.mesg=p.join('\n');
+                  let p=v.mesg.split('\n'); let mkdn=1;
+                  (['# ','## ','### ','#### ']).forEach((h)=>{if(p[0].startsWith(h+i.mesgHead)){lpop(p)}}); v.mesg=p.join('\n');
+                  if(isHtml(v.mesg)){mkdn=0; v.mesg=(`<div style="padding:10px; font-size:13px">`+v.mesg+`</div>`)};
 
                   radd(d,{div:'.DoktCmntWrap', contents:[{grid:'', contents:[{row:
                   [
                      {col:'.DoktCmntData', contents:
                      [
-                        {div:'.DoktCmntText', format:'markdown', contents:v.mesg},
+                        {div:'.DoktCmntText', format:(mkdn?"markdown":VOID), contents:v.mesg},
                         {grid:'.DoktCmntInfo', contents:[{row:
                         [
                            {col:'.DoktCmntRate', contents:
@@ -304,11 +308,19 @@ extend(Anon)
                   let v=i[k]; radd(c,{input:'', type:'text', placeholder:k, title:k, inival:v, value:v});
                });
 
-               radd(c,{grid:[{row:
+               radd(c,{grid:`.DoktConfButnGrid`, $:
                [
-                  {col:[{butn:'', contents:'Save', onclick:function(){Anon.Task.jobCards.config.save(this.root.select('grid')[0])}}]},
-                  {col:[{butn:'', contents:'Reset', onclick:function(){Anon.Task.jobCards.config.void(this.root.select('grid')[0])}}]},
-               ]}]});
+                   {row:
+                   [
+                      {col:[{butn:'.cool', contents:'Save', onclick:function(){Anon.Task.jobCards.config.save(this.root.select('grid')[0])}}]},
+                      {col:[{butn:'.warn', contents:'Reset', onclick:function(){Anon.Task.jobCards.config.undo(this.root.select('grid')[0])}}]},
+                   ]},
+                   {row:
+                   [
+                      {col:[]},
+                      {col:[{butn:'.harm', contents:'Delete', onclick:function(){Anon.Task.jobCards.config.void(this.root.select('grid')[0])}}]},
+                   ]},
+               ]});
 
                popModal({class:'AnonTaskDokt',info:i, onidle:function()
                {
@@ -364,10 +376,16 @@ extend(Anon)
                });
             },
 
-            void:function(m, l)
+            undo:function(m, l)
             {
                l=m.select('.TaskDoktConf')[0].select('input');
                l.forEach((n)=>{n.value=n.inival});
+            },
+
+            void:function(m, l)
+            {
+                if(!confirm(`Really delete this docket?`)){return};
+                alert("TODO :: delete docket");
             },
          },
 

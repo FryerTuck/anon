@@ -52,7 +52,7 @@ namespace Anon;
 
             $bn=$td->business; if(!$bn){$bn=find::firmByMail($td->fromAddy); $td->business=$bn;}; // get business name
             $wc=$td->withClan; if(!is_array($wc)){$wc=explode(',',$wc);}; //if(!isin($uc,$wc)){continue;}; // not meant for current user's clan
-            $ll=explode("\n",$td->editLogs); $ll=rpop($ll); $tt=isin($ll,"to test by");
+            $ll=explode("\n",$td->editLogs); $ll=rpop($ll); $tt=isin($ll,"to test by"); $td->mesgHead=encode::b64($td->mesgHead);
             $wu=$td->withUser; $fu=$td->fromUser; $fc=find::clanByUser($fu); if($fc)
             {xpop($fc,'work'); xpop($fc,'sort'); xpop($fc,'test'); xpop($fc,'gang'); xpop($fc,'lead'); xpop($fc,'sudo'); xpop($fc,'surf');}
             if(!$fc||(span($fc)<1)){$fc=['sort'];}; $rc=pick($uc,$fc);
@@ -66,10 +66,12 @@ namespace Anon;
             unset($cl,$cn,$cd); $cl=keys($td->comments); $cn=rpop($cl); $cd=dupe($td->comments->$cn); unset($td->comments);
             $cd->user=knob(['rate'=>User::ratingOf($cd->mail)]); $f=$cd->tags; if(!$f){$f='';};
             $f=frag($f,','); foreach($f as $x => $n){$i=pget("/Task/tags/$n"); if(!$i){fail("undefined task-tag `$n`");}; $f[$x]=$i;};
-            $cd->tico=$f; $td->comments=knob([$cn=>$cd]); $r->$q=$td;
+            $cd->mesg=encode::b64($cd->mesg); $cd->tico=$f; $td->comments=knob([$cn=>$cd]); $r->$q=$td;
          };
 
          Proc::signal('busy',['with'=>'/Task/dispense','done'=>100]);
+
+         if(NAVIPATH==='/Task/dispense'){ekko($r);return;};
          return $r;
       }
    # ------------------------------------------------------------------------------------------------------------------------------------------
