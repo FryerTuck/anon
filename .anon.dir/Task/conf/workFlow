@@ -1,8 +1,1 @@
 sort: deal
-deal: gang
-gang: plan
-plan: geek,draw,mind
-geek: test
-draw: test
-mind: test
-test: bill
