@@ -4,7 +4,7 @@
    #anonPanlView
    {
       width:100%; overflow:hidden;
-      color:hsla(0,0%,85%,1);
+      color:hsla(0,0%,90%,1);
       bottom:0px;
       box-shadow:0px 0px 5px hsla(0,0%,0%,0.5);
    }
@@ -97,7 +97,7 @@
    {
       height:40px;
       vertical-align:top;
-      background:url('/User/dcor/blue.jpg');
+      background:url('/User/dcor/wal2.jpg');
       background-size:cover;
    }
 
@@ -152,7 +152,7 @@
       text-align:left !important;
       font-size:16px !important;
       line-height:16px !important;
-      color:#AAA !important;
+      color:#BBB !important;
       padding:0px !important;
       margin:0px !important;
    }
@@ -168,7 +168,7 @@
       font-family:"code" !important;
       font-size:16px !important;
       line-height:16px !important;
-      color:#666;
+      color:#777;
       padding:0px !important;
       margin:0px !important;
    }
@@ -179,7 +179,7 @@
       height:16px !important;
       border:none !important;
       background:transparent !important;
-      color:#BBB;
+      color:#CCC;
       text-align:left;
       font-size:16px !important;
       line-height:16px !important;
@@ -194,19 +194,19 @@
 
    .replEchoProm
    {
-      color:#666;
+      color:#777;
       margin-right:6px;
    }
 
    .replEchoProm
    {
-      color:#666;
+      color:#777;
       margin-right:6px;
    }
 
    .replEchoMumb
    {
-      color:#444;
+      color:#555;
    }
 /* ----------------------------------------------------------------------------------------------------------------------------------------- */
 
