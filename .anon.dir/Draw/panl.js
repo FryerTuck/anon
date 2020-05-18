@@ -272,7 +272,7 @@ extend(Anon)
             select('#DrawScanPanl').reclan('hide:show');
             drv.create({title:ttl, contents:[{panl:'.DrawViewPanl', contents:[{div:'.DrawViewWrap', canFocus:1}]}]});
             tab=drv.select(ttl); tgt=tab.body.select('.DrawViewWrap')[0]; tgt.vars={}; mim=stub(img.src,';base64,')[0].split(':')[1];
-            lay=swap((rstub(ttl.split('/').pop(),'.')[0]),'.','_');
+            lay=swap(swap((rstub(ttl.split('/').pop(),'.')[0]),'.','_'),'-','_');
             tgt.vars.path=pth; tgt.vars.mime=mim;
 
             tgt.vars.unredo={indx:0,keep:

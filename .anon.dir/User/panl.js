@@ -72,12 +72,12 @@
                               'key:ArrowUp':function(){repl.ENV.cmdlog.seek(-1)},
                               'key:ArrowDown':function(){repl.ENV.cmdlog.seek(1)},
                               'Control c':function(){repl.echo('yoohoo')},
-                              'focus':function(){tick.after(50,()=>
+                              'focus':function(){tick.after(10,()=>
                               {
                                   select("#AnonReplView").setStyle({height:200});
                                   let pnl=select('#AnonReplPanl'); pnl.scrollTop=pnl.scrollHeight;
                               })},
-                              'blur':function(){tick.after(50,()=>
+                              'blur':function(){tick.after(110,()=>
                               {
                                   select("#AnonReplView").setStyle({height:(!focusObj.node.contains(this)?40:200)});
                                   let pnl=select('#AnonReplPanl'); pnl.scrollTop=pnl.scrollHeight;

@@ -10,13 +10,13 @@
 
 /* custom :: CSS : enjoy!
 /* ---------------------------------------------------------------------------- */
-   #AnonAppsDeck
+   #AnonMainGrid
    {
-      background:url('/User/dcor/blue.jpg');
+      background:url('/User/dcor/wal1.jpg');
       background-size:cover;
    }
 
-   #AnonAppsView
+   #AnonMainPanl
    {
       background:hsla(210,3%,16%,0.95);
    }

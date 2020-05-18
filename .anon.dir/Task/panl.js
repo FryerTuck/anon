@@ -312,12 +312,12 @@ extend(Anon)
                [
                    {row:
                    [
-                      {col:[{butn:'.cool', contents:'Save', onclick:function(){Anon.Task.jobCards.config.save(this.root.select('grid')[0])}}]},
-                      {col:[{butn:'.warn', contents:'Reset', onclick:function(){Anon.Task.jobCards.config.undo(this.root.select('grid')[0])}}]},
+                      {col:[{butn:'.good', contents:'Save', onclick:function(){Anon.Task.jobCards.config.save(this.root.select('grid')[0])}}]},
+                      {col:[{butn:'.cool', contents:'Undo', onclick:function(){Anon.Task.jobCards.config.undo(this.root.select('grid')[0])}}]},
                    ]},
                    {row:
                    [
-                      {col:[]},
+                      {col:[{butn:'.warn', contents:'Reject', onclick:function(){Anon.Task.jobCards.config.ject(this.root.select('grid')[0])}}]},
                       {col:[{butn:'.harm', contents:'Delete', onclick:function(){Anon.Task.jobCards.config.void(this.root.select('grid')[0])}}]},
                    ]},
                ]});
@@ -380,6 +380,12 @@ extend(Anon)
             {
                l=m.select('.TaskDoktConf')[0].select('input');
                l.forEach((n)=>{n.value=n.inival});
+            },
+
+            ject:function(m, l)
+            {
+                if(!confirm(`Really reject this docket?\nIf blah blah`)){return};
+                alert("TODO :: delete docket");
             },
 
             void:function(m, l)

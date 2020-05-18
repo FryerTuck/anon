@@ -536,7 +536,8 @@ extend(custom.domtag)
          create:function(obj,cbf,idx)
          {
             expect({knob:obj}); if(!isFunc(cbf)){cbf=function(){}}; let ttl,bdy,slf,pid,tid,hdr,tgt,hid,bid,hob,bob,stl,spn,fso,flp,cls,rot;
-            ttl=(obj.title||obj.head||obj.tab); bdy=(obj.contents||obj.body); if(!ttl){return}; if(bdy==VOID){bdy=''}; slf=this.entity;
+            ttl=(obj.title||obj.head||obj.tab); bdy=(obj.contents||obj.body); if(!isText(ttl)){return}; if(bdy==VOID){bdy=''}; slf=this.entity;
+            if(ttl.startsWith("/$/")||ttl.startsWith("/~/")){ttl=ltrim(ttl,"/")};
             expect({text:ttl}); if(!slf.id){slf.id=('TN'+hash())}; if(!isNumr(idx)){idx=0;}; stl=(slf.theme||'.dark'); spn=span(ttl);
             pid=slf.id; tid=sha1(pid+ttl); hdr=slf.select('.tabhdr')[0]; tgt=select(slf.target); cls=obj.canClose; if(cls==VOID){cls=1};
             hid=('#TAB'+tid+'HEAD'); bid=('#TAB'+tid+'BODY'); hob=select(hid); bob=select(bid); if(!!hob||!!bob){return}; if(!cls){cls=VOID};
