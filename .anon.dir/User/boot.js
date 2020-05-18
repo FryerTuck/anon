@@ -85,7 +85,7 @@
          if((tn-tl)>=ti){globVars("activity").idle=1};
       }.bind({incr:0}));
 
-      globVars({authTime:time()});
+      globVars({authTime:time()},[`authSudo /User/getRepel`]);
 
 
       server.listen('sesnFade',function(obj)

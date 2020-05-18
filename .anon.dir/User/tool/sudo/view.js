@@ -2,7 +2,7 @@ extend(repl)
 ({
    sudo:function(c,a, u,s,p,f,ct,lt)
    {
-      if(c&&c.length<1){return}; u=sesn('USER'); s=repl.sudo; p=select('#AnonReplProm'); f=select('#AnonReplFeed'); // short refs
+      if(c&&c.length<1){return}; u=sesn('USER'); s=this; p=select('#AnonReplProm'); f=select('#AnonReplFeed'); // short refs
       a=trim(a); ct=time(); lt=this.lastTime; if((ct-lt)<30){this.execCmnd(c,a);return};
 
       if(repl.ENV.target!='sudo') // no password given, command start
@@ -13,10 +13,11 @@ extend(repl)
 
       repl.ENV.target='exec'; repl.reprom(); //repl.mumble('stand by ...');
 
-      purl('/User/authSudo',{pw:c},(ar)=>
+      purl('/User/authSudo',{pw:c},function authSudo(ar)
       {
          if(ar.body!=OK){repl.mumble(ar.body);return};
-         this.execCmnd(s.cmnd,s.exec);
+         let rs=globVars({authTime:time()}); if(!rs){return};
+         s.execCmnd(s.cmnd,s.exec);
       });
    }
    .bind

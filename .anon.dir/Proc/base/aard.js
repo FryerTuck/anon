@@ -4,10 +4,14 @@ const HOSTNAME='{:HOSTNAME:}';
 const HOSTPURL=('https://'+HOSTNAME);
 const UNDF=(function(){}());
 
+Math.rand=function(min,max){return Math.floor(Math.random()*(max-min+1)+min);};
+
 const wack = function(r)
 {
-   let z,x,m,t;  z=this.line.length; x=Math.floor(Math.random()*z); m=this.line[x]; if(r){return m}; if(this.done||window.HALT){return};
-   window.HALT=1; this.done=1; document.documentElement.innerHTML=('<head></head><body>'+m+'</body>');
+   let z,x,m,d;  z=this.line.length; x=Math.floor(Math.random()*z); m=this.line[x]; if(r){return m}; if(this.done||window.HALT){return};
+   window.HALT=1; this.done=1; d=document.body; d.style.backgroundSize=`cover`; d.style.backgroundImage=`url('/User/dcor/anm1.gif')`;
+   d.innerHTML=`<div style="height:100%; background:hsla(0,0%,0%,0.7);padding:10px">${m}</div>`;
+   setTimeout(function(){d.style.backgroundImage=`url('/User/dcor/wal1.jpg')`;},Math.rand(900,3000));
 }
 .bind({line:atob('{:WACKMESG:}').split('\n'),done:0});
 

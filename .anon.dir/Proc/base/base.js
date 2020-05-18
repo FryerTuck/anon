@@ -1,13 +1,25 @@
 "use strict";
 
 
-// func :: globVars : immutable globals
+// func :: globVars : mutable/immutable globals that smells less funky .. i mean it has good enough security
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   const globVars = function(d)
+   const globVars = function(d,f, fs,si,y,r,rb)
    {
-      if(isText(d,1)){return this[d]}; if(!isKnob(d,1)){return};
-      d.each((v,k)=>{if(k.length<1){return}; if(this[k]!=VOID){return}; this[k]=v});
-   }.bind({});
+      fs=stak(); if(!fs){console.error(fs);wack();return}; // get the call-stack, if empty -> wack the abuser, else use it for from-auth
+      if(isText(f)){f=[f];}; if((f!==VOID)&&!isList(f)){fail("invalid globVars auth-from");return}; // verify auth, must be text-list, or VOID
+      if(f){y=0;f.forEach((p)=>{if(!isText(p)){fail("invalid globVars auth-from");y=1}}); if(y){return}}; // verify each text if from-auth
+      if(isText(d,1)){return dupe(this.vars[d])}; if(!isKnob(d,1)){return}; // return copy of requested value, or VOID if not object
+      // below will attempt to create/update global variables using from-auth security (if any -else it's immutable)
+      si=rstub(fs[1]," ")[0]; rb=true; d.each((v,k)=>
+      {
+         if(k.length<1){return}; r=this.vars[k]; // sanitize & prep
+         if(r===VOID){this.vars[k]=v; this.auth[k]=f; return}; // not defined yet, so create it now using auth-from (if any)
+         if(!isin(this.auth[k],si)){rb=false; console.error(fs); wack(); return STOP}; // not authorized to change this variable
+         this.vars[k]=v; // update existing variable, cannot re-auth, only initial creation can set auth
+      });
+      return rb;
+   }
+   .bind({vars:{},auth:{}});
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -1930,12 +1942,11 @@
       }
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   globVars({activity:{idle:0,last:time()}});
+   globVars({activity:{idle:0,last:time()}},[`imHere /Proc/base/base.js`]);
 
    const imHere = function()
    {
-      globVars("activity").idle=0;
-      globVars("activity").last=time();
+      globVars({activity:{idle:0,last:time()}});
    };
 
    document.addEventListener("mousemove", function(e){cursor.move(e.clientX,e.clientY);},false);

@@ -135,12 +135,12 @@
          });
 
 
-         globVars({focussed:{hash:VOID,node:VOID}});
-         tick.every(50,function()
+         extend(MAIN)({focusObj:{hash:VOID,node:VOID}});
+
+         tick.every(100,function()
          {
-            let e=document.activeElement; if(!e){return}; if(!e.UniqueID){e.modify({UniqueID:('NODE'+fash())}); harden('UniqueID',e)};
-            if(globVars('focussed').hash==e.UniqueID){return};
-            globVars('focussed').hash=e.UniqueID; globVars('focussed').node=e; signal('focuschange',e);
+            let e=document.activeElement; if(!e){return}; if(!e.UniqueID){extend(e)({UniqueID:('NODE'+fash())})};
+            if(focusObj.hash==e.UniqueID){return}; focusObj.hash=e.UniqueID; focusObj.node=e; signal('focuschange',e);
          });
 
 
@@ -157,7 +157,7 @@
    listen('key:Esc',function(evnt){tick.after(1,(dc,je,se,fe)=>
    {
       dc=1; je=evnt.jacked; if(isText(je)){je=select(je)}; se=evnt.srcElement;
-      fe=globVars('focussed').node; if(isNode(je)&&(je.houses(se)||je.houses(fe))){dc=0};
+      fe=focusObj.node; if(isNode(je)&&(je.houses(se)||je.houses(fe))){dc=0};
       if(!dc){return}; // hijacked .. we no longer have control here
 
       if(Busy.node){Busy.kill(); return};
