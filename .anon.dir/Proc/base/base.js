@@ -462,7 +462,7 @@
    tick.after(1500,function()
    {
       server.listen('busy',function(d){if(server.silent.busy){return}; Busy.edit(d.with,d.done)});
-      server.listen('done',function(d){dump("\nserver is done with:",d,"\n"); Busy.done();});
+      server.listen('done',function(d){if(d!="!"){dump(`\nserver is done with:\n${d}`)}; Busy.done();});
       server.listen('dump',function(d){dump(d)});
    });
 
@@ -1361,7 +1361,7 @@
          radd(obj.head,{icon:`.shut${clot}`, face:'cross', title:"close", onclick:function(){this.root.exit()}});
          if(isList(obj.body,2)&&isKnob(obj.body[0])){fiob=obj.body[0];}; if(!!fiob&&isKnob(vals(obj.body,-1))){liob=vals(obj.body,-1)};
          if(isText(obj.body)){obj.body=[{panl:obj.body}]}; if(!obj.foot){obj.foot=`Okay`};
-         if(isText(obj.foot)){obj.foot=[{butn:obj.foot}]};
+         if(isText(obj.foot)){obj.foot={butn:obj.foot}}; if(!isList(obj.foot)){obj.foot=[obj.foot]};
 
          if(!!fiob&&(isText(fiob.panl)||isText(fiob.page))&&!!liob&&(isText(liob.panl)||isText(liob.page)))
          {

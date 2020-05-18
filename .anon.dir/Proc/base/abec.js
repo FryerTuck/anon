@@ -968,7 +968,7 @@
    ({
       time:function()
       {
-         let r=(Date.now()/1000);
+         let r=Math.round((Date.now()/1000));
          return r;
       },
       round:function(n,d, r)

@@ -78,7 +78,7 @@
                               })},
                               'blur':function(){tick.after(50,()=>
                               {
-                                  select("#AnonReplView").setStyle({height:(!globVars('focussed').node.contains(this)?40:200)});
+                                  select("#AnonReplView").setStyle({height:(!globVars('focussed').node.contains(this)?60:200)});
                               })},
                            }}]},
                         ]}

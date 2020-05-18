@@ -76,6 +76,18 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    if(userDoes('work','sudo'))
    {
+      globVars({idleTime:{:'/User/conf/inactive':}});
+
+      tick.every(1000,function()
+      {
+         let tl=globVars("activity").last;  this.incr++;
+         let tn=time();  let ti=(globVars("idleTime")-12);
+         if((tn-tl)>=ti){globVars("activity").idle=1};
+      }.bind({incr:0}));
+
+      globVars({authTime:time()});
+
+
       server.listen('sesnFade',function(obj)
       {
          if(!globVars("activity").idle)
@@ -84,22 +96,17 @@
             return; // user is active
          };
 
-         popModal('Idle :: Your session is about to expire.',obj.time)
-         ([
-            {"good :: I'm here":function(){this.root.exit()}},
-         ])
+         popModal({skin:`dark`,size:`300x150`,time:obj.time})
+         ({
+            head:`Idle Session`,
+            body:`Your session is about to expire`,
+            foot:{butn:`I'm here`, onclick:function(){this.root.exit()}},
+         })
          .listen
          ({
             gone:function(){repl.exit();},
             exit:function(){Cookies.set(sesn('HASH'),'...'); navigator.sendBeacon('/User/isActive','1');},
          });
-      });
-
-      tick.every(1000,function()
-      {
-         let tl=globVars("activity").last;
-         let tn=time();
-         if((tn-tl)>3600){globVars("activity").idle=1};
       });
 
       initPanl();
