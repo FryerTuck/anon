@@ -82,13 +82,15 @@ namespace Anon;
       {
           permit::fubu('clan:lead,sudo,geek');
           $v=knob($_POST); $p=$v->path; $p=swap(lshave($p,'/$/'),'/conf',''); $v=conf($p);
-          $n=stub($p,'/')[2]; if(!isKnob($v)){$v=knob(["($n)"=>$v]);}; ekko($v);
+          $n=stub($p,'/')[2]; if(!isKnob($v)&&!isNuma($v)){$v=[$v];}; ekko($v);
       }
 
 
 
       static function saveConf()
       {
+          permit::fubu('clan:lead,sudo,geek'); $v=knob($_POST); $p=$v->path; $d=decode::b64($v->bufr);
+          $r=path::make($p,$d); if(!$r&&($r!==0)){fail("could not save $p");return;}; ekko(OK);
       }
 
 

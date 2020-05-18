@@ -26,7 +26,7 @@ extend(MAIN)
          {
             r=[]; if(!isText(s,1)){return r}; b=''; q=0; s=s.trim(); if(s.length<1){return r}; s.split('').forEach(function(c)
             {
-               if(isin(['"',"'",'`'],c)){if(!q){q=c;return}; if(c!=q){b+=c;return}; q=0; r.push(b); b=''; return}; // quoted
+               if(isin(['"',"'",'`'],c)){if(!q){q=c;b+=c;return}; b+=c; q=0; r.push(b); b=''; return}; // quoted
                if(q){b+=c;return}; if(c!=' '){b+=c;return}; if(b!=''){r.push(b);b=''};
             });
             r.push(b); return r;

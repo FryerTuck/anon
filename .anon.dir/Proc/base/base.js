@@ -858,15 +858,17 @@
 
 // tool :: (Element.prototype) : select .. handy document.getElement(s)By .. select ancestor with `^ ^2` .. and siblings with `< > <4 >2 << >>`
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   const select = function(x,h, l,p,c,n,r,f)
+   const select = function(x,h, l,p,c,n,r,f,y)
    {
       if(isText(x)){x=x.trim()}; if(!isText(x,1)){return}; if(!isNode(h)){h=document.documentElement}; c=VOID; n=1; // validate
       c=isin(x,['^^','<<','>>','^','<','>']); if(c&&(x.indexOf(c)>0)){c=VOID}; // validate special-select
-      if(c){p=stub(x,c); x=p[2]; p=stub(x,' '); if(p){n=(p[0]);x=p[2]}else if(!isNaN(x)){n=x;x=''}};
+      if(c){p=stub(x,c); x=p[2]; p=stub(x,' '); if(p){n=(p[0]);x=p[2]}else if(!isNaN(x)){n=x;x=''}}; r=[];
       if(c){h=h.lookup(c,n); if(!x){return h}; return select(x,h)}; f='querySelectorAll'; // lookup relatives .. line below is all children *
-      if(x=='*'){r=[]; l=listOf(h.childNodes); l.forEach((i)=>{if(!((i.nodeName=='#text')&&!i.textContent.trim())){r.push(i)}}); return r};
-      c=x[0]; l=h[f](':scope '+x); if((l.length<1)&&(c=='#')&&(x.indexOf(' ')<1)){l=h[f](':scope [name='+x.slice(1)+']')}; // pseudo-selector
-      if(l.length<1){return}; r=[]; listOf(l).forEach((i)=>{r.push(i)}); if((c=='#')&&!isin(x,' ')){r=((r.length>0)?r[0]:VOID)}; return r;
+      if(x=='*'){l=listOf(h.childNodes); l.forEach((i)=>{if(!((i.nodeName=='#text')&&!i.textContent.trim())){r.push(i)}}); return r};
+      c=x[0]; l=h[f](':scope '+x); if((l.length<1)&&(c=='#')&&(x.indexOf(' ')<1)){x=x.slice(1);l=h[f](':scope [name='+x+']')}; // pseudo-selector
+      if(l.length<1){return}; listOf(l).forEach((i)=>
+      {if(isin(x,"[value=")){y=stub(x,"=")[2]; y=unwrap(rstub(y,"]")[0]); if(i.value!=y){return}}; radd(r,i);}); // fixed querySelector bug
+      if(r.length<1){return}; if((c=='#')&&!isin(x,' ')){r=r[0]}; return r;
    };
 
 
@@ -1351,12 +1353,15 @@
          if((obj.info!=VOID)&&!isText(obj.info,1)&&!isList(obj.info,1)&&!isKnob(obj.info,1)){fail('invalid modal info');};
 
          if(!atr){atr={}}; var mid,thm,box,inf,rsl; mid=('MDL'+hash()); if(!atr.class){atr.class='';}; atr.class=atr.class.trim().split(' ');
-         ladd(atr.class,'modalBox'); ladd(atr.class,'cenmid'); thm=atr.theme; if(thm){radd(atr.class,thm)}; atr.class=atr.class.join(' ');
+         ladd(atr.class,'modalBox'); ladd(atr.class,'cenmid'); thm=(atr.theme||atr.skin); if(thm){radd(atr.class,thm)}; atr.class=atr.class.join(' ');
 
-         if(isText(obj.head)){obj.head={span:obj.head}}; let fiob,liob,pagr,clot; clot=(thm?` .${thm}`:"");
-         if(!isList(obj.head)){obj.head=[obj.head]};
+         if(isText(obj.head)){obj.head={span:obj.head}}; if(!isList(obj.head)){obj.head=[obj.head]};
+         if(!(obj.head[0]||{}).icon){ladd(obj.head,{icon:`info`})}; let fiob,liob,pagr,clot,tout; clot=(thm?` .${thm}`:"");
+         if(!isList(obj.head)){obj.head=[obj.head]}; tout=atr.time; if(!isInum(tout)){tout=VOID};
          radd(obj.head,{icon:`.shut${clot}`, face:'cross', title:"close", onclick:function(){this.root.exit()}});
          if(isList(obj.body,2)&&isKnob(obj.body[0])){fiob=obj.body[0];}; if(!!fiob&&isKnob(vals(obj.body,-1))){liob=vals(obj.body,-1)};
+         if(isText(obj.body)){obj.body=[{panl:obj.body}]}; if(!obj.foot){obj.foot=`Okay`};
+         if(isText(obj.foot)){obj.foot=[{butn:obj.foot}]};
 
          if(!!fiob&&(isText(fiob.panl)||isText(fiob.page))&&!!liob&&(isText(liob.panl)||isText(liob.page)))
          {
@@ -1395,7 +1400,7 @@
          {
             obj.foot.forEach((b,i)=>
             {
-               if((lowerCase((b.text||b.contents)+"")=="cancel")&&!b.onclick&&!b.listen)
+               if(isin(["cancel","okay"],lowerCase((b.text||b.contents||b.$||b.butn)+""))&&!b.onclick&&!b.listen)
                {obj.foot[i].onclick=function(){this.root.exit()}};
             });
          };
@@ -1405,7 +1410,9 @@
             {row:[{col:'.head', contents:[{div:obj.head}]}]},
             {row:[{col:'.body', contents:[{panl:'.wrap', contents:[{grid:[{row:
             [
-               (obj.info?{col:'.info', contents:obj.info}:VOID),{col:'.view', contents:obj.body}
+               (obj.info?{col:'.info', contents:obj.info}:VOID),
+               {col:'.view', contents:obj.body},
+               (tout?{col:'.side', contents:[{div:'.xbar'}]}:VOID),
             ]}]}]}]}]},
             {row:[{col:'.foot', contents:obj.foot}]},
          ]});
@@ -1437,6 +1444,18 @@
             };
          };
 
+
+        rsl.gone=function(sec)
+        {
+           let bar=this.select('.xbar')[0]; let hgt=rectOf(this.select('.body')[0]).height; bar.view('block');
+           let unt=(hgt/sec); bar.setStyle({height:hgt}); this.ticker=tick.every(1000,()=>
+           {
+              sec--; bar.setStyle({height:Math.floor(unt*sec)}); if(sec>0){return};
+              this.signal('gone'); tick.after(60,()=>{this.exit()});
+           });
+        };
+
+
          rsl.done=function(me,cx,pl,il,lx,ad)
          {
             if(!this.pageIndx){this.pageIndx=0;}; me=this; cx=me.pageIndx; pl=listOf(me.select('.view')[0].childNodes);
@@ -1451,6 +1470,7 @@
          rsl.select('.shut')[0].root=rsl; (rsl.select('treeview')||[]).forEach((b)=>{b.main=rsl});
          box=rsl.select('.modalBox')[0]; let bxd=rectOf(box); box.declan('cenmid');
          box.setStyle({position:'absolute',left:Math.floor(bxd.left),top:Math.floor(bxd.top)});
+         if(tout){tick.after(60,()=>{rsl.gone(tout)})}; rsl.focus();
          return rsl;
       },
    });
@@ -1460,7 +1480,7 @@
 
 // func :: popAlert : opens a pre-formatted modal dialogue .. requires a heading
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   const popAlert = function(titl,skin,tone,icon,size)
+   const popAlert = function(titl,skin,tone,icon,size,tout)
    {
       return function(mesg)
       {

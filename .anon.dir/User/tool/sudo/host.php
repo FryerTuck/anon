@@ -1,26 +1,26 @@
 <?
 namespace Anon;
 
-$export=function($a,$c,$h)
+$export=function($c,$a,$h)
 {
-   if(!userDoes('sudo')){ekko(wack());}; $c=trim($c); if(!isText($c,1)){ekko('nothing to do');};
+   if(!userDoes('sudo')){ekko(wack());}; $a=trim($a); if(!isText($a,1)){ekko('nothing to do');};
 
-   if($a==='php')
+   if($c==='php')
    {
-      $x=stub($c,['(','::']); if($x&&(is_funnic($x[0]))){$c=('$_RSL'." = $c");};
-      if(substr($c,-1,1)!==';'){$c="$c;";}; $r=call(function($_CMD)
+      $x=stub($a,['(','::']); if($x&&(is_funnic($x[0]))){$a=('$_RSL'." = $a");};
+      if(substr($a,-1,1)!==';'){$a="$a;";}; $r=call(function($_CMD)
       {
          $_RSL=VOID; ob_start(); eval("namespace Anon;\n$_CMD"); if($_RSL!==VOID){ekko($_RSL);};
          $l=get_defined_vars(); $r=trim(ob_get_clean()); if(span($r)>0){ekko($r);}; unset($l['_CMD'],$l['_RSL']);
          if(span($l)<1){ekko(OK);}; ekko($l);
-      },[$c]);
+      },[$a]);
    };
 
-   if($a==='sh')
+   if($c==='sh')
    {
-      $f=0; try{$r=exec::{"$c"}($h);}catch(\Exception $e){$f=1; $r=$e->getMessage();};
+      $f=0; try{$r=exec::{"$a"}($h);}catch(\Exception $e){$f=1; $r=$e->getMessage();};
       if(!$r){$r=($f?FAIL:OK);}; ekko($r);
    };
 
-   fail("command `$a` is not supported, yet");
+   fail("command `$c` is not supported, yet");
 };

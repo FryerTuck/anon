@@ -97,6 +97,14 @@
    };
 
    const isKnob = function(v,g,l){if(((typeof v)!='object')||isList(v)||isNode(v)){return FALS}; return (isVoid(g)||spanIs(v,g,l))};
+
+   const isObja = function(d,g,l)
+   {
+       if(!isKnob(d)){return false}; let k,x,v; k=Object.keys(d); x=0;
+       for(let i in k){if(!k.hasOwnProperty(i)){continue}; v=(k[i]*1); if(v!=x){return false}; x++};
+       return (isVoid(g)||spanIs(k,g,l));
+   };
+
    const isNode = function(v,g,l){if(!(v instanceof Element)){return FALS}; return (isVoid(g)||spanIs(v.childNodes.length,g,l))};
    const isTemp = function(v){return (v instanceof DocumentFragment)};
    const isMain = function(v){if(!v||isBool(v)){return FALS}; return (v.isMaster||v.isWorker);};
@@ -1056,6 +1064,11 @@
       fuse:function(a)
       {
          let r=dupe(this); if(!isKnob(a)&&!isList(a)){return r}; a.each((v,k)=>{r[k]=v}); return r;
+      },
+
+      unify:function(d, r)
+      {
+          if(!isText(d)){return}; r=[]; this.each((v,k)=>{radd(r,(k+d+v))}); return r;
       },
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------
