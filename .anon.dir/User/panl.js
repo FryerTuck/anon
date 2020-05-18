@@ -75,10 +75,11 @@
                               'focus':function(){tick.after(50,()=>
                               {
                                   select("#AnonReplView").setStyle({height:200});
+                                  let pnl=select('#AnonReplPanl'); pnl.scrollTop=pnl.scrollHeight;
                               })},
                               'blur':function(){tick.after(50,()=>
                               {
-                                  select("#AnonReplView").setStyle({height:(!globVars('focussed').node.contains(this)?54:200)});
+                                  select("#AnonReplView").setStyle({height:(!globVars('focussed').node.contains(this)?40:200)});
                                   let pnl=select('#AnonReplPanl'); pnl.scrollTop=pnl.scrollHeight;
                               })},
                            }}]},
