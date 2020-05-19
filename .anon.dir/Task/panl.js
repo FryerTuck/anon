@@ -123,6 +123,11 @@ extend(Anon)
          {
             Anon.Task.jobCards.prerun(d);
          });
+
+         server.listen('docketDelete',(d)=>
+         {
+            remove(`#JC${d}`); Busy.edit(`delete${d}`,100);
+         });
       },
 
 
@@ -318,11 +323,11 @@ extend(Anon)
                    {row:
                    [
                       {col:[{butn:'.warn', contents:'Reject', onclick:function(){Anon.Task.jobCards.config.ject(this.root.select('grid')[0])}}]},
-                      {col:[{butn:'.harm', contents:'Delete', onclick:function(){Anon.Task.jobCards.config.void(this.root.select('grid')[0])}}]},
+                      {col:[{butn:'.harm', contents:'Delete', onclick:function(){Anon.Task.jobCards.config.void(this.dbox)}}]},
                    ]},
                ]});
 
-               popModal({class:'AnonTaskDokt',info:i, onidle:function()
+               popModal({class:'AnonTaskDokt',info:i, skin:"lite", onidle:function()
                {
                   let te=this.select('.TaskDoktConf')[0];
                   te.reclan('shut:open'); tick.after(10,()=>{te.reclan('open:shut');});
@@ -384,14 +389,25 @@ extend(Anon)
 
             ject:function(m, l)
             {
-                if(!confirm(`Really reject this docket?\nIf blah blah`)){return};
-                alert("TODO :: delete docket");
+                if(!confirm(`Really reject this docket?`)){return};
+                alert("TODO :: reject docket");
             },
 
-            void:function(m, l)
+            void:function(d)
             {
-                if(!confirm(`Really delete this docket?`)){return};
-                alert("TODO :: delete docket");
+               popConfirm(`### Really delete this docket?\n\n>This action cannot be undone`)
+               ({
+                  'harm::Delete':function(e,x)
+                  {
+                     x=d.info.docketID; Busy.edit(`delete${x}`,10);
+                     purl('/Task/voidDokt',{dref:x},(r)=>
+                     {
+                        this.root.exit(); r=r.body;
+                        if(r!=OK){fail(`Could not delete docket: ${x}\n\n>${r}`);return};
+                        wait.until(()=>{return !select(`#JC${x}`)},()=>{d.root.exit()});
+                     });
+                  },
+               });
             },
          },
 

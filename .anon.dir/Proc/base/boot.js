@@ -118,15 +118,14 @@
                 mesg+=("\n\n```\n"+info.stak.join("\n")+"\n```\n\n<br>");
             };
             mesg+=`\n\n${apnd}`;
-            popConfirm(`${nick} Fail`,mesg,`dark`,`auto`,`bug`,`500x260`)
+            popConfirm(`${nick} Fail :: ${mesg}`,`dark`,`auto`,`bug`,`500x260`)
             ({
                'need::report bug and refresh':function(ce, fm)
                {
                   fm="Failed to report bug :(\n\nPlease contact tech support:\n{:TECHMAIL:}";
                   try{purl("/Proc/makeTodo",{mesg:btoa(encode.jso(e.detail))},(r)=>
                   {
-                     dump(r.body);
-                     if(r.body!=OK){alert(fm);return}; newGui({APIKEY:sesn('HASH')});
+                     if(r.body!=OK){console.error(r.body); alert(fm);return}; newGui({APIKEY:sesn('HASH')});
                   });}catch(err){alert(fm);};
                },
                'warn::refresh':function(){newGui({APIKEY:sesn('HASH')});},

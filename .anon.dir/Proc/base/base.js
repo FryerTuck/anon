@@ -1365,7 +1365,8 @@
          if((obj.info!=VOID)&&!isText(obj.info,1)&&!isList(obj.info,1)&&!isKnob(obj.info,1)){fail('invalid modal info');};
 
          if(!atr){atr={}}; var mid,thm,box,inf,rsl; mid=('MDL'+hash()); if(!atr.class){atr.class='';}; atr.class=atr.class.trim().split(' ');
-         ladd(atr.class,'modalBox'); ladd(atr.class,'cenmid'); thm=(atr.theme||atr.skin); if(thm){radd(atr.class,thm)}; atr.class=atr.class.join(' ');
+         ladd(atr.class,'modalBox'); ladd(atr.class,'cenmid'); thm=(atr.theme||atr.skin); if(!thm){thm=(userDoes("work")?"dark":"lite")};
+         if(thm){radd(atr.class,thm)}; atr.class=atr.class.join(' ');
 
          if(isText(obj.head)){obj.head={span:obj.head}}; if(!isList(obj.head)){obj.head=[obj.head]};
          if(!(obj.head[0]||{}).icon){ladd(obj.head,{icon:`info`})}; let fiob,liob,pagr,clot,tout; clot=(thm?` .${thm}`:"");
@@ -1434,7 +1435,7 @@
          if(sze){if(!isKnob(atr.style)){atr.style={}}; atr.style.width=sze[0]; atr.style.height=sze[1];};
          box.modify(atr);
 
-         rsl=create({modal:mid, contents:[{wrap:[box]}]});
+         rsl=create({modal:mid, contents:[{wrap:[box]}]}); box.root=rsl;
          rsl.page=function(d, me,cx,lx,nx,nl,fn)
          {
             if(!this.pageIndx){this.pageIndx=0;}; me=this; cx=me.pageIndx; nl=listOf(me.select('.view')[0].childNodes);
@@ -1522,19 +1523,21 @@
 
 // func :: popConfirm : opens a pre-formatted modal dialogue .. requires a heading, message and a button
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   const popConfirm = function(titl,mesg,skin,tone,icon,size)
+   const popConfirm = function(mesg,skin,tone,icon,size, titl)
    {
+      let mp=stub(mesg,"::"); if(mp){titl=trim(mp[0]); mesg=trim(mp[2])}else{titl="Confirm"};
       return function(butn, txt,btn)
       {
          txt=trim(this.msg); txt=txt.split('\n'); txt.forEach((l,x)=>{txt[x]=l.trim()}); txt=txt.join('\n'); btn=[];
+         if(!this.skn){this.skn=(userDoes("work")?"dark":"lite")};
          butn.each((v,k)=>
          {let p,t; p=stub(k,'::'); if(p){t=trim(p[0]); k=trim(p[2])}else{t='auto'}; radd(btn,{butn:`.${t}`, text:k, onclick:v})});
-         if(btn.length<2){radd(btn,{butn:'', text:'Cancel', onclick:function(){this.root.exit()}})};
+         if(btn.length<2){radd(btn,{butn:'', text:'Cancel'})};
          parsed(txt,'markdown',(msg)=>
          {
             popModal({class:'AnonPopAlert', theme:this.skn, size:this.sze})
             ({
-               head:this.ttl,
+               head:[{icon:this.ico},this.ttl],
                body:
                [
                   {layr:'.bodyicon', contents:[{icon:`.${this.tne}`,face:this.ico}]},
@@ -1544,7 +1547,7 @@
             });
          });
       }
-      .bind({ttl:titl,msg:mesg,skn:(skin||'lite'),tne:(tone||'auto'),ico:(icon||'question-circle'),sze:(size||'400x220')});
+      .bind({ttl:titl,msg:mesg,skn:skin,tne:(tone||'auto'),ico:(icon||'question-circle'),sze:(size||'400x230')});
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 

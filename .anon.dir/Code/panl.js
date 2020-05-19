@@ -433,7 +433,7 @@ extend(Anon)
                blk=select('#CodeBulkPanl'); lst=blk.select('input'); if(!lst){return}; // nothing found
                if(!blk.select('h3')[0].pick){blk.select('h3')[0].pick=1; lst.each((n)=>{n.view('inline-block')}); return}; // show checkboxes
                vrs={list:[],find:qry.findText,swap:qry.swapText}; lst.each((n)=>{if(n.checked){radd(vrs.list,n.value)}});
-               popConfirm(`Confirm BULK replace`,`This action cannot be "undone".\nAre you sure you want to do this?`,`dark`)
+               popConfirm(`Confirm BULK replace :: This action cannot be "undone".\nAre you sure you want to do this?`)
                ({
                   'warn::Ok':function(){purl('/Code/bulkSwap',vrs,()=>{slf.seek(qry)});this.root.exit()},
                });

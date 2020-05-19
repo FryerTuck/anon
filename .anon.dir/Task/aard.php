@@ -20,6 +20,7 @@ namespace Anon;
 
       static function init()
       {
+         permit::fubu('clan:work');
       }
 
       static function __init()
@@ -258,6 +259,18 @@ namespace Anon;
          self::makeNote($co); if(!$da){ekko(OK);}; $fa=pget("$dp/destAddy"); $mh="About docket #$dr - $mh"; requires::stem('Mail');
          xeno::sendMarkDownMail(['fromAddy'=>$fa,'destAddy'=>$da, 'mesgHead'=>$mh, 'mesgBody'=>$co->mesg, 'attached'=>$af, 'runDebug'=>true]);
          return OK;
+      }
+   # ------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+   # func :: voidDokt : delete docket by doktID
+   # ------------------------------------------------------------------------------------------------------------------------------------------
+      static function voidDokt()
+      {
+         $po=knob($_POST); $dr=$po->dref; $dp="/Task/data/$dr";
+         Proc::signal('docketDelete',$dr,'.work');
+         $r=path::void($dp); return ($r?OK:FAIL);
       }
    # ------------------------------------------------------------------------------------------------------------------------------------------
    }
