@@ -134,6 +134,8 @@ extend(Anon)
 
       jobCards:
       {
+         memory:{},
+
          prerun:function(d)
          {
             // (select('#TaskPanlSlab').select('jobcard')||[]).forEach((n)=>{if(!d[n.info.docketID]){remove(n)}});
@@ -146,6 +148,7 @@ extend(Anon)
                Anon.Task.jobCards.render(v);
             });
          },
+
 
 
          render:function(o, c,s,d)
@@ -166,6 +169,7 @@ extend(Anon)
                else{Anon.Task.jobCards.update(o,jcid)};
             });
          },
+
 
 
          create:function(o,jcid,jico,cmnt)
@@ -202,8 +206,6 @@ extend(Anon)
          },
 
 
-         memory:{},
-
 
          update:function(obj,jid, slf,hsh,cmt,ico,crd)
          {
@@ -218,6 +220,7 @@ extend(Anon)
          },
 
 
+
          mvCard:function(dref,mvto)
          {
             purl('/Task/moveCard',{dref:dref,mvto:mvto},(r)=>
@@ -225,6 +228,7 @@ extend(Anon)
                if(r.body!=':OK:'){dump(r.body); alert('something went wrong');};
             });
          },
+
 
 
          readMe:function(i)
@@ -267,8 +271,8 @@ extend(Anon)
                            [
                               {col:'.DoktUserFace', contents:[{div:
                               [
-                                 {img:'',src:avatar(v.mail,'blank',60)},
                                  {img:'',src:'/User/dcor/mug2.jpg'},
+                                 {img:'',src:avatar(v.mail,'blank',60)},
                               ]}]},
                               {col:'.DoktUserInfo', contents:[{b:v.nick},{span:v.mail},{span:(v.repu+'')}]},
                            ]}]}]},
@@ -322,7 +326,7 @@ extend(Anon)
                    ]},
                    {row:
                    [
-                      {col:[{butn:'.warn', contents:'Reject', onclick:function(){Anon.Task.jobCards.config.ject(this.root.select('grid')[0])}}]},
+                      {col:[{butn:'.need', contents:'Return', onclick:function(){Anon.Task.jobCards.config.ject(this.root.select('grid')[0])}}]},
                       {col:[{butn:'.harm', contents:'Delete', onclick:function(){Anon.Task.jobCards.config.void(this.dbox)}}]},
                    ]},
                ]});
@@ -359,6 +363,7 @@ extend(Anon)
          },
 
 
+
          rating:function(d,c,v,n, p)
          {
             purl('/Task/voteNote',{dref:d,cref:c,vote:v},(r)=>
@@ -367,6 +372,7 @@ extend(Anon)
                v=((n.textContent.trim())*1); v=(v+p); n.textContent=v;
             });
          },
+
 
 
          config:
@@ -381,17 +387,31 @@ extend(Anon)
                });
             },
 
-            undo:function(m, l)
+
+            undo:function(d, l)
             {
-               l=m.select('.TaskDoktConf')[0].select('input');
+               l=d.select('.TaskDoktConf')[0].select('input');
                l.forEach((n)=>{n.value=n.inival});
             },
 
-            ject:function(m, l)
+
+            ject:function(d, inf,ref,prv,eml)
             {
-                if(!confirm(`Really reject this docket?`)){return};
-                alert("TODO :: reject docket");
+               inf=d.info; ref=inf.docketID; dump(inf);
+
+               popModal(`step-backward :: Really return this docket?`)
+               ({
+                  body:[{panl:
+                  [
+                     {h1:`olo`},
+                  ]}],
+                  foot:
+                  [
+                     {butn:`Cancel`},
+                  ],
+               });
             },
+
 
             void:function(d)
             {
@@ -410,6 +430,7 @@ extend(Anon)
                });
             },
          },
+
 
 
          savAtc:function(ad, cb)
@@ -457,6 +478,7 @@ extend(Anon)
          },
 
 
+
          attach:function(cb)
          {
             popModal({class:'DoktCmntModl CmntAtchPanl',theme:'dark'})
@@ -487,6 +509,7 @@ extend(Anon)
          },
 
 
+
          mkCmnt:function(g,f)
          {
             let dr,mt,af; dr=g.dref; mt=g.select('.DoktCmntMake')[0].value; af=g.select('.DoktCmntAtch')[0].attached;
@@ -498,3 +521,17 @@ extend(Anon)
       },
    }
 });
+
+
+
+               popModal(`step-backward :: Really return this docket?`)
+               ({
+                  body:[{panl:
+                  [
+                     {h1:`olo`},
+                  ]}],
+                  foot:
+                  [
+                     {butn:`Cancel`},
+                  ],
+               });

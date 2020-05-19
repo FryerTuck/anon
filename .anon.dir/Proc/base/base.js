@@ -1294,70 +1294,47 @@
 
 // func :: popModal : opens a modal dialogue
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   const popModal = function(a1,a2)
+   const popModal = function(arg)
    {
-      if(isText(a1)){return this.txtBased(a1,a2);};
-      if(isKnob(a1))
+      if(isKnob(arg))
       {
-         if(a1.head&&a1.body){return this.objBased(a1);};
-         return function(a3){return this.fnc(a3,this.atr)}.bind({fnc:this.objBased,atr:a1});
+         let a,h,b,f; a=arg.attr; h=arg.head; b=arg.body; f=arg.foot;
+         delete arg.attr;  delete arg.head;  delete arg.body;  delete arg.foot; if(span(arg)<1){arg=VOID};
+         if(!a){a=arg}; if(!a&&!!h&&!!b){return this.fnc({head:h,body:b,foot:f});}; // single call, no attr
+         if(isKnob(a)){return function(dfn){return this.fnc(dfn,this.atr)}.bind({fnc:this.fnc,atr:a})}; // double-call
+         fail("invalid use of `popModal()`");
       };
+
+      if(isList(arg))
+      {
+         return function(d)
+         {
+            let o={head:this.ttl};
+            if(!isKnob(d)){o.body=d}else{o.body=d.body; o.foot=d.foot;};
+            return this.fnc(o);
+         }
+         .bind({fnc:this.fnc,ttl:arg});
+      };
+
+      if(isText(arg))
+      {
+         let b,s,i,h; b=trim(arg); if(!b||isin(b,"\n")){fail("invalid use of `popModal()`");return};
+         s=stub(b," :: "); if(s){i=trim(s[0]); b=trim(s[2])}else{i="info"}; s=stub(b," : "); if(s){h=trim(s[0]); b=trim(s[2])};
+         if(h&&b){return this.fnc({head:[{icon:i},{span:h}],body:b})};  // simplest modal definition .. single-call .. ("head : body")
+         return function(d)
+         {
+            let o={head:[{icon:this.ico},{span:this.ttl}]};
+            if(!isKnob(d)){o.body=d}else{o.body=d.body; o.foot=d.foot;};
+            return this.fnc(o);
+         }
+         .bind({fnc:this.fnc,ico:i,ttl:b}); // double-call .. ("head")(*)
+      };
+
+      fail("invalid use of `popModal()`");
    }
    .bind
    ({
-      txtBased:function(a1,a2)
-      {
-         return function(arg)
-         {
-            var mid,ttl,txt,btn,tmo,box,rsl; mid=('#MDL'+hash()); if(isKnob(arg)||isText(arg)){arg=[arg]};
-            txt=stub(this.txt,' :: '); if(txt){ttl=txt[0]; txt=txt[2]}else{txt=this.txt}; btn=[]; tmo=this.tmo;
-
-            if(!isList(arg)){fail('invalid arguments');return}; arg.each((o)=>
-            {
-               if(isText(o)){o={[o]:1}}; if(!isKnob(o)){fail('invalid arguments');}; let k,v,p,c; k=keys(o)[0]; v=o[k]; o=VOID;
-               if(!v){return NEXT}; if(!isFunc(v)){v=function(){}}; c='Auto'; p=stub(k,' :: '); if(p){c=p[0]; k=p[2]};
-               radd(btn,{butn:('.butn'+c), onclick:v, contents:k});
-            });
-
-            box=create({grid:'.cenmid .modalBox', contents:
-            [
-               {row:[{col:'.head', contents:[{div:[{span:ttl},{icon:'.shut', face:'cross', onclick:function(){this.root.exit()}}]}]}]},
-               {row:[{col:'.body', contents:[{grid:[{row:
-               [
-                  {col:'.view', contents:[{panl:txt}]},
-                  {col:'.side ', contents:[{div:'.xbar'}]},
-               ]}]}]}]},
-               {row:[{col:'.foot', contents:[{grid:[{row:
-               [
-                  {col:'.footLeft', contents:[]},
-                  {col:'.footRait', contents:btn},
-               ]}]}]}]},
-            ]});
-
-
-            rsl=create({modal:mid, contents:[{wrap:[box]}]});
-            rsl.exit=function(){if(this.ticker){clearInterval(this.ticker)}; this.signal('exit'); tick.after(60,()=>{this.remove()})};
-            rsl.gone=function(sec)
-            {
-               let bar=this.select('.xbar')[0]; let hgt=rectOf(this.select('.body')[0]).height; bar.view('block');
-               let unt=(hgt/sec); bar.setStyle({height:hgt}); this.ticker=tick.every(1000,()=>
-               {
-                  sec--; bar.setStyle({height:Math.floor(unt*sec)}); if(sec>0){return}; clearInterval(this.ticker); this.signal('gone');
-                  tick.after(60,()=>{this.remove()});
-               });
-            };
-
-            document.body.appendChild(rsl); (rsl.select('butn')||[]).forEach((b)=>{b.root=rsl}); rsl.select('.shut')[0].root=rsl;
-            if(tmo){tick.after(60,()=>{rsl.gone(tmo)})}; rsl.focus();
-            box=rsl.select('.modalBox')[0]; let bxd=rectOf(box); box.declan('cenmid');
-            box.setStyle({position:'absolute',left:Math.floor(bxd.left),top:Math.floor(bxd.top)});
-            return rsl;
-         }
-         .bind({txt:a1,tmo:a2});
-      },
-
-
-      objBased:function(obj,atr)
+      fnc:function(obj,atr)
       {
          if(!isKnob(obj)){fail('expecting object');return};
          if(!isText(obj.head,1)&&!isList(obj.head,1)&&!isKnob(obj.head,1)){fail('invalid modal head');};
@@ -1430,7 +1407,8 @@
             {row:[{col:'.foot', contents:obj.foot}]},
          ]});
 
-         let sze=atr.size; if(sze){delete atr.size}; if(isText(sze)){sze=stub(sze,['x',',',' ',':']); if(sze){sze=[(sze[0]*1),(sze[2]*1)]}};
+         let sze=(atr.size||"400x230"); if(sze){delete atr.size}; if(isText(sze)){sze=stub(sze,['x',',',' ',':']);
+         if(sze){sze=[(trim(sze[0])*1),(trim(sze[2])*1)]}};
          if(isList(sze)&&((span(sze)<2)||!isNumr(sze[0])||!isNumr(sze[1]))){sze=VOID};
          if(sze){if(!isKnob(atr.style)){atr.style={}}; atr.style.width=sze[0]; atr.style.height=sze[1];};
          box.modify(atr);
@@ -1515,7 +1493,7 @@
             });
          });
       }
-      .bind({ttl:titl,skn:(skin||'lite'),tne:(tone||'auto'),ico:(icon||'warning'),sze:(size||'400x220')});
+      .bind({ttl:titl,skn:(skin||'lite'),tne:(tone||'auto'),ico:(icon||'warning'),sze:size});
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -1547,7 +1525,7 @@
             });
          });
       }
-      .bind({ttl:titl,msg:mesg,skn:skin,tne:(tone||'auto'),ico:(icon||'question-circle'),sze:(size||'400x230')});
+      .bind({ttl:titl,msg:mesg,skn:skin,tne:(tone||'auto'),ico:(icon||'question-circle'),sze:size});
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
