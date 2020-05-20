@@ -257,7 +257,7 @@
    document.body.addEventListener('keyup',function(evnt)
    {
       let butn=Listen.keys.from(evnt); delete Listen.keys.down[butn];
-      imHere();
+      imHere(1);
    });
 
 
@@ -1930,13 +1930,14 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    globVars({activity:{idle:0,last:time()}},[`imHere /Proc/base/base.js`]);
 
-   const imHere = function()
+   const imHere = function(yn)
    {
-      globVars({activity:{idle:0,last:time()}});
+      yn=(yn?0:1);
+      globVars({activity:{idle:yn,last:time()}});
    };
 
    document.addEventListener("mousemove", function(e){cursor.move(e.clientX,e.clientY);},false);
    document.addEventListener("dragover", function(e){cursor.move(e.pageX,e.pageY);},false);
    document.addEventListener("mousedown", function(e){if(isin(e.signal,'LeftClick')){cursor.grab=1;};},false);
-   document.addEventListener("mouseup", function(e){cursor.grab=0; imHere(); },false);
+   document.addEventListener("mouseup", function(e){cursor.grab=0; imHere(1); },false);
 // --------------------------------------------------------------------------------------------------------------------------------------------

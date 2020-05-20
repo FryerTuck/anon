@@ -82,7 +82,7 @@
       {
          let tl=globVars("activity").last;  this.incr++;
          let tn=time();  let ti=(globVars("idleTime")-12);
-         if((tn-tl)>=ti){globVars("activity").idle=1};
+         if((tn-tl)>=ti){imHere(0)};
       }.bind({incr:0}));
 
       globVars({authTime:time()},[`authSudo /User/getRepel`]);
