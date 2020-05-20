@@ -1346,8 +1346,12 @@
          if(thm){radd(atr.class,thm)}; atr.class=atr.class.join(' ');
 
          if(isText(obj.head)){obj.head={span:obj.head}}; if(!isList(obj.head)){obj.head=[obj.head]};
-         if(!(obj.head[0]||{}).icon){ladd(obj.head,{icon:`info`})}; let fiob,liob,pagr,clot,tout; clot=(thm?` .${thm}`:"");
-         if(!isList(obj.head)){obj.head=[obj.head]}; tout=atr.time; if(!isInum(tout)){tout=VOID};
+         if(!(obj.head[0]||{}).icon){ladd(obj.head,{icon:`info`})}; let xash=sha1(encode.jso(obj.head));
+         let stop=0; (select('modal')||[]).each((mn)=>{if(mn.xash==xash){stop=1}});
+         if(stop){console.error("ignored attempt to open duplicate modal");return}; // already open
+
+         let fiob,liob,pagr,clot,tout; clot=(thm?` .${thm}`:"");
+         tout=atr.time; if(!isInum(tout)){tout=VOID};
          radd(obj.head,{icon:`.shut${clot}`, face:'cross', title:"close", onclick:function(){this.root.exit()}});
          if(isList(obj.body,2)&&isKnob(obj.body[0])){fiob=obj.body[0];}; if(!!fiob&&isKnob(vals(obj.body,-1))){liob=vals(obj.body,-1)};
          if(isText(obj.body)){obj.body=[{panl:obj.body}]}; if(!obj.foot){obj.foot=`Okay`};
@@ -1395,7 +1399,7 @@
             });
          };
 
-         box=create({grid:'', contents:
+         box=create({grid:'.cenmid', contents:
          [
             {row:[{col:'.head', contents:[{div:obj.head}]}]},
             {row:[{col:'.body', contents:[{panl:'.wrap', contents:[{grid:[{row:
@@ -1413,7 +1417,7 @@
          if(sze){if(!isKnob(atr.style)){atr.style={}}; atr.style.width=sze[0]; atr.style.height=sze[1];};
          box.modify(atr);
 
-         rsl=create({modal:mid, contents:[{wrap:[box]}]}); box.root=rsl;
+         rsl=create({modal:mid, xash:xash, contents:[{wrap:[box]}]}); box.root=rsl;
          rsl.page=function(d, me,cx,lx,nx,nl,fn)
          {
             if(!this.pageIndx){this.pageIndx=0;}; me=this; cx=me.pageIndx; nl=listOf(me.select('.view')[0].childNodes);
@@ -1459,8 +1463,9 @@
          rsl.exit=function(){if(this.ticker){clearInterval(this.ticker)}; this.signal('exit'); tick.after(60,()=>{this.remove()})};
          document.body.appendChild(rsl); (rsl.select('butn')||[]).forEach((b)=>{b.root=rsl; b.dbox=box; b.enclan(thm)});
          rsl.select('.shut')[0].root=rsl; (rsl.select('treeview')||[]).forEach((b)=>{b.main=rsl});
-         box=rsl.select('.modalBox')[0]; let bxd=rectOf(box); box.declan('cenmid');
-         box.setStyle({position:'absolute',left:Math.floor(bxd.left),top:Math.floor(bxd.top)});
+         box=rsl.select('.modalBox')[0];
+         // let bxd=rectOf(box); box.declan('cenmid');
+         // box.setStyle({position:'absolute',left:Math.floor(bxd.left),top:Math.floor(bxd.top)});
          if(tout){tick.after(60,()=>{rsl.gone(tout)})}; rsl.focus();
          return rsl;
       },
@@ -1480,7 +1485,7 @@
          {
             popModal({class:'AnonPopAlert', theme:this.skn, size:this.sze})
             ({
-               head:this.ttl,
+               head:[{icon:this.ico},{span:this.ttl}],
                body:
                [
                   {layr:'.bodyicon', contents:[{icon:`.${this.tne}`,face:this.ico}]},
@@ -1493,7 +1498,7 @@
             });
          });
       }
-      .bind({ttl:titl,skn:(skin||'lite'),tne:(tone||'auto'),ico:(icon||'warning'),sze:size});
+      .bind({ttl:titl,skn:skin,tne:(tone||'auto'),ico:(icon||'warning'),sze:size});
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 

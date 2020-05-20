@@ -102,6 +102,8 @@
          listen('procFail',function(e)
          {
             Busy.done(); MAIN.HALT++; if(MAIN.HALT>2){return};
+
+            let info=e.detail; if((info.name=="Error")&&(info.mesg=="null")){return};
             let hint=`An error was triggered and for some reason it was not handled.`;
 
             let apnd=`This could be trivial, but may cause issues with your session.
@@ -111,7 +113,7 @@
 
                       What will you do?`;
 
-            let info=e.detail; let mesg=info.mesg; let nick=(info.evnt||info.name||"Unknown").split("Error").join("");
+            let mesg=info.mesg; let nick=(info.evnt||info.name||"Unknown").split("Error").join("");
 
             if(!userDoes('geek','sudo')){mesg=hint;}else
             {
@@ -138,10 +140,20 @@
 
 
 // --------------------------------------------------------------------------------------------------------------------------------------------
+         extend(MAIN)({guiResizing:{tikr:null,busy:0}});
+
+         listen("resize",function()
+         {
+            clearTimeout(MAIN.guiResizing.tikr);
+            if(!MAIN.guiResizing.busy){signal("resizeInit")}; MAIN.guiResizing.busy=1;
+            MAIN.guiResizing.tikr=setTimeout(()=>{MAIN.guiResizing.busy=0; signal("resizeDone")},300);
+         });
+
          extend(MAIN)({focusObj:{hash:VOID,node:VOID}});
 
          tick.every(100,function()
          {
+            signal("tick");
             let e=document.activeElement; if(!e){return}; if(!e.UniqueID){extend(e)({UniqueID:('NODE'+fash())})};
             if(focusObj.hash==e.UniqueID){return}; focusObj.hash=e.UniqueID; focusObj.node=e; signal('focuschange',e);
          });
@@ -169,6 +181,32 @@
    })});
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
+
+
+// font rendering issue hacking below .. for when the viewport width is odd pixel number
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   listen("boot",function()
+   {
+      listen("tick",function()
+      {
+         if(MAIN.guiResizing.busy){return};
+         let f=(((document.body.clientWidth/2)+"").indexOf(".")>-1); if(!f){return};
+         (select(".modalBox")||[]).forEach((n)=>
+         {
+            let r,x,y; r=rectOf(n); x=r.x; y=r.y;  if(!isFrac(x)){return};  n.reclan("cenmid:posAbs");
+            x=Math.floor(x); y=Math.floor(y); n.style.left=`${x}px`; n.style.top=`${y}px`;
+         });
+      });
+
+      listen("resizeInit",function()
+      {
+         (select(".modalBox")||[]).forEach((n)=>
+         {
+            n.reclan("posAbs:cenmid");
+         });
+      });
+   });
+// --------------------------------------------------------------------------------------------------------------------------------------------
 
 
 

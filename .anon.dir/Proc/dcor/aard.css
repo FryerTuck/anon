@@ -526,8 +526,8 @@
 /* ------------------------------------------------------------------------------------------------------------- */
    .center {position:absolute !important; left:50%; transform:translate(-50%,0%);}
    .middle {position:absolute !important; top:50%; transform:translate(0%,-50%);}
-   .cenmid {position:absolute !important; left:50%; top:50%; transform:translate(-50%,-50%);}
-   .midcen {position:absolute !important; left:50%; top:50%; transform:translate(-50%,-50%);}
+   .cenmid {position:absolute !important; left:50% !important; top:50% !important; transform:translate(-50%,-50%) !important;}
+   .midcen {position:absolute !important; left:50% !important; top:50% !important; transform:translate(-50%,-50%) !important;}
 
    .cntrChld {text-align:center !important;}
    .midlChld {vertical-align:middle !important;}

@@ -84,21 +84,25 @@ namespace Anon;
       static function moveCard()
       {
          $pv=knob($_POST); $dr=$pv->dref; $mt=$pv->mvto; $dp="/Task/data/$dr"; if(lock::exists($dp)){ekko(GONE);}; lock::create($dp);
-         $el=pget("$dp/editLogs"); $tn=time(); path::make("$dp/editTime",$tn); $un=sesn('USER'); $cn=sesn('CLAN');
-         $mf=pget("$dp/inColumn"); flog::{"$dp/editLogs"}("moved from $mf to $mt by $un"); $wf=conf('Task/workFlow'); $pc=pick($cn,keys($wf));
+         $el=pget("$dp/editLogs"); $tn=time(); $un=sesn('USER'); $cn=sesn('CLAN'); $em=pget("/User/data/$un/mail");
+         $mf=pget("$dp/inColumn"); $wf=conf('Task/workflow'); $pc=pick($cn,keys($wf));
 
          if($mt!=='test')
          {
+            flog::{"$dp/editLogs"}("moved from $mf to $mt by $un"); path::make("$dp/editTime",$tn);
             path::make("$dp/fromUser",''); path::make("$dp/withClan",$pc); path::make("$dp/withUser",$un); path::make("$dp/inColumn",$mt);
             lock::remove($dp); $dd=self::dispense([$dr]); proc::signal('docketUpdate',$dd,'.work'); ekko(OK);
          };
 
-         if(!$pc){ekko("no workflow destination from `$mf`");}; $nc=$wf->$pc;
+         if(!$pc){lock::remove($dp); ekko("no workflow destination from `$mf`");}; $nc=$wf->$pc;
          if(is_array($nc)){$nc=fuse($nc,',');}; $nu=find::userByClan($nc);
-         if(!$nu){fail::workflow("next clan `$nc` has no members; nobody to receive this job");};
+         if(!$nu){lock::remove($dp); fail::workflow("next clan `$nc` has no members; nobody to receive this job");};
 
          path::make("$dp/fromUser",$un); path::make("$dp/withClan",$nc); path::make("$dp/withUser",''); path::make("$dp/inColumn",'todo');
-         lock::remove($dp); $dd=self::dispense([$dr]); proc::signal('docketUpdate',$dd,'.work'); ekko(OK);
+         flog::{"$dp/editLogs"}("moved from $mf to $mt by $un"); flog::{"$dp/workflow"}($un,$em); path::make("$dp/editTime",$tn);
+
+         lock::remove($dp); $dd=self::dispense([$dr]); proc::signal('docketUpdate',$dd,'.work');
+         ekko(OK);
       }
    # ------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -141,10 +145,10 @@ namespace Anon;
          $cf=[['nick'=>$o->nick,'mail'=>$o->mail,'user'=>$un,'clan'=>sesn('CLAN')]];
          $q=knob
          ([
-            // 'cameFrom'=>encode::jso($cf),
             'docketID'=>$r,
             'business'=>$o->firm,
             'workPath'=>($o->path?$o->path:''),
+            'workflow'=>"$t\t$un\t$o->mail\n",
             'editLogs'=>"$t\tcreated by $o->nick\n",
             'editTime'=>$t,
             'flagTags'=>($o->tags?$o->tags:''),
@@ -152,7 +156,6 @@ namespace Anon;
             'destAddy'=>$o->dest,
             'fromName'=>$o->nick,
             'fromUser'=>$un,
-            // 'handlers'=>'',
             'initTime'=>$t,
             'mesgHead'=>$s[2],
             'priority'=>'normal',
