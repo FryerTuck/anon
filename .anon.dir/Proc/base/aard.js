@@ -29,7 +29,7 @@ const stak = function(x,a, e,s,r,h,o)
 
 const sesn = function(a)
 {if(!stak(0)){wack();return}; if(((typeof a)!='string')||(a.length<1)||!this[a]){return}; return this[a];}.bind
-({USER:'{:SESNUSER:}',CLAN:'{:SESNCLAN:}',HASH:'{:SESNHASH:}'});
+({USER:'{:SESNUSER:}',MAIL:'{:SESNMAIL:}',CLAN:'{:SESNCLAN:}',HASH:'{:SESNHASH:}'});
 
 const script=function(p,f, n){n=document.createElement('script'); n.src=`${p}`; n.onload=f; document.head.appendChild(n);};
 const bz=function(p){Busy.edit('/anonBoot',p);};

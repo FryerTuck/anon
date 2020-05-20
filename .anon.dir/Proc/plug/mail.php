@@ -226,7 +226,8 @@ namespace Anon;
 
             if(isin($fltr,'flagTags'))
             {
-               $fo=knob(imap_fetch_overview($L,$x)); if(is_array($fo)){$fo=$fo[0];}; $fl=diff(keys($fo),$nf); $o->flagTags=[];
+               $fo=imap_fetch_overview($L,$x); if(isNuma($fo)){$fo=$fo[0];};
+               if(isAsso($fo)){$fo=knob($fo);}; $fl=diff(keys($fo),$nf); $o->flagTags=[];
                foreach($fl as $fn){if($fo->$fn===1){$o->flagTags[]=$fn;}}; $o->flagTags=fuse($o->flagTags,' ');
             };
 

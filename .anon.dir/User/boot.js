@@ -12,6 +12,19 @@
 
 
 
+// func :: userInfo : returns an object .. if user does not exist it is empty
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const userInfo = function(d)
+   {
+      if(!userDoes(`work lead sudo`)){return {}}; if(!stak(0)){wack();return}; // security
+      if(!isText(d,1)){return {}}; if(d!=INIT){return (this[d]||{})}; // validation & existing
+      purl(`/User/getUsers`,(r)=>{r=decode.jso(r.body); r.each((v,k)=>{this[k]=v})}); // initialize
+   }
+   .bind({});
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 // defn :: (config) : upgrade conf with this stem's viewConf
 // --------------------------------------------------------------------------------------------------------------------------------------------
    (function(c,h,m)
@@ -56,6 +69,7 @@
                   }); // but show that+why it was forced
 
                   if(!userDoes('work,sudo,lead')){return}; // we want to do something (next) that requires privileges
+                  userInfo(INIT);
                   let c=getBadConf(); if(!c){return}; // check for bad config, if none then all is good
 
                   purl(('/User/readNote/'+c),(r)=>

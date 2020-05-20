@@ -313,7 +313,7 @@ extend(Anon)
                let c=[{h4:'Docket Config'}]; let q=keys(i).sort(); q.forEach((k)=>
                {
                   // dump(k);
-                  if(isin(['docketID','editTime','initTime','comments','editLogs','tagIcons'],k)){return};
+                  if(isin(`docketID editTime initTime comments editLogs tagIcons workflow`,k)){return}; // not for config
                   let v=i[k]; radd(c,{input:'', type:'text', placeholder:k, title:k, inival:v, value:v});
                });
 
@@ -395,18 +395,29 @@ extend(Anon)
             },
 
 
-            ject:function(d, inf,ref,prv,eml)
+            ject:function(d, di,dr,wl,wf,lu,um,dm)
             {
-               inf=d.info; ref=inf.docketID; dump(inf);
+               di=d.info; dr=di.docketID; wl=di.workflow.split("\n"); wf=dupe(wl);
+               do{lu=lpop(wf);}while((wf.length>0)&&isin(lu,sesn(`MAIL`)));
+               // if(wf.length<1){popAlert(`You will be returning it to yourself :baffled:`)};
+               lu=lu.split("\t"); lu={time:(lu[0]*1),name:lu[1],mail:lu[2]}; um=userInfo(lu.user).mail;
+               dm=(um?"TODO":`email (${lu.mail})`);
 
-               popModal(`step-backward :: Really return this docket?`)
+               popModal({size:`420x255`})
                ({
+                  head:`backward :: Confirm`,
                   body:[{panl:
                   [
-                     {h1:`olo`},
+                     {div:``, format:`markdown`, $:
+                     `
+                        ### Really return this docket?
+                        >It will return to **${lu.name}** as ${dm}
+                     `},
+                     {textarea:`#TaskJectMesg`, demo:`type return message here`}
                   ]}],
                   foot:
                   [
+                     {butn:`.need`, text:`Return`, onclick:function(){dump(`return`)}},
                      {butn:`Cancel`},
                   ],
                });
@@ -521,17 +532,3 @@ extend(Anon)
       },
    }
 });
-
-
-
-               popModal(`step-backward :: Really return this docket?`)
-               ({
-                  body:[{panl:
-                  [
-                     {h1:`olo`},
-                  ]}],
-                  foot:
-                  [
-                     {butn:`Cancel`},
-                  ],
-               });

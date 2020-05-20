@@ -505,18 +505,8 @@ modal .modalBox.DoktCmntModl.AtchSavePanl
 }
 
 
-/*
-.AtchSavePath>input
+#TaskJectMesg
 {
-   display:block;
-   width:100%;
-   position:relative;
-   box-sizing:border-box;
-   font-size:11px !important;
-   line-height:15px !important;
-   border:1px solid hsla(0,0%,65%,1) !important;
-   border-radius:2px !important;
-   background:none;
-   outline:none;
-   padding:3px;
-} */
+   height:60px;
+   margin-top:20px;
+}

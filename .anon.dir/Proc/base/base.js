@@ -122,7 +122,7 @@
    const userDoes = function()
    {
       let a=listOf(arguments); if(a.length<1){return}; if(isList(a[0])){a=a[0]}; if(a.length<1){return}; // validate
-      if((a.length<2)&&isText(a[0])&&isin(a[0],',')){a=a[0]; a=a.split(' ').join('').split(',')}; // correct
+      if((a.length<2)&&isText(a[0])&&isin(a[0],[',',' '])){a=a[0]; a=a.split(' ').join(',').split(',')}; // correct
       let l,n,f,c; l=[]; n=[]; a.forEach((i)=>{if(f||!isText(i,4)){f=1;return}; c=i[0]; i=ltrim(i,'!'); l.push(i); if(c=='!'){n.push(i)}});
       if(f){fail('invalid clan assertion');return}; let r=isin(sesn('CLAN'),l); if(n.length<1){return r};
       if(r&&isin(n,r)){return false}; if(r){return ('!'+r)}; return a.join(',');
@@ -1343,11 +1343,11 @@
 
          if(!atr){atr={}}; var mid,thm,box,inf,rsl; mid=('MDL'+hash()); if(!atr.class){atr.class='';}; atr.class=atr.class.trim().split(' ');
          ladd(atr.class,'modalBox'); ladd(atr.class,'cenmid'); thm=(atr.theme||atr.skin); if(!thm){thm=(userDoes("work")?"dark":"lite")};
-         if(thm){radd(atr.class,thm)}; atr.class=atr.class.join(' ');
+         if(thm){radd(atr.class,thm)}; atr.class=atr.class.join(' ');  let ti,tv; ti=`info`;
 
-         if(isText(obj.head)){obj.head={span:obj.head}}; if(!isList(obj.head)){obj.head=[obj.head]};
-         if(!(obj.head[0]||{}).icon){ladd(obj.head,{icon:`info`})}; let xash=sha1(encode.jso(obj.head));
-         let stop=0; (select('modal')||[]).each((mn)=>{if(mn.xash==xash){stop=1}});
+         if(isText(obj.head)){tv=stub(obj.head," :: "); if(tv){ti=tv[0];obj.head=tv[2]}; obj.head={span:obj.head}};
+         if(!isList(obj.head)){obj.head=[obj.head]}; if(!(obj.head[0]||{}).icon){ladd(obj.head,{icon:ti})};
+         let xash=sha1(encode.jso(obj.head));  let stop=0; (select('modal')||[]).each((mn)=>{if(mn.xash==xash){stop=1}});
          if(stop){console.error("ignored attempt to open duplicate modal");return}; // already open
 
          let fiob,liob,pagr,clot,tout; clot=(thm?` .${thm}`:"");

@@ -238,6 +238,7 @@ extend(custom.attrib)
 
    format:function(v,n,a,c)
    {
+      if(v==`markdown`){c=c.split(`\n`); c.forEach((t,l)=>{c[l]=trim(t)}); c=c.join(`\n`);};
       n.listen('ready',()=>
       {
          parsed(c,v,(r)=>{n.innerHTML=''; n.textContent=''; n.insert(r)});

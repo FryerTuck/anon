@@ -46,6 +46,15 @@ namespace Anon;
 
 
 
+      static function getUsers()
+      {
+         permit::fubu('clan:work,lead,sudo'); $l=pget('/User/data'); $r=knob(); foreach($l as $u)
+         {if(isin('anonymous master',$u)){continue;}; $r->$u=knob(['mail'=>pget("/User/data/$u/mail")]);};
+         ekko($r);
+      }
+
+
+
       static function getRepel()
       {
          $r=''; $h='/User/tool'; $l=pget($h); $uc=explode(',',sesn('CLAN')); foreach($l as $i)

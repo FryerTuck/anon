@@ -355,7 +355,7 @@ namespace Anon;
    function guiStrap($u=null,$sc=1)
    {
       $h=sesn('HASH'); $v=knob(['WACKMESG'=>base64_encode(pget('/Proc/info/hack.inf'))]); $p='/Proc/base/aard.js'; $d=[];
-      if(!$u){$u=sesn('USER');}; $v->SESNUSER=$u; $v->SESNCLAN=pget("/User/data/$u/clan");
+      if(!$u){$u=sesn('USER');}; $v->SESNUSER=$u; $v->SESNCLAN=pget("/User/data/$u/clan"); $v->SESNMAIL=user('mail');
       foreach($_COOKIE as $cn => $cv){if(test($cn,'/^[a-z0-9]{40}$/')&&($cn!==$h)){kuki($cn,VOID);}};
       $c=import($p,$v); $c=base64_encode(strrev($c)); $m=4000;
       $f="after encoding, `$p` exceeds maximum cookie size of $m bytes .. technically, it's 4096, but there are overhead issues";
