@@ -51,7 +51,6 @@ namespace Anon;
 
       static function fetchBox($prl,$box=null,$flt=null,$usr=null)
       {
-
          if(!$box){$box='INBOX';}; if(!$flt){$flt="flagTags !~ *seen*";}; if(!$usr){$i=path::info($prl); $usr="$i->user@$i->host";};
          $lck="$usr/$box"; if(lock::exists($lck)){return;}; lock::create($lck); $lnk=crud($prl);
 
@@ -199,7 +198,8 @@ namespace Anon;
       foreach($l as $i){if(!isFold("/$i")){continue;}; $x=path::conf("/$i"); $c=pget("$x/autoMail"); if($x&&$c&&!isin($pl,$c)){$pl[]=$c;}};
       // if(!online()){fail('`'.HOSTNAME.'` is offline');};
       if(!online()){return;};
-      Proc::impede('busy.mail'); foreach($pl as $pv){Mail::openPlug($pv); Mail::fetchBox($pv);}; Proc::resume('busy.mail');
+      Proc::impede('busy.mail');
+      foreach($pl as $pv){Mail::openPlug($pv); Mail::fetchBox($pv);}; Proc::resume('busy.mail');
       path::make('/Mail/vars/lastRead',$tn);
    });
 # ---------------------------------------------------------------------------------------------------------------------------------------------

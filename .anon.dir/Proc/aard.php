@@ -20,37 +20,43 @@ namespace Anon;
 
 
 
+      static function __init()
+      {
+         self::$meta->hush=knob(); self::$meta->hook=knob(); self::$meta->wait=500;
+      }
+
+
+
       static function init()
       {
-         self::$meta->hush=knob(); self::$meta->hook=knob(); self::$meta->wait=500; $i=0;
          boot(); // boot all bootable stems
 
-           if(facing('GUI'))
-           {
-              guiStrap();
-              //ekko::head(['Referrer-Policy'=>'origin','cache'=>false,'cookies'=>true]); // send bootStrap headers
-              $v=['botHoney'=>conf('Proc/badRobot')->lure,'busyGear'=>base64_encode(pget('/Proc/base/busy.htm'))];
-              $r=import('/Proc/base/aard.htm',$v);
-              echo($r); done(); // send BootStrap GUI keeping headers intact
-           };
+         if(facing('GUI'))
+         {
+            guiStrap();
+            //ekko::head(['Referrer-Policy'=>'origin','cache'=>false,'cookies'=>true]); // send bootStrap headers
+            $v=['botHoney'=>conf('Proc/badRobot')->lure,'busyGear'=>base64_encode(pget('/Proc/base/busy.htm'))];
+            $r=import('/Proc/base/aard.htm',$v);
+            echo($r); done(); // send BootStrap GUI keeping headers intact
+         };
 
-           if(facing('DPR')&&(NAVIPATH==='/Proc/base/boot.js'))
-           {
-              $a=scan('$'); $b=scan('/',FOLD); $l=concat($a,$b); $r=[]; foreach($l as $i)
-              {
-                 $p=path::conf($i); if(!$p){continue;}; $d=dval(pget("$p/autoboot"));
-                 if(!is_assoc_array($d)||!isset($d['client'])){continue;};
-                 $d=$d['client']; if(!$d){continue;}; if(isText($d)){$d=[$d];}; if(!isNuma($d)){continue;};
-                 foreach($d as $f){if(!isText($f)){fail("invalid `autoboot` config in: `$p/autoboot`");}; $r[]=$f;};
-              };
+         if(facing('DPR')&&(NAVIPATH==='/Proc/base/boot.js'))
+         {
+            $a=scan('$'); $b=scan('/',FOLD); $l=concat($a,$b); $r=[]; foreach($l as $i)
+            {
+               $p=path::conf($i); if(!$p){continue;}; $d=dval(pget("$p/autoboot"));
+               if(!is_assoc_array($d)||!isset($d['client'])){continue;};
+               $d=$d['client']; if(!$d){continue;}; if(isText($d)){$d=[$d];}; if(!isNuma($d)){continue;};
+               foreach($d as $f){if(!isText($f)){fail("invalid `autoboot` config in: `$p/autoboot`");}; $r[]=$f;};
+            };
 
-              $v=knob(['bootList'=>tval($r)]); unset($d); $d=[];
-              $c=pget('/User/data/master/pass'); if(!$c){wack();}; if(password_verify('0m1cr0n!',$c)){$d[]='editRootPass';};
-              $c=pget('/Proc/conf/autoMail'); if(!isin($c,'mail://')||!isin($c,'@')||!isin($c,'.')){$d[]='confAutoMail';}; // debug automail
-              $v->badCfg=base64_encode(tval($d));
+            $v=knob(['bootList'=>tval($r)]); unset($d); $d=[];
+            $c=pget('/User/data/master/pass'); if(!$c){wack();}; if(password_verify('0m1cr0n!',$c)){$d[]='editRootPass';};
+            $c=pget('/Proc/conf/autoMail'); if(!isin($c,'mail://')||!isin($c,'@')||!isin($c,'.')){$d[]='confAutoMail';}; // debug automail
+            $v->badCfg=base64_encode(tval($d));
 
-              finish(NAVIPATH,$v);
-           }
+            finish(NAVIPATH,$v);
+         }
 
          $p=NAVIPATH; Time::logEvent(); if(strpos($p,'/~/')===0){$p=lshave($p,'/~/'); $u=user('name'); $p="/User/data/$u/home/$p";};
          $r=path::call($p,__FILE__); // run PHP controller found in path .. this should exit here - else we handle it below:
@@ -137,7 +143,7 @@ namespace Anon;
       static function emit($e,$d='!')
       {
          permit::fubu();
-         if(!isText($e,1)){return;}; if(!is_string($d)){$d=tval($d);};
+         if(!is_string($e)||!$e){$e='undefined';}; if(!is_string($d)){$d=tval($d);};
          $d=base64_encode($d); $b=": \nevent: {$e}\ndata: {$d}\n\n";
          $bpad=4096; if($bpad&&(strlen($b)<$bpad)){do{$b.=' ';}while(strlen($b)<$bpad);}; if(facing('SSE')&&!headers_sent())
          {header_remove(); header("Content-Type: text/event-stream\n\n"); header('Cache-Control: no-cache, must-revalidate');};
@@ -162,11 +168,12 @@ namespace Anon;
              header('Cache-Control: no-cache, must-revalidate'); flush();
              $_SERVER['SSEREADY']='yes';
          };
+
          requires::stem('Mail');
 
-         $wait=self::$meta->wait; $rtmx=(ini_get('max_execution_time')*1); $utmx=conf('User/inactive'); $utxs=$utmx; $tout=0; $fade=12;
-         $sesn=('/Proc/temp/sesn/'.sesn('HASH')); $epth="$sesn/emit"; $tbgn=time(); $tlst=$tbgn; $cntr=0;
-         $sxed=encode::jso(['time'=>$fade]); $fapi=facing('API'); $lost=0; $fint=$fade; $lstn=knob();
+         $wait=self::$meta->wait; $rtmx=(ini_get('max_execution_time')*1); $utmx=conf('User/inactive'); $utxs=$utmx; $fade=12;
+         $sesn=('/Proc/temp/sesn/'.sesn('HASH')); $epth="$sesn/emit"; $tbgn=fractime(3); $tlst=$tbgn; $cntr=0;
+         $sxed=encode::jso(['time'=>$fade]); $fapi=facing('API'); $wapi=0; $lost=0; $fint=$fade; $lstn=knob();
 
          $stms=fuse(pget('$'),pget('/'));
 
@@ -176,30 +183,35 @@ namespace Anon;
             if($evnt){if(!$lstn->$evnt){$lstn->$evnt=knob();}; $lstn->$evnt->{"$stem"}=import("/$stem/evnt/$sefn");}};
          }}; unset($stms,$stem,$sefl,$sefn,$evnt);
 
+
          for(;;)
          {
             if((connection_status()!==CONNECTION_NORMAL)||connection_aborted()){break;}; // halt if connection is unstable
-            $tnow=time(); $tdif=($tnow-$tbgn); if((($tdif+$lost)+1)>=$rtmx){$tout=1; break;}; // force halt before runtime expires
+            $tnow=fractime(3); // time-now in milliseconds
 
             if(($tnow-$tlst)>=1)
-            {
-               $tlst=$tnow; $utxs--; xena::fetchNewAutoMail(); $lost+=(time()-$tnow); // update counters .. fetch mail only when necessary
+            {  // this happens once per second
+               $wapi++;
+               $tlst=$tnow; $utxs--; xena::fetchNewAutoMail(); $lost+=(time()-$tnow); // update counters .. fetch mail only when as configured
                $utla=pget("$sesn/TIME"); if(!$utla){$utla=0;}; $usfn=(($tnow-$utla)>=($utmx-($fade*2)-$lost)); // User-Session-Fades-Now (bool)
                if($usfn){$fint--;}; if($fint<1){$utxs=$utmx; $fint=$fade; self::emit('sesnFade',$sxed);}else{self::emit('ping');};
             };
 
             $scan=pget($epth); if(isset($scan[0])){foreach($scan as $indx) // scan for events
-            {
+            {  // this happens every `wait` interval in milliseconds
                $evnt=decode::jso("$epth/$indx"); void("$epth/$indx"); // emit this event only once
                if(!is_object($evnt)){continue;}; $en=$evnt->name; $ed=$evnt->data; // validate event object
                $hook=$lstn->$en; if($hook){foreach($hook as $sn => $fn){$fn($ed); unset($sn,$fn);}}; // call this event's hooks
                self::emit($en,$ed); unset($evnt,$en,$ed,$hook);  // emit this event to front-end .. clean up each iteration
             }};
 
-            if(!$fapi){wait($wait);}else{break;};
+            if(!$fapi){wait($wait);continue;}; // no API-check .. this is only SSE
+            if($wapi<4){continue;}; break;
          };
 
-         done();
+         if(!$fapi){done(); exit;};
+         $f=dbug::wash(__FILE__);  $l=__LINE__;  $f="file: $f";  $l="line: $l";
+         ekko("SSE listener-loop clean exit; no errors encountered in 5 seconds.\n\n```\n$f\n$l\n```\n");
       }
 
 

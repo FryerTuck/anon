@@ -143,7 +143,7 @@
 
 // func :: purl : process/path-URL
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   const purl = function(p,d,f, o,x,e,cb,pe)
+   const purl = function(p,d,f, o,x,e,cb,pe,ee)
    {
       if(MAIN.HALT){return};
       if(isText(p)&&isVoid(d)&&isVoid(f)){o={target:p,method:'GET',listen:{}}} // only URL given
@@ -156,6 +156,13 @@
       e='invalid purl arguments'; if(!isKnob(o)){fail(e);return}; if(!isText(o.target,1)){fail(e);return}; // validate
       if(!isKnob(o.listen)){fail(e);return}; if(!isFunc(o.listen.loadend)){fail(e);return}; // validate
       if(!isFunc(o.listen.progress)){o.listen.progress=function(){}}; pe=o.listen.progress; delete o.listen.progress;
+      if(!isFunc(o.listen.error)){o.listen.error=function(){}}; ee=o.listen.error; delete o.listen.error;
+
+      o.listen.error=function(e)
+      {
+         let rtxt=this.response; console.error("xhrFail",rtxt);
+         this.failed=this.response; ee(e);
+      };
 
       o.listen.progress=function(b)
       {
@@ -423,7 +430,7 @@
             // this.stream.listen('open',function(evnt){});
             this.stream.listen('ping',function(evnt){server.sensor.live=1});
             this.stream.listen('shut',function(evnt){server.stream.close(); server.sensor.live=0});
-            // this.stream.listen('fail',function(evnt){fail(decode.jso(atob(evnt.data)))});
+            this.stream.listen('fail',function(evnt){fail(decode.jso(atob(evnt.data)))});
 
             this.stream.listen('error',function(evnt) // this happens on reconnect -or "connection fail", only the latter is an error
             {
@@ -435,7 +442,8 @@
                      // debug this issue by visiting the event emitter via API interface
                      rsp=(rsp.body||"undefined"); stb=stub(rsp,"event: fail\ndata: ");
                      if(stb){rsp=trim(stb[2]); console.log(rsp); rsp=decode.jso(atob(rsp)); fail(rsp); return};
-                     fail('server event emitter `'+evnt.Target.purl+'` has issues\n\n'+rsp);
+                     if(isJson(rsp)){rsp=decode.jso(rsp); fail(rsp); return}; let prl=evnt.Target.purl;
+                     fail(`Server Side Events :: emitter **${prl}** died unexpectedly.\n${rsp}`);
                   });
                };
             });
@@ -1324,8 +1332,9 @@
          return function(d)
          {
             let o={head:[{icon:this.ico},{span:this.ttl}]};
-            if(!isKnob(d)){o.body=d}else{o.body=d.body; o.foot=d.foot;};
-            return this.fnc(o);
+            if(isKnob(d)){o.body=d.body; o.foot=d.foot;}else if(isList(d)){o.body=d};
+            if(!isText(d)){return this.fnc(o)};
+            parsed(d,'markdown',(htm)=>{o.body=htm; this.fnc(o)}); // TODO :: await : make synchronous to return modal object
          }
          .bind({fnc:this.fnc,ico:i,ttl:b}); // double-call .. ("head")(*)
       };
@@ -1394,7 +1403,7 @@
          {
             obj.foot.forEach((b,i)=>
             {
-               if(isin(["cancel","okay"],lowerCase((b.text||b.contents||b.$||b.butn)+""))&&!b.onclick&&!b.listen)
+               if(isin(["cancel","okay","ok"],lowerCase((b.text||b.contents||b.$||b.butn)+""))&&!b.onclick&&!b.listen)
                {obj.foot[i].onclick=function(){this.root.exit()}};
             });
          };
@@ -1476,29 +1485,28 @@
 
 // func :: popAlert : opens a pre-formatted modal dialogue .. requires a heading
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   const popAlert = function(titl,skin,tone,icon,size,tout)
+   const popAlert = function(msg,tme, stb,ico,ttl,bdy)
    {
-      return function(mesg)
+      msg=trim(msg); msg=msg.split('\n'); msg.forEach((l,x)=>{msg[x]=l.trim()}); msg=msg.join('\n');
+      stb=stub(msg,` :: `); if(stb){ico=stb[0]; msg=stb[2];}else{ico=`warning`};
+      stb=stub(msg,` : `); if(stb){ttl=stb[0]; bdy=stb[2];}else{ttl=`Attention!`; bdy=msg};
+
+      parsed(bdy,'markdown',(htm)=>
       {
-         mesg=trim(mesg); mesg=mesg.split('\n'); mesg.forEach((l,x)=>{mesg[x]=l.trim()}); mesg=mesg.join('\n');
-         parsed(mesg,'markdown',(msg)=>
-         {
-            popModal({class:'AnonPopAlert', theme:this.skn, size:this.sze})
-            ({
-               head:[{icon:this.ico},{span:this.ttl}],
-               body:
-               [
-                  {layr:'.bodyicon', contents:[{icon:`.${this.tne}`,face:this.ico}]},
-                  {panl:'.bodymesg', contents:[msg]},
-               ],
-               foot:
-               [
-                  {butn:'',contents:'Ok', onclick:function(){this.root.exit()}},
-               ],
-            });
+         popModal({class:'AnonPopAlert',time:tme})
+         ({
+            head:[{icon:ico},{span:ttl}],
+            body:
+            [
+               {layr:'.bodyicon', contents:[{icon:ico}]},
+               {panl:'.bodymesg', contents:[htm]},
+            ],
+            foot:
+            [
+               {butn:`OK`},
+            ],
          });
-      }
-      .bind({ttl:titl,skn:skin,tne:(tone||'auto'),ico:(icon||'warning'),sze:size});
+      });
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 

@@ -18,13 +18,10 @@ namespace Anon;
    # ------------------------------------------------------------------------------------------------------------------------------------------
       static $meta;
 
-      static function init()
-      {
-         permit::fubu('clan:work');
-      }
-
       static function __init()
       {
+         permit::fubu('clan:work');
+
          if((USERDEED==='select')&&that(NAVIPATH)->startsWith('/Task/data/'))
          {
             ekko::path(NAVIPATH);
@@ -38,11 +35,14 @@ namespace Anon;
    # ------------------------------------------------------------------------------------------------------------------------------------------
       static function dispense($l=null)
       {
-         if(!isNuma($l)){$l=pget('/Task/data');}; $uc=sesn('CLAN'); $un=sesn('USER'); $r=knob();
-         Proc::signal('busy',['with'=>'/Task/dispense','done'=>11]);
+         $bulk=((NAVIPATH==='/Task/dispense')||!isNuma($l)); if($bulk){$l=pget('/Task/data');};
+         $uc=sesn('CLAN'); $un=sesn('USER'); $r=knob(); $totl=span($l); $done=0;
+         if($bulk){Proc::signal('busy',['with'=>'/Task/dispense','done'=>1]);};
 
          foreach($l as $q)
          {
+            if($bulk){Proc::signal('busy',['with'=>'/Task/dispense','done'=>floor(($done/$totl)*100)]);};
+
             $td=path::ogle
             ([
                using => "/Task/data/$q",
@@ -67,12 +67,12 @@ namespace Anon;
             unset($cl,$cn,$cd); $cl=keys($td->comments); $cn=rpop($cl); $cd=dupe($td->comments->$cn); unset($td->comments);
             $cd->user=knob(['rate'=>User::ratingOf($cd->mail)]); $f=$cd->tags; if(!$f){$f='';};
             $f=frag($f,','); foreach($f as $x => $n){$i=pget("/Task/tags/$n"); if(!$i){fail("undefined task-tag `$n`");}; $f[$x]=$i;};
-            $cd->mesg=encode::b64($cd->mesg); $cd->tico=$f; $td->comments=knob([$cn=>$cd]); $r->$q=$td;
+            $cd->mesg=encode::b64($cd->mesg); $cd->tico=$f; $td->comments=knob([$cn=>$cd]); $r->$q=$td; $done++;
          };
 
-         Proc::signal('busy',['with'=>'/Task/dispense','done'=>100]);
+         if($bulk){Proc::signal('busy',['with'=>'/Task/dispense','done'=>100]);};
 
-         if(NAVIPATH==='/Task/dispense'){ekko($r);return;};
+         if($bulk){ekko($r);return;};
          return $r;
       }
    # ------------------------------------------------------------------------------------------------------------------------------------------
@@ -179,7 +179,7 @@ namespace Anon;
          $h="/Task/data/$r/comments"; $x=($o->cref?$o->cref:gudref($h,16)); unset($o->cref); $h="$h/$x"; if(!isee($h)){path::make("$h/");};
          $o->time=time(); $o->rate=0; foreach($o as $k => $v){path::make("$h/$k",$v);}; // create text-data
          if(isKnob($a)){foreach($a as $f => $d){if(isDurl($d)){$d=furl($d)->data;}; path::make("$h/atch/$f",$d); $d=null;}}; // attachments
-         $dd=self::dispense(); if(span($dd)>0){proc::signal('docketUpdate',$dd,'.work');};
+         $dd=self::dispense([$r]); if(span($dd)>0){proc::signal('docketUpdate',$dd,'.work');};
          return OK;
       }
    # ------------------------------------------------------------------------------------------------------------------------------------------
@@ -223,7 +223,7 @@ namespace Anon;
    # ------------------------------------------------------------------------------------------------------------------------------------------
       static function saveConf()
       {
-         $o=knob($_POST); $dr=$o->dref; $h="/Task/data/$dr"; unset($o->dref);
+         $o=knob($_POST); $dr=$o->dref; if(!$dr){return 'dref is undefined';}; $h="/Task/data/$dr"; unset($o->dref);
          foreach($o as $k => $v){if(!isee("$h/$k")){continue;}; path::make("$h/$k",$v);};
          $dd=self::dispense([$dr]); proc::signal('docketUpdate',$dd,'.work');
          if($o->business===null){return OK;}; $m=pget("$h/fromAddy"); path::make("/Bill/data/contacts/.index/$m",$o->business);
@@ -272,8 +272,29 @@ namespace Anon;
       static function voidDokt()
       {
          $po=knob($_POST); $dr=$po->dref; $dp="/Task/data/$dr";
-         Proc::signal('docketDelete',$dr,'.work');
-         $r=path::void($dp); return ($r?OK:FAIL);
+         $r=path::void($dp); if($r){Proc::signal('docketDelete',$dr,'.work');};
+         return ($r?OK:FAIL);
+      }
+   # ------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+   # func :: jectDokt : reject/return docket
+   # ------------------------------------------------------------------------------------------------------------------------------------------
+      static function jectDokt()
+      {
+         $po=knob($_POST); $dr=$po->dref; $rt=$po->trgt; $un=$po->user; $su=sesn('USER'); if($un==='yourself'){$tu=$su;}; $dp="/Task/data/$dr";
+         $im=(!isWord($rt,4)); if($im){$ml=frag($po->mesg,"\n"); ladd($ml,"#$po->mail"); $_POST['mesg']=fuse($ml,"\n");}; // add mail tag
+         $mc=self::makeCmnt(); if($mc!=OK){ekko(FAIL);}; // makeCmnt also uses $_POST .. now the comment is made, mail sent & GUI notified
+
+         if($im){$r=path::void($dp); if(!$r){return FAIL;}; Proc::signal('docketReturn',$dr,'.work'); return OK;}; // sent back to OP as email
+
+         $cc=sesn('CLAN'); $wf=frag(pget('/Task/workflow'),"\n");
+         foreach($wf as $wl){$wl=swap($wl,' ',''); if(isin($wl,":$cc")){$tc=frag($wl,':')[0]; break;}};
+         $_POST=['dref'=>$dr,'withUser'=>$tu,'withClan'=>$tc,'inColumn'=>$rt];
+         $r=self::saveConf(); // saveConf also uses $_POST .. if all went well then config is saved & GUI updated
+         if($r!=OK){ekko($r);}; Proc::signal('docketReturn',$dr,'.work');
+         return OK;
       }
    # ------------------------------------------------------------------------------------------------------------------------------------------
    }

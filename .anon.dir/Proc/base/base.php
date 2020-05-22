@@ -654,9 +654,10 @@ namespace Anon;
 
       public function connect($hn,$pn=21,$un=null,$pw=null,$sm=true)
       {
-         $HF=null; $SF=null; deFail();
-            try{$L=($sm?ftp_ssl_connect($hn,$pn):ftp_connect($hn,$pn));}catch(\Exception $e){$HF=$e->getMessage();};
-         $SF=enFail(); if($L===false){$F=trim(($HF?$HF:($SF?$SF:'connection failed')).''); if(!$F){$F=null;}; $this->fail=$F; return;};
+         $HF=null; $SF=null; $EH=defail();
+         try{$L=($sm?ftp_ssl_connect($hn,$pn):ftp_connect($hn,$pn));}catch(\Exception $e){$HF=$e->getMessage();};
+         $SF=enfail($EH); if(isset($SF[0])){$SF=$SF[0]->mesg;};
+         if($L===false){$F=trim(($HF?$HF:($SF?$SF:'connection failed')).''); if(!$F){$F=null;}; $this->fail=$F; return;};
          $this->host=$hn; $this->fold='/'; $this->fail=null; $this->link=$L; if($un===null){return $this->link;};
          $S=$this->login($un,$pw); if(!$S||$this->fail){if($this->link){$F=$this->fail; $this->close(); $this->link=null; $this->fail=$F;}};
          return (($S&&!$this->fail)?true:false);
@@ -691,8 +692,8 @@ namespace Anon;
       {
          if(is_string($n)){$n=trim($n); if(strlen($n)<1){return;}}; $f="ftp_$n"; $r=null; $fa=(isset($a[0])?$a[0]:null);
          if(!function_exists($f)){fail("call to undefined method ftp::$n");}; array_unshift($a,$this->link);
-         deFail(); $HF=null; $SF=null; try{$r=call_user_func_array($f,$a);}catch(\Exception $e){$HF=$e->getMessage();}; $SF=enFail();
-         $E=trim(($HF?$HF:($SF?$SF:null)).''); if(!$E){$E=null;}; $this->fail=$E;
+         $EH=defail(); $HF=null; $SF=null; try{$r=call_user_func_array($f,$a);}catch(\Exception $e){$HF=$e->getMessage();};
+         $SF=enfail($EH); if(isset($SF[0])){$SF=$SF[0]->mesg;}; $E=trim(($HF?$HF:($SF?$SF:null)).''); if(!$E){$E=null;}; $this->fail=$E;
          if(!$E)
          {
             if($n==='chdir'){$this->fold=path::fuse($this->fold,$fa);};

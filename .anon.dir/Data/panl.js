@@ -129,7 +129,7 @@ extend(Anon)
             if(isFunc(cbf)){cbf(rsp.body)}; if((rsp.body!=OK)||!isin(['sproc','funct'],tpe)){return}; let pts,tmp;
             pts=stub(val,"\nBEGIN\n"); tmp=pts[0]; if(!tmp.endsWith(' ')&&!tmp.endsWith('\n')&&!isin(tmp,'--')){return}; // all is well
 
-            popAlert('Attention!','dark','auto','bug')
+            popModal('bug :: Attention!')
             (`
                Your ***${tpe}*** was saved, however:
                - any **comments** -or extra **whitespace** before \`BEGIN\` will be ignored!\n

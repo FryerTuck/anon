@@ -21,29 +21,6 @@ namespace Anon;
    ini_set('output_encoding','UTF-8'); mb_internal_encoding('UTF-8'); mb_http_output('UTF-8'); // force utf8
    ini_set("precision",16); // accuracy matters .. to get accurate decimal value from float, use: number_format($number,$precision);
    set_time_limit(60); // max execution time from here on
-   $z=pget('/Proc/conf/timeZone'); if(is_string($z)&&(strpos($z,'/'))){date_default_timezone_set("$z");}; unset($z); // set server time zone
-   $_SERVER['oblevl']=0; $_SERVER['obfail']=''; $_SERVER['cbfail']=null; // for deFail & enFail
-   $_SERVER['SESNHASH']=null; $_SERVER['SESNUSER']=null; $_SERVER['SESNCLAN']=null; // for security .. bite me
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-# func :: (dbug) : disable and enable errors .. to silence warnings/notices picked up by error handler
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-   function deFail($cb=null)
-   {
-      ini_set('display_errors',false); error_reporting(0); usleep(1000); $_SERVER['nofail']=1; $l=ob_get_level();
-      if(!$l){$l=0;}; $_SERVER['oblevl']=$l; $_SERVER['obfail']=''; $_SERVER['cbfail']=$cb; ob_start();
-   }
-
-   function enFail()
-   {
-      ini_set('display_errors',true); error_reporting(E_ALL); usleep(1000);
-      $_SERVER['nofail']=0; $cl=ob_get_level();
-      $r=''; if($cl>0){$r=ob_get_clean();}; $r=trim($r); if($r===''){$r=$_SERVER['obfail'];}; $pl=$_SERVER['oblevl'];
-      if(is_int($pl)&&($pl<1)&&($cl>0)){while(ob_get_level()>0){ob_end_clean();}; $_SERVER['oblevl']=0;};
-      $_SERVER['obfail']=''; $_SERVER['cbfail']=null; return $r;
-   }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -189,10 +166,10 @@ namespace Anon;
    {
       if(!is_string($p)){return;}; if(!test($p,'/^[a-zA-Z0-9-\/\.\$~@_]{1,432}$/')){return;}; $p=str_replace('//','/',$p);
       $r=envi('ROOTPATH'); $c=envi('COREPATH'); $u=envi('USERPATH'); if(($p==='/')||($p==='.')){return $r;}; $p=rshave($p,'/');
-      if(substr($p,-1,1)==='.'){return;}; if(strpos($p,'/~')===0){$p=substr($p,1);};
+      if(substr($p,-1,1)==='.'){return;}; if((strpos($p,'/~')===0)||(strpos($p,'/$')===0)){$p=substr($p,1);};
       if(!$r||!$c||!$u){return $p;}; if($p===''){return $r;}; if($p==='$'){return $c;}; if($p==='~'){return $u;}; // works for: ./  $/  ~/
       if((strpos($p,$u)===0)||(strpos($p,$c)===0)||(strpos($p,$r)===0)){return $p;}; $s=substr($p,0,1); $p=ltrim($p,'$/'); $p=ltrim($p,'~/');
-      if($s==='$'){return "$c/$p";}; if($s==='~'){return "$u/$p";}; if($s!=='/'){return;}; $p=ltrim($p,'/'); $t=explode('/',$p); $t=$t[0];
+      if($s==='$'){return "$c/$p";}; if($s==='~'){return "$u/$p";}; if($s!=='/'){return;}; $p=lshave($p,'/'); $t=explode('/',$p); $t=$t[0];
       if(file_exists("$c/$t")){return "$c/$p";}; return "$r/$p";
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -214,16 +191,23 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function isee($d)
    {
-      if($d==='/'){return envi('ROOTPATH');}; if($d==='$'){return envi('COREPATH');}; if($d==='~'){return envi('USERPATH');};
-      if(is_string($d)){$d=trim($d); if(strlen($d)<2){return;}; $d=str_replace(' ',',',$d); if(strpos($d,',')){$d=explode(',',$d);}};
+      $z=envi('ROOTPATH'); if(($d==='/')||($d===$z)){return $z;}; if($d==='$'){return envi('COREPATH');}; if($d==='~'){return envi('USERPATH');};
+      if(is_string($d)){$d=trim($d); if(strlen($d)<1){return;}; $d=str_replace(' ',',',$d); if(strpos($d,',')){$d=explode(',',$d);}};
 
       if(is_array($d))
       {$s=count($d); $f=array(); do{$i=array_shift($d); $i=isee($i); if($i){$f[]=$i;}}while(count($d)); $r=(count($f)/$s); return $r;};
 
-      if(!is_string($d)){return;}; $d=str_replace('Anon\\','',trim($d)); $v=test($d,'/^([a-zA-Z])([a-zA-Z0-9_]){2,36}$/');
-      if(!$v){$p=path($d); if(!$p){return;}; $f=0; deFail(); $r=is_readable($p); $f=enFail(); if(!$r||$f){$p=null;}; return $p;}; $c='Anon\\';
-      if(function_exists($d)||function_exists($c.$d)){return 'func';}; if(class_exists($d,false)||class_exists($c.$d,false)){return 'tool';};
-      if(extension_loaded($d)){return 'extn';};
+      clearstatcache(); if(!is_string($d)){return;}; $d=str_replace('Anon\\','',trim($d)); $v=test($d,'/^([a-zA-Z])([a-zA-Z0-9_]){2,36}$/');
+
+      if($v)
+      {
+         $c='Anon\\'; if(function_exists($d)||function_exists($c.$d)){return 'func';};
+         if(class_exists($d,false)||class_exists($c.$d,false)){return 'tool';}; if(extension_loaded($d)){return 'extn';};
+      };
+
+      $p=path($d); if(!$p){return;}; $r=envi('ROOTPATH'); $l=str_replace("$r/",'',$p); $l=lshave($l,'/'); $l=explode('/',$l);
+      $q=''; $f=0; $fd=''; foreach($l as $x => $i){$q.="/$i"; if(isset($l[($x+1)])&&!is_dir($r.$q)){$f=1;$fd=($r.$q);break;}};
+      if($f){return;}; $r=is_readable($p); clearstatcache(true);  return ($r?$p:false);
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -233,6 +217,7 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function pget($p,$t=true)
    {
+      clearstatcache();
       $p=isee($p); if(!$p){return;}; if(!is_dir($p)){$r=file_get_contents($p); if($t){$r=trim($r);}; return $r;};
       $r=array_diff(scandir($p),array('.','..')); if(!$t){return array_values($r);};
       $z=array(); do{$i=array_shift($r); if($i===null){continue;}; $c=substr($i,0,1); if($c!=='.'){$z[]=$i;};}while(count($r));
@@ -538,6 +523,11 @@ namespace Anon;
 
    if($s){$s="$c/Proc/temp/sesn/$s/USER"; if(file_exists($s)){$u=file_get_contents($s);}};
    if(!$u){$u='anonymous';}; $_SERVER['USERNAME']=$u; $_SERVER['USERPATH']="$c/User/data/$u/home";
+
+   $z=pget('/Proc/conf/timeZone'); if(is_string($z)&&(strpos($z,'/'))){date_default_timezone_set("$z");}; unset($z); // set server time zone
+   $_SERVER['oblevl']=0; $_SERVER['obfail']=''; $_SERVER['cbfail']=null; // for deFail & enFail
+   $_SERVER['SESNHASH']=null; $_SERVER['SESNUSER']=null; $_SERVER['SESNCLAN']=null; // for security .. bite me
+
 
    $q=envi('URL'); $dbwp='/User/dcor/wal1.jpg'; $dbbs='/User/dcor/anm1.gif';
    if((strpos($q,$dbwp)!==false)&&isee($dbwp)){header('Content-Type: image/jpeg'); readfile(isee($dbwp)); exit;};

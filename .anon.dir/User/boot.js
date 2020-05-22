@@ -18,7 +18,7 @@
    {
       if(!userDoes(`work lead sudo`)){return {}}; if(!stak(0)){wack();return}; // security
       if(!isText(d,1)){return {}}; if(d!=INIT){return (this[d]||{})}; // validation & existing
-      purl(`/User/getUsers`,(r)=>{r=decode.jso(r.body); r.each((v,k)=>{this[k]=v})}); // initialize
+      purl(`/User/getUsers`,(r)=>{r=decode.jso(r.body); r.each((v,k)=>{this[k]=v;})}); // initialize
    }
    .bind({});
 // --------------------------------------------------------------------------------------------------------------------------------------------

@@ -35,7 +35,8 @@ extend(custom.domtag)
       a.size=(isInum(a.size)?(a.size+'px'):(isNumr(a.size)?(a.size+'rem'):(isText(a.size,3)?a.size:'16px')));
       let fce,fnt,sze,rot,clp; fce=a.face; fnt=a.font; sze=(a.size+""); clp=a.clip; delete a.face; delete a.font; delete a.size; delete a.clip;
       c=VOID; if(a.text){c=a.text; delete a.text}; rot=stub(fce,'@'); if(rot){fce=rot[0]; rot=(rot[2]*1); rot=(isNumr(rot)?round(rot,0):0)};
-      modify(n,a); if(!clp){n.enclan(('.'+fnt+'-'+fce))}; n.setStyle({width:sze, height:sze, fontSize:sze,transform:`rotate(${rot}deg)`});
+      modify(n,a); if(!clp){n.enclan(('.'+fnt+'-'+fce))}; n.setStyle({height:sze, fontSize:sze});
+      if(!c){n.setStyle({width:sze,transform:`rotate(${rot}deg)`})};
 
       if(c){n.insert({div:c})}
       else if(clp)

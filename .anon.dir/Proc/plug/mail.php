@@ -38,9 +38,10 @@ namespace Anon;
 
       function engage($h,$u,$p,$o,$y=null,$z=[])
       {
-         deFail(); $r=knob(); $r->link=imap_open($h,$u,$p,$o,$y,$z); $me=imap_errors(); $ma=imap_alerts(); $ob=enFail();
+         $r=knob(); defail(); $r->link=imap_open($h,$u,$p,$o,$y,$z); $el=enfail(); $me=imap_errors(); $ma=imap_alerts();
          if($r->link){return $r;}; $f=[imap_last_error()]; if($me){$f=array_merge($f,$me);}; if($ma){$f=array_merge($f,$ma);};
-         $f=trim(implode("\n",$f)); if(!$f){$f=trim($ob);}; $r->fail=$f; wait(250); return $r;
+         if(isset($eb[0])){$f[]=$eb[0]->mesg;}; $f=trim(implode("\n",$f)); if(!$f){$f=trim($ob);}; $r->fail=$f; wait(250);
+         return $r;
       }
 
 
@@ -61,7 +62,9 @@ namespace Anon;
          foreach($ca as $cs)
          {
              $r=$this->engage($cs,$u,$p,$o); $f=$r->fail; if($r->link){$this->link=$r->link; return $this->link;};
-             if($f&&!$ff){$ff=$f;}; $f=($f?$f:''); if(!isin($f,$fm)){fail("$uf $f"); return;}; wait(250);
+             if($f&&!$ff){$ff=$f;}; $f=($f?$f:'');
+             if(!isin($f,$fm)){if(facing('SSE')){Proc::emit('dump',"FAILED :: $uf $f"); wait(550);};  fail("$uf $f"); return;};
+             wait(250);
          };
 
          reset($ca); unset($cs);
@@ -151,7 +154,7 @@ namespace Anon;
 
          Proc::signal('busy',['with'=>"mail",'done'=>12]);
          $L->Body=$w->mesgBody; $mt=time(); $z=knob(['done'=>0,'fail'=>null]);
-         deFail(); ob_start(); $fm=''; $r=$L->send(); $fm=ob_get_clean(); enFail();
+         $eh=defail(); $r=$L->send(); $eb=enfail($eh); if(isset($eb[0])){$fm=$eb[0]->mesg;};
 
          if(!$r)
          {
@@ -194,7 +197,8 @@ namespace Anon;
          Proc::signal('busy',['with'=>"mail",'done'=>21]); if(isAssa($a)){$a=knob($a,U);}; expect::knob($a);
          if(!$a->using){$a->using='INBOX';}; $L=$this->vivify($a->using,($a->touch?null:OP_READONLY));
          $fltr=$a->fetch; if(!$fltr){$fltr='*';}; if(!isText($fltr)&&!isFlat($fltr)){fail('invalid `fetch` clause');}; $cols=$this->cols;
-         if($fltr==='*'){$fltr=$cols;}elseif(isText($fltr)){$fltr=[$fltr];}; $a->fetch=$fltr; if($a->where)
+         if($fltr==='*'){$fltr=$cols;}elseif(isText($fltr)){$fltr=[$fltr];}; $a->fetch=$fltr;
+         if($a->where)
          {
             $oper=padded((explode(' ',EXPROPER)),' ');
             if(isText($a->where)){$a->where=[$a->where];}; if(!isFlat($a->where)){fail('invalid `where` clause');};

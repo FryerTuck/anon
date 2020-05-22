@@ -6,7 +6,7 @@ namespace Anon;
    function upkeep($dbs,$ldb,$tmn)
    {
       $h='/Proc/temp'; $x=['file','kban','lock','logs','refs','sesn'];
-      $cln=user('clan'); $hsh=sesn('HASH'); $usr=sesn('USER');
+      $cln=sesn('CLAN'); $hsh=sesn('HASH'); $usr=sesn('USER');
 
       foreach($x as $d)
       {
@@ -27,17 +27,14 @@ namespace Anon;
 
       if(!isRepo('/')){repo::create('/'); wait(50);};
 
-      if(isRepo('/'))
+      $h='/.anon.dir'; $l=conf('Proc/gitIgnor'); unset($i);
+      foreach($l as $i)
       {
-         $h='/.anon.dir'; $l=conf('Proc/gitIgnor'); unset($i);
-         foreach($l as $i)
-         {
-            if((strlen($i)>1)&&(substr($i,0,2)==='# ')){continue;}; // commented out
-            $c=substr($i,0,1); if($c==='!'){$i=substr($i,1);}else{$c='';}; // negation
-            repo::ignore('/',write,($c.$h.$i));
-         };
-         unset($h,$l,$c,$i);
+         if((strlen($i)>1)&&(substr($i,0,2)==='# ')){continue;}; // commented out
+         $c=substr($i,0,1); if($c==='!'){$i=substr($i,1);}else{$c='';}; // negation
+         repo::ignore('/',write,($c.$h.$i));
       };
+      unset($h,$l,$c,$i);
 
       path::make('/Proc/vars/lastDbug',$tmn);
    }

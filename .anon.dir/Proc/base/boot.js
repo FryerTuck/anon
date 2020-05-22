@@ -104,6 +104,7 @@
             Busy.done(); MAIN.HALT++; if(MAIN.HALT>2){return};
 
             let info=e.detail; if((info.name=="Error")&&(info.mesg=="null")){return};
+            console.error(info);
             let hint=`An error was triggered and for some reason it was not handled.`;
 
             let apnd=`This could be trivial, but may cause issues with your session.
@@ -117,7 +118,7 @@
 
             if(!userDoes('geek','sudo')){mesg=hint;}else
             {
-                console.error(info);
+                // console.error(info);
                 mesg+=("<br><br>\n\n```\n"+`file: ${info.file}\nline: ${info.line}`+"\n```\n\n<br>");
                 mesg+=("\n\n```\n"+info.stak.join("\n")+"\n```\n\n<br>");
             };
@@ -135,6 +136,8 @@
                'warn::refresh':function(){newGui({APIKEY:sesn('HASH')});},
                'harm::ignore':function(){this.root.exit();},
             });
+
+            tick.after(250,()=>{Busy.done()});
          });
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -219,7 +222,7 @@
       requires(bl,()=>
       {
          bz(60);
-            console.clear();
+            // console.clear();
          let np=location.href; render(np,(r)=>
          {
             let mv=select('#anonMainView'); mv.insert(r);

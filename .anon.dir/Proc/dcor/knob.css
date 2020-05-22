@@ -127,24 +127,24 @@
 
    butn.need
    {
-      background:linear-gradient(0deg, hsla(280,60%,20%,1) 0%, hsla(280,60%,30%,1) 100%);
+      background:linear-gradient(0deg, hsla(280,60%,25%,1) 0%, hsla(280,60%,35%,1) 100%);
       color:hsla(0,0%,95%,1);
-      border:1px solid hsla(280,60%,30%,1);
+      border:1px solid hsla(280,60%,35%,1);
       box-shadow:0px 0px 3px hsla(0,0%,0%,0.3);
    }
 
    butn.need:hover
    {
-      background:linear-gradient(0deg, hsla(280,60%,25%,1) 0%, hsla(280,60%,35%,1) 100%);
+      background:linear-gradient(0deg, hsla(280,60%,30%,1) 0%, hsla(280,60%,40%,1) 100%);
       color:hsla(0,0%,100%,1);
-      border:1px solid hsla(280,60%,35%,1);
+      border:1px solid hsla(280,60%,40%,1);
    }
 
    butn.hovrNeed:hover
    {
-      background:linear-gradient(0deg, hsla(280,60%,20%,1) 0%, hsla(280,60%,30%,1) 100%);
+      background:linear-gradient(0deg, hsla(280,60%,25%,1) 0%, hsla(280,60%,35%,1) 100%);
       color:hsla(0,0%,95%,1);
-      border:1px solid hsla(280,60%,30%,1);
+      border:1px solid hsla(280,60%,35%,1);
    }
 
 
@@ -205,10 +205,10 @@
       transform-origin:center;
       padding:0px; margin:0px; font-size:16px; line-height:16px;
    }
-   icon div
+   icon>div
    {
-      display:inline-block;
-      font-family: Arial, Helvetica, sans-serif !important;
+      display:inline-block !important;
+      font-family: Arial, Helvetica, sans-serif;
       font-size:0.85em;
       padding-left:0.3em;
    }

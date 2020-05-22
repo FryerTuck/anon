@@ -115,6 +115,7 @@ extend(Anon)
       {
          purl('/Task/dispense',(r)=>
          {
+            dump(r);
             Anon.Task.jobCards.prerun(decode.jso(r.body));
             Busy.edit('/Task/panl.js',100);
          });
@@ -127,6 +128,11 @@ extend(Anon)
          server.listen('docketDelete',(d)=>
          {
             remove(`#JC${d}`); Busy.edit(`delete${d}`,100);
+         });
+
+         server.listen('docketReturn',(d)=>
+         {
+            remove(`#JC${d}`); Busy.edit(`return${d}`,100);
          });
       },
 
@@ -233,7 +239,8 @@ extend(Anon)
 
          readMe:function(i)
          {
-            Busy.init();
+             dump(i);
+            Busy.edit("/Task/openDokt",1);
             purl('/Task/openDokt',{dref:i.docketID},(r, d)=>
             {
                d=VOID; d=[{h2:i.mesgHead}]; r=decode.jso(r.body);
@@ -310,11 +317,12 @@ extend(Anon)
                   '&nbsp; this tag will not appear in the comment -or in the email message at all.'
                ]}]});
 
-               let c=[{h4:'Docket Config'}]; let q=keys(i).sort(); q.forEach((k)=>
+               let c=[{h4:[{icon:`cog`},{span:'Docket Config'}]},{div:``,$:`#${i.docketID}`}];
+               let q=keys(i).sort(); q.forEach((k)=>
                {
                   // dump(k);
-                  if(isin(`docketID editTime initTime comments editLogs tagIcons workflow`,k)){return}; // not for config
-                  let v=i[k]; radd(c,{input:'', type:'text', placeholder:k, title:k, inival:v, value:v});
+                  if(isin(`docketID editTime initTime comments destAddy editLogs tagIcons workflow`,k)){return}; // not for config
+                  let v=i[k]; radd(c,{input:'.toolTextFeed .dark', type:'text', placeholder:k, title:k, inival:v, value:v});
                });
 
                radd(c,{grid:`.DoktConfButnGrid`, $:
@@ -331,14 +339,14 @@ extend(Anon)
                    ]},
                ]});
 
-               popModal({class:'AnonTaskDokt',info:i, skin:"lite", onidle:function()
+               popModal({class:'AnonTaskDokt',info:i, onidle:function()
                {
                   let te=this.select('.TaskDoktConf')[0];
                   te.reclan('shut:open'); tick.after(10,()=>{te.reclan('open:shut');});
                   tick.after(250,()=>{Busy.done();});
                }})
                ({
-                  head:('Docket #'+i.docketID+' - '+i.mesgHead),
+                  head:i.mesgHead,
 
                   body:[{grid:'', contents:[{row:
                   [
@@ -352,13 +360,15 @@ extend(Anon)
                   foot:
                   [
                      // {butn:'.info', contents:'Save', onclick:function(){dump('save');}},
-                     {butn:'.info', contents:'Done', onclick:function()
+                     {butn:'.auto', contents:'Done', onclick:function()
                      {
                         let ncwe=this.root.select('#DoktMakeCmnt'); let ncev=ncwe.select('.DoktCmntMake')[0].value;
                         if(ncev.trim().length<1){this.root.exit(); return}; Anon.Task.jobCards.mkCmnt(ncwe,()=>{this.root.exit();});
                      }},
                   ],
                });
+
+               Busy.edit("/Task/openDokt",100);
             });
          },
 
@@ -395,12 +405,12 @@ extend(Anon)
             },
 
 
-            ject:function(d, di,dr,wl,wf,lu,um,dm)
+            ject:function(d, di,dr,wl,wf,lu,un,um,dm)
             {
                di=d.info; dr=di.docketID; wl=di.workflow.split("\n"); wf=dupe(wl);
                do{lu=lpop(wf);}while((wf.length>0)&&isin(lu,sesn(`MAIL`)));
-               // if(wf.length<1){popAlert(`You will be returning it to yourself :baffled:`)};
-               lu=lu.split("\t"); lu={time:(lu[0]*1),name:lu[1],mail:lu[2]}; um=userInfo(lu.user).mail;
+               lu=lu.split("\t"); lu={time:(lu[0]*1),name:lu[1],mail:lu[2]}; um=userInfo(lu.name).mail;
+               un=lu.name; if((wf.length<1)||(sesn(`MAIL`)==um)){un=`yourself`};
                dm=(um?"TODO":`email (${lu.mail})`);
 
                popModal({size:`420x255`})
@@ -411,13 +421,24 @@ extend(Anon)
                      {div:``, format:`markdown`, $:
                      `
                         ### Really return this docket?
-                        >It will return to **${lu.name}** as ${dm}
+                        >It will return to **${un}** as ${dm}
                      `},
                      {textarea:`#TaskJectMesg`, demo:`type return message here`}
                   ]}],
                   foot:
                   [
-                     {butn:`.need`, text:`Return`, onclick:function(){dump(`return`)}},
+                     {butn:`.need`, text:`Return`, vars:{dref:dr,user:un,mail:lu.mail,trgt:dm}, onclick:function(e,x,v)
+                     {
+                        v=this.vars; x=v.dref;  v.mesg=trim(select(`#TaskJectMesg`).value);
+                        if(span(v.mesg)<1){popAlert(`A return message is required`);return};
+                        Busy.edit(`return${x}`,30);
+                        purl(`/Task/jectDokt`,v,(r)=>
+                        {
+                           this.root.exit(); r=r.body;
+                           if(r!=OK){Busy.edit(`return${x}`,100); fail(`Could not return docket: ${x}\n\n>${r}`);return};
+                           Busy.edit(`return${x}`,60); wait.until(()=>{return !select(`#JC${x}`)},()=>{d.root.exit()});
+                        });
+                     }},
                      {butn:`Cancel`},
                   ],
                });
@@ -430,12 +451,12 @@ extend(Anon)
                ({
                   'harm::Delete':function(e,x)
                   {
-                     x=d.info.docketID; Busy.edit(`delete${x}`,10);
+                     x=d.info.docketID; Busy.edit(`delete${x}`,30);
                      purl('/Task/voidDokt',{dref:x},(r)=>
                      {
                         this.root.exit(); r=r.body;
-                        if(r!=OK){fail(`Could not delete docket: ${x}\n\n>${r}`);return};
-                        wait.until(()=>{return !select(`#JC${x}`)},()=>{d.root.exit()});
+                        if(r!=OK){Busy.edit(`delete${x}`,100); fail(`Could not delete docket: ${x}\n\n>${r}`);return};
+                        Busy.edit(`delete${x}`,60); wait.until(()=>{return !select(`#JC${x}`)},()=>{d.root.exit()});
                      });
                   },
                });
@@ -507,7 +528,8 @@ extend(Anon)
                      {
                         let tn,il,fx,fi; tn=this.select('^2 >'); if(!tn.attached){tn.attached={}}; il=Anon.Task.vars.icon;
                         if(!!tn.attached[fn]){alert(`duplicate filename "${fn}"\ntry rename it then try again, or choose another`);return};
-                        tn.attached[fn]=fd; fx=fext(fn); fi=(il[fx]||il.auto); tn.select('panl')[0].insert({icon:fi,text:fn});
+                        tn.attached[fn]=fd; fx=fext(fn); fi=(il[fx]||il.auto);
+                        tn.select('panl')[0].insert({icon:`.hybrid`, face:fi,text:fn});
                      }},
                   ]}]},
                   {col:'.CmntAtchList', contents:[{panl:[{b:'Attachments'}]}]},

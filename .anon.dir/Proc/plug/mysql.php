@@ -42,7 +42,7 @@ namespace Anon;
 
       function engage($h,$u,$p,$b)
       {
-         $c=null; deFail(); $c=mysqli_connect($h,$u,$p,$b); enFail(); // hammer of deh gaahds!! .. - thor SC2
+         $c=null; $eh=defail(); $c=mysqli_connect($h,$u,$p,$b); $eb=enfail($eh); // hammer of deh gaahds!! .. - thor SC2
          if($c){return $c;}; throw (new \ErrorException("no connection using `mysql://$u:****@$h/$b`"));
       }
 

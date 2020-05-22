@@ -46,9 +46,8 @@ namespace Anon;
       {
       # cond :: init : protect the framework core and limit browsing freedom according to config
       # ---------------------------------------------------------------------------------------------------------------------------------------
-         self::$vars=knob(['faceList'=>['API','BOT','DPI','GUI','SSE']]);
+         self::$vars=knob(['faceList'=>['API','BOT','DPR','GUI','SSE']]);
          $s=test::{NAVIPATH}(conf('Proc/redirect')); // get redirect config for the current web URL
-
          if(is_int($s)&&($s!==200)){finish($s);}; // explicitly configured to echo status
          if($s&&!is_int($s)){finish($s);}; // explicitly configured to bypass any stem/module controllers
 
@@ -56,8 +55,7 @@ namespace Anon;
          $s=explode('/',$s)[0]; if(($s==='~')&&!isin(user('clan'),'work')){finish(404);};
          if($s&&($s!=='~')&&!isee("/$s")){finish(404);}; // stem not found .. no point in wasting any more resources
 
-
-         $p=isee(NAVIPATH); $i=(is_dir($p)?path::indx($p):null); $l=padded(scan('$'),'/'); $x=indx(NAVIPATH,$l);
+         $p=isee(NAVIPATH); $i=(is_dir($p)?path::indx(NAVIPATH):null); $l=padded(scan('$'),'/'); $x=indx(NAVIPATH,$l);
          if(facing('BOT')&&($x!==null)){finish(403);}; // hide framework core from web-crawlers whom identify as bots
          if(is_dir($p)&&($i===null)&&!conf('Proc/viewDirs')){finish(403);}; unset($s,$c,$p,$i,$l,$x); // deny folder browsing if so configured
       # ---------------------------------------------------------------------------------------------------------------------------------------

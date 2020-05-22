@@ -172,10 +172,10 @@ namespace Anon;
          $r=json_encode(knob(['name'=>'dump', 'data'=>$r])); print_r($r); flush(); die();
       };
 
-      if(facing('DPR')&&(knob($_GET)->n==='script'))
+      if(facing('DPR')&&(fext(NAVIPATH)==='js'))
       {
-         if(!headers_sent()){header('Content-Type: application/javascript');};
-         $r=str_replace("'","\'",$r); $r=str_replace("\n",'\n',$r); $r="dump('$r');";
+         if(!headers_sent()){header('Content-Type: application/javascript'); flush();};
+         $r=str_replace("`","\`",$r); $r="dump(`$r`);";
       }
       else{if(!headers_sent()){header('Content-Type: text/plain');}};
 
@@ -190,8 +190,10 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function info($p)
    {
-      $p=path($p); if(!is_link($p)&&!is_dir($p)&&!is_file($p)){return;}; $s=(is_link($p)?lstat($p):stat($p)); if(!$s){return;};
-      $r=knob($s); if(!$r->ctime){$r->ctime=($r->mtime?$r->mtime:0);}; if(!$r->mtime){$r->mtime=$r->ctime;}; return $r;
+      if(!is_string($p)){return;}; if(strpos($p,'/')===false){return;}; $p=isee($p); if(!$p){return;};
+      $s=(is_link($p)?lstat($p):stat($p)); clearstatcache(true); if(!$s){return;}; $r=knob($s);
+      if(!$r->ctime){$r->ctime=($r->mtime?$r->mtime:0);}; if(!$r->mtime){$r->mtime=$r->ctime;};
+      return $r;
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -257,9 +259,10 @@ namespace Anon;
 
       static function exists($p)
       {
-         if(!is_string($p)){return;}; $d=self::$dir; $h=sha1($p); $p="$d/$h"; if(!file_exists($p)){return false;};
+         if(!is_string($p)){return;}; $d=self::$dir; $h=sha1($p); $p="$d/$h"; clearstatcache();
+         if(!file_exists($p)){clearstatcache(true); return false;};
          $a=aged($p); if($a<self::$max){return true;}; if(!file_exists($p)){return false;};
-         try{deFail(); unlink($p); enFail();}catch(\Exception $e){return false;}; return false;
+         try{$h=defail(); unlink($p); $b=enfail($h);}catch(\Exception $e){return false;}; return false;
       }
 
 
@@ -279,8 +282,9 @@ namespace Anon;
 
       static function remove($p)
       {
-         if(!is_string($p)){return;}; $d=self::$dir; $h=sha1($p); $p="$d/$h"; if(!file_exists($p)){return true;};
-         $d=file_get_contents($p); if($d===PROCHASH){unlink($p); return true;}; return false;
+         if(!is_string($p)){return;}; $d=self::$dir; $h=sha1($p); $p="$d/$h"; clearstatcache();
+         if(!file_exists($p)){clearstatcache(true); return true;}; $d=file_get_contents($p); clearstatcache(true);
+         if($d===PROCHASH){unlink($p); clearstatcache(true); return true;}; return false;
       }
    }
 
@@ -405,7 +409,6 @@ namespace Anon;
    if((envi('METHOD')==='POST')&&facing('API')){$d=file_get_contents('php://input'); if(wrapOf($d)==='{}')
    {$d=json_decode($d); foreach($d as $k => $v){$_POST[$k]=$v;}}; unset($d,$k,$v);};
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-
 
 
 # proc :: init : autoload classes from stems and initiate the Proc class

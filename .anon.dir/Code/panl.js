@@ -174,12 +174,12 @@ extend(Anon)
             if(isFunc(ev.saveBack)){ev.saveBack(inst.anon,(sb)=>
             {
                if(sb==OK){inst.anon.ohash=md5(inst.anon.value);inst.anon.check(inst.anon.value);return};
-               popAlert(`Attention!`,`dark`,`harm`,`bug`)(`failed saving: \`${inst.anon.ipath}\``);
+               fail(`failed saving: \`${inst.anon.ipath}\``);
             });return};
 
             purl('/Code/saveFile',{path:inst.anon.ipath,bufr:inst.anon.value},function(rsp)
             {
-               rsp=rsp.body; if(rsp!=OK){popAlert(`Attention!`,`dark`,`harm`,`bug`)(`failed saving: \`${inst.anon.ipath}\``);return};
+               rsp=rsp.body; if(rsp!=OK){fail(`failed saving: \`${inst.anon.ipath}\``);return};
                inst.anon.ohash=md5(inst.anon.value); inst.anon.check(inst.anon.value);
                // select('#CodeTreeMenu').update();
             });

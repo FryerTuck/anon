@@ -39,7 +39,7 @@ namespace Anon;
    function isPath($d,$o=null)
    {
       $v=path($d); if(!$v){return false;}; if($o===null){return $v;}; // after this validation, all options need an existing path
-      $l=null; $x=null; deFail(); $x=file_exists($v); $l=is_link($v); enFail(); if(!$x){return false;}; // avoid issues here
+      $l=null; $x=null; $x=isee($v); if(!$x){return false;}; $l=is_link($x); // avoid issues here
       if((crop($v)!=='/')&&!is_dir(dirname($v))){return false;};
       if(isText($o,3)){$o=[$o];}; if(!is_nokey_array($o)){return;}; // validate single option and options list
       $os=count($o); $of=0; foreach($o as $i) // loop through options list
@@ -1193,17 +1193,20 @@ namespace Anon;
          return $z;
       };
 
+      if(($a!=='Proc')&&!is_object(Proc::$meta)){Proc::$meta=knob();};
+
       $x=call_user_func_array(function($_PATH,$_VARS)
       {
-         foreach($_VARS as $k => $v){$$k=$v;}; unset($k,$v); ob_start(); require($_PATH); $l=get_defined_vars(); $r=trim(ob_get_clean());
-         foreach($l as $k => $v){if(($k=='_PATH')||($k=='_VARS')||property_exists($_VARS,$k)){unset($l[$k]);};}; return ['V'=>$l,'T'=>$r];
+         foreach($_VARS as $k => $v){$$k=$v;}; unset($k,$v); $_BUFR=ob_start(); require($_PATH); clearstatcache(true);
+         $l=get_defined_vars(); $r=ob_get_clean(); foreach($l as $k => $v)
+         {if(((substr($k,0,1)==='_')&&(upperCase($k)===$k))||property_exists($_VARS,$k)){unset($l[$k]);};}; return ['V'=>$l,'T'=>$r];
       },[$p,$v]);
 
       if($x['T']){return $x['T'];}; // the PHP script printed some stuff, it probably wanted to do that, we're done then
       $a=lshave($a,'/'); $a=rshave($a,'/aard.php'); if(isin($a,'/')){$a=rshave($a,'/index.php');}; $c="Anon\\$a"; if(!is_class($c)){$c=null;};
-
-      if(isset($x['V']['export'])){$r=$x['V']['export']; if(is_class($r)&&!$c){$c="Anon\\$r"; unset($x['V']['export']);}else{return $r;};};
-      if($c){if(isin($c,'meta')&&!$c::$meta){$c::$meta=knob();}; if(is_method("$c::__init")&&!$ni){call("$c::__init");}; return $c;};
-      if(span($x['V'])>0){return (new module($x['V']));}; return true;
+      if(isset($x['V']['export'])){$r=$x['V']['export']; if(is_class($r)&&!$c){$c="Anon\\$r"; unset($x['V']['export']);}else{return $r;}};
+      if(!$c){if(span($x['V'])>0){return (new module($x['V']));}; return true;}; // not a class
+      if(isin($c,'meta')&&!$c::$meta){$c::$meta=knob();}; $im=is_method("$c::__init"); if(!$im||($im&&$ni)){return $c;}; // no calling __init
+      try{$ic=$c::__init(); $er=error_get_last();}catch(\Exception $er){throw $er;}; if($er){fail("severe import error");};
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------

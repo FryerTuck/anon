@@ -224,7 +224,7 @@ jobcard
 modal .modalBox.AnonTaskDokt
 {
    width:860px !important;
-   height:520px !important;
+   height:530px !important;
 }
 
 
@@ -251,18 +251,22 @@ modal .TaskDoktPage
 .TaskDoktFlap>flap
 {margin-right:-1px;}
 .TaskDoktFlap>flap>div
-{background:hsla(0,0%,90%,1);}
+{
+   background:hsla(0,0%,95%,0.02);
+   border-left:2px solid hsla(0,0%,85%,0.2);
+}
 .TaskDoktFlap>flap>icon
 {
    margin-top:-1px;
+   margin-left:2px;
    color:hsla(0,0%,50%,1);
 }
 
 .TaskDoktConf
 {
    width:0.1px;
-   background:hsla(0,0%,90%,1);
-   border-left:1px solid hsla(0,0%,65%,1);
+   background:hsla(0,0%,95%,0.02);
+   border-left:1px solid hsla(0,0%,85%,0.1);
 }
 
 .TaskDoktConf>panl
@@ -272,16 +276,29 @@ modal .TaskDoktPage
    overflow:hidden !important;
 }
 
-.TaskDoktConf input
+.TaskDoktConf>panl>h4
 {
-   display:block;
-   width:186px;
-   border:1px solid hsla(0,0%,65%,1);
-   border-radius:2px;
-   font-size:12px; line-height:12px;
-   padding:2px !important;
-   background:hsla(0,0%,95%,1);
-   /* margin:4px; */
+   font-size:16px;
+   margin-top:10px;
+   margin-bottom:2px;
+}
+
+.TaskDoktConf>panl>h4>icon
+{
+   margin-right:6px;
+}
+
+.TaskDoktConf>panl>div
+{
+   font-size:13px;
+   padding-left:20px;
+   margin-bottom:20px;
+   opacity:0.6;
+}
+
+.TaskDoktConf>panl>input.toolTextFeed.dark
+{
+   width:180px !important;
    margin-bottom:4px;
 }
 
@@ -308,9 +325,9 @@ modal .TaskDoktPage
 .DoktCmntWrap
 {
    width:100%;
-   border:1px solid hsla(0,0%,85%,1);
+   border:1px solid hsla(0,0%,85%,0.2);
    border-radius:2px;
-   background:hsla(0,0%,98%,1);
+   background:hsla(0,0%,98%,0.05);
    margin-bottom:30px;
    overflow-x:auto;
 }
@@ -328,12 +345,13 @@ modal .TaskDoktPage
 
 .DoktCmntAtch
 {
-   width:20px;
-   padding-top:2px;
+   width:26px;
+   padding:4px;
+   border-left:1px solid hsla(0,0%,85%,0.1);
 }
 .DoktCmntAtch>icon
 {
-   color:hsla(0,0%,50%,1);
+   color:hsla(0,0%,70%,1);
    margin:2px;
    margin-bottom:0px;
    line-height:16px;
@@ -391,7 +409,8 @@ modal .TaskDoktPage
 .DoktUserFace>div
 {
    width:60px; height:60px;
-   border:3px solid hsla(0,0%,100%,1);
+   background:hsla(0,0%,95%,0.1);
+   border:3px solid hsla(0,0%,100%,0.3);
    border-radius:5px;
    box-shadow:0px 0px 2px hsla(0,0%,0%,0.3);
    overflow:hidden;
@@ -509,4 +528,14 @@ modal .modalBox.DoktCmntModl.AtchSavePanl
 {
    height:60px;
    margin-top:20px;
+}
+
+.DoktCmntInfo
+{
+   margin-bottom:6px;
+}
+
+.TaskDoktPage>panl>small
+{
+   opacity:0.6;
 }
