@@ -115,7 +115,6 @@ extend(Anon)
       {
          purl('/Task/dispense',(r)=>
          {
-            dump(r);
             Anon.Task.jobCards.prerun(decode.jso(r.body));
             Busy.edit('/Task/panl.js',100);
          });
@@ -132,6 +131,7 @@ extend(Anon)
 
          server.listen('docketReturn',(d)=>
          {
+            dump(`event :: docketReturn : ${d}`);
             remove(`#JC${d}`); Busy.edit(`return${d}`,100);
          });
       },
@@ -164,7 +164,7 @@ extend(Anon)
             c.each((v,k)=>
             {
                v.mesg=decode.b64(v.mesg); v.mesg=trim(v.mesg); v.mesg=trim(v.mesg,"<br>"); v.mesg=trim(v.mesg,"<br />");
-               v.mesg=trim(v.mesg); if(d<1){let pts=stub(v.mesg,"\n"); if(isin(pts[0],o.mesgHead)){v.mesg=pts[2]}};
+               v.mesg=trim(v.mesg); if(d<1){let pts=(stub(v.mesg,"\n")||[0]); if(isin(pts[0],o.mesgHead)){v.mesg=pts[2]}};
                if(isHtml(v.mesg)){c[k]=v}
                else{parsed(v.mesg,'markdown',function(p){p.info=this.dat; c[this.ref]=p;d++}.bind({ref:k,dat:v}))};
             });
@@ -434,8 +434,8 @@ extend(Anon)
                         Busy.edit(`return${x}`,30);
                         purl(`/Task/jectDokt`,v,(r)=>
                         {
-                           this.root.exit(); r=r.body;
-                           if(r!=OK){Busy.edit(`return${x}`,100); fail(`Could not return docket: ${x}\n\n>${r}`);return};
+                           this.root.exit(); r=r.body; dump('yoohoo!');
+                           if(r!=OK){Busy.edit(`return${x}`,100); dump(`Could not return docket: ${x}\n\n>${r}`);return};
                            Busy.edit(`return${x}`,60); wait.until(()=>{return !select(`#JC${x}`)},()=>{d.root.exit()});
                         });
                      }},

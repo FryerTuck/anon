@@ -68,11 +68,11 @@ namespace Anon;
 
       static function spew($o)
       {
-         $o->mesg=self::wash($o->mesg); $o->file=self::wash($o->file); $x=fext(NAVIPATH); $m=$o->mesg; // scrub sys-paths
+         $o->mesg=self::wash($o->mesg); $o->file=self::wash($o->file); $x=fext(NAVIPATH); $m=$o->mesg; $h="HTTP/1.1 500 Internal Server Error";
          $s=[]; foreach($o->stak as $i){$s[]="$i->func $i->file $i->line";}; $o->stak=$s; $n=$o->name; $f=$o->file; $l=$o->line; $t=tval($o);
 
-         if(facing('API')){ekko($t); exit;};  if(facing('DPR')&&($x=='js')){ekko("fail($t)");}; // API & js-dpr
-         if(facing('DPR')){$m=str_replace(["\n",'"'],['',"`"],$m); $m=crop($m,60); harakiri("$n - $m - $f - $l"); exit;}; // any other file
+         if(facing('API')){header($h); echo($t); exit;};  if(facing('DPR')&&($x=='js')){ekko("fail($t)");}; // API & js-dpr
+         if(facing('DPR')){$m=str_replace(["\n",'"'],['',"`"],$m); $m=crop($m,60); harakiri("$n - $f - $l"); exit;}; // any other file
          if(facing('SSE')){if(is_class('Proc')){Proc::emit('fail',$t); exit;}; ekko($o); exit;}; // server side event
          if(facing('GUI')){$d=base64_encode($t); $r=str_replace('{:(DBUGDATA):}',$d,pget(envi('DBUGPATH'))); echo($r); exit;}; // GUI
 

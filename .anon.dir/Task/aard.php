@@ -101,7 +101,7 @@ namespace Anon;
          path::make("$dp/fromUser",$un); path::make("$dp/withClan",$nc); path::make("$dp/withUser",''); path::make("$dp/inColumn",'todo');
          flog::{"$dp/editLogs"}("moved from $mf to $mt by $un"); flog::{"$dp/workflow"}($un,$em); path::make("$dp/editTime",$tn);
 
-         lock::remove($dp); $dd=self::dispense([$dr]); proc::signal('docketUpdate',$dd,'.work');
+         lock::remove($dp); $dd=self::dispense([$dr]); wait(250); proc::signal('docketUpdate',$dd,'.work');
          ekko(OK);
       }
    # ------------------------------------------------------------------------------------------------------------------------------------------
@@ -138,7 +138,7 @@ namespace Anon;
          $p=stub($o->mesg,"\n"); if(!$p){fail('invalid message, expecting new-line');}; // validate message
          $s=stub($p[0],"# "); if(!$s){fail('invalid `mesg` subject, expecting valid markdown with heading');}; // validate subject
          $b=trim($p[2]); if(!$b){fail('invalid message body');}; $t=time(); // validate body & make reference
-         $r=($o->dref?$o->dref:gudref('/Task/data',12)); $un=($o->user?$o->user:(find::userByMail($o->mail)));
+         $r=($o->dref?$o->dref:gudref('/Task/data',12)); $un=find::userByMail($o->mail); if(!$un){$un=$o->user;};
 
          if(isee("/Task/data/$r")){return OK;};
 
@@ -221,9 +221,9 @@ namespace Anon;
 
    # func :: saveConf : save docket properties
    # ------------------------------------------------------------------------------------------------------------------------------------------
-      static function saveConf()
+      static function saveConf($c=null)
       {
-         $o=knob($_POST); $dr=$o->dref; if(!$dr){return 'dref is undefined';}; $h="/Task/data/$dr"; unset($o->dref);
+         $o=($c?$c:knob($_POST)); $dr=$o->dref; if(!$dr){return 'dref is undefined';}; $h="/Task/data/$dr"; unset($o->dref);
          foreach($o as $k => $v){if(!isee("$h/$k")){continue;}; path::make("$h/$k",$v);};
          $dd=self::dispense([$dr]); proc::signal('docketUpdate',$dd,'.work');
          if($o->business===null){return OK;}; $m=pget("$h/fromAddy"); path::make("/Bill/data/contacts/.index/$m",$o->business);
@@ -259,7 +259,7 @@ namespace Anon;
          $co->mail=user('mail'); $mh=pget("$dp/mesgHead"); $da=0; $mp=stub($co->mesg,"\n"); $bw=conf('Proc/badWords'); $af=$co->atch;
          if($mp&&(strpos($mp[0],'#')===0)){$mp[0]=substr(trim($mp[0]),1); if(isMail($mp[0])){$da=$mp[0]; $co->mesg=trim($mp[2]);}};
          if(span($co->mesg)<2){ekko('invalid message');}; if(isin($co->mesg,$bw)){ekko('try "less crude" words .. sarcasm could be nice ;)');};
-         self::makeNote($co); if(!$da){ekko(OK);}; $fa=pget("$dp/destAddy"); $mh="About docket #$dr - $mh"; requires::stem('Mail');
+         self::makeNote($co); if(!$da){return OK;}; $fa=pget("$dp/destAddy"); $mh="About docket #$dr - $mh"; requires::stem('Mail');
          xeno::sendMarkDownMail(['fromAddy'=>$fa,'destAddy'=>$da, 'mesgHead'=>$mh, 'mesgBody'=>$co->mesg, 'attached'=>$af, 'runDebug'=>true]);
          return OK;
       }
@@ -272,7 +272,7 @@ namespace Anon;
       static function voidDokt()
       {
          $po=knob($_POST); $dr=$po->dref; $dp="/Task/data/$dr";
-         $r=path::void($dp); if($r){Proc::signal('docketDelete',$dr,'.work');};
+         $r=path::void($dp); wait(50); if($r){Proc::signal('docketDelete',$dr,'.work');};
          return ($r?OK:FAIL);
       }
    # ------------------------------------------------------------------------------------------------------------------------------------------
@@ -283,7 +283,7 @@ namespace Anon;
    # ------------------------------------------------------------------------------------------------------------------------------------------
       static function jectDokt()
       {
-         $po=knob($_POST); $dr=$po->dref; $rt=$po->trgt; $un=$po->user; $su=sesn('USER'); if($un==='yourself'){$tu=$su;}; $dp="/Task/data/$dr";
+         $po=knob($_POST); $dr=$po->dref; $rt=$po->trgt; $un=$po->user; $su=sesn('USER'); if($un==='yourself'){$un=$su;}; $dp="/Task/data/$dr";
          $im=(!isWord($rt,4)); if($im){$ml=frag($po->mesg,"\n"); ladd($ml,"#$po->mail"); $_POST['mesg']=fuse($ml,"\n");}; // add mail tag
          $mc=self::makeCmnt(); if($mc!=OK){ekko(FAIL);}; // makeCmnt also uses $_POST .. now the comment is made, mail sent & GUI notified
 
@@ -291,10 +291,8 @@ namespace Anon;
 
          $cc=sesn('CLAN'); $wf=frag(pget('/Task/workflow'),"\n");
          foreach($wf as $wl){$wl=swap($wl,' ',''); if(isin($wl,":$cc")){$tc=frag($wl,':')[0]; break;}};
-         $_POST=['dref'=>$dr,'withUser'=>$tu,'withClan'=>$tc,'inColumn'=>$rt];
-         $r=self::saveConf(); // saveConf also uses $_POST .. if all went well then config is saved & GUI updated
-         if($r!=OK){ekko($r);}; Proc::signal('docketReturn',$dr,'.work');
-         return OK;
+         $r=self::saveConf(['dref'=>$dr,'fromUser'=>$su,'withUser'=>$un,'withClan'=>$tc,'inColumn'=>$rt]); // saved & update GUI
+         if($r!=OK){ekko(FAIL);return;}; Proc::signal('docketReturn',$dr,'.work'); return OK;
       }
    # ------------------------------------------------------------------------------------------------------------------------------------------
    }

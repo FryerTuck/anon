@@ -224,7 +224,7 @@ jobcard
 modal .modalBox.AnonTaskDokt
 {
    width:860px !important;
-   height:530px !important;
+   height:560px !important;
 }
 
 
@@ -337,7 +337,7 @@ modal .TaskDoktPage
    padding:10px;
 }
 
-.DoktCmntText .markdown-body code
+modal .modalBox.AnonTaskDokt pre
 {
     padding-left:10px !important;
     font-size:12px;

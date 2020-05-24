@@ -156,12 +156,12 @@
       e='invalid purl arguments'; if(!isKnob(o)){fail(e);return}; if(!isText(o.target,1)){fail(e);return}; // validate
       if(!isKnob(o.listen)){fail(e);return}; if(!isFunc(o.listen.loadend)){fail(e);return}; // validate
       if(!isFunc(o.listen.progress)){o.listen.progress=function(){}}; pe=o.listen.progress; delete o.listen.progress;
-      if(!isFunc(o.listen.error)){o.listen.error=function(){}}; ee=o.listen.error; delete o.listen.error;
+      if(!isFunc(o.listen.error)){o.listen.error=function(ea){fail(ea)}}; ee=o.listen.error; delete o.listen.error;
 
-      o.listen.error=function(e)
+      o.listen.error=function(fe)
       {
-         let rtxt=this.response; console.error("xhrFail",rtxt);
-         this.failed=this.response; ee(e);
+         let ea=fe.detail; if(isJson(ea)){ea=decode.jso(ea)}; ee(ea);
+         this.failed=this.response;
       };
 
       o.listen.progress=function(b)
@@ -173,11 +173,11 @@
       cb=o.listen.loadend; delete o.listen.loadend; o.listen.loadend=function() // event done
       {
          let h=dval(this.getAllResponseHeaders()); if((h!=null)&&h.Cookies){h.Cookies=decode.jso(decode.b64(h.Cookies))};
-         let r={path:this.purl,head:h,body:this.response}; this.done=100;
-         if(this.status==200){pe(100,this.purl);if(this.busy&&!!select("#busyPane")){Busy.edit(this.purl,100)};};
-         if(x.silent){tick.after(250,()=>{delete server.silent.busy})}; if(MAIN.HALT){return};
-         if(isin(r.body,"evnt: fail\nmesg: ")){this.signal("error",r.body); if(!o.listen.error){fail(r.body);return}};
-         cb(r);
+         let r={path:this.purl,head:h,body:this.response}; this.done=100;  let s=this.status;
+         if(s==200){pe(100,this.purl);if(this.busy&&!!select("#busyPane")){Busy.edit(this.purl,100)};};
+         if(x.silent){tick.after(250,()=>{delete server.silent.busy})}; if(s<400){cb(r);return}; // all is well
+         if(MAIN.HALT){console.error("xhrMuted");return}; this.signal("error",r.body);
+
       };
 
       if(o.silent){server.silent.busy=1};

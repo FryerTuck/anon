@@ -154,7 +154,7 @@ namespace Anon;
 
          Proc::signal('busy',['with'=>"mail",'done'=>12]);
          $L->Body=$w->mesgBody; $mt=time(); $z=knob(['done'=>0,'fail'=>null]);
-         $eh=defail(); $r=$L->send(); $eb=enfail($eh); if(isset($eb[0])){$fm=$eb[0]->mesg;};
+         $eh=defail(); $r=$L->send(); $fm=enfail($eh,1);
 
          if(!$r)
          {
