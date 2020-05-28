@@ -47,6 +47,8 @@ namespace Anon;
 
           $co=knob
           ([
+              'TIMEOUT' => 10,
+              'HEADER' => true,
               'RETURNTRANSFER' => true,
               'SSL_VERIFYPEER' => false,
               'USERAGENT' => envi('USER_AGENT'),
@@ -61,8 +63,12 @@ namespace Anon;
           if(isKnob($a->param)){foreach($a->param as $hk => $hv){$ho->$hk=$hv;}}; unset($hk,$hv);
           $ha=[]; foreach($ho as $hk => $hv){$ha[]="$hk: $hv";}; curl_setopt($L,CURLOPT_HTTPHEADER,$ha);
 
-          $r=curl_exec($L); $e=null; if(!$r){$x=curl_error($L); if($x){$e=$x;}};
-          if($e){fail($e);return;}; $this->pacify(); return $r;
+          $r=curl_exec($L); $e=null; if(!$r){$x=curl_error($L); if($x){$e=$x;}}; if($e){fail($e);return;};
+          $i=curl_getinfo($L); $this->pacify(); $d="\r\n\r\n"; $s=stub($r,$d); if($s&&isin($s[0],'100 Continue')){$s=stub($s[2],$d);};
+          $b=$s[2]; $l=frag(trim($s[0]),"\n"); $h=knob();
+          foreach($l as $q){$y=stub($q,': '); $k=$y[0]; if(!$k){continue;}; $v=dval($y[2]); $h->$k=$v;};
+
+          $r=knob(['info'=>$i,'head'=>$h,'body'=>$b]); return $r;
       }
 
 

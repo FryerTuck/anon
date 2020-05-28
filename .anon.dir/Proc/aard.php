@@ -31,6 +31,12 @@ namespace Anon;
       {
          boot(); // boot all bootable stems
 
+         if(NAVIPATH==='/Proc/execPath')
+         {
+            // skip past all the INIT stuff and run quickly, yet -with security
+            self::execPath(); exit;
+         };
+
          if(facing('GUI'))
          {
             guiStrap();
@@ -67,9 +73,21 @@ namespace Anon;
 
 
 
+      static function execPath()
+      {
+         permit::fubu('clan:work,lead,sudo'); // can only be run when logged in
+         $po=knob($_POST); $pn=$po->pathName; $rp=(isFold($pn)?("$pn/".path::indx($pn)):"$pn.php");
+         $rp=isee($rp); if(!$rp){finish(404);}; $rp=path($rp); // we need an existing php file
+         dbug::trap('overflow',function($e){ekko($e); exit;}); // fail on any errors, warnings, etc
+
+         require_once $rp; exit;
+      }
+
+
+
       static function treeMenu()
       {
-         permit::fubu('clan:work');
+         permit::fubu('clan:work,lead,sudo');
          $cn='name,path,mime,type';
          $al=path::ogle([using=>'$',fetch=>$cn,limit=>['type'=>'fold','levl'=>0]]);
          $ul=path::ogle([using=>'/',fetch=>$cn,limit=>['type'=>'fold','levl'=>0]]);
@@ -172,7 +190,7 @@ namespace Anon;
          requires::stem('Mail');
 
          $wait=self::$meta->wait; $rtmx=(ini_get('max_execution_time')*1); $utmx=conf('User/inactive'); $utxs=$utmx; $fade=12;
-         $sesn=('/Proc/temp/sesn/'.sesn('HASH')); $epth="$sesn/emit"; $tbgn=fractime(3); $tlst=$tbgn; $cntr=0;
+         $sesn=('/Proc/temp/sesn/'.sesn('HASH')); $epth="$sesn/emit"; $tbgn=fractime(3); $tlst=$tbgn; $cntr=0; $mxrt=(55-$wait);
          $sxed=encode::jso(['time'=>$fade]); $fapi=facing('API'); $wapi=0; $lost=0; $fint=$fade; $lstn=knob();
 
          $stms=fuse(pget('$'),pget('/'));
@@ -183,6 +201,7 @@ namespace Anon;
             if($evnt){if(!$lstn->$evnt){$lstn->$evnt=knob();}; $lstn->$evnt->{"$stem"}=import("/$stem/evnt/$sefn");}};
          }}; unset($stms,$stem,$sefl,$sefn,$evnt);
 
+         self::emit('open');
 
          for(;;)
          {
@@ -191,7 +210,7 @@ namespace Anon;
 
             if(($tnow-$tlst)>=1)
             {  // this happens once per second
-               $wapi++;
+               // $wapi++;
                $tlst=$tnow; $utxs--; xena::fetchNewAutoMail(); $lost+=(time()-$tnow); // update counters .. fetch mail only when as configured
                $utla=pget("$sesn/TIME"); if(!$utla){$utla=0;}; $usfn=(($tnow-$utla)>=($utmx-($fade*2)-$lost)); // User-Session-Fades-Now (bool)
                if($usfn){$fint--;}; if($fint<1){$utxs=$utmx; $fint=$fade; self::emit('sesnFade',$sxed);}else{self::emit('ping');};
@@ -199,19 +218,22 @@ namespace Anon;
 
             $scan=pget($epth); if(isset($scan[0])){foreach($scan as $indx) // scan for events
             {  // this happens every `wait` interval in milliseconds
-               $evnt=decode::jso("$epth/$indx"); void("$epth/$indx"); // emit this event only once
+               $evnt=decode::jso("$epth/$indx"); if(!$fapi){path::void("$epth/$indx");}; // emit this event only once for SSE-only
                if(!is_object($evnt)){continue;}; $en=$evnt->name; $ed=$evnt->data; // validate event object
                $hook=$lstn->$en; if($hook){foreach($hook as $sn => $fn){$fn($ed); unset($sn,$fn);}}; // call this event's hooks
                self::emit($en,$ed); unset($evnt,$en,$ed,$hook);  // emit this event to front-end .. clean up each iteration
             }};
 
+            // if(($tnow-$tbgn)>=$mxrt)
+            // {self::emit("gone","refreshing"); wait($wait); if(errors_get_last()){errors_clear_last();}; die();};
+
             if(!$fapi){wait($wait);continue;}; // no API-check .. this is only SSE
-            if($wapi<4){continue;}; break;
+            break;
          };
 
          if(!$fapi){done(); exit;};
          $f=dbug::wash(__FILE__);  $l=__LINE__;  $f="file: $f";  $l="line: $l";
-         ekko("SSE listener-loop clean exit; no errors encountered in 5 seconds.\n\n```\n$f\n$l\n```\n");
+         ekko("SSE listener-loop clean exit; no errors encountered in 3 loops.\n\n```\n$f\n$l\n```\n");
       }
 
 

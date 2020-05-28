@@ -300,6 +300,7 @@
    const fail = function(m, a,n,f,l,s,p,o)
    {
       if(MAIN.HALT){return}; MAIN.HALT=1; if(MAIN.Busy){Busy.tint('red')}; tick.after(2000,()=>{MAIN.HALT=0});
+      if(isJson(m)&&(wrapOf(m)=="{}")){m=JSON.parse(m); dump([m.file,m.line]);};
       if(isText(m))
       {
           if(isin(m,"evnt: ")&&isin(m,"\nmesg: "))
@@ -697,7 +698,7 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const sval = function(a)
    {
-      if(!isText(a)){return}; let b=a.trim(); b=b.toLowerCase(); if((1>b.length)||("null"===b)||("undefined"===b)){return null};
+      if(!isText(a)){return}; let b=a.trim(); b=b.toLowerCase(); if((1>b.length)||("null"===b)||("undefined"===b)||(a==="VOID")){return null};
       if("true"===b){return!0}; if("false"===b){return!1}; if((a[0]=='+')&&!isNaN(a.slice(1))){a=a.slice(1)};
       if(!isNaN(a)){return (a*1)}; return a;
    };

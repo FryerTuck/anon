@@ -26,6 +26,7 @@ namespace Anon;
    {
       private static $meta;
       private static $bufr=[];
+      static $temp;
 
 
       static $code = array
@@ -71,7 +72,7 @@ namespace Anon;
          $o->mesg=self::wash($o->mesg); $o->file=self::wash($o->file); $x=fext(NAVIPATH); $m=$o->mesg; $h="HTTP/1.1 500 Internal Server Error";
          $s=[]; foreach($o->stak as $i){$s[]="$i->func $i->file $i->line";}; $o->stak=$s; $n=$o->name; $f=$o->file; $l=$o->line; $t=tval($o);
 
-         if(facing('API')){header($h); echo($t); exit;};  if(facing('DPR')&&($x=='js')){ekko("fail($t)");}; // API & js-dpr
+         if(facing('API')){if(!headers_sent()){header($h);}; echo($t); exit;};  if(facing('DPR')&&($x=='js')){ekko("fail($t)");};//API & js-dpr
          if(facing('DPR')){$m=str_replace(["\n",'"'],['',"`"],$m); $m=crop($m,60); harakiri("$n - $f - $l"); exit;}; // any other file
          if(facing('SSE')){if(is_class('Proc')){Proc::emit('fail',$t); exit;}; ekko($o); exit;}; // server side event
          if(facing('GUI')){$d=base64_encode($t); $r=str_replace('{:(DBUGDATA):}',$d,pget(envi('DBUGPATH'))); echo($r); exit;}; // GUI
@@ -82,7 +83,7 @@ namespace Anon;
 
       static function wash($m)
       {
-         $p=[COREPATH,ROOTPATH]; $r=str_replace($p,'',$m);
+         $p=[COREPATH,ROOTPATH]; $r=str_replace($p,['$',''],$m);
          $b='basedir restriction in effect. File(';  $e=') is not within the';
          $s=explode($b,$r); if(count($s)<2){return $r;}; $r=explode($e,$s[1])[0];
          return "illegal path: $r";
@@ -149,18 +150,24 @@ namespace Anon;
 
 # func :: (dbug) : disable and enable errors .. to silence warnings/notices picked up by error handler
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   function defail()
+   function defail($de=0)
    {
-      ob_start();
+      ini_set('display_errors',false); error_reporting(0); usleep(1000); $l=ob_get_level();
+      if(!$l){$l=0;}; $_SERVER['oblevl']=$l; ob_start();
       $tn=dbug::trap(); dbug::trap('hush');
       return $tn;
    }
 
    function enfail($tn='anon',$rs=null)
    {
-      $rb=dbug::bufr(); dbug::trap($tn); if(!$rs){return $rb;};
+      ini_set('display_errors',true); error_reporting(E_ALL); usleep(1000); $cl=ob_get_level();
+      $r=''; if($cl>0){$r=ob_get_clean();}; $pl=$_SERVER['oblevl'];
+      if(is_int($pl)&&($pl<1)&&($cl>0)){while(ob_get_level()>0){ob_end_clean();}; $_SERVER['oblevl']=0;};
+
+      $rb=dbug::bufr(); dbug::trap($tn);
+      if(!$rs){return $rb;}; // no result-string .. returns array
       $rs=[]; foreach($rb as $eo){$rs[]=$eo->mesg;}; $rs=implode("\n",$rs);
-      return trim($rs);
+      return trim($rs."\n".$r);
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 

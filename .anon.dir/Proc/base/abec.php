@@ -782,10 +782,11 @@ namespace Anon;
 
       static function size($d,$o=null)
       {
-         $p=path($d);  if(!$p){return;}; if(isFile($p)){$r=filesize($p); return round(($r/1024),3);}; if(!isFold($p)){return;};
-         $rp=ROOTPATH; $cp=COREPATH; $h=(isin($p,$cp)?$cp:$rp); $t=trim(self::twig($d),'/'); $h="$h/$t"; $f=self::leaf($p);
-         if(!file_exists("$h/$f")){return;}; $r=exec::{"du -sb ./$f"}($h); $x=stub($r,[' ',"\t"]); if($x){$r=$x[0];};
-         if(isNumr($r,1)){$r=($r*1); return round(($r/1024),3);}; fail("failed to get byte-size of: `$h/$f`");
+         $p=isee($d);  if(!$p){$p=tval($d); fail("expecting `$p` to exist as readable path"); return;};
+         if(is_file($p)){$r=filesize($p); return round(($r/1024),3);}; if(!is_dir($p)){return;};
+         $rp=ROOTPATH; $cp=COREPATH; $t=self::twig($p); $f=self::twig($p); $f=self::leaf($p);
+         $r=exec::{"du -sb ./$f"}($t); $x=stub($r,[' ',"\t"]); if($x){$r=$x[0];}; $h=('/'.lshave("$t/$f",'/'));
+         if(isNumr($r,1)){$r=($r*1); return round(($r/1024),3);}; fail("failed to get byte-size of: `$h`");
       }
 
 
@@ -914,25 +915,23 @@ namespace Anon;
       }
 
 
-      static function move($pf,$pt)
-      {
-         $pf=path($pf); $pt=path($pt); if(!$pf||!$pt){fail('expecting 2 paths');}; if(!isee($pf)){fail("`$pf` is undefined");};
-         if(isee($pt)){if(!isPath($pt,[D,W])){fail("`$pt` exists and is not a writable folder");}; $pt=rshave($pt,'/'); $pt="$pt/";};
-         $r=rename($pf,$pt); return $r;
-      }
-
-
       static function copy($pf,$pt)
       {
          $pf=path($pf); $pt=path($pt); if(!$pf||!$pt){fail('expecting 2 paths');}; if(!isee($pf)){fail("`$pf` is undefined");};
-         if(isee($pt)){if(!isPath($pt,[D,W])){fail("`$pt` exists and is not a writable folder");}; $pt=rshave($pt,'/'); $pt="$pt/";};
-         exec::{"cp -R $pf $pt"}(); return true; // will fail if not OK
+         $tx=isee($pt); if(!$tx){$np=(isFold($pf)?$pt:self::twig($pt)); pset("$np/");};
+         lock::awaits($pt); exec::{"cp -R $pf $pt"}(); lock::remove($pt); return true; // will fail if not OK
       }
 
 
       static function void($p)
       {
          if(!path($p)){return;}; lock::awaits($p); $r=void($p); lock::remove($p); return $r;
+      }
+
+
+      static function move($pf,$pt)
+      {
+         $r=self::copy($pf,$pt); $r=self::void($pf); return $r;
       }
 
 
@@ -998,10 +997,10 @@ namespace Anon;
 
          foreach($l as $x => $i)
          {
-            // if($lmtn&&(isin($lmtn,"!$i")||(!isin($lmtn,"!$i")&&!isin($lmtn,$i)))){continue;};
-            // if($lmtn&&(isin($lmtn,"!$i"))){continue;};
-            // if(isKnob($q->limit)&&$q->limit->name){if(isin($q->limit->name,"!$i")){continue;}};
-            $p=crop("$h/$i"); $t=(isFile($p)?'file':(isFold($p)?'fold':'link')); $fx=self::type($p); $fs=self::size($p); $mt=mime($p);
+            $p=crop("$h/$i"); if(isin($p,'//')){ekko('FOUND YOU!!');}
+            // $p=crop(('/'.lshave("$h/$i",'//')));
+            // $p=crop("$h/$i");
+            $t=(isFile($p)?'file':(isFold($p)?'fold':'link')); $fx=self::type($p); $fs=self::size($p); $mt=mime($p);
             if(isKnob($q->limit)&&$q->limit->type&&!isin($q->limit->type,$t)){continue;};
             $xp=isee($p); $pm=($xp?substr(sprintf('%o',fileperms($xp)),-4):null);
             $o=knob(['repo'=>null,'path'=>$p,'name'=>$i,'mime'=>$mt,'type'=>$t,'size'=>$fs,'time'=>info($p)->mtime,'mode'=>$pm,'levl'=>$levl,'data'=>null]);
@@ -1033,8 +1032,10 @@ namespace Anon;
 
       static function tree($h)
       {
-         expect::fold($h); $h=crop($h); $r=(isRepo($h)?repo::status($h):null); if($r){unset($r->body);}; $n=self::leaf($h); $s=self::size($h);
-         $z=knob(['repo'=>$r,'path'=>$h,'name'=>$n,'mime'=>mime($h),'type'=>'fold','size'=>$s,'time'=>info($h)->mtime,'data'=>null]);
+         expect::fold($h); $i=info($h); if(!isKnob($i)){fail("expect failed on `$h`"); return;};
+         $h=crop($h); $r=(isRepo($h)?repo::status($h):null); if($r){unset($r->body);}; $n=self::leaf($h); $s=self::size($h);
+
+         $z=knob(['repo'=>$r,'path'=>$h,'name'=>$n,'mime'=>mime($h),'type'=>'fold','size'=>$s,'time'=>$i->mtime,'data'=>null]);
          $z->data=self::ogle
          ([
             using => $h,

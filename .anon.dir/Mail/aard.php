@@ -143,16 +143,18 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    xeno::learns('sendMarkDownMail',function($o)
    {
-      if(is_assoc_array($o)){$o=knob($o);}; if(!isKnob($o)){fail('expecting object');}; $tn=time(); $mh=$o->mesgHead; $mb=$o->mesgBody;
+      if(is_assoc_array($o)){$o=knob($o);}; if(!isKnob($o)){fail('expecting object');}; $tn=time(); $mh=$o->mesgHead;
+      if(!$o->mesgBody){$o->mesgBody=$o->textBody;}; if(!$o->mesgBody){$o->mesgBody=$o->htmlBody;}; $mb=$o->mesgBody;
       if(!isPath($mb)&&$mh){$th=sha1(mash($o,$tn)); $tp="/Proc/temp/file/$th.md"; path::make($tp,"# $mh\n\n$mb"); $o->mesgBody=$tp;};
       if(!isPath($o->mesgBody)){fail('expecting `mesgBody` as file path');}; $p=crop($o->mesgBody); $rp='/Proc/libs/marked/Parsedown.php';
       if(!isee($p)){fail("expecting `$p` as accessible file");}; if(!is_file(path($p))){fail("expecting `$p` as file");};
-      if(!isKnob($o->varsUsed)){$o->varsUsed=knob($o->varsUsed);}; $b=trim(import($p,$o->varsUsed)); $h=stub($b,"\n");
-      if($h){$h=stub($h[0],'# ');}; if($h){$h=trim($h[2]);}; if(!$h){fail("expecting `$p` as markdown-formatted text-file with a heading");};
-      $b=stub($b,"\n"); $b=trim($b[2]); if(!isMail($o->destAddy)){fail('expecting `destAddy` as email address');}; requires::path($rp);
-      $x=(new \Parsedown()); $x->setBreaksEnabled(true); $b=$x->text($b); $b=import('/Proc/libs/marked/page.htm',['parsed'=>$b]);
-      $m=$o->destAddy; $c=$o->fromAddy; if(!$c){$c=conf('Proc/autoMail');}elseif(isMail($c)){$c=pget("/Mail/link/$c");};
-      if(!isin($c,['mail://','imap://'])){dump(["Serellaaa!! hooHOO!!",$c]); fail('invalid plug specification .. make sure the `fromAddy` (autoMail -or plug) is valid');};
+      if(!isKnob($o->varsUsed)){$o->varsUsed=knob($o->varsUsed);}; $mb=trim(import($p,$o->varsUsed)); $bh=stub($mb,"\n");
+      if($bh){$bh=stub($bh[0],'# ');}; if($bh){$mh=trim($bh[2]);}; if(!$mh){fail("expecting `$p` as markdown file with a heading");};
+      $mb=stub($mb,"\n"); $mb=trim($mb[2]); $tb=$mb; if(!isMail($o->destAddy)){fail('expecting `destAddy` as email address');}; requires::path($rp);
+      $x=(new \Parsedown()); $x->setBreaksEnabled(true); $hb=$x->text($mb); $hb=import('/Proc/libs/marked/page.htm',['parsed'=>$hb]);
+      $da=$o->destAddy; if(!$da){$da=$o->destAddr;}; $dn=$o->destName; $fa=$o->fromAddy; if(!$fa){$fa=$o->fromAddr;}; $fn=$o->fromName;
+      $c=conf('Proc/autoMail'); if(!$c){$c=pget("/Mail/link/$fa");};
+      if(!isin($c,['mail://','imap://'])){fail('invalid plug specification .. make sure the `fromAddr` (autoMail -or plug) is valid');};
       if(!online()){fail('`'.HOSTNAME.'` is offline');};
 
       $r=crud($c)->insert
@@ -160,9 +162,13 @@ namespace Anon;
          debug => $o->runDebug,
          write =>
          ([
-            'destAddy' => $m,
-            'mesgHead' => $h,
-            'mesgBody' => $b,
+            'fromAddr' => $fa,
+            'fromName' => $fn,
+            'destAddr' => $da,
+            'destName' => $dn,
+            'mesgHead' => $mh,
+            'htmlBody' => $hb,
+            'textBody' => $tb,
             'attached' => $o->attached,
          ])
       ]);

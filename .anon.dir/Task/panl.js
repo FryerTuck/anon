@@ -131,8 +131,13 @@ extend(Anon)
 
          server.listen('docketReturn',(d)=>
          {
-            dump(`event :: docketReturn : ${d}`);
             remove(`#JC${d}`); Busy.edit(`return${d}`,100);
+         });
+
+         server.listen('docketFinish',(d)=>
+         {
+            remove(`#JC${d}`);
+            popAlert(`flag-checkered :: Completed : ### Job done :cool:\n>${d}`);
          });
       },
 
@@ -239,7 +244,6 @@ extend(Anon)
 
          readMe:function(i)
          {
-             dump(i);
             Busy.edit("/Task/openDokt",1);
             purl('/Task/openDokt',{dref:i.docketID},(r, d)=>
             {
@@ -320,7 +324,6 @@ extend(Anon)
                let c=[{h4:[{icon:`cog`},{span:'Docket Config'}]},{div:``,$:`#${i.docketID}`}];
                let q=keys(i).sort(); q.forEach((k)=>
                {
-                  // dump(k);
                   if(isin(`docketID editTime initTime comments destAddy editLogs tagIcons workflow`,k)){return}; // not for config
                   let v=i[k]; radd(c,{input:'.toolTextFeed .dark', type:'text', placeholder:k, title:k, inival:v, value:v});
                });
@@ -346,7 +349,7 @@ extend(Anon)
                   tick.after(250,()=>{Busy.done();});
                }})
                ({
-                  head:i.mesgHead,
+                  head:(i.mesgHead||`(no subject)`),
 
                   body:[{grid:'', contents:[{row:
                   [
@@ -359,7 +362,6 @@ extend(Anon)
 
                   foot:
                   [
-                     // {butn:'.info', contents:'Save', onclick:function(){dump('save');}},
                      {butn:'.auto', contents:'Done', onclick:function()
                      {
                         let ncwe=this.root.select('#DoktMakeCmnt'); let ncev=ncwe.select('.DoktCmntMake')[0].value;
@@ -434,7 +436,7 @@ extend(Anon)
                         Busy.edit(`return${x}`,30);
                         purl(`/Task/jectDokt`,v,(r)=>
                         {
-                           this.root.exit(); r=r.body; dump('yoohoo!');
+                           this.root.exit(); r=r.body;
                            if(r!=OK){Busy.edit(`return${x}`,100); dump(`Could not return docket: ${x}\n\n>${r}`);return};
                            Busy.edit(`return${x}`,60); wait.until(()=>{return !select(`#JC${x}`)},()=>{d.root.exit()});
                         });

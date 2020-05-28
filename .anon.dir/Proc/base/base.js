@@ -158,12 +158,6 @@
       if(!isFunc(o.listen.progress)){o.listen.progress=function(){}}; pe=o.listen.progress; delete o.listen.progress;
       if(!isFunc(o.listen.error)){o.listen.error=function(ea){fail(ea)}}; ee=o.listen.error; delete o.listen.error;
 
-      o.listen.error=function(fe)
-      {
-         let ea=fe.detail; if(isJson(ea)){ea=decode.jso(ea)}; ee(ea);
-         this.failed=this.response;
-      };
-
       o.listen.progress=function(b)
       {
          let q=(Math.floor(b.loaded/b.total)*100); if(this.done<q){this.done=q};pe(q,this.purl);
@@ -175,9 +169,10 @@
          let h=dval(this.getAllResponseHeaders()); if((h!=null)&&h.Cookies){h.Cookies=decode.jso(decode.b64(h.Cookies))};
          let r={path:this.purl,head:h,body:this.response}; this.done=100;  let s=this.status;
          if(s==200){pe(100,this.purl);if(this.busy&&!!select("#busyPane")){Busy.edit(this.purl,100)};};
-         if(x.silent){tick.after(250,()=>{delete server.silent.busy})}; if(s<400){cb(r);return}; // all is well
-         if(MAIN.HALT){console.error("xhrMuted");return}; this.signal("error",r.body);
-
+         if(x.silent){tick.after(250,()=>{delete server.silent.busy})}; if(s<400){cb.apply(this,[r]);return}; // all is well
+         if(MAIN.HALT){console.error("xhrMuted");return}; let eo=r.body;
+         if(!isJson(eo)){eo=('Network :: '+s+' '+(this.statusText||'Connection Failure')+"\n\n"+eo)};
+         ee.apply(this,[eo]);
       };
 
       if(o.silent){server.silent.busy=1};
@@ -414,6 +409,7 @@
          sensor:{},
          silent:{},
          hashes:{},
+         // timing:setTimeout(function(){server.sensor.live=0},1),
 
 
          vivify:function(f)
@@ -427,25 +423,49 @@
                 if(isJson(mesg)&&isin(mesg,[`"name":`,`"mesg":`,`"file":`,`"line":`],ALL)){fail(decode.jso(mesg));return};
                 dump("unhandled server mesg:\n"+atob(evnt.data));
             };
-            // this.stream.listen('open',function(evnt){});
-            this.stream.listen('ping',function(evnt){server.sensor.live=1});
-            this.stream.listen('shut',function(evnt){server.stream.close(); server.sensor.live=0});
+            this.stream.listen('open',function(evnt){server.sensor.live=1; dump("SSE ready");});
+            this.stream.listen('ping',function(evnt)
+            {
+               server.sensor.live=1; tick.after(2000,()=>{server.sensor.live=0});
+            });
+
+            // this.stream.listen('gone',function(evnt){server.stream.close(); server.sensor.live=0; server.vivify();});
             this.stream.listen('fail',function(evnt){fail(decode.jso(atob(evnt.data)))});
+            this.stream.listen('close',function(evnt){console.error("SSE closed");});
 
             this.stream.listen('error',function(evnt) // this happens on reconnect -or "connection fail", only the latter is an error
             {
-               if(!server.sensor.live)
+               tick.after(2250,()=>
                {
-                  server.stream.close(); // prevent reconnect flood for in case the server disconnects upon connect
-                  purl(evnt.Target.purl,(rsp,stb)=>
-                  {
-                     // debug this issue by visiting the event emitter via API interface
-                     rsp=(rsp.body||"undefined"); stb=stub(rsp,"event: fail\ndata: ");
-                     if(stb){rsp=trim(stb[2]); console.log(rsp); rsp=decode.jso(atob(rsp)); fail(rsp); return};
-                     if(isJson(rsp)){rsp=decode.jso(rsp); fail(rsp); return}; let prl=evnt.Target.purl;
-                     fail(`Server Side Events :: emitter **${prl}** died unexpectedly.\n${rsp}`);
+                  if(server.sensor.live){return};
+                  console.error("SSE stopped, checking health with XHR");
+                  // prevent reconnect flood for in case the server disconnects upon connect
+                  // debug this issue by visiting the event emitter via API interface
+                  purl
+                  ({
+                     target:evnt.Target.purl,
+                     listen:
+                     {
+                        error:function(e)
+                        {
+                           console.error(e);
+                        },
+                        loadend:function(rsp, cde,dne,stb)
+                        {
+                           if(server.sensor.live){return};
+                           rsp=rsp.body; cde=this.status; dne=(!rsp&&((cde<1)||(cde==503)));
+                           if(dne){server.stream.close(); console.error('SSE stopped');};
+                           if(!rsp&&(cde<1)){popAlert("link :: Connection : Unable to connect; refreshing now."); tick.after(6,()=>{repl.exit();}); return};
+                           if(!rsp&&(cde===503)){popAlert("link :: Session Expired : Refreshing now."); tick.after(6,()=>{repl.exit();}); return};
+                           if(isin(rsp,": \nevent: open\ndata: IQ==")){dump(rsp);return};
+                           if(!rsp){rsp="undefined"}; stb=stub(rsp,"event: fail\ndata: ");
+                           if(stb){rsp=trim(stb[2]); console.log(rsp); rsp=decode.jso(atob(rsp)); fail(rsp); return};
+                           if(isJson(rsp)){rsp=decode.jso(rsp); fail(rsp); return}; let prl=evnt.Target.purl;
+                           fail(`Server Side Events :: emitter **${prl}** died unexpectedly.\n${rsp}`);
+                        },
+                     }
                   });
-               };
+               });
             });
 
             if(isFunc(f)){f(this.stream);};
@@ -486,7 +506,11 @@
       server.listen('dump',function(d){dump(d)});
    });
 
-   setInterval(()=>{server.ostime+=1;},1000);
+   setInterval(()=>
+   {
+      server.ostime+=1;
+      signal('clockSec');
+   },1000);
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 

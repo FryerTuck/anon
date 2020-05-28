@@ -7,20 +7,30 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    class xeno
    {
-      private static $meta;
+      private static $meta=[];
 
       static function learns($n,$f)
       {
-         if(!isWord($n)){fail('My skills are named, try using a word next time');};
-         if(!isFunc($f)){fail('I can learn skills by methods only');}; if(!isKnob(self::$meta)){self::$meta=knob();};
-         if(isFunc(self::$meta->$n)){fail("I already know how to `$n`");}; self::$meta->$n=$f;
+         if(!isWord($n)){fail::xeno('My skills are named, try using a word next time');};
+         if(!isFunc($f)){fail::xeno('I can learn skills by methods only');};
+         if(self::does($n)){fail::xeno("I already know how to `$n`");};
+         self::$meta[$n]=$f;
+      }
+
+      static function does($n=null)
+      {
+         $l=array_keys(self::$meta); if(!is_string($n)||(strlen($n)<2)){return $l;};
+         $r=in_array($n,$l); return $r;
       }
 
       static function __callStatic($n,$a)
       {
-         $f=self::$meta->$n; if(!isFunc($f)){fail("I don't know how to `$n` .. yet .. teach me?");};
-         try{$r=call($f,$a); return $r;}catch(\Exception $e)
-         {$m=$e->getMessage(); $f=$e->getFile(); $l=$e->getLine(); fail("I could not `$n` because: $m");};
+         if(!self::does($n)){fail::xeno("I don't know how to `$n` .. yet .. teach me?");};
+         try{$r=call(self::$meta[$n],$a); return $r;}catch(\Exception $e)
+         {
+            $m=$e->getMessage(); $f=$e->getFile(); $l=$e->getLine();
+            fail::xeno("I could not `$n` because: $m\n\n```\nfile:$f\nline:$l\n```\n\n");
+         };
       }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -32,20 +42,30 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    class xena
    {
-      private static $meta;
+      private static $meta=[];
 
       static function learns($n,$f)
       {
-         if(!isWord($n)){fail('My skills are named, try using a word next time');};
-         if(!isFunc($f)){fail('I can learn skills by methods only');}; if(!isKnob(self::$meta)){self::$meta=knob();};
-         if(isFunc(self::$meta->$n)){fail("I already know how to `$n`");}; self::$meta->$n=$f;
+         if(!isWord($n)){fail::xena('My skills are named, try using a word next time');};
+         if(!isFunc($f)){fail::xena('I can learn skills by methods only');};
+         if(self::does($n)){fail::xena("I already know how to `$n`");};
+         self::$meta[$n]=$f;
+      }
+
+      static function does($n=null)
+      {
+         $l=array_keys(self::$meta); if(!is_string($n)||(strlen($n)<2)){return $l;};
+         $r=in_array($n,$l); return $r;
       }
 
       static function __callStatic($n,$a)
       {
-         $f=self::$meta->$n; if(!isFunc($f)){fail("I don't know how to `$n` .. yet .. teach me?");};
-         try{$r=call($f,$a); return $r;}catch(\Exception $e)
-         {$m=$e->getMessage(); $f=$e->getFile(); $l=$e->getLine(); fail("I could not `$n` because: $m");};
+         if(!self::does($n)){fail::xena("I don't know how to `$n` .. yet .. teach me?");};
+         try{$r=call(self::$meta[$n],$a); return $r;}catch(\Exception $e)
+         {
+            $m=$e->getMessage(); $f=$e->getFile(); $l=$e->getLine();
+            fail::xena("I could not `$n` because: $m\n\n```\nfile:$f\nline:$l\n```\n\n");
+         };
       }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -416,7 +436,7 @@ namespace Anon;
       };
 
       if(!is_funnic($m)){$m='txt';}; $m=mime($m); if(!$m){$m='text/plain';};
-      header("Content-Type: text/plain"); print_r($r); flush(); die();
+      if(!headers_sent()){header("Content-Type: text/plain");}; print_r($r); flush(); die();
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -473,10 +493,11 @@ namespace Anon;
 
       static function head($a,$nx=true)
       {
+         $hs=headers_sent(); if($hs){return false;};
          if(is_int($a))
          {
-            $c=conf('Proc/httpCode'); $m=$c->$a; if(!$m){$a=501; $m=$c->$a;}; $hs=headers_sent();
-            if(!$hs){header_remove();}; while(ob_get_level()){ob_end_clean();}; self::$stat=1;
+            $c=conf('Proc/httpCode'); $m=$c->$a; if(!$m){$a=501; $m=$c->$a;};
+            while(ob_get_level()){ob_end_clean();}; self::$stat=1;
 
             if(facing('SSE'))
             {

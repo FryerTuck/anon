@@ -554,7 +554,7 @@ namespace Anon;
 
 # dbug :: platform : check for expected PHP version and extensions .. demand short open tag
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   if(isee('mbstring curl')!==1){halt(424,'Failed Dependency - need PHP extensions: mbstring, curl');}; // required extensons
+   if(isee('mbstring curl zlib')!==1){halt(424,'Failed Dependency - need PHP extensions: mbstring, curl, zlib');}; // required extensons
    if(''===trim(trim(strtolower((ini_get('short_open_tag').'')),'off'),'0')){halt(424,'Failed Dependency - short_open_tag');}; // bad htconf
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 

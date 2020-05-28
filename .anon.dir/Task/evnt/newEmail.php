@@ -18,7 +18,7 @@ $export=function($v)
    if($fn){$fn=frag($fn,' ')[0];}else{$fn=stub($fa,'@')[0]; $fn=frag($fn,'.')[0];}; $un=find::userByMail($fa); $ft='xenoMail';
 
    if(!$nd||$od||$dj){$mh=trim(stub($mh,"#$dr -")[1]);}; $tb=$mo->textBody; $mp=stub($tb,"\r\n>");
-   if($mp){$tb=$mp[0];}; $mb=rstub($tb,["\r\n\r\n\r\nOn ","\r\n\r\n"]); $mb=($mb?$mb[0]:$tb);
+   if($mp){$tb=$mp[0];}; $mb=rstub($tb,["\r\n\r\n\r\nOn ","\r\n\r\n"]); $mb=($mb?$mb[0]:$tb); if(!$mb){$mb='(no message)';};
    $dd=knob(['dref'=>$dr,'nick'=>$fn,'user'=>$un,'mail'=>$fa,'dest'=>$mo->destAddy,'firm'=>$mo->business,'tags'=>$ft,'atch'=>$mo->attached]);
    if($dj){$dd->tags='dejavu';};
 

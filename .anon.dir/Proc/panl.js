@@ -149,7 +149,7 @@ extend(Anon)
          {
             let k=trim(n.select(`input.ProcConfName`)[0].value);
             let v=sval(n.select(`input.ProcConfValu`)[0].value);
-            let w=wrapOf(v); if(!w&&isin(v,[":"])){v=`"${v}"`};
+            let w=wrapOf(v); if(!w&&isin(v,[":"])&&isNaN(k)){v=`"${v}"`};
             d[k]=v;
          }));
 

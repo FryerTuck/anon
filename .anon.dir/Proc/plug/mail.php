@@ -2,6 +2,7 @@
 namespace Anon;
 
 
+
 # tool :: mail_plug : git abstraction
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    class mail_plug
@@ -110,86 +111,58 @@ namespace Anon;
       }
 
 
-      function insert($a,$fcrt=null)
+
+      function insert($a,$fcrt=0)
       {
          $oa=dupe($a);
-         if(isAssa($a)){$a=knob($a,U);}; expect::knob($a); $I=$this->mean; $user="$I->user@$I->host"; $pass=$I->pass; $port=$I->port; $dbug=0;
+         if(isAssa($a)){$a=knob($a,1);}; expect::knob($a); $I=$this->mean;
          if($a->debug){$dbug=1;}; if(!isKnob($a->write)){$w=dupe($a); $a=knob(['write'=>$w]);}else{$w=$a->write;}; expect::knob($w);
-         if(!$port){$port=587;}elseif($port!==465){fail('invalid SMTP port');}; $w->destAddy=validEmail($w->destAddy,'destAddy');
-         if(!isVoid($w->involves)){$w->involves=validEmail($w->involves,'involves');};
-         if(!isVoid($w->disclose)){$w->disclose=validEmail($w->disclose,'disclose');}; if(isVoid($w->mesgHead)){$w->mesgHead='No Subject';};
-         if(isVoid($w->mesgBody)){$w->mesgBody='No Message';}; if(isText($w->attached)){$w->attached=[$w->attached];}; if(isFlat($w->attached))
-         {foreach($w->attached as $p){if(!isPath($p,R,F)){fail("expecting attachment path as readable file");}}}; $ts=(($port===465)?'ssl':'tls');
-         $w->mesgBody=trim(tval($w->mesgBody));if(isPath($w->mesgBody)&&!isPath($w->mesgBody,R,F)){fail("expecting embedded path as readable file");};
 
-         $L=requires::path('/Proc/libs/PHPMailer'); $L->isSMTP(); $L->CharSet='UTF-8'; $L->Host="smtp.$I->host"; $L->SMTPAuth=true;
+         $da=$w->destAddy; if(!$da){$da=$w->destAddr;}; $dn=$w->destName; if(!$dn){$dnn=stub($da,'@')[0]; $dn=explode('.',$dn)[0];};
 
-         if($w->followID!==null)
-         {
-            if(isFlat($w->followID)){$w->followID=fuse($w->followID,'');};
-            if((wrapOf($w->followID)!='<>')||!isin($w->followID,'@')||!isin($w->followID,'.')){fail('invalid reply followID');};
-            $L->addCustomHeader('In-Reply-To',$w->followID); $L->addCustomHeader('References',$w->followID);
-         };
+         // validEmail($w->destAddy,'destAddy')[0];
+         $host="smtp.$I->host"; if($I->vars&&$I->vars->smtp){$host=$I->vars->smtp;}; $port=$I->port; if($port!==587){$port=465;};
+         $user="$I->user@$I->host"; $pass=$I->pass;
+         $name=($w->fromName?$w->fromName:$I->user); if(isin($name,'.')){$name=stub($name,'.')[0];};
+         $from=($w->fromAddr?$w->fromAddr:$w->fromAddy); $html=$w->htmlBody; $text=$w->textBody;
+         $head=$w->mesgHead; if(isVoid($head)){$head='(no subject)';}; if(isVoid($html)){$html=(!isVoid($w->mesgBody)?$w->mesgBody:$text);};
+         $dbug=3; dbug::$temp=''; $secu=(($port===587)?'tls':'ssl'); requires::phpx('openssl'); if(isVoid($html)){$html='(no message)';};
+         $cdom=HOSTNAME; $z=knob(['done'=>0,'fail'=>null]);
+         $send=array
+         (
+            'smtpHost' => $host,
+            'smtpAuth' => true,
+            'smtpSecu' => $secu,
+            'smtpPort' => $port,
+            'smtpUser' => $user,
+            'smtpPass' => $pass,
+            'fromAddr' => $from,
+            'fromName' => $name,
+            'destAddr' => $da,
+            'destName' => $dn,
+            'mesgHead' => $w->mesgHead,
+            'htmlBody' => $html,
+            'textBody' => $text
+         );
 
-         requires::phpx('openssl'); $L->SMTPAutoTLS=true; if($dbug){$L->SMTPDebug=3;};
+         $resp=plug("https://$cdom/Proc/execPath")->insert
+         ([
+            param =>
+            [
+               'Cookie' => sesn('HASH'),
+            ],
+            write =>
+            [
+               'pathName' => '/Proc/libs/PHPMailer',
+               'sendMail' => $send,
+            ]
+         ]);
 
-         $L->Username=$user; $L->Password=$pass; $L->SMTPSecure=$ts; $L->Port=$port; $name=$I->user;
-         if(isin($name,'.')){$name=stub($name,'.')[0];}; $name=ucwords($name); $L->setFrom($user,$name); $L->Subject=$w->mesgHead;
-         foreach($w->destAddy as $tr){$L->addAddress($tr);}; if($w->attached){foreach($w->attached as $ak => $av)
-         {
-            if(is_int($ak)&&isPath($av)){$L->addAttachment(path($av)); continue;}; if(!isText($ak,1)||!isDurl($av)){continue;};
-            $av=furl($av); $L->AddStringAttachment($av->data,$ak,'base64',$av->mime);
-         }};
-
-         $w->mesgBody=trim($w->mesgBody); if(wrapOf($w->mesgBody)==='<>')
-         {
-            $L->isHTML(true); $l=expose($w->mesgBody,'<img','>'); unset($i); if($l){foreach($l as $i)
-            {
-               $f="<img{$i}>"; $i=expose($i,'src="','"'); if($i){$i=$i[0];}; if(!isPath($i,R,F)){fail("expecting `$i` as readable file");};
-               $n=swap(path::leaf($i),'.','_'); $w->mesgBody=swap($w->mesgBody,$f,"<img src=\"cid:$n\" />"); $L->AddEmbeddedImage(path($i),$n);
-            }};
-         };
-
-         if($fcrt){$L->SMTPOptions=['ssl'=>['verify_peer'=>false,'verify_peer_name'=>false,'allow_self_signed'=>true]];}; // faulty cert
-
-         Proc::signal('busy',['with'=>"mail",'done'=>12]);
-         $L->Body=$w->mesgBody; $mt=time(); $z=knob(['done'=>0,'fail'=>null]);
-         $eh=defail(); $r=$L->send(); $fm=enfail($eh,1);
-
-         if(!$r)
-         {
-            $z->fail=$L->ErrorInfo; $z->fail.="\n\n$fm"; $zf=$z->fail;
-            if(isin($zf,'SMTP connect() failed')&&isin($zf,'certificate')){unset($L,$z); wait(60); $z=$this->insert($oa,1);}
-            return $z;
-         };
-
-         if(!$a->debug){$z->done='?'; Proc::signal('busy',['with'=>"mail",'done'=>99]); return $z;};
-         Proc::signal('busy',['with'=>"mail",'done'=>40]);
-         wait(750); Proc::signal('busy',['with'=>"mail",'done'=>50]);
-         unset($da); $fa=[]; $fx=[]; $L=null; try{$M=$this->vivify('INBOX');}catch(\Exception $e){fail("debug failed .. ".$e->getMessage());};
-         $mc=count($w->destAddy); $in=ceil(50/$mc); $bp=50; foreach($w->destAddy as $da)
-         {
-            $f=$this->select
-            ([
-               using=>'INBOX',fetch=>['mesgIndx'],
-               where=>
-               [
-                  "fromAddy ~ mailer-daemon*",
-                  "fromName = 'Mail Delivery Subsystem'",
-                  "unixTime >= $mt",
-                  "mesgHead = 'Delivery Status Notification (Failure)'",
-                  "mesgBody ~ *$da*",
-               ],
-               limit=>1,
-            ]);
-            if(count($f)>0){$fa[]=$da; $fx[]=$f[0]->mesgIndx;}else{$z->done++;};
-            $bp+=$in; if($bp>99){$bp=99;}; Proc::signal('busy',['with'=>"mail",'done'=>$bp]);
-         };
-
-         if(span($fx)<1){return $z;};
-         $z->fail=('failed: '.fuse($fa,', ')); $fx=fuse($fx,','); imap_setflag_full($M,$fx,"\\Deleted");
+         $resp=trim($resp); if(!$resp){$resp='{"head":{},"body":""}';}; $resp=decode::jso($resp);
+         if($resp->body===OK){$z->done=1;}else{$z->fail=$resp->body;};
          return $z;
       }
+
 
 
       function select($a)

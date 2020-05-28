@@ -99,7 +99,7 @@
          if((tn-tl)>=ti){imHere(0)};
       }.bind({incr:0}));
 
-      globVars({authTime:time()},[`authSudo /User/getRepel`]);
+      globVars({authTime:time()},[`XMLHttpRequest.authSudo /User/getRepel`]);
 
 
       server.listen('sesnFade',function(obj)

@@ -86,34 +86,38 @@ namespace Anon;
          $pv=knob($_POST); $dr=$pv->dref; $mt=$pv->mvto; $dp="/Task/data/$dr"; if(lock::exists($dp)){ekko(GONE);}; lock::create($dp);
          $el=pget("$dp/editLogs"); $tn=time(); $un=sesn('USER'); $cn=sesn('CLAN'); $em=pget("/User/data/$un/mail");
          $mf=pget("$dp/inColumn"); $wf=conf('Task/workflow'); $pc=pick($cn,keys($wf));
+         $wc=pget("$dp/withClan"); $nc=$wf->$wc; if(is_array($nc)){$nc=fuse($nc,',');}; $tc=(($nc=='DONE')?$wc:$pc);
 
          if($mt!=='test')
          {
             flog::{"$dp/editLogs"}("moved from $mf to $mt by $un"); path::make("$dp/editTime",$tn);
-            path::make("$dp/fromUser",''); path::make("$dp/withClan",$pc); path::make("$dp/withUser",$un); path::make("$dp/inColumn",$mt);
+            path::make("$dp/fromUser",''); path::make("$dp/withClan",$tc); path::make("$dp/withUser",$un); path::make("$dp/inColumn",$mt);
             lock::remove($dp); $dd=self::dispense([$dr]); proc::signal('docketUpdate',$dd,'.work'); ekko(OK);
          };
 
-         if(!$pc){lock::remove($dp); ekko("no workflow destination from `$mf`");}; $nc=$wf->$pc;
-         if(is_array($nc)){$nc=fuse($nc,',');}; $nu=find::userByClan($nc);
-         if(!$nu){lock::remove($dp); fail::workflow("next clan `$nc` has no members; nobody to receive this job");};
+         if(!$pc){lock::remove($dp); ekko("no workflow destination from `$mf`");};
+
+         if($nc!=='DONE')
+         {
+            $nu=find::userByClan($nc);
+            if(!$nu){lock::remove($dp); fail::workflow("next clan `$nc` has no members; nobody to receive this job"); return;};
+         }
+
 
          path::make("$dp/fromUser",$un); path::make("$dp/withClan",$nc); path::make("$dp/withUser",''); path::make("$dp/inColumn",'todo');
-         flog::{"$dp/editLogs"}("moved from $mf to $mt by $un"); flog::{"$dp/workflow"}($un,$em); path::make("$dp/editTime",$tn);
+         flog::{"$dp/editLogs"}("moved from $mf to $mt by $un"); flog::{"$dp/workflow"}($un,$em);
+         path::make("$dp/editTime",$tn); lock::remove($dp);
 
-         lock::remove($dp); $dd=self::dispense([$dr]); wait(250); proc::signal('docketUpdate',$dd,'.work');
+         if($nc==='DONE')
+         {
+            $mv=path::move($dp,"/Task/arch"); if(!$mv){ekko(FAIL);};
+            proc::signal('docketFinish',$dr,'.work'); ekko(OK);
+            // $zl=requires::path('/Proc/libs/zip'); $zl->start("$tp/$dt");
+         };
+
+         $dd=self::dispense([$dr]); proc::signal('docketUpdate',$dd,'.work');
          ekko(OK);
       }
-   # ------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-   # func :: readCard : get kanBoard card from dokt reference
-   # ------------------------------------------------------------------------------------------------------------------------------------------
-      // static function readCard($x)
-      // {
-      //    expect::text($x,12); $d=path::ogle($x); dump($x);
-      // }
    # ------------------------------------------------------------------------------------------------------------------------------------------
 
 

@@ -7,6 +7,26 @@
    select('script').forEach((n)=>{remove(n)});
    hijack(['eval','Element.prototype.appendChild','Element.prototype.setAttribute','Element.prototype.addEventListener','XMLHttpRequest.prototype.open'],function()
    {if(stak(0)){return listOf(arguments)}; wack()});
+
+   // jack('console.error',function()
+   // {
+   //    let a=listOf(arguments);
+   //    console.log("goctha !!! - hijacked console error");
+   //    console.log(a);
+   //    return a;
+   // });
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: envi : this is used for syntax-sugar only .. the argument-value is got from server at serve-time
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const envi = function(s)
+   {
+      if(!stak(0)){wack();return}; // keep out some hackers
+      if(!isText(s,1)||!s.startsWith("$")){fail(`expecting text that starts with $`);return};
+      let v=sval(s.slice(1));  return v;
+   };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -17,6 +37,8 @@
    {
       {:'/Proc/conf/viewConf':}
    };
+
+   const timeVars = {e6:0};
 
    const badCfg='{:badCfg:}';
 
@@ -200,6 +222,7 @@
             x=Math.floor(x); y=Math.floor(y); n.style.left=`${x}px`; n.style.top=`${y}px`;
          });
       });
+
 
       listen("resizeInit",function()
       {
