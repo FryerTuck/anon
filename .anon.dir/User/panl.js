@@ -71,7 +71,7 @@
                               'key:Enter':function(){repl.exec(this.value)},
                               'key:ArrowUp':function(){repl.ENV.cmdlog.seek(-1)},
                               'key:ArrowDown':function(){repl.ENV.cmdlog.seek(1)},
-                              'Control c':function(){repl.echo('yoohoo')},
+                              // 'Control c':function(){repl.echo('Ctrl c')},
                               'focus':function(){tick.after(10,()=>
                               {
                                   select("#AnonReplView").setStyle({height:200});

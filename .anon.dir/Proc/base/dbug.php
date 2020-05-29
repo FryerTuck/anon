@@ -152,22 +152,18 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function defail($de=0)
    {
-      ini_set('display_errors',false); error_reporting(0); usleep(1000); $l=ob_get_level();
-      if(!$l){$l=0;}; $_SERVER['oblevl']=$l; ob_start();
-      $tn=dbug::trap(); dbug::trap('hush');
+      ob_start(); $tn=dbug::trap(); dbug::trap('hush');
+      if($de){display_errors(false); error_reporting(0);};
       return $tn;
    }
 
    function enfail($tn='anon',$rs=null)
    {
-      ini_set('display_errors',true); error_reporting(E_ALL); usleep(1000); $cl=ob_get_level();
-      $r=''; if($cl>0){$r=ob_get_clean();}; $pl=$_SERVER['oblevl'];
-      if(is_int($pl)&&($pl<1)&&($cl>0)){while(ob_get_level()>0){ob_end_clean();}; $_SERVER['oblevl']=0;};
-
-      $rb=dbug::bufr(); dbug::trap($tn);
+      $b=''; while(ob_get_level()){$b.=("\n".ob_get_clean());}; $b=trim($b);
+      display_errors(true); error_reporting(E_ALL); $rb=dbug::bufr(); dbug::trap($tn);
       if(!$rs){return $rb;}; // no result-string .. returns array
       $rs=[]; foreach($rb as $eo){$rs[]=$eo->mesg;}; $rs=implode("\n",$rs);
-      return trim($rs."\n".$r);
+      return trim($rs."\n".$b);
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -185,8 +181,11 @@ namespace Anon;
    set_error_handler(function()
    {
       $b=''; while(ob_get_level()){$b.=("\n".ob_get_clean());}; $b=trim($b); $e=func_get_args();
-      $e=knob(['name'=>dbug::name($e[0]),'mesg'=>trim($e[1]."\n".$b),'file'=>$e[2],'line'=>$e[3]]);
-      $e->stak=stak(); dbug::view($e);
+      $e=knob(['name'=>dbug::name($e[0]),'mesg'=>trim($e[1]."\n".$b),'file'=>$e[2],'line'=>$e[3]]); $e->stak=stak(); $s=$e->stak;
+      // if(isset($s[0])&&($s[0]->func==='imap_open')&&($e->name==='Warning')){return;}; // shut it!
+      if(isset($s[1])&&($s[0]->func==='is_readable')&&($s[1]->func==='isee')&&($e->name==='Warning')){return;}; // shut it!
+
+      dbug::view($e);
    });
 
    register_shutdown_function(function()

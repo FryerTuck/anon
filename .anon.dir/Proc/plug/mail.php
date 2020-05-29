@@ -32,14 +32,31 @@ namespace Anon;
       }
 
 
-      function adjure()
+      function adjure($fn,$al, $rt=0)
       {
+         $rt++; $cdom=HOSTNAME; wait(50);
+         $r=plug("https://$cdom/Proc/xenoCall")->insert
+         ([
+            param =>
+            [
+               'Cookie' => sesn('HASH'),
+            ],
+            write =>
+            [
+               'func' => $fn,
+               'args' => $al,
+            ]
+         ]);
+
+         $r=$r->body; if(isin($r,"503 Service Unavailable")&&($rt<3)){$r=$this->adjure($fn,$al, $rt); return $r;};
+         return $r;
       }
 
 
       function engage($h,$u,$p,$o,$y=null,$z=[])
       {
-         $r=knob(); defail(); $r->link=imap_open($h,$u,$p,$o,$y,$z); $el=enfail(); $me=imap_errors(); $ma=imap_alerts();
+         $r=knob(); $t=$this->adjure("imap_open",[$h,$u,$p,$o,$y,$z]); if(!isin($t,'Resource id #')){$r->fail=$t; return $r;}; // test/fail
+         $r->link=imap_open($h,$u,$p,$o,$y,$z); $me=imap_errors(); $ma=imap_alerts();
          if($r->link){return $r;}; $f=[imap_last_error()]; if($me){$f=array_merge($f,$me);}; if($ma){$f=array_merge($f,$ma);};
          if(isset($eb[0])){$f[]=$eb[0]->mesg;}; $f=trim(implode("\n",$f)); if(!$f){$f=trim($ob);}; $r->fail=$f; wait(250);
          return $r;
@@ -64,7 +81,7 @@ namespace Anon;
          {
              $r=$this->engage($cs,$u,$p,$o); $f=$r->fail; if($r->link){$this->link=$r->link; return $this->link;};
              if($f&&!$ff){$ff=$f;}; $f=($f?$f:'');
-             if(!isin($f,$fm)){if(facing('SSE')){Proc::emit('dump',"FAILED :: $uf $f"); wait(550);};  fail("$uf $f"); return;};
+             if(!isin($f,$fm)){if(facing('SSE')){Proc::emit('dump',"$uf $f"); wait(550);};  fail("$uf $f"); return;};
              wait(250);
          };
 

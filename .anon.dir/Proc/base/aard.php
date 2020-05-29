@@ -194,10 +194,10 @@ namespace Anon;
       $z=envi('ROOTPATH'); if(($d==='/')||($d===$z)){return $z;}; if($d==='$'){return envi('COREPATH');}; if($d==='~'){return envi('USERPATH');};
       if(is_string($d)){$d=trim($d); if(strlen($d)<1){return;}; $d=str_replace(' ',',',$d); if(strpos($d,',')){$d=explode(',',$d);}};
 
-      if(is_array($d))
+      clearstatcache(); if(is_array($d))
       {$s=count($d); $f=array(); do{$i=array_shift($d); $i=isee($i); if($i){$f[]=$i;}}while(count($d)); $r=(count($f)/$s); return $r;};
 
-      clearstatcache(); if(!is_string($d)){return;}; $d=str_replace('Anon\\','',trim($d)); $v=test($d,'/^([a-zA-Z])([a-zA-Z0-9_]){2,36}$/');
+      if(!is_string($d)){return;}; $d=str_replace('Anon\\','',trim($d)); $v=test($d,'/^([a-zA-Z])([a-zA-Z0-9_]){2,36}$/');
 
       if($v)
       {
@@ -205,9 +205,11 @@ namespace Anon;
          if(class_exists($d,false)||class_exists($c.$d,false)){return 'tool';}; if(extension_loaded($d)){return 'extn';};
       };
 
-      $p=path($d); if(!$p){return;}; $r=envi('ROOTPATH'); $l=str_replace("$r/",'',$p); $l=lshave($l,'/'); $l=explode('/',$l);
-      $q=''; $f=0; $fd=''; foreach($l as $x => $i){$q.="/$i"; if(isset($l[($x+1)])&&!is_dir($r.$q)){$f=1;$fd=($r.$q);break;}};
-      if($f){return;}; $r=is_readable($p); clearstatcache(true);  return ($r?$p:false);
+      $p=path($d); if(!$p){return;}; $r=is_readable($p); clearstatcache(true);  return ($r?$p:false);
+      // $r=envi('ROOTPATH'); $l=str_replace("$r/",'',$p); $l=lshave($l,'/'); $l=explode('/',$l);
+      // $q=''; $f=0; $fd=''; foreach($l as $x => $i){$q.="/$i"; if(isset($l[($x+1)])&&!is_dir($r.$q)){$f=1;$fd=($r.$q);break;}};
+      // if($f){return;}; $s=explode('/',$p); $f=array_pop($s); $t=implode('/',$s); unset($l,$s); $l=array_diff(scandir($t),['.','..']);
+      // $s=implode($l,"\n"); if(strpos("$s\n","\n$f")===false){return;}; $r=is_readable($p); clearstatcache(true);  return ($r?$p:false);
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -219,7 +221,7 @@ namespace Anon;
    {
       clearstatcache();
       $p=isee($p); if(!$p){return;}; if(!is_dir($p)){$r=file_get_contents($p); if($t){$r=trim($r);}; return $r;};
-      $r=array_diff(scandir($p),array('.','..')); if(!$t){return array_values($r);};
+      $r=array_diff(scandir($p),['.','..']); if(!$t){$r=array_values($r); $r=sort($r); return $r;};
       $z=array(); do{$i=array_shift($r); if($i===null){continue;}; $c=substr($i,0,1); if($c!=='.'){$z[]=$i;};}while(count($r));
       $z=array_values($z); sort($z); return $z;
    };

@@ -269,8 +269,8 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function scan($p,$o=null)
    {
-      if($p==='$'){$p=COREPATH;}else{$p=isee($p);}; if(!$p){return;}; if(is_string($o)){$o=[$o];};
-      if(is_dir($p)){$r=array_values(($o?array_diff(scandir($p),['.','..']):pget($p)));}
+      $p=isee($p); if(!$p){return;}; if(is_string($o)){$o=[$o];};
+      if(is_dir($p)){$r=pget($p); if($o){$r=array_diff($r,$o);}}
       else{$r=(is_file($p)?file_get_contents($p):(is_link($p)?readlink($p):null));}
 
       if(!is_array($o)){return $r;}; if(!is_array($r)){return $r;}; $z=[]; ladd($o,VOID);

@@ -174,9 +174,16 @@
             MAIN.guiResizing.tikr=setTimeout(()=>{MAIN.guiResizing.busy=0; signal("resizeDone")},300);
          });
 
-         extend(MAIN)({focusObj:{hash:VOID,node:VOID}});
+         extend(MAIN)
+         ({
+            focusObj:{hash:VOID,node:VOID},
+            ProcInfo:
+            {
+               sysClock:decode.jso(`{:conf('Proc/sysClock'):}`).client,
+            },
+         });
 
-         tick.every(100,function()
+         tick.every(ProcInfo.sysClock,function()
          {
             signal("tick");
             let e=document.activeElement; if(!e){return}; if(!e.UniqueID){extend(e)({UniqueID:('NODE'+fash())})};
@@ -230,6 +237,11 @@
          {
             n.reclan("posAbs:cenmid");
          });
+      });
+
+
+      listen("everySec",function()
+      {
       });
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------

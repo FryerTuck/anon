@@ -22,7 +22,9 @@ namespace Anon;
 
       static function __init()
       {
-         self::$meta->hush=knob(); self::$meta->hook=knob(); self::$meta->wait=500;
+         self::$meta->hush = knob();
+         self::$meta->hook = knob();
+         self::$meta->wait = conf('Proc/sysClock')->server;
       }
 
 
@@ -81,6 +83,18 @@ namespace Anon;
          dbug::trap('overflow',function($e){ekko($e); exit;}); // fail on any errors, warnings, etc
 
          require_once $rp; exit;
+      }
+
+
+
+      static function xenoCall()
+      {
+         permit::fubu('clan:work,lead,sudo'); // can only be run when logged in
+         $po=knob($_POST); $pf=$po->func; $pa=$po->args;
+         $af='imap_open'; // allowed functions
+         if(!isin($af,$pf)){ekko(':WACK:'); exit;}; // security!
+         dbug::trap('overflow',function($e){ekko("$e->name - $e->mesg"); exit;}); // fail on any errors, warnings, etc
+         $rt=call_user_func_array($pf,$pa); ekko($rt); exit;
       }
 
 
@@ -160,12 +174,17 @@ namespace Anon;
 
       static function emit($e,$d='!')
       {
-         permit::fubu();
+         permit::fubu(); // security
          if(!is_string($e)||!$e){$e='undefined';}; if(!is_string($d)){$d=tval($d);};
          $d=base64_encode($d); $b=": \nevent: {$e}\ndata: {$d}\n\n";
          $bpad=4096; if($bpad&&(strlen($b)<$bpad)){do{$b.=' ';}while(strlen($b)<$bpad);}; if(facing('SSE')&&!headers_sent())
          {header_remove(); header("Content-Type: text/event-stream\n\n"); header('Cache-Control: no-cache, must-revalidate');};
-         echo $b; if(ob_get_level()){ob_flush(); ob_clean();}; flush();
+         $pmb=''; while(ob_get_level()&&(strlen($pmb)<2049)){$pmb.=ob_get_clean();}; // cyber plumage could be leaking .. by then
+
+         if(!$pmb){echo $b; return;}; // all is well
+
+         // just making sure
+         $s=stak(); fail::SSE_signalAbuse("Some server process runs in SSE, but thinks it can take over and feel pretty about it.\n\n\n$pmb");
       }
 
 

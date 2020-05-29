@@ -1,5 +1,13 @@
 "use strict";
 
+// hack :: protection : against self
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   hijack([`console.log`,`console.error`,`console.debug`,`console.warn`],function()
+   {
+      // if(!userDoes(`geek sudo`)){return}; // tighten security .. sweet screams .. my condelences if you got here only now
+      return listOf(arguments);
+   });
+// --------------------------------------------------------------------------------------------------------------------------------------------
 
 
 // func :: getBadConf : returns the first configuration item name that needs attention
@@ -124,19 +132,6 @@
       });
 
       initPanl();
-   }
-   else
-   {
-      // (function(t,h,s,p)
-      // {
-      //    t=tick.every(1000,()=>
-      //    {
-      //       h=window.location.hash; if(!h){return;}; h=h.slice(1); if(!isin(['panlOpen','panlShut'],h)||(s==h)){return;};
-      //       p=((typeof AnonPanl)!='undefined'); if((h=='panlOpen')&&!p){s=h; initPanl(); return;};
-      //       if((h=='panlOpen')&&p&&!AnonPanl.actv){s=h;AnonPanl.show();return};
-      //       if((h=='panlShut')&&p&&AnonPanl.actv){s=h;AnonPanl.hide();return};
-      //    });
-      // }());
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 

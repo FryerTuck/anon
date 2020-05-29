@@ -183,11 +183,11 @@ extend(Anon)
 
 
 
-         create:function(o,jcid,jico,cmnt)
+         create:function(o,jcid,jico,cmnt,lane)
          {
-            cmnt=keys(o.comments)[0]; cmnt=o.comments[cmnt]; jico=((o.tagIcons||[])[0]||'note');
+            cmnt=keys(o.comments)[0]; cmnt=o.comments[cmnt]; jico=((o.tagIcons||[])[0]||'note'); lane=select('#'+o.inColumn+'TaskList');
 
-            select('#'+o.inColumn+'TaskList').insert
+            lane.insert
             ({
                jobcard:jcid, grabgoal:'.slabMenuBody>panl', info:o, listen:
                {
@@ -214,6 +214,8 @@ extend(Anon)
                   ]},
                ],
             });
+
+            lane.assort();
          },
 
 
@@ -228,6 +230,7 @@ extend(Anon)
             crd.select('.cardBodyPane')[0].innerHTML=''; crd.select('.cardBodyPane')[0].insert(cmt); // body text
             crd.select('.cardFootNick')[0].innerHTML=cmt.info.nick; // foot nick
             crd.select('.cardFootTime')[0].innerHTML=('- '+timePast(cmt.info.time,server.ostime)); // foot time
+            crd.info=obj; crd.assort();
          },
 
 
@@ -395,7 +398,7 @@ extend(Anon)
                {v=n.value;k=n.placeholder; if(n.inival==v){return}; if((k=='business')&&!v){v='Unknown Company Name'}; o[k]=v; j.info[k]=v});
                purl('/Task/saveConf',o,(r)=>
                {
-                  if(r.body!=OK){console.error(r.body);alert(r.body);};
+                  if(r.body!=OK){fail(r.body);};
                });
             },
 

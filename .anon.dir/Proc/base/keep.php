@@ -10,7 +10,8 @@ namespace Anon;
 
       foreach($x as $d)
       {
-         if(!is_dir("$h/$d")){pset("$h/$d/");}; $l=pget("$h/$d"); foreach($l as $i)
+         if(!is_dir("$h/$d")){pset("$h/$d/"); usleep(10000);}; $l=pget("$h/$d/"); if(!is_array($l)||(count($l)<1)){continue;}; 
+         foreach($l as $i)
          {
             if(aged("$h/$d/$i")<=($dbs+2)){continue;}; if($d!=='sesn'){void("$h/$d/$i"); continue;}; // non-session related
             if($usr==='anonymous'){continue;}; $t=(pget("$h/$d/$i/TIME")*1); $dif=($tmn-$t); if($dif<$dbs){continue;}; // still active .. skip

@@ -457,7 +457,7 @@
                            if(dne){server.stream.close(); console.error('SSE stopped');};
                            if(!rsp&&(cde<1)){popAlert("link :: Connection : Unable to connect; refreshing now."); tick.after(6,()=>{repl.exit();}); return};
                            if(!rsp&&(cde===503)){popAlert("link :: Session Expired : Refreshing now."); tick.after(6,()=>{repl.exit();}); return};
-                           if(isin(rsp,": \nevent: open\ndata: IQ==")){dump(rsp);return};
+                           if(rsp.startsWith(": \nevent: open\ndata: IQ==")&&isin(rsp,"clean exit; no errors")){return};
                            if(!rsp){rsp="undefined"}; stb=stub(rsp,"event: fail\ndata: ");
                            if(stb){rsp=trim(stb[2]); console.log(rsp); rsp=decode.jso(atob(rsp)); fail(rsp); return};
                            if(isJson(rsp)){rsp=decode.jso(rsp); fail(rsp); return}; let prl=evnt.Target.purl;
@@ -1107,14 +1107,14 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    extend(Element.prototype)
    ({
-      assort:function(a, l)
+      assort:function(r, f,w)
       {
-         if(!isText(a,6)){if(!this.parentNode){return}; a=this.parentNode.sorted; if(!isText(a,6)){l=listOf(this.parentNode.childNodes)}};
-         if(!l&&isText(a,6))
-         {
-            let p=stub(a,'::'); if(!p||!isin(p[2],':')){fail('invalid assort parameters');return};
-            // console.log('TODO :: Element.prototype.assort() .. '+a);
-         };
+         if(!r){r=this.sorted}; w=`assort rule: ${r}`; f=`invalid ${w}`;  let prts,slct,attr,ordr,indx,fltr;
+         if(!isText(r,6)||!isin(r,"::")){fail(f);return}; prts=stub(r,"::"); slct=trim(prts[0]); prts=stub(trim(prts[2]),":");
+         if(!slct||!prts){console.warn(f);return}; attr=trim(prts[0]); ordr=lowerCase(trim(prts[2])); if(!attr||!ordr){console.warn(f);return};
+         slct=this.select(slct); if(!slct){console.warn(`no childNodes match ${w}`);return}; indx={};
+         slct.forEach((n)=>{let a=bore(n,attr); if(isVoid(a)){return}; indx[a]=n; remove(n)}); fltr=(keys(indx)).sort();
+         if(ordr=="dsc"){fltr.reverse()}; fltr.forEach((i)=>{this.appendChild(indx[i])});
       },
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------
