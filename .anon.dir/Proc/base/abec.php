@@ -301,11 +301,28 @@ namespace Anon;
 
 
 
+# tool :: conf : get/set config relative to stem/path
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   class conf
+   {
+      private static $meta=[];
+      static function __callStatic($n,$a)
+      {
+         $d=shaved($n,'/'); if(strlen($d)<1){return;}; $q=((isset($a[0])&&is_string($a[0]))?$a[0]:''); $s=rshave("$n/$q","/");
+         if(isset(self::$meta[$s])){return self::$meta[$s];}; if($q===SKIP){return;}; $r=conf($s); if($r===null){return;};
+         self::$meta[$s]=$r; // cache the result .. comment out this line for debugging persistent config in SSE
+         return $r;
+      }
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 # func :: conf : get/set config relative to path
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function conf($d)
    {
-      if(!is_string($d)){return;}; $d=trim($d,'/'); if(strlen($d)<1){return;};
+      if(!is_string($d)){return;}; if(strlen($d)<1){return;}; $q=conf::{"$d"}(SKIP); if($q!==null){return $q;}; $d=shaved($d,'/'); // quicker
       if(!strpos($d,'/')){$d="/$d/conf";}elseif(!strpos($d,'/conf/')){$p=stub($d,'/'); $d="/$p[0]/conf/$p[2]";}else{$d="/$d";}; $r=pget($d);
       if(!$r){return;}; if(!is_array($r)){$r=dval($r); if(is_assoc_array($r)||(is_array($r)&&!is_nokey_array($r))){$r=knob($r);}; return $r;};
       $z=knob(); foreach($r as $i){$z->$i=conf("$d/$i");}; return $z;
@@ -992,12 +1009,13 @@ namespace Anon;
          if(isKnob($q)&&($q->fetch==='*')){$q->fetch=self::cols();};
          if(isKnob($q->limit)&&$q->limit->name&&!is_array($q->limit->name)){$q->limit->name=explode(',',swap($q->limit->name,' ',''));};
          $lmtn=null; if(isKnob($q->limit)){$lmtn=$q->limit->name; if(span($lmtn)<1){$lmtn=null;}};
+         $omit=['/Proc/temp'];
          // if(isKnob($q->limit)&&is_int($q->limit->levl)&&($q->limit->levl<$levl)){return;};
          // $lmtp=[]; $lmtn=[];
 
          foreach($l as $x => $i)
          {
-            $p=crop("$h/$i"); if(isin($p,'//')){ekko('FOUND YOU!!');}
+            $p=crop("$h/$i"); if(isin($p,$omit)){continue;}
             // $p=crop(('/'.lshave("$h/$i",'//')));
             // $p=crop("$h/$i");
             $t=(isFile($p)?'file':(isFold($p)?'fold':'link')); $fx=self::type($p); $fs=self::size($p); $mt=mime($p);
@@ -1095,11 +1113,31 @@ namespace Anon;
 
 # func :: call : use it like: `call("Class::method",[$arg1,$arg2]);` .. or `call(function(){},[$a1,$a2]);` .. or `call("bark",[$a1,$a2]);`
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   function call($x,$a=[])
+   function call($x,$a=[],$z=null)
    {
-      if(!is_nokey_array($a)){$a=[$a];}; if(is_string($x)&&(strpos($x,'Anon\\')===false)){$x="Anon\\$x";};
-      if(is_string($x)&&isin($x,'::')){$p=frag($x,'::'); return call_user_func_array([$p[0],$p[1]],$a);};
-      return call_user_func_array($x,$a);
+      if(!is_nokey_array($a)){$a=[$a];}; $ns='Anon\\'; if(is_string($x)&&(strpos($x,$ns)===false)){$x=($ns.$x);};
+      if($z){ob_start(null,0,PHP_OUTPUT_HANDLER_STDFLAGS);};
+      if(is_string($x)&&isin($x,'::'))
+      {
+         $p=frag($x,'::');
+         $r=call_user_func_array([$p[0],$p[1]],$a);
+      }
+      elseif(!is_string($x))
+      {
+         $r=call_user_func_array($x,$a);
+      }
+      elseif(!function_exists($x))
+      {
+         $x=lshave($x,$ns); if(!function_exists($x)){fail("function `$x` is undefined");return;};
+         $r=call_user_func_array($x,$a);
+      }
+      else
+      {
+         $r=call_user_func_array($x,$a);
+      }
+
+      if($z){$b=trim(ob_get_clean()); if(($b!=='')&&($r===false)||($r===null)){$r=$b;}};
+      return $r;
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 

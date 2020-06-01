@@ -153,14 +153,14 @@ namespace Anon;
    function defail($de=0)
    {
       ob_start(); $tn=dbug::trap(); dbug::trap('hush');
-      if($de){display_errors(false); error_reporting(0);};
+      if($de){error_reporting(0);};
       return $tn;
    }
 
    function enfail($tn='anon',$rs=null)
    {
       $b=''; while(ob_get_level()){$b.=("\n".ob_get_clean());}; $b=trim($b);
-      display_errors(true); error_reporting(E_ALL); $rb=dbug::bufr(); dbug::trap($tn);
+      error_reporting(E_ALL); $rb=dbug::bufr(); dbug::trap($tn);
       if(!$rs){return $rb;}; // no result-string .. returns array
       $rs=[]; foreach($rb as $eo){$rs[]=$eo->mesg;}; $rs=implode("\n",$rs);
       return trim($rs."\n".$b);
@@ -183,8 +183,12 @@ namespace Anon;
       $b=''; while(ob_get_level()){$b.=("\n".ob_get_clean());}; $b=trim($b); $e=func_get_args();
       $e=knob(['name'=>dbug::name($e[0]),'mesg'=>trim($e[1]."\n".$b),'file'=>$e[2],'line'=>$e[3]]); $e->stak=stak(); $s=$e->stak;
       // if(isset($s[0])&&($s[0]->func==='imap_open')&&($e->name==='Warning')){return;}; // shut it!
-      if(isset($s[1])&&($s[0]->func==='is_readable')&&($s[1]->func==='isee')&&($e->name==='Warning')){return;}; // shut it!
-
+      if(($e->name==='Warning')&&isset($s[1])) // let's see if this warning is necessary
+      {
+         if(($s[0]->func==='is_readable')&&($s[1]->func==='isee')){return;}; // shut it!
+         if(($s[0]->func==='stat')&&($s[1]->func==='info')&&(strpos($e->mesg,'/Proc/temp/lock/'))){return;}; // quiet!
+         if(($s[0]->func==='unlink')&&($s[1]->func==='void')&&(strpos($e->mesg,'/Proc/temp/sesn/'))){return;}; // shush!
+      };
       dbug::view($e);
    });
 

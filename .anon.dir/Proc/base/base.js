@@ -409,7 +409,8 @@
          sensor:{},
          silent:{},
          hashes:{},
-         // timing:setTimeout(function(){server.sensor.live=0},1),
+         status:VOID,
+         timing:setTimeout(function(){server.sensor.live=0},1),
 
 
          vivify:function(f)
@@ -423,19 +424,23 @@
                 if(isJson(mesg)&&isin(mesg,[`"name":`,`"mesg":`,`"file":`,`"line":`],ALL)){fail(decode.jso(mesg));return};
                 dump("unhandled server mesg:\n"+atob(evnt.data));
             };
-            this.stream.listen('open',function(evnt){server.sensor.live=1; dump("SSE ready");});
+            this.stream.listen('open',function(evnt)
+            {
+               server.sensor.live=1; server.status="open"; signal("SSE_open");
+               clearTimeout(server.timing); setTimeout(function(){server.sensor.live=0},3000);
+            });
             this.stream.listen('ping',function(evnt)
             {
-               server.sensor.live=1; tick.after(2000,()=>{server.sensor.live=0});
+               server.sensor.live=1; clearTimeout(server.timing);
             });
 
-            // this.stream.listen('gone',function(evnt){server.stream.close(); server.sensor.live=0; server.vivify();});
+            this.stream.listen('gone',function(evnt){server.status="gone"; server.sensor.live=0;});
             this.stream.listen('fail',function(evnt){fail(decode.jso(atob(evnt.data)))});
             this.stream.listen('close',function(evnt){console.error("SSE closed");});
 
             this.stream.listen('error',function(evnt) // this happens on reconnect -or "connection fail", only the latter is an error
             {
-               tick.after(2250,()=>
+               tick.after(3100,()=>
                {
                   if(server.sensor.live){return};
                   console.error("SSE stopped, checking health with XHR");
@@ -452,12 +457,12 @@
                         },
                         loadend:function(rsp, cde,dne,stb)
                         {
-                           if(server.sensor.live){return};
+                           if(server.sensor.live||(server.status=="gone")){return};
                            rsp=rsp.body; cde=this.status; dne=(!rsp&&((cde<1)||(cde==503)));
                            if(dne){server.stream.close(); console.error('SSE stopped');};
                            if(!rsp&&(cde<1)){popAlert("link :: Connection : Unable to connect; refreshing now."); tick.after(6,()=>{repl.exit();}); return};
                            if(!rsp&&(cde===503)){popAlert("link :: Session Expired : Refreshing now."); tick.after(6,()=>{repl.exit();}); return};
-                           if(rsp.startsWith(": \nevent: open\ndata: IQ==")&&isin(rsp,"clean exit; no errors")){return};
+                           if(rsp.startsWith(": \nevent: init\ndata: IQ==")&&isin(rsp,"clean exit; no errors")){return};
                            if(!rsp){rsp="undefined"}; stb=stub(rsp,"event: fail\ndata: ");
                            if(stb){rsp=trim(stb[2]); console.log(rsp); rsp=decode.jso(atob(rsp)); fail(rsp); return};
                            if(isJson(rsp)){rsp=decode.jso(rsp); fail(rsp); return}; let prl=evnt.Target.purl;
@@ -477,7 +482,12 @@
             if(isFunc(h)){t=f; f=h; h=t;}; // swapped args
             if(isText(h,1)&&!!server.hashes[h]){return}; // already listening for this
             if(!isWord(e)){fail('expecting 1st arg as :word:');return}; if(!isFunc(f)){fail('expecting 2nd arg as :func:');return};
-            this.vivify(()=>{server.stream.addEventListener(e,function(evnt){let d=dval(atob(evnt.data)); this.cb(d);}.bind({cb:f}),false);});
+            this.vivify(()=>{server.stream.addEventListener(e,function(evnt)
+            {
+               let d=atob(evnt.data);
+               // if(isJson(d)){d=(decode.jso(d)||d)}; d=sval(d); 
+               this.cb(d);
+            }.bind({cb:f}),false);});
             if(!isText(h,1)){return}; server.hashes[h]=1;
          },
 
@@ -501,7 +511,7 @@
 
    tick.after(1500,function()
    {
-      server.listen('busy',function(d){if(server.silent.busy){return}; Busy.edit(d.with,d.done)});
+      server.listen('busy',function(d){if(!d||server.silent.busy){return}; Busy.edit(d.with,d.done)});
       server.listen('done',function(d){if(d!="!"){dump(`\nserver is done with:\n${d}`)}; Busy.done();});
       server.listen('dump',function(d){dump(d)});
    });
@@ -1962,10 +1972,9 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    globVars({activity:{idle:0,last:time()}},[`imHere /Proc/base/base.js`]);
 
-   const imHere = function(yn)
+   const imHere = function(here)
    {
-      yn=(yn?0:1);
-      globVars({activity:{idle:yn,last:time()}});
+      globVars({activity:{idle:(here?0:1),last:time()}});
    };
 
    document.addEventListener("mousemove", function(e){cursor.move(e.clientX,e.clientY);},false);

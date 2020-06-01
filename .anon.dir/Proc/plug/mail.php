@@ -34,27 +34,34 @@ namespace Anon;
 
       function adjure($fn,$al, $rt=0)
       {
-         $rt++; $cdom=HOSTNAME; wait(50);
+         $rt++; $cdom=HOSTNAME; $skey=sesn('HASH');
+// Proc::signal("dump","step 3 .. plea sent over to xeno"); wait(999);
          $r=plug("https://$cdom/Proc/xenoCall")->insert
          ([
             param =>
             [
-               'Cookie' => sesn('HASH'),
+               'Cookie' => "$skey=...",
             ],
             write =>
             [
+               'dbug' => 1,
                'func' => $fn,
                'args' => $al,
             ]
-         ]);
 
-         $r=$r->body; if(isin($r,"503 Service Unavailable")&&($rt<3)){$r=$this->adjure($fn,$al, $rt); return $r;};
+         ]);
+         // dump("sent:\n",[$fn,$al],"\n\nreceived:\n",$r,"\n\n");
+
+         $r=$r->body; if((!$r||isin($r,["503 Service Unavailable"]))&&($rt<3))
+         {wait(250); $r=$this->adjure($fn,$al, $rt); return $r;};
+
          return $r;
       }
 
 
       function engage($h,$u,$p,$o,$y=null,$z=[])
       {
+// Proc::signal("dump","step 2 .. engaged .. making a call to plea: DO NOT SPILL OB"); wait(999);
          $r=knob(); $t=$this->adjure("imap_open",[$h,$u,$p,$o,$y,$z]); if(!isin($t,'Resource id #')){$r->fail=$t; return $r;}; // test/fail
          $r->link=imap_open($h,$u,$p,$o,$y,$z); $me=imap_errors(); $ma=imap_alerts();
          if($r->link){return $r;}; $f=[imap_last_error()]; if($me){$f=array_merge($f,$me);}; if($ma){$f=array_merge($f,$ma);};
@@ -75,13 +82,18 @@ namespace Anon;
          $ca=array_merge($ca,["{{$s}.$h:143/imap}$b","{{$s}.$h:143/imap/$y}$b"]);
 
          $fm=['Certificate failure','Can not authenticate','Retrying PLAIN authentication','IMAP connection broken'];
-         $uf="unhandled IMAP connection error.\n\nThis spilled out:"; $ff=''; $lf='';
+         $uf="unhandled IMAP connection error.\n\nThis spilled out:\n"; $ff=''; $lf='';
 
          foreach($ca as $cs)
          {
              $r=$this->engage($cs,$u,$p,$o); $f=$r->fail; if($r->link){$this->link=$r->link; return $this->link;};
-             if($f&&!$ff){$ff=$f;}; $f=($f?$f:'');
-             if(!isin($f,$fm)){if(facing('SSE')){Proc::emit('dump',"$uf $f"); wait(550);};  fail("$uf $f"); return;};
+             if($f&&!$ff){$ff=$f;}; $f=trim(($f?$f:''));
+             if(!isin($f,$fm))
+             {
+                if(facing('SSE')){Proc::emit('dump',"$uf $f"); wait(550);}; // save debugging hours
+                if((wrapOf($f)==='{}')&&isin($f,'"name":"')&&isin($f,'"line":"')){$f=decode::jso($f); $f->mesg=($uf.$f->mesg); dbug::spew($f);};
+                fail("$uf $f"); return;
+             };
              wait(250);
          };
 
@@ -144,7 +156,7 @@ namespace Anon;
          $from=($w->fromAddr?$w->fromAddr:$w->fromAddy); $html=$w->htmlBody; $text=$w->textBody;
          $head=$w->mesgHead; if(isVoid($head)){$head='(no subject)';}; if(isVoid($html)){$html=(!isVoid($w->mesgBody)?$w->mesgBody:$text);};
          $dbug=3; dbug::$temp=''; $secu=(($port===587)?'tls':'ssl'); requires::phpx('openssl'); if(isVoid($html)){$html='(no message)';};
-         $cdom=HOSTNAME; $z=knob(['done'=>0,'fail'=>null]);
+         $cdom=HOSTNAME; $z=knob(['done'=>0,'fail'=>null]); $skey=sesn('HASH');
          $send=array
          (
             'smtpHost' => $host,
@@ -166,7 +178,7 @@ namespace Anon;
          ([
             param =>
             [
-               'Cookie' => sesn('HASH'),
+               'Cookie' => "$skey=...",
             ],
             write =>
             [

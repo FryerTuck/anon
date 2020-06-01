@@ -43,7 +43,8 @@ namespace Anon;
       static function openPlug($p=null)
       {
          if(!$p){$v=knob($_POST); $p=pget("/Mail/link/$v->purl.url");}; $i=path::info($p); $u="$i->user@$i->host"; $h="/Mail/data/$u";
-         Proc::signal('busy',['with'=>"mail",'done'=>10]); $l=crud($p)->descry(); Proc::signal('busy',['with'=>"mail",'done'=>100]); $r=[];
+         Proc::signal('busy',['with'=>"mail",'done'=>10]);
+         $l=crud($p)->descry(); Proc::signal('busy',['with'=>"mail",'done'=>100]); $r=[];
          if(!isee("$h/")){path::make("$h/");}; foreach($l as $i){$b=self::mboxName($i); if(!isee("$h/$b")){path::make("$h/$b/");}; $r[]=$b;};
          return $r;
       }
@@ -54,6 +55,8 @@ namespace Anon;
          if(!$box){$box='INBOX';}; if(!$flt){$flt="flagTags !~ *seen*";}; if(!$usr){$i=path::info($prl); $usr="$i->user@$i->host";};
          $lck="$usr/$box"; if(lock::exists($lck)){return;}; lock::create($lck); $lnk=crud($prl);
 
+// signal::dump("Mail :: about to select");
+
          $lst=$lnk->select
          ([
             using=>$box,
@@ -63,22 +66,27 @@ namespace Anon;
             order=>'unixTime:DSC',
          ]);
 
+// signal::dump("Mail :: done select");
+// signal::dump($lst);
+
+         // if(!$lst){$lst=[];};
          if(!isee("/Mail/link/$usr")){path::make("/Mail/link/$usr",$prl);}; // do this here incase crud() fails; here we know it's ok
          $box=self::mboxName($box); $hme="/Mail/data/$usr/$box"; if((span($lst)>0)&&!isee($hme)){path::make("$hme/");};
+
 
          foreach($lst as $itm)
          {
             $hsh=sha1($itm->followID); $pth="$hme/$hsh"; if(isee($pth)){continue;};
-            Proc::signal('newEmail',["destAddy"=>$itm->destAddy,"fromAddy"=>$itm->fromAddy,"savePath"=>$pth]);
-            // if(isee($pth)){continue;};
             path::make("$pth/"); foreach($itm as $key => $val)
             {
                if($key!=='attached'){path::make("$pth/$key",$val);continue;}; if(span($val)<1){continue;};
                foreach($val as $k => $v){path::make("$pth/$key/$k",furl($v)->data);};
             };
+            Proc::signal('newEmail',["destAddy"=>$itm->destAddy,"fromAddy"=>$itm->fromAddy,"savePath"=>$pth]);
          };
 
          lock::remove($lck); return true;
+// Proc::signal("dump","step 6 .. Mail::fetchBox done"); wait(999);
       }
 
 
@@ -185,7 +193,7 @@ namespace Anon;
          if($o->runDebug){fail($r);}; return $r;
       };
 
-      Proc::signal('done');
+      signal::done(['with'=>"mail",'done'=>100]);
       return OK;
    });
 # ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -198,13 +206,20 @@ namespace Anon;
    xena::learns('fetchNewAutoMail',function($now=null)
    {
       if(!userDoes('work','lead','sudo')){return;};
+      if(lock::exists('xena.fetchNewAutoMail')){return OK;}; lock::create('xena.fetchNewAutoMail'); // only run this once
       $ri=conf('Mail/checkSec'); if(!is_int($ri)||($ri<5)){fail('invalid `checkSec` config in Mail .. expecting int > 4');}; // validate
       $tn=time(); $lr=pget('/Mail/vars/lastRead'); if(!$lr){$lr=($tn-($ri+1));}; $td=($tn-$lr); if($td<$ri){return;}; // read later
       $l=fuse(pget('$'),pget('/')); $pl=[]; // $a=args(func_get_args());
       foreach($l as $i){if(!isFold("/$i")){continue;}; $x=path::conf("/$i"); $c=pget("$x/autoMail"); if($x&&$c&&!isin($pl,$c)){$pl[]=$c;}};
-      if(!online()){return;};
-      Proc::impede('busy.mail');
-      foreach($pl as $pv){Mail::openPlug($pv); Mail::fetchBox($pv);}; Proc::resume('busy.mail');
+      if(!online()){signal::dump("xena :: server offline .. I'll fetchNewAutoMail later"); wait(150); return;};
+      Proc::impede('busy.mail'); // let's do this dicreet
+      foreach($pl as $pv)
+      {
+         Mail::openPlug($pv);
+         Mail::fetchBox($pv);
+      };
+      Proc::resume('busy.mail');
       path::make('/Mail/vars/lastRead',$tn);
+      return OK;
    });
 # ---------------------------------------------------------------------------------------------------------------------------------------------

@@ -21,7 +21,6 @@ namespace Anon;
       'COREPATH' => envi('COREPATH'),
       'USERPATH' => str_replace(envi('COREPATH'),'',envi('USERPATH')),
       'TECHMAIL' => envi('TECHMAIL'),
-      'HOSTNAME' => $h,
       'USERADDR' => envi('CLIENT_ADDR'),
       'USERMIME' => envi('ACCEPT'),
       'PROTOCOL' => envi('SCHEME'),
@@ -32,43 +31,14 @@ namespace Anon;
       'HOSTADDR' => envi('SERVER_ADDR'),
       'USERDEED' => envi('USERDEED'),
       'NAVIPURL' => envi('URI'),
-      'NAVIPATH' => $p,
       'BASEPATH' => envi('BASEPATH'),
       'MADEFUBU' => envi('MADEFUBU'),
    ]);
 
    defn(['PROCHASH'=>sha1(random(6).microtime(true).USERADDR.getmypid().random(6))]); // this is unique .. any doubts?
-   $s=trim(NAVIPATH,'/'); if(!$s){$s='/';}elseif(strpos($s,'/')){$s=explode('/',$s)[0];}; defn(['NAVISTEM'=>$s]); unset($s,$h,$p,$b);
+   $s=trim(NAVIPATH,'/'); if(!$s){$s='/';}elseif(strpos($s,'/')){$s=explode('/',$s)[0];}; defn(['NAVISTEM'=>$s]); unset($s);
    defn(['EXPROPER'=>'!= !~ >= <= << >> /* */ // ## : = ~ < > & | ! ? + - * / % ^ @ . , ; # ( ) [ ] { } `']);
    defn(['SPECIALS'=>'_^~|.-*+=#$@$!%?:;&/']);
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-# func :: (wrapping) : text functions for performing operations on first-and-last characters of a string if it's "wrapped"
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-   function isWrap($d,$b=1)
-   {
-      if(!is_string($d)||(strlen($d)<2)){return false;}; $r=(mb_substr($d,0,1).mb_substr($d,-1,1));
-      if(in_array($r,['**','``','""',"''",'‷‴','[]','{}','()','<>','::','\\\\','//'])){return ($b?true:$r);};
-   }
-
-   function wrapOf($d){$r=isWrap($d,0); return ($r?$r:'');}
-   function unwrap($d){if(!isWrap($d)){return $d;}; return mb_substr($d,1,(mb_strlen($d)-2));}
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-# func :: stub : finds first occurance of $d in $t then splits there once, returns array[left,dlim,right] .. or null if invalid
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-   function stub($t,$d,$r=0)
-   {
-      if(is_array($d)){$l=array_values($d);$d=null;foreach($l as $i){if(is_string($i)&&(strlen($i)>0)&&(strpos($t,$i)!==false)){$d=$i;break;}}};
-      if(!is_string($t)||!is_string($d)||(strlen($t)<2)||(strlen($d)<1)){return;}; $p=(!$r?mb_strpos($t,$d):mb_strrpos($t,$d));
-      if($p!==false){return [mb_substr($t,0,$p),$d,mb_substr($t,($p+mb_strlen($d)))];};
-   }
-
-   function lstub($t,$d){return stub($t,$d);};  function rstub($t,$d){return stub($t,$d,1);}
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -406,10 +376,8 @@ namespace Anon;
    }
 
    defn(['AUTOMAIL'=>pget('/Proc/conf/autoMail')]); // needed
-
-   if((envi('METHOD')==='POST')&&facing('API')){$d=file_get_contents('php://input'); if(wrapOf($d)==='{}')
-   {$d=json_decode($d); foreach($d as $k => $v){$_POST[$k]=$v;}}; unset($d,$k,$v);};
 # ---------------------------------------------------------------------------------------------------------------------------------------------
+
 
 
 # proc :: init : autoload classes from stems and initiate the Proc class

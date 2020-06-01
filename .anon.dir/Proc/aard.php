@@ -24,7 +24,7 @@ namespace Anon;
       {
          self::$meta->hush = knob();
          self::$meta->hook = knob();
-         self::$meta->wait = conf('Proc/sysClock')->server;
+         self::$meta->wait = conf::Proc('sysClock')->server;
       }
 
 
@@ -37,6 +37,12 @@ namespace Anon;
          {
             // skip past all the INIT stuff and run quickly, yet -with security
             self::execPath(); exit;
+         };
+
+         if(NAVIPATH==='/Proc/xenoCall')
+         {
+            // skip past all the INIT stuff and run quickly, yet -with security
+            self::xenoCall(); exit;
          };
 
          if(facing('GUI'))
@@ -90,11 +96,17 @@ namespace Anon;
       static function xenoCall()
       {
          permit::fubu('clan:work,lead,sudo'); // can only be run when logged in
-         $po=knob($_POST); $pf=$po->func; $pa=$po->args;
-         $af='imap_open'; // allowed functions
-         if(!isin($af,$pf)){ekko(':WACK:'); exit;}; // security!
-         dbug::trap('overflow',function($e){ekko("$e->name - $e->mesg"); exit;}); // fail on any errors, warnings, etc
-         $rt=call_user_func_array($pf,$pa); ekko($rt); exit;
+         $po=knob($_POST); $pf=$po->func; $pa=$po->args; $pd=$po->deps; if(isText($pd)){$pd=[$pd];}; if(!isNuma($pd,1)){$pd=null;};
+         $db=$po->dbug;
+         $af='imap_open xena::fetchNewAutoMail'; // allowed functions
+         $ad='Mail'; // allowed dependencies
+         wait(conf::Proc('sysClock')->server);
+
+         if(!isin($af,$pf)||($pd&&!isin($ad,$pd))){ekko(':WACK:'); exit;}; // security!
+         if($pd){requires::stem($pd);}; // require all dependencies
+
+         if(!$db){$eh=defail(1); $rt=call($pf,$pa); $ob=enfail($eh); ekko($rt); exit;};
+         $rt=call($pf,$pa,1); ekko($rt); exit;
       }
 
 
@@ -177,14 +189,10 @@ namespace Anon;
          permit::fubu(); // security
          if(!is_string($e)||!$e){$e='undefined';}; if(!is_string($d)){$d=tval($d);};
          $d=base64_encode($d); $b=": \nevent: {$e}\ndata: {$d}\n\n";
-         $bpad=4096; if($bpad&&(strlen($b)<$bpad)){do{$b.=' ';}while(strlen($b)<$bpad);}; if(facing('SSE')&&!headers_sent())
+         while(strlen($b)<8400){$b.=' ';};
+         if(facing('SSE')&&!headers_sent())
          {header_remove(); header("Content-Type: text/event-stream\n\n"); header('Cache-Control: no-cache, must-revalidate');};
-         $pmb=''; while(ob_get_level()&&(strlen($pmb)<2049)){$pmb.=ob_get_clean();}; // cyber plumage could be leaking .. by then
-
-         if(!$pmb){echo $b; return;}; // all is well
-
-         // just making sure
-         $s=stak(); fail::SSE_signalAbuse("Some server process runs in SSE, but thinks it can take over and feel pretty about it.\n\n\n$pmb");
+         echo $b; return;
       }
 
 
@@ -209,8 +217,9 @@ namespace Anon;
          requires::stem('Mail');
 
          $wait=self::$meta->wait; $rtmx=(ini_get('max_execution_time')*1); $utmx=conf('User/inactive'); $utxs=$utmx; $fade=12;
-         $sesn=('/Proc/temp/sesn/'.sesn('HASH')); $epth="$sesn/emit"; $tbgn=fractime(3); $tlst=$tbgn; $cntr=0; $mxrt=(55-$wait);
-         $sxed=encode::jso(['time'=>$fade]); $fapi=facing('API'); $wapi=0; $lost=0; $fint=$fade; $lstn=knob();
+         $sesn=('/Proc/temp/sesn/'.sesn('HASH')); $epth="$sesn/emit"; $tbgn=time(); $tlst=$tbgn; $cntr=0; $mxrt=(55-$wait);
+         $sxed=encode::jso(['time'=>$fade]); $fapi=facing('API'); $wapi=0; $lost=0; $fint=$fade; $lstn=knob(); $lpng=0;
+         $emri=conf('Mail/checkSec'); if(!is_int($emri)||($emri<5)){$emri=5;}; $emlr=0; $work=userDoes('work');
 
          $stms=fuse(pget('$'),pget('/'));
 
@@ -220,34 +229,63 @@ namespace Anon;
             if($evnt){if(!$lstn->$evnt){$lstn->$evnt=knob();}; $lstn->$evnt->{"$stem"}=import("/$stem/evnt/$sefn");}};
          }}; unset($stms,$stem,$sefl,$sefn,$evnt);
 
-         self::emit('open');
+         self::emit('init','!',1); wait($wait); self::emit('init','!',1); wait($wait); self::emit('init','!',1); wait($wait);
+         self::emit('open','!',1); wait($wait);
+
 
          for(;;)
          {
+         // step :: 1 : setup - check if SSE process is still viable and define some variables needed in this loop
+         // -----------------------------------------------------------------------------------------------------------------------------------
             if((connection_status()!==CONNECTION_NORMAL)||connection_aborted()){break;}; // halt if connection is unstable
-            $tnow=fractime(3); // time-now in milliseconds
+            $tnow=time(); $ping=0; if(($tnow-$lpng)>=15){$ping=1; $lpng=$tnow;}; // time-now, ping-bool, last-ping
+            if(($tnow-$tbgn)>=59){self::emit('gone'); wait($wait); break;}; // process needs to be refreshed .. dies here if true
+            unset($huks); $huks=knob(); // we need this empty here, to be filled with event-names that may have listeners
+         // -----------------------------------------------------------------------------------------------------------------------------------
 
-            if(($tnow-$tlst)>=1)
-            {  // this happens once per second
-               // $wapi++;
-               $tlst=$tnow; $utxs--; xena::fetchNewAutoMail(); $lost+=(time()-$tnow); // update counters .. fetch mail only when as configured
-               $utla=pget("$sesn/TIME"); if(!$utla){$utla=0;}; $usfn=(($tnow-$utla)>=($utmx-($fade*2)-$lost)); // User-Session-Fades-Now (bool)
-               if($usfn){$fint--;}; if($fint<1){$utxs=$utmx; $fint=$fade; self::emit('sesnFade',$sxed);}else{self::emit('ping');};
-            };
 
+         // step :: 2 : scan for any events written in current session and send those first, if we run any hooks before this we may miss events
+         // -----------------------------------------------------------------------------------------------------------------------------------
             $scan=pget($epth); if(isset($scan[0])){foreach($scan as $indx) // scan for events
-            {  // this happens every `wait` interval in milliseconds
-               $evnt=decode::jso("$epth/$indx"); if(!$fapi){path::void("$epth/$indx");}; // emit this event only once for SSE-only
-               if(!is_object($evnt)){continue;}; $en=$evnt->name; $ed=$evnt->data; // validate event object
-               $hook=$lstn->$en; if($hook){foreach($hook as $sn => $fn){$fn($ed); unset($sn,$fn);}}; // call this event's hooks
-               self::emit($en,$ed); unset($evnt,$en,$ed,$hook);  // emit this event to front-end .. clean up each iteration
+            {
+               if(!isee("$epth/$indx")){continue;}; // it just disappeared
+               $evnt=decode::jso("$epth/$indx"); void("$epth/$indx"); // emit this event only once
+               if(is_object($evnt)) // safety-check .. avoid errors and warnings & notices here
+               {
+                  $en=$evnt->name; $ed=$evnt->data; // validate event object
+                  $hook=$lstn->$en; if($hook){$huks->$en=knob(['huks'=>$hook,'args'=>$ed]);}; // enqeue this event's hooks (if any)
+                  self::emit($en,$ed); $ping=0; unset($evnt,$en,$ed,$hook);  // emit this event to front-end .. clean up each iteration
+               }
             }};
+         // -----------------------------------------------------------------------------------------------------------------------------------
 
-            // if(($tnow-$tbgn)>=$mxrt)
-            // {self::emit("gone","refreshing"); wait($wait); if(errors_get_last()){errors_clear_last();}; die();};
 
-            if(!$fapi){wait($wait);continue;}; // no API-check .. this is only SSE
-            break;
+         // step :: 3 : each event found in `step 2` may have had listeners attached, call them now
+         // -----------------------------------------------------------------------------------------------------------------------------------
+            foreach($huks as $en => $hk)
+            {
+               foreach($hk->huks as $sn => $fn){$fn($hk->args);}
+            };
+            unset($en,$hk,$sn,$fn);
+         // -----------------------------------------------------------------------------------------------------------------------------------
+
+
+         // step :: 3 : this happens every 1 second .. emit if it's time send mail, or if the user's session is about to expire
+         // -----------------------------------------------------------------------------------------------------------------------------------
+            if(($tnow-$tlst)>=1)
+            {
+               $tlst=$tnow; $utxs--; if((($tnow-$emlr)>=$emri)&&$work){$emlr=$tnow; $ping=0; self::emit('mailTime',$sxed);}; // fetch mail
+               $utla=pget("$sesn/TIME"); if(!$utla){$utla=0;}; $usfn=(($tnow-$utla)>=($utmx-($fade*2)-$lost)); // User-Session-Fades-Now (bool)
+               if($usfn){$fint--;}; if($fint<1){$utxs=$utmx; $fint=$fade; if($work){$ping=0; self::emit('sesnFade',$sxed);}};
+            };
+         // -----------------------------------------------------------------------------------------------------------------------------------
+
+
+         // step :: 4 : control the open stream .. send ping to make sure it stays open for process max exec time while in SSE-mode
+         // -----------------------------------------------------------------------------------------------------------------------------------
+            if(!$fapi){if($ping){self::emit('ping');}; wait($wait);continue;}; // no API-check .. this is only SSE - continue listening
+            break; // API for SSE-health-check - stop here
+         // -----------------------------------------------------------------------------------------------------------------------------------
          };
 
          if(!$fapi){done(); exit;};
@@ -346,6 +384,21 @@ namespace Anon;
          };
 
          return $r;
+      }
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+# tool :: signal : syntax sugar for Proc::signal('evenName','eventData');
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   class signal
+   {
+      static function __callStatic($n,$a)
+      {
+         $e=trim($n); if(!is_funnic($e)){fail::Reference("invalid event name: $n");return;};
+         $d=null; $t=null; if(isset($a[0])){$d=$a[0];}; if(isset($a[1])){$t=$a[1];};
+         $r=Proc::signal($n,$d,$t); $c=conf::Proc('sysClock')->server; if(!is_int($c)){ekko($c);}; wait($c+50); return $r;
       }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------

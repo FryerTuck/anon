@@ -491,6 +491,34 @@ namespace Anon;
 
 
 
+# func :: (wrapping) : text functions for performing operations on first-and-last characters of a string if it's "wrapped"
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   function isWrap($d,$b=1)
+   {
+      if(!is_string($d)||(strlen($d)<2)){return false;}; $r=(mb_substr($d,0,1).mb_substr($d,-1,1));
+      if(in_array($r,['**','``','""',"''",'‷‴','[]','{}','()','<>','::','\\\\','//'])){return ($b?true:$r);};
+   }
+
+   function wrapOf($d){$r=isWrap($d,0); return ($r?$r:'');}
+   function unwrap($d){if(!isWrap($d)){return $d;}; return mb_substr($d,1,(mb_strlen($d)-2));}
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+# func :: stub : finds first occurance of $d in $t then splits there once, returns array[left,dlim,right] .. or null if invalid
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   function stub($t,$d,$r=0)
+   {
+      if(is_array($d)){$l=array_values($d);$d=null;foreach($l as $i){if(is_string($i)&&(strlen($i)>0)&&(strpos($t,$i)!==false)){$d=$i;break;}}};
+      if(!is_string($t)||!is_string($d)||(strlen($t)<2)||(strlen($d)<1)){return;}; $p=(!$r?mb_strpos($t,$d):mb_strrpos($t,$d));
+      if($p!==false){return [mb_substr($t,0,$p),$d,mb_substr($t,($p+mb_strlen($d)))];};
+   }
+
+   function lstub($t,$d){return stub($t,$d);};  function rstub($t,$d){return stub($t,$d,1);}
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 # refs :: constants : these help us express specific directives .. they all have the value of the word wrapped in `:` .. like :AUTO:
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    defn('AUTO KEYS VALS WORD XACT VOID NONE STEM TOOL FUNC PATH FOLD FILE LINK DUMP DONE GOOD INFO WARN FAIL MINI MIDI MAXI SKIP STOP TODO');
@@ -499,6 +527,23 @@ namespace Anon;
    defn('count fetch using alter write claim touch where group order limit parse shape apply erase purge debug dbase table field sproc funct after basis named param parts');
    defn('NATIVE REMOTE ORIGIN');
    defn('ANY ALL ASC DSC API BOT DPI GUI SSE');
+
+   $h=pget('/Proc/conf/hostName'); if(!$h){$h=envi('SERVER_NAME'); if(!$h){$h=envi('HOST');}};
+   $p=envi('URL'); $b=envi('BASEPATH'); if($b!=='/'){$p=lshave($p,$b);}; if(!$p){$p='/';};
+   defn
+   ([
+      'HOSTNAME' => $h,
+      'NAVIPATH' => $p,
+   ]);
+
+   unset($h,$p,$b);
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+# vars :: (POSTed) : convert json to POST-vars
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   if((envi('METHOD')==='POST')&&facing('API')){$d=file_get_contents('php://input'); if(wrapOf($d)==='{}')
+   {$d=json_decode($d); foreach($d as $k => $v){$_POST[$k]=$v;}}; unset($d,$k,$v);};
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 

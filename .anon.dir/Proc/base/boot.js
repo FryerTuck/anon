@@ -5,16 +5,17 @@
 // hack :: protection : hijack some functions and methods that can be used against us using dev-tools and address-bar
 // --------------------------------------------------------------------------------------------------------------------------------------------
    select('script').forEach((n)=>{remove(n)});
-   hijack(['eval','Element.prototype.appendChild','Element.prototype.setAttribute','Element.prototype.addEventListener','XMLHttpRequest.prototype.open'],function()
+
+   hijack(['eval','alert','Element.prototype.appendChild','Element.prototype.setAttribute','Element.prototype.addEventListener','XMLHttpRequest.prototype.open'],function()
    {if(stak(0)){return listOf(arguments)}; wack()});
 
-   // jack('console.error',function()
-   // {
-   //    let a=listOf(arguments);
-   //    console.log("goctha !!! - hijacked console error");
-   //    console.log(a);
-   //    return a;
-   // });
+   hijack([`console.log`,`console.error`,`console.debug`,`console.warn`,`console.info`],function()
+   {
+      let j={"[Intervention] Slow network":`Fallback font will be used`}; // junk
+      let a,i; a=listOf(arguments); a.forEach((s)=>{j.each((v,k)=>{if(isin(s,k)&&isin(s,v)){i=1;return STOP}})});
+      if(i||!userDoes(`geek sudo`)){return}; // .. sweet screams
+      return a;
+   });
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -240,9 +241,9 @@
       });
 
 
-      listen("everySec",function()
-      {
-      });
+      // listen("clockSec",function()
+      // {
+      // });
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------
 

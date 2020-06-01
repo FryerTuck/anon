@@ -358,7 +358,7 @@
             fail:function(n, dd,fd)
             {
                dd=this.data; fd=(dd.mesg&&((dd.mesg.indexOf("Failed dependency")>-1)||(n=="epic")));
-               Select('#'+n).style.display='inline-block'; if(!dd.clan&&!fd){return};
+               Select('#'+n).style.display='inline-block'; if(!dd.clan&&!fd){if(n=='hack'){slap()}; return};
                if((n=='auto')&&!fd){dump('details hidden for '+(dd.user||"anonymous")+' ('+(dd.clan||"surfer")+')');return;};
                if(((dd.clan||"").indexOf('geek')<0)&&!fd){return}; if((n=='hack')||(dd.name=='Usage')||fd){slap();};
                // document.body.style.backgroundImage=('url("'+Select('#wal1').src+'")');

@@ -1,14 +1,5 @@
 "use strict";
 
-// hack :: protection : against self
-// --------------------------------------------------------------------------------------------------------------------------------------------
-   hijack([`console.log`,`console.error`,`console.debug`,`console.warn`],function()
-   {
-      // if(!userDoes(`geek sudo`)){return}; // tighten security .. sweet screams .. my condelences if you got here only now
-      return listOf(arguments);
-   });
-// --------------------------------------------------------------------------------------------------------------------------------------------
-
 
 // func :: getBadConf : returns the first configuration item name that needs attention
 // --------------------------------------------------------------------------------------------------------------------------------------------
@@ -96,22 +87,41 @@
 
 // cond :: clan : if user is logged in and is worker -then show the panel
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   if(userDoes('work','sudo'))
+   if(userDoes("work sudo"))
    {
       globVars({idleTime:{:'/User/conf/inactive':}});
+      globVars({authTime:time()},[`XMLHttpRequest.authSudo /User/getRepel`]);
+      globVars({mailBusy:0},[`Object.mailTime /User/boot.js`,`XMLHttpRequest.pingMail /User/boot.js`]);
 
-      tick.every(1000,function()
+
+      listen("clockSec",function()
       {
          let tl=globVars("activity").last;  this.incr++;
          let tn=time();  let ti=(globVars("idleTime")-12);
-         if((tn-tl)>=ti){imHere(0)};
+         if((tn-tl)>=ti){imHere(0); signal("sesnFade");};
       }.bind({incr:0}));
 
-      globVars({authTime:time()},[`XMLHttpRequest.authSudo /User/getRepel`]);
 
-
-      server.listen('sesnFade',function(obj)
+      server.listen("mailTime",function mailTime(obj)
       {
+         if(!server.stream||globVars(`mailBusy`)){return}; globVars({mailBusy:1});
+         purl({target:`/Proc/xenoCall`,silent:true,convey:{func:`xena::fetchNewAutoMail`,deps:`Mail`}},function pingMail(r)
+         {
+            r=r.body; if(r==OK){globVars({mailBusy:0}); return;};
+            dump(`mail issue:\n${r}\n\n`);
+         });
+      });
+
+
+      server.listen("newEmail",function()
+      {
+         dump("new email!");
+      });
+
+
+      server.listen("sesnFade",function(obj)
+      {
+         dump(`sesnFade `+time());
          if(!globVars("activity").idle)
          {
             Cookies.set(sesn('HASH'),'...'); navigator.sendBeacon('/User/isActive','1');
