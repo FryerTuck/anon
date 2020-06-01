@@ -427,7 +427,7 @@
             this.stream.listen('open',function(evnt)
             {
                server.sensor.live=1; server.status="open"; signal("SSE_open");
-               clearTimeout(server.timing); setTimeout(function(){server.sensor.live=0},3000);
+               clearTimeout(server.timing); setTimeout(function(){server.sensor.live=0},6000);
             });
             this.stream.listen('ping',function(evnt)
             {
@@ -440,7 +440,7 @@
 
             this.stream.listen('error',function(evnt) // this happens on reconnect -or "connection fail", only the latter is an error
             {
-               tick.after(3100,()=>
+               tick.after(6100,()=>
                {
                   if(server.sensor.live){return};
                   console.error("SSE stopped, checking health with XHR");
@@ -485,7 +485,7 @@
             this.vivify(()=>{server.stream.addEventListener(e,function(evnt)
             {
                let d=atob(evnt.data);
-               // if(isJson(d)){d=(decode.jso(d)||d)}; d=sval(d); 
+               // if(isJson(d)){d=(decode.jso(d)||d)}; d=sval(d);
                this.cb(d);
             }.bind({cb:f}),false);});
             if(!isText(h,1)){return}; server.hashes[h]=1;

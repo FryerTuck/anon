@@ -98,17 +98,18 @@
       {
          let tl=globVars("activity").last;  this.incr++;
          let tn=time();  let ti=(globVars("idleTime")-12);
-         if((tn-tl)>=ti){imHere(0); signal("sesnFade");};
+         if((tn-tl)>=ti){imHere(0); signal("sesnFade",{time:12});};
       }.bind({incr:0}));
 
 
       server.listen("mailTime",function mailTime(obj)
       {
          if(!server.stream||globVars(`mailBusy`)){return}; globVars({mailBusy:1});
+         // dump("mail init");
          purl({target:`/Proc/xenoCall`,silent:true,convey:{func:`xena::fetchNewAutoMail`,deps:`Mail`}},function pingMail(r)
          {
-            r=r.body; if(r==OK){globVars({mailBusy:0}); return;};
-            dump(`mail issue:\n${r}\n\n`);
+            r=r.body; globVars({mailBusy:0}); if(r==OK){return;};
+            dump(`mail fail:\n${r}\n\n`);
          });
       });
 
@@ -121,20 +122,23 @@
 
       server.listen("sesnFade",function(obj)
       {
-         dump(`sesnFade `+time());
+         let tn=time(); if(obj.detail){obj=obj.detail}; if(isJson(obj)){obj=decode.jso(obj);};
+
          if(!globVars("activity").idle)
          {
             Cookies.set(sesn('HASH'),'...'); navigator.sendBeacon('/User/isActive','1');
             return; // user is active
          };
 
-         popModal({skin:`dark`,size:`300x150`,time:obj.time})
+         let pm=popModal({skin:`dark`,size:`300x150`,time:obj.time})
          ({
             head:`Idle Session`,
             body:`Your session is about to expire`,
             foot:{butn:`I'm here`, onclick:function(){this.root.exit()}},
-         })
-         .listen
+         });
+
+         if(!pm){return}; // already open
+         pm.listen
          ({
             gone:function(){repl.exit();},
             exit:function(){Cookies.set(sesn('HASH'),'...'); navigator.sendBeacon('/User/isActive','1');},
