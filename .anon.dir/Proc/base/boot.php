@@ -228,11 +228,11 @@ namespace Anon;
       }
 
 
-      static function exists($p)
+      static function exists($p,$x=null)
       {
          if(!is_string($p)){return;}; $d=self::$dir; $h=sha1($p); $p="$d/$h"; clearstatcache();
-         if(!file_exists($p)){clearstatcache(true); return false;};
-         $a=aged($p); if($a<self::$max){return true;}; if(!file_exists($p)){return false;};
+         if(!file_exists($p)){clearstatcache(true); return false;}; if(!is_int($x)){$x=self::$max;};
+         $a=aged($p); if($a<$x){return true;}; if(!file_exists($p)){return false;};
          try{$h=defail(); unlink($p); $b=enfail($h);}catch(\Exception $e){return false;}; return false;
       }
 
