@@ -114,35 +114,21 @@ extend(Anon)
                     pth=rsp.body;
                     frm=create({iframe:`#SiteXenoTmpl`, src:pth, onload:function()
                     {
-                        let root=this.contentWindow;
-                        let cntx=root.document;
-
-                        let focs=cntx.createElement("style");
-                        focs.innerHTML=`
-                        .AnonInspects
-                        {
-                          outline:auto !important;
-                          outline-color:hsla(220,100%,70%,1) !important;
-                          background-color:hsla(220,100%,70%,0.3) !important;
-                          box-shadow:0px 0px 15px hsla(0,0%,0%,0.5) !important;
-                        }`;
-                        cntx.head.appendChild(focs);
-
+                        var cntx=this.contentWindow.document;
                         listOf(cntx.body.getElementsByTagName("*")).forEach((n)=>
                         {
-                            n.ROOT=root; n.CNTX=cntx;
-                            n.addEventListener(`mouseover`,function(ev)
+                            n.addEventListener(`mouseover`,function()
                             {
-                                ev.stopPropagation();  let cc=this.className;
-                                cc=cc.split(` AnonInspects`).join(""); cc+=` AnonInspects`;
-                                this.className=cc;
+                                let bn="AnonInspectDiv";  let xb=cntx.body.getElementById(bn);
+                                if(xb){xb.parentNode.removeChild(xb)};  let bd=rectOf(n);  let bx=cntx.createElement("div");
+                                bx.id=bn; bx.style.position="absolute"; bx.style.zIndex=999999;
+                                bx.style.top=`${bd.top}px`; bx.style.left=`${bd.left}px`;
+                                bx.style.width=`${bd.width}px`; bx.style.height=`${bd.height}px`;
+                                bx.style.background="hsla(0,220%,60%,0.3)";
+                                bx.style.border="1px solid hsla(0,220%,70%,0.3)";
+                                cntx.body.appendChild(bx);
                             },false);
-                            n.addEventListener(`mouseout`,function(ev)
-                            {
-                                ev.stopPropagation();  let cc=this.className;
-                                cc=cc.split(` AnonInspects`).join("");
-                                this.className=cc;
-                            },false);
+                            dump(bx);
                         });
 
                         Busy.edit(`/Site/importOpen`,100);

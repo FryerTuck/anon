@@ -57,5 +57,6 @@ weba : audio/webm
 webm : video/webm
 webp : image/webp
 woff : application/font-woff
+woff2 : application/font-woff2
 xml : application/xml
 zip : application/zip

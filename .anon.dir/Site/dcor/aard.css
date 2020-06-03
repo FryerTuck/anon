@@ -1,1 +1,17 @@
- 
+#SiteToolMenu
+{
+   padding:10px;
+}
+
+
+#SiteBodyPanl .SitePanlHead
+{
+   height:60px;
+}
+
+
+#importPurl
+{
+   padding:6px !important;
+   border:1px solid hsla(0,0%,35%,1);
+}

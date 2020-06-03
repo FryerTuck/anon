@@ -552,6 +552,7 @@
 
    .posAbs {position:absolute !important;}
    .posRel {position:relative !important; box-sizing:border-box !important;}
+   .posDrift {position:absolute !important; z-index:999999;}
 
    .absLft {position:absolute !important; left:0px !important;}
    .absRgt {position:absolute !important; right:0px !important;}

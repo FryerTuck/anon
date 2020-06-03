@@ -259,12 +259,12 @@ namespace Anon;
 
 # func :: spuf : simple http-request .. can be used for spoofing .. or not .. using a proxy is better for REMOTE_ADDR, blessed be the ignorant
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   function spuf($uri,$uas=null,$ref=null,$tmo=12)
+   function spuf($uri,$uas=null,$ref=null,$tmo=12,$bin=0)
    {
       if(!is_string($uri)){return;}; if(strpos($uri,'http')===false){return;}; if(!isee('curl')){return;}; $ipa=envi('USERADDR');
       if(!$uas){$uas=envi('USER_AGENT');}; if(!$ref){$ref=envi('REFERER'); if(!$ref){$ref='http://example.com/index.html';}};
       $o=[CURLOPT_RETURNTRANSFER=>1,CURLOPT_SSL_VERIFYPEER=>false,CURLOPT_URL=>$uri,CURLOPT_USERAGENT=>$uas,CURLOPT_REFERER=>$ref,
-      CURLOPT_CONNECTTIMEOUT=>4,CURLOPT_TIMEOUT=>$tmo];
+      CURLOPT_CONNECTTIMEOUT=>4,CURLOPT_TIMEOUT=>$tmo,CURLOPT_BINARYTRANSFER=>$bin];
       $c=curl_init(); curl_setopt_array($c,$o); curl_setopt($c,CURLOPT_HTTPHEADER,array("REMOTE_ADDR: $ipa", "HTTP_X_FORWARDED_FOR: $ipa"));
       $r=curl_exec($c); $e=null; if(!$r){$x=curl_error($c); if($x){$e=$x;};}; curl_close($c);
       if($e){return "FAIL :: $e";}; return $r;

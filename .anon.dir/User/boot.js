@@ -106,10 +106,24 @@
       {
          if(!server.stream||globVars(`mailBusy`)){return}; globVars({mailBusy:1});
          // dump("mail init");
-         purl({target:`/Proc/xenoCall`,silent:true,convey:{func:`xena::fetchNewAutoMail`,deps:`Mail`}},function pingMail(r)
-         {
-            r=r.body; globVars({mailBusy:0}); if(r==OK){return;};
-            dump(`mail fail:\n${r}\n\n`);
+         purl
+         ({
+            target:`/Proc/xenoCall`,
+            silent:true,
+            convey:{func:`xena::fetchNewAutoMail`,deps:`Mail`},
+            listen:
+            {
+               error:function pingMail(r)
+               {
+                  dump("pingMail error");
+                  globVars({mailBusy:0});
+               },
+               loadend:function pingMail(r)
+               {
+                  r=r.body; globVars({mailBusy:0}); if(r==OK){return;};
+                  dump(`mail fail:\n${r}\n\n`);
+               },
+            }
          });
       });
 
@@ -122,11 +136,18 @@
 
       server.listen("sesnFade",function(obj)
       {
-         let tn=time(); if(obj.detail){obj=obj.detail}; if(isJson(obj)){obj=decode.jso(obj);};
+          signal(`sesnFade`,obj);
+      });
 
+
+      listen("sesnFade",function(obj)
+      {
+         let tn=time(); if(obj.detail){obj=obj.detail}; if(isJson(obj)){obj=decode.jso(obj);};
+dump("sesnFade called");
          if(!globVars("activity").idle)
          {
             Cookies.set(sesn('HASH'),'...'); navigator.sendBeacon('/User/isActive','1');
+dump("sesnFade ignored");
             return; // user is active
          };
 
@@ -144,6 +165,7 @@
             exit:function(){Cookies.set(sesn('HASH'),'...'); navigator.sendBeacon('/User/isActive','1');},
          });
       });
+
 
       initPanl();
    };

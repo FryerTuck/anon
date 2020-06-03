@@ -839,6 +839,21 @@ namespace Anon;
       }
 
 
+      static function cdto($p1,$p2)
+      {
+         if(!isPath($p1)||!isText($p2,1)){return;}; if($p1!=='/'){$p1=rshave($p1,'/');}; $p2=trim($p2);
+         if((strlen($p2)<1)||($p2==='.')||($p2==='./')){return $p1;}; // unchanged
+         if(strpos($p2,'./')===0){$p2=lshave($p2,'./');}; // same-dir
+         if(strpos($p2,'/')===0){$p2=lshave($p2,'/');}; // prep for next
+         if(strpos($p2,'../')!==0){return (($p1==='/')?"/$p2":"$p1/$p2");}; // simple concat
+         if($p1==='/'){return '/';}; // can't go deeper than root
+         $a1=frag($p1,'/'); $a2=frag($p2,'/');
+         while(isset($a1[0])&&isset($a2[0])&&($a2[0]==='..')){lpop($a2); rpop($a1);};
+         $r1=fuse($a1,'/'); $r2=fuse($a2,'/');
+         return (($r1==='/')?"/$r2":"$r1/$r2");
+      }
+
+
       static function fuse($p1,$p2,$dc=true)
       {
          if(!isPath($p1)||!isText($p2,1)){return;}; $p2=trim($p2);
@@ -928,7 +943,11 @@ namespace Anon;
 
       static function make($p,$v=null)
       {
-         if(!path($p)){return;}; lock::awaits($p); $r=pset($p,$v); lock::remove($p); return (($r===false)?$r:true);
+         if(!path($p)){return;}; lock::awaits($p); $r=pset($p,$v);
+         if($r){lock::remove($p); return (($r===true)?$r:false);}; // done first try
+         $t=self::twig($p); $t=frag($t,"/"); $q="";
+         foreach($t as $i){$q.="$i/"; if(!isee($q)){$r=pset($q); if(!$r){break;}}}; if(!$r){return false;};
+         $r=pset($p,$v); lock::remove($p); return (($r===true)?$r:false);
       }
 
 

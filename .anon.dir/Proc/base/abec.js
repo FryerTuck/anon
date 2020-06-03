@@ -105,7 +105,12 @@
        return (isVoid(g)||spanIs(k,g,l));
    };
 
-   const isNode = function(v,g,l){if(!(v instanceof Element)){return FALS}; return (isVoid(g)||spanIs(v.childNodes.length,g,l))};
+   const isNode = function(v,g,l)
+   {
+       if(isVoid(v)||((typeof v)!='object')){return FALS}; if((typeof v.getBoundingClientRect)!='function'){return FALS};
+       return (isVoid(g)||spanIs(v.childNodes.length,g,l))
+   };
+
    const isTemp = function(v){return (v instanceof DocumentFragment)};
    const isMain = function(v){if(!v||isBool(v)){return FALS}; return (v.isMaster||v.isWorker);};
 
