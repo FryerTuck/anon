@@ -56,7 +56,8 @@ extend(Anon)
 
          panl.insert
          ([
-            {butn:`.longMenuButn`, text:`import template`, onclick:function(){Anon.Site.open(`import`)}},
+            {butn:`.longMenuButn`, text:`browse templates`, onclick:function(){Anon.Site.open(`import`,`browse`)}},
+            {butn:`.longMenuButn`, text:`import from URL`, onclick:function(){Anon.Site.open(`import`,`fromURL`)}},
          ]);
 
          Busy.edit('/Site/panl.js',100);
@@ -64,11 +65,11 @@ extend(Anon)
 
 
 
-      open:function(t, drv,ttl,tab)
+      open:function(t,s,a, drv,ttl,tab)
       {
-         drv=select('#SiteTabber').driver; ttl=`/Site/tool/${t}`; tab=drv.select(ttl); if(!!tab){return};
+         drv=select('#SiteTabber').driver; ttl=`/Site/tool/${t}/${s}`; tab=drv.select(ttl); if(!!tab){return};
          drv.create({title:ttl}); tab=drv.select(ttl);
-         Anon.Site.tool[t].view(tab);
+         Anon.Site.tool[t][s](tab,a);
       },
 
 
@@ -77,7 +78,55 @@ extend(Anon)
       {
          import:
          {
-             view:function(tab)
+             browse:function(tab)
+             {
+                tab.body.insert({grid:
+                [
+                    {row:[{col:`.SitePanlHead`, $:
+                    [
+                       {div:`.panlHeadBanr`, contents:[{grid:`.noSpan`, $:
+                       [
+                          {row:
+                          [
+                             {col:[{input:`#browseIndx .toolTextFeed .dark`, demo:`0`, title:`start from`}]},
+                             {col:[{butn:`#browseButn .AnonToolButn`, icon:`eye`, onclick:function(){this.exec()}, exec:function()
+                             {
+                                 let frm=((select(`#browseIndx`).value.trim()*1)||0);
+                                 if(!isInum(frm)){popAlert(`invalid "start from" number`);return};
+                                 // Busy.edit(`/Site/importBrowse`,0);
+                                 purl(`Site/importBrowse`,{from:frm},(rsp)=>
+                                 {
+                                     rsp=decode.jso(rsp.body);  let bdy=select(`#SiteBrwsBody`);
+                                     bdy.innerHTML=""; rsp.forEach((o)=>
+                                     {
+                                         bdy.insert({wrap:
+                                         [
+                                             {div:`.tmplItem .spanBoth`,
+                                                style:{backgroundImage:`url('${o.face}')`},
+                                                title:o.name,
+                                                targt:o.href,
+                                                onclick:function()
+                                                {
+                                                    Anon.Site.open(`import`,`fromURL`,this.targt);
+                                                }
+                                             }
+                                         ]});
+                                     });
+                                 });
+                             }}]},
+                          ]},
+                       ]}]}
+                     ]}]},
+                     {row:[{col:[{panl:`#SiteBrwsBody`, $:
+                     [
+                     ]}]}]},
+                ]});
+
+                select(`#browseButn`).exec();
+             },
+
+
+             fromURL:function(tab,url)
              {
                 tab.body.insert({grid:
                 [
@@ -87,27 +136,29 @@ extend(Anon)
                        [
                           {row:
                           [
-                             {col:[{input:`#importPurl .toolTextFeed .dark`, demo:`paste free template URL here`}]},
+                             {col:[{input:`#importPurl .toolTextFeed .dark`, demo:`paste free template URL here`, value:(url||"")}]},
                           ]},
                           {row:
                           [
-                             {butn:`.dark .need`, text:`open`, onclick:function(){Anon.Site.tool.import.open()}},
+                             {butn:`.dark .need`, text:`load`, onclick:function(){Anon.Site.tool.import.load()}},
                              {butn:`.dark .good`, text:`save`},
                              {butn:`.dark .auto`, text:`void`},
                           ]},
                        ]}]}
                      ]}]},
-                     {row:[{col:[{panl:`#SitePanlBody .SitePanlBody`, $:
+                     {row:[{col:[{panl:`#SiteTmplBody .SiteTmplBody`, $:
                      [
                      ]}]}]},
                 ]});
+
+                if(url){Anon.Site.tool.import.load()};
             },
 
 
-            open:function(url,bdy,pth,frm)
+            load:function(url,bdy,pth,frm)
             {
                 url=select(`#importPurl`).value;
-                bdy=select(`#SitePanlBody`); bdy.innerHTML="";
+                bdy=select(`#SiteTmplBody`); bdy.innerHTML="";
                 Busy.edit(`/Site/importOpen`,0);
                 purl(`/Site/importOpen`,{purl:url},function(rsp)
                 {
@@ -122,27 +173,42 @@ extend(Anon)
                         .AnonInspects
                         {
                           outline:auto !important;
-                          outline-color:hsla(220,100%,70%,1) !important;
-                          background-color:hsla(220,100%,70%,0.3) !important;
-                          box-shadow:0px 0px 15px hsla(0,0%,0%,0.5) !important;
+                          outline-color:hsla(220,100%,60%,1) !important;
+                          background-color:hsla(220,100%,60%,0.3) !important;
+                          box-shadow:0px 0px 1px hsla(0,0%,100%,1), 0px 0px 2px hsla(0,0%,100%,1), 0px 0px 15px hsla(0,0%,0%,0.5) !important;
                         }`;
                         cntx.head.appendChild(focs);
 
                         listOf(cntx.body.getElementsByTagName("*")).forEach((n)=>
                         {
                             n.ROOT=root; n.CNTX=cntx;
+
                             n.addEventListener(`mouseover`,function(ev)
                             {
-                                ev.stopPropagation();  let cc=this.className;
+                                ev.stopPropagation();  let cc=this.className; if(!isText(cc)){cc=""};
                                 cc=cc.split(` AnonInspects`).join(""); cc+=` AnonInspects`;
-                                this.className=cc;
+                                delete this.className; this.className=cc;
                             },false);
+
                             n.addEventListener(`mouseout`,function(ev)
                             {
-                                ev.stopPropagation();  let cc=this.className;
+                                ev.stopPropagation();  let cc=this.className; if(!isText(cc)){cc=""};
                                 cc=cc.split(` AnonInspects`).join("");
-                                this.className=cc;
+                                delete this.className; this.className=cc;
                             },false);
+
+                            if(nodeName(n)==`a`)
+                            {
+                                let hr=n.getAttribute(`href`);
+                                if(!hr.startsWith(`#`)){n.setAttribute(`href`,`#`)};
+                            };
+
+                            let ch=(n.onclick||n.onClick||n.getAttribute("onclick")||n.getAttribute("onClick"));
+                            if(isFunc(ch)){ch=ch.toString()}; if(isin(ch,["window.open","location.href"]))
+                            {
+                                delete n.onclick; delete n.onClick;
+                                n.removeAttribute("onclick"); n.removeAttribute("onClick");
+                            };
                         });
 
                         Busy.edit(`/Site/importOpen`,100);

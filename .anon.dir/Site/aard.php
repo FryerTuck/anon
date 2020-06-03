@@ -22,6 +22,27 @@ namespace Anon;
 
 
 
+      static function importBrowse()
+      {
+          $vars=knob($_POST); $from=$vars->from; $host="https://www.free-css.com";
+          $html=spuf("$host/free-css-templates?start=$from",null,"$host/");
+          if(!$html){done(FAIL);}; $fixr='/free-css-templates';
+          $list=expose($html,"<figure>","</figure>"); $resl=[];
+
+          foreach($list as $item)
+          {
+              $name=expose($item,'<span class="name">','</span>')[0];
+              $href=expose($item,'<a href="','"')[0];
+              $href=("$host/assets/files".swap($href,$fixr,"$fixr/preview"));
+              $face=expose($item,'<img src="','"')[0]; $face=swap($face,'/assets',"$host/assets");
+              $resl[]=knob(['name'=>$name,'href'=>"$href/",'face'=>$face]);
+          };
+
+          ekko($resl);
+      }
+
+
+
       static function importOpen()
       {
           $vars=knob($_POST); $purl=$vars->purl; $surl=rshave($purl,"/"); $hash=md5($purl);
