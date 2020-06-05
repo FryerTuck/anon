@@ -10,6 +10,13 @@
 }
 
 
+
+#SiteTmplBody
+{
+    overflow:hidden;
+}
+
+
 #importPurl
 {
    padding:6px !important;

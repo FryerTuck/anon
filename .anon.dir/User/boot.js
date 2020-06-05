@@ -115,8 +115,9 @@
             {
                error:function pingMail(r)
                {
-                  dump("pingMail error");
                   globVars({mailBusy:0});
+                  if(isJson(r)){fail(decode.jso(r));return};
+                  dump("pingMail error:\n"+r);
                },
                loadend:function pingMail(r)
                {

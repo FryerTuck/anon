@@ -169,13 +169,13 @@
          let h=dval(this.getAllResponseHeaders()); if((h!=null)&&h.Cookies){h.Cookies=decode.jso(decode.b64(h.Cookies))};
          let r={path:this.purl,head:h,body:this.response}; this.done=100;  let s=this.status;
          if(s==200){pe(100,this.purl);if(this.busy&&!!select("#busyPane")){Busy.edit(this.purl,100)};};
-         if(x.silent){tick.after(250,()=>{delete server.silent.busy})}; if(s<400){cb.apply(this,[r]);return}; // all is well
+         if(x.silent){tick.after(250,()=>{delete server.silent[this.purl]})}; if(s<400){cb.apply(this,[r]);return}; // all good
          if(MAIN.HALT){console.error("xhrMuted");return}; let eo=r.body;
          if(!isJson(eo)){eo=('Network :: '+s+' '+(this.statusText||'Connection Failure')+"\n\n"+eo)};
          ee.apply(this,[eo]);
       };
 
-      if(o.silent){server.silent.busy=1};
+      if(o.silent){server.silent[o.target]=1};
       if(!o.method){o.method='POST'}; if(!o.expect){o.expect='text'}; if(!isKnob(o.header)){o.header={}}; // method, responseType, headerOBJ
       if(!o.header.INTRFACE){o.header.INTRFACE='API'}; x=(new XMLHttpRequest()); x.open(o.method,o.target); x.responseType=o.expect; x.done=0;
       // x.withCredentials=true;
@@ -511,7 +511,14 @@
 
    tick.after(1500,function()
    {
-      server.listen('busy',function(d){if(!d||server.silent.busy){return}; Busy.edit(d.with,d.done)});
+      server.listen('busy',function(d,w)
+      {
+          if(!isJson(d)){return}; d=decode.jso(d); w=d.with; d=d.done;
+          if(!isText(w,1)||!isInum(d)){return};
+          if(server.silent[w]){return};
+          Busy.edit(w,d);
+      });
+
       server.listen('done',function(d){if(d!="!"){dump(`\nserver is done with:\n${d}`)}; Busy.done();});
       server.listen('dump',function(d){dump(d)});
    });

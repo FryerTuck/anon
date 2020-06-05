@@ -58,6 +58,7 @@ extend(Anon)
          ([
             {butn:`.longMenuButn`, text:`browse templates`, onclick:function(){Anon.Site.open(`import`,`browse`)}},
             {butn:`.longMenuButn`, text:`import from URL`, onclick:function(){Anon.Site.open(`import`,`fromURL`)}},
+            {butn:`.longMenuButn`, text:`create template`, onclick:function(){Anon.Site.open(`create`,`brandNew`)}},
          ]);
 
          Busy.edit('/Site/panl.js',100);
@@ -140,9 +141,10 @@ extend(Anon)
                           ]},
                           {row:
                           [
-                             {butn:`.dark .need`, text:`load`, onclick:function(){Anon.Site.tool.import.load()}},
-                             {butn:`.dark .good`, text:`save`},
-                             {butn:`.dark .auto`, text:`void`},
+                             {butn:`.dark .warn`, text:`load`, hint:`loads the template in the URL above`, onclick:function(){Anon.Site.tool.import.load()}},
+                             {butn:`.dark .good`, text:`save`, hint:`saves changes made to the loaded template`, onclick:function(){Anon.Site.tool.import.save()}},
+                             {butn:`.dark .need`, text:`pick`, hint:`use this template as main website template`, onclick:function(){Anon.Site.tool.import.pick()}},
+                             {butn:`.dark .harm`, text:`void`, hint:`forgets this loaded/saved template so it can be loaded fresh`, onclick:function(){Anon.Site.tool.import.void()}},
                           ]},
                        ]}]}
                      ]}]},
@@ -176,17 +178,41 @@ extend(Anon)
                           outline-color:hsla(220,100%,60%,1) !important;
                           background-color:hsla(220,100%,60%,0.3) !important;
                           box-shadow:0px 0px 1px hsla(0,0%,100%,1), 0px 0px 2px hsla(0,0%,100%,1), 0px 0px 15px hsla(0,0%,0%,0.5) !important;
-                        }`;
+                        }
+
+                        .AnonInspPick
+                        {
+                          outline:auto !important;
+                          outline-color:hsla(100,100%,60%,1) !important;
+                          background-color:hsla(100,100%,60%,0.3) !important;
+                          box-shadow:0px 0px 1px hsla(0,0%,100%,1), 0px 0px 2px hsla(0,0%,100%,1), 0px 0px 15px hsla(0,0%,0%,0.5) !important;
+                        }
+                        `;
+
                         cntx.head.appendChild(focs);
 
                         listOf(cntx.body.getElementsByTagName("*")).forEach((n)=>
                         {
                             n.ROOT=root; n.CNTX=cntx;
 
+                            if(nodeName(n)==`a`)
+                            {
+                                let hr=n.getAttribute(`href`); if(isVoid(hr)){hr=""};
+                                if(!hr.startsWith(`#`)){n.setAttribute(`href`,`#`)};
+                            };
+
+                            let ch=(n.onclick||n.onClick||n.getAttribute("onclick")||n.getAttribute("onClick"));
+                            if(isFunc(ch)){ch=ch.toString()}; if(isin(ch,["window.open","location.href"]))
+                            {
+                                delete n.onclick; delete n.onClick;
+                                n.removeAttribute("onclick"); n.removeAttribute("onClick");
+                            };
+
                             n.addEventListener(`mouseover`,function(ev)
                             {
                                 ev.stopPropagation();  let cc=this.className; if(!isText(cc)){cc=""};
-                                cc=cc.split(` AnonInspects`).join(""); cc+=` AnonInspects`;
+                                if(isin(cc,`AnonInspPick`)){return}; // this is selected .. do nothing
+                                cc=cc.split(` AnonInspects`).join(""); cc+=` AnonInspects`; // add focussed class
                                 delete this.className; this.className=cc;
                             },false);
 
@@ -197,18 +223,11 @@ extend(Anon)
                                 delete this.className; this.className=cc;
                             },false);
 
-                            if(nodeName(n)==`a`)
+                            n.addEventListener(`dblclick`,function(ev)
                             {
-                                let hr=n.getAttribute(`href`);
-                                if(!hr.startsWith(`#`)){n.setAttribute(`href`,`#`)};
-                            };
-
-                            let ch=(n.onclick||n.onClick||n.getAttribute("onclick")||n.getAttribute("onClick"));
-                            if(isFunc(ch)){ch=ch.toString()}; if(isin(ch,["window.open","location.href"]))
-                            {
-                                delete n.onclick; delete n.onClick;
-                                n.removeAttribute("onclick"); n.removeAttribute("onClick");
-                            };
+                                ev.preventDefault(); ev.stopPropagation(); ev.stopImmediatePropagation();
+                                Anon.Site.tool.update.popOptions(this);
+                            },false);
                         });
 
                         Busy.edit(`/Site/importOpen`,100);
@@ -216,6 +235,50 @@ extend(Anon)
                     bdy.insert(frm);
                 });
             },
+
+
+            save:function()
+            {
+                dump(`save`);
+            },
+
+
+            pick:function()
+            {
+                dump(`pick`);
+            },
+
+
+            void:function()
+            {
+                dump(`void`);
+            },
+
+
+            edit:function(n)
+            {
+                popAlert(`Edit Imported Template : Editing parts of an imported template`);
+            },
+         },
+
+
+
+         create:
+         {
+             brandNew:function(tab)
+             {
+                 popAlert(`TODO : This feature is not available yet.`);
+             },
+         },
+
+
+
+         update:
+         {
+             popOptions:function(n)
+             {
+                 popAlert(`TODO : This feature is not available yet.`);
+             },
          },
       },
    }

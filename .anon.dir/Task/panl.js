@@ -121,7 +121,7 @@ extend(Anon)
 
          server.listen('docketUpdate',(d)=>
          {
-            Anon.Task.jobCards.prerun(d);
+            Anon.Task.jobCards.prerun(decode.jso(d));
          });
 
          server.listen('docketDelete',(d)=>
@@ -230,7 +230,7 @@ extend(Anon)
             crd.select('.cardBodyPane')[0].innerHTML=''; crd.select('.cardBodyPane')[0].insert(cmt); // body text
             crd.select('.cardFootNick')[0].innerHTML=cmt.info.nick; // foot nick
             crd.select('.cardFootTime')[0].innerHTML=('- '+timePast(cmt.info.time,server.ostime)); // foot time
-            crd.info=obj; crd.assort();
+            crd.info=obj; crd.parentNode.assort();
          },
 
 

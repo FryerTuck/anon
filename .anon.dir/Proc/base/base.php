@@ -493,7 +493,7 @@ namespace Anon;
 
       static function head($a,$nx=true)
       {
-         $hs=headers_sent(); if($hs){return false;};
+         $hs=\headers_sent(); if($hs){return false;};
          if(is_int($a))
          {
             $c=conf('Proc/httpCode'); $m=$c->$a; if(!$m){$a=501; $m=$c->$a;};
