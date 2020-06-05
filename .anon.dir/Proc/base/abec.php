@@ -944,10 +944,11 @@ namespace Anon;
       static function make($p,$v=null)
       {
          if(!path($p)){return;}; lock::awaits($p); $r=pset($p,$v);
-         if($r){lock::remove($p); return (($r===true)?$r:false);}; // done first try
+         if(($r!==false)&&($r!==null)){lock::remove($p); return true;}; // done first try
          $t=self::twig($p); $t=frag($t,"/"); $q="";
-         foreach($t as $i){$q.="$i/"; if(!isee($q)){$r=pset($q); if(!$r){break;}}}; if(!$r){return false;};
-         $r=pset($p,$v); lock::remove($p); return (($r===true)?$r:false);
+         foreach($t as $i){$q.="$i/"; if(!isee($q)){$r=pset($q); if(($r===false)||($r===null)){break;}}};
+         if(($r===false)||($r===null)){return false;}; $r=pset($p,$v); lock::remove($p); 
+         return ((($r===false)||($r===null))?false:true);
       }
 
 
