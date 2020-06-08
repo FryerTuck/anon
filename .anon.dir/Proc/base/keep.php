@@ -26,7 +26,9 @@ namespace Anon;
          // if(!path::indx('/')){path::copy('/Proc/dcor/README.md','/README.md');};
       };
 
+
       if(!isRepo('/')){repo::create('/'); wait(50);};
+
 
       $h='/.anon.dir'; $l=conf('Proc/gitIgnor'); unset($i);
       foreach($l as $i)
@@ -36,6 +38,7 @@ namespace Anon;
          repo::ignore('/',write,($c.$h.$i));
       };
       unset($h,$l,$c,$i);
+
 
       path::make('/Proc/vars/lastDbug',$tmn);
    }

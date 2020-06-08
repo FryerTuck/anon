@@ -1,13 +1,13 @@
 "use strict";
 
 
-requires(['/AnonStem/bits/aard.css']);
+requires(['/Repo/bits/aard.css']);
 
 
 
 select('#AnonAppsView').insert
 ([
-   {panl:'#AnonStemPanlSlab', contents:
+   {panl:'#RepoPanlSlab', contents:
    [
       {grid:'.AnonPanlSlab', contents:
       [
@@ -19,7 +19,7 @@ select('#AnonAppsView').insert
                [
                   {row:[{col:'.slabMenuHead', contents:'site'}]},
                   {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
-                  {row:[{col:'.slabMenuBody', contents:[{panl:'#AnonStemTreeMenu'}]}]},
+                  {row:[{col:'.slabMenuBody', contents:[{panl:'#RepoTreeMenu'}]}]},
                ]}
             ]},
             {col:'.panlVertDlim', role:'gridFlex', axis:X, target:'<', contents:{vdiv:''}},
@@ -27,9 +27,9 @@ select('#AnonAppsView').insert
             [
                {grid:
                [
-                  {row:[{col:'#AnonStemHeadView .slabViewHead', contents:[{tabber:'#AnonStemTabber', theme:'.dark', target:'#AnonStemBodyPanl'}]}]},
+                  {row:[{col:'#RepoHeadView .slabViewHead', contents:[{tabber:'#RepoTabber', theme:'.dark', target:'#RepoBodyPanl'}]}]},
                   {row:[{col:'.panlHorzLine', contents:{hdiv:''}}]},
-                  {row:[{col:'.slabViewBody', contents:{panl:'#AnonStemBodyPanl'}}]},
+                  {row:[{col:'.slabViewBody', contents:{panl:'#RepoBodyPanl'}}]},
                ]}
             ]},
          ]}
@@ -42,7 +42,7 @@ select('#AnonAppsView').insert
 
 extend(Anon)
 ({
-   AnonStem:
+   Repo:
    {
       anew:function(cbf)
       {
@@ -50,13 +50,13 @@ extend(Anon)
 
       init:function()
       {
-         Busy.edit('/AnonStem/panl.js',100);
+         Busy.edit('/Repo/panl.js',100);
       },
 
 
       open:function(p)
       {
-         dump('TODO :: AnonStem.open file: '+p);
+         dump('TODO :: Repo.open file: '+p);
       },
    }
 });
