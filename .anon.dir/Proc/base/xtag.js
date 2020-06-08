@@ -315,7 +315,8 @@ extend(custom.domtag)
                      {
                          if(r.body!=OK){fail(r.body);return};
                          let tn=this.from;  let pi=tn.lookup("^",2).lookup("<");
-                         remove(tn); tn=VOID; pi.info.root.status.togl(pi);
+                         remove(tn); tn=VOID; if(!pi){this.root.exit();return};
+                         pi.info.root.status.togl(pi);
                          tick.after(250,()=>{pi.info.root.status.togl(pi)});
                          this.root.exit();
                      });
