@@ -451,8 +451,10 @@ namespace Anon;
 
       if(is_int($a))
       {
-         ekko::head($a); if($nx){return;}; if(!facing('GUI')){exit;}; $c=conf('Proc/httpCode'); $m=$c->$a;
-         $r=import('/Proc/stat.htm',['code'=>$a,'text'=>$m]); echo ($r); exit;
+         ekko::head($a); if($nx){return;}; if(facing("BOT")){exit;};
+         $c=conf('Proc/httpCode'); $m=$c->$a;
+         $t=$vo->tmpl; if(!isee($t)){$t='/Proc/base/stat.htm';};
+         $r=import($t,['code'=>$a,'text'=>$m]); echo ($r); exit;
       };
 
       if(path($a))
@@ -460,11 +462,11 @@ namespace Anon;
          if(isin($a,'.url/'))
          {$r=Proc::scanPlug($a); if(isList($r)){done($r);}; defn(['HALT'=>1]); header("Content-Type: $r->head"); echo $r->body; die();};
 
-         $m=mime($a); if(!$m){finish(415);}; $x=fext($a);
-         $p=isee($a); if(!$p){$p=path($a); finish((!file_exists($p)?404:403));};
+         $m=mime($a); if(!$m){finish(415,$vo,$nx);}; $x=fext($a);
+         $p=isee($a); if(!$p){$p=path($a); finish((!file_exists($p)?404:403),$vo,$nx);};
 
-         if(facing('SSE')&&envi('SSEREADY')){ekko(durl($a),'feed'); return;};
-         if(facing('BOT')){dump('TODO :: feed bot : '.$a);};
+         if(facing('SSE')){signal::feed(durl($a)); return;}; // feed data-URL to SSE
+         // if(facing('BOT')){dump('TODO :: feed bot : '.$a);};
 
          if(envi('ACCEPT')==='application/json')
          {
@@ -473,9 +475,9 @@ namespace Anon;
             $r=json_encode(knob(['name'=>'feed', 'data'=>$r])); print_r($r); flush(); die();
          };
 
-         // if(envi('ACCEPT')==='text/plain'){$m='text/plain';};
-         ekko::head(['Content-Type'=>$m]);
-         $r=import($a,$vo); if($r){print_r($r);}elseif(envi('ACCEPT')==='text/plain'){print_r(durl($p));}else{readfile($p);};
+
+         ekko::head(['Content-Type'=>$m]); $r=import($a,$vo);
+         if($r){print_r($r);}elseif(envi('ACCEPT')==='text/plain'){print_r(durl($p));}else{readfile($p);};
          if(!$nx){die();};
       };
    }

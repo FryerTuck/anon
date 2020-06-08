@@ -259,7 +259,8 @@
       {
          bz(60);
             // console.clear();
-         let np=location.href; render(np,(r)=>
+         let np=location.href; np+=((isin(np,"?")?"&":"?")+"init=1");
+         render(np,(r)=>
          {
             let mv=select('#anonMainView'); mv.insert(r);
             bz(80);

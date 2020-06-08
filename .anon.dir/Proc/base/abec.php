@@ -339,6 +339,7 @@ namespace Anon;
       {
          if(isset($a[0])&&(is_array($a[0])||is_object($a[0]))){$a=$a[0];}; if(span($a)<1){return;};
          if(is_nokey_array($a)){foreach($a as $t){$r=((wrapOf($t)==='//')?test($s,$t):akin($s,$t)); if($r){return $r;}}; return;};
+         if(!isAsso($a)&&!isKnob($a)){return;};
          foreach($a as $k => $v){$r=((wrapOf($k)==='//')?test($s,$k):akin($s,$k)); if($r){return $v;}}; return;
       }
    }
@@ -947,7 +948,7 @@ namespace Anon;
          if(($r!==false)&&($r!==null)){lock::remove($p); return true;}; // done first try
          $t=self::twig($p); $t=frag($t,"/"); $q="";
          foreach($t as $i){$q.="$i/"; if(!isee($q)){$r=pset($q); if(($r===false)||($r===null)){break;}}};
-         if(($r===false)||($r===null)){return false;}; $r=pset($p,$v); lock::remove($p); 
+         if(($r===false)||($r===null)){return false;}; $r=pset($p,$v); lock::remove($p);
          return ((($r===false)||($r===null))?false:true);
       }
 

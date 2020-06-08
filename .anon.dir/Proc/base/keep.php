@@ -10,7 +10,7 @@ namespace Anon;
 
       foreach($x as $d)
       {
-         if(!is_dir("$h/$d")){pset("$h/$d/"); usleep(10000);}; $l=pget("$h/$d/"); if(!is_array($l)||(count($l)<1)){continue;}; 
+         if(!is_dir("$h/$d")){pset("$h/$d/"); usleep(10000);}; $l=pget("$h/$d/"); if(!is_array($l)||(count($l)<1)){continue;};
          foreach($l as $i)
          {
             if(aged("$h/$d/$i")<=($dbs+2)){continue;}; if($d!=='sesn'){void("$h/$d/$i"); continue;}; // non-session related
@@ -23,7 +23,7 @@ namespace Anon;
       if(facing('GUI'))
       {
          if(!isee('/Proc/conf/hostName')){pset('/Proc/conf/hostName',HOSTNAME);};
-         if(!path::indx('/')){path::copy('/Proc/dcor/README.md','/README.md');};
+         // if(!path::indx('/')){path::copy('/Proc/dcor/README.md','/README.md');};
       };
 
       if(!isRepo('/')){repo::create('/'); wait(50);};

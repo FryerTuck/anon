@@ -14,16 +14,66 @@ namespace Anon;
       static function __init()
       {
          // self::$meta->done=[];
-         $ac=conf('Site/autoConf'); $cp=conf('Site/clanPath'); $cc=sesn('CLAN'); $np=NAVIPATH; $un=sesn('USER');
+         // $ac=conf('Site/autoConf');
 
-         if($cp->$cc){finish($cp->$cc); exit;}; // serve for specified clans explicitly
+
+         // if(!isee("/www"){}){};
+
+         // $cp=conf('Site/clanPath'); $cc=sesn('CLAN'); $np=NAVIPATH; $un=sesn('USER');
+         // if($cp->$cc){finish($cp->$cc); exit;}; // serve for specified clans explicitly
          // ekko("Hello $un");
+      }
+
+
+
+      static function handle($p)
+      {
+        $sc=conf("Site/autoConf"); $tn=$sc->template; $ap="/Site/tmpl/Anon"; $np="$p";
+        $tp="/Site/tmpl/$tn"; if(!isee($tp)){fail::template("missing path: `$tp`"); exit;};
+        if(isFold($np)){$ix=path::indx($np,'aard.php'); if($ix){$np=(rshave($np,'/')."/$ix");}}; // check for index-file
+        $tc=knob("/Site/tmpl/$tn/conf"); $rp=test::{$np}($tc->redirect);
+        if(is_int($rp)){finish($rp,['tmpl'=>"$tp/page/stat.htm"]); exit;}; // EXIT :: graceful status
+        if(isText($rp,1)&&(isPath($rp)||isPath("/$rp"))){$np=(arg($rp)->startsWith("/")?$rp:"$tp/$rp");}; // got redirected path
+        $fx=fext($np); if(isFold($np)&&!conf('Proc/viewDirs')){finish(403);}; // configured to deny viewing folders
+
+
+        if(facing("DPR")||($fx==="php"))
+        {
+            if(isee($np)){finish($np);}; // assests NOT in template
+            if(isee("$tp/$np")){finish("$tp/$np");}; // assests in template
+            if(isee("$ap/$np")){finish("$ap/$np");}; // assests in Anon template
+            finish($np); // 404 or 403
+        };
+
+
+        $cv=$tc->clanView; $uc=sesn("CLAN"); $rc=null; if(isKnob($cv)){$rc=pick($uc,keys($cv));};
+        $rp=null; if($rc&&isKnob($cv)){$rp=$cv->$rc;};
+
+        if($rp&&(is_int($rp)||isPath($rp)||isPath("/$rp")))
+        {
+            if(is_int($rp)){finish($rp,['tmpl'=>"$tp/page/stat.htm"]); exit;};
+            $rp=(arg($rp)->startsWith("/")?$rp:"$tp/$rp"); if(!isee($rp)){fail::config("file not found: `$rp`");};
+            $np="$rp";
+        }
+
+        if(!$rc)
+        {
+            $cl=["peek","surf","back","work","lead","sudo"];
+            $rc=isin($uc,$cl); if(!$rc){fail::template("invalid user clan: `$uc`");};
+        };
+
+        $gv=knob($_GET); if(!$gv->init){finish($np);}; // serve without template
+        $pt=null; $tl=["$tp/base/$rc.$fx","$ap/base/aard.$fx","$ap/base/$rc.$fx","$ap/base/aard.$fx"];
+        if(!arg($np)->startsWith("$tp/base/")){foreach($tl as $xt){if(isee($tl)){$pt="$xt"; break;}}};
+        if(!$pt){finish($np); exit;}; // without template
+        finish($pt,['contents'=>$np]); exit; // with template
       }
 
 
 
       static function importBrowse()
       {
+          permit::fubu("clan:work");
           $vars=knob($_POST); $from=$vars->from; $host="https://www.free-css.com";
           $html=spuf("$host/free-css-templates?start=$from",null,"$host/");
           if(!$html){done(FAIL);}; $fixr='/free-css-templates';
@@ -45,6 +95,7 @@ namespace Anon;
 
       static function importOpen()
       {
+          permit::fubu("clan:work");
           $vars=knob($_POST); $purl=$vars->purl; $surl=rshave($purl,"/"); $hash=md5($purl);
           $path="~/.tmp/Site/$hash"; if(isee($path)){ekko($path);}; // exit here
           $html=spuf($purl); if(!$html){done(FAIL);}; path::make("$path/");
@@ -176,6 +227,7 @@ namespace Anon;
 
       static function brandNew()
       {
+          permit::fubu("clan:work");
           for($i=0; $i<=100; $i++)
           {
               signal::busy(['with'=>"/Site/brandNew","done"=>$i]);

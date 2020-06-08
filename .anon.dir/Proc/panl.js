@@ -87,6 +87,7 @@ extend(Anon)
          cnf=swap(ltrim(pth,'/$/'),'/conf','');
          fln=stub(cnf,"/")[2];
          nme=swap(cnf,"/","_");
+         nme=swap(nme,"$","_");
 
          purl('/Proc/openConf',{path:pth},function(rsp)
          {

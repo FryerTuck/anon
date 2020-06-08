@@ -75,8 +75,12 @@ namespace Anon;
          $p=NAVIPATH; Time::logEvent(); if(strpos($p,'/~/')===0){$p=lshave($p,'/~/'); $u=user('name'); $p="/User/data/$u/home/$p";};
          $r=path::call($p,__FILE__); // run PHP controller found in path .. this should exit here - else we handle it below:
          if(($r!==null)&&($r!==true)&&!is_class($r)){if(defn('HALT')||envi('HALT')){done($r);}; ekko($r);}; // respond with controller response
-         if(isFold($p)){$i=path::indx($p,'aard.php'); if($i){$p=(rshave($p,'/')."/$i");}}; // if folder, check for index-file
-         finish($p); // handle regular path
+         if(is_class($r)){finish($r);}; // ?
+
+         if($p!=='/')
+         {$s=path::stem($p); if(isWord($s)&&isee("$/$s")){finish($p);}};
+
+         Site::handle($p);
       }
 
 
@@ -114,13 +118,15 @@ namespace Anon;
       static function treeMenu()
       {
          permit::fubu('clan:work,lead,sudo');
-         $cn='name,path,mime,type';
+         $cn='name,path,mime,type'; $tn=conf('Site/autoConf')->template; if(!isText($tn,1)){$tn='Anon';};
+         $tp="$/Site/tmpl/$tn/conf/"; if(!isee($tp)){fail::tampering("expecting existing path: `$tp`"); return;};
          $al=path::ogle([using=>'$',fetch=>$cn,limit=>['type'=>'fold','levl'=>0]]);
          $ul=path::ogle([using=>'/',fetch=>$cn,limit=>['type'=>'fold','levl'=>0]]);
          $sl=array_merge($al,$ul); $rl=[]; foreach($sl as $so)
          {
             $sc=path::conf($so->path); if(!$sc){continue;};
             $so->data=path::ogle([using=>$sc,fetch=>"$cn,data"]);
+            if($so->path=='$/Site'){$so->data=array_merge($so->data,path::ogle([using=>$tp,fetch=>"$cn,data"]));};
             $rl[]=$so;
          };
          ekko($rl);
@@ -131,8 +137,9 @@ namespace Anon;
       static function openConf()
       {
           permit::fubu('clan:lead,sudo,geek');
-          $v=knob($_POST); $p=$v->path; $p=swap(lshave($p,'/$/'),'/conf',''); $v=conf($p);
-          $n=stub($p,'/')[2]; if(!isKnob($v)&&!isNuma($v)){$v=[$v];}; ekko($v);
+          $v=knob($_POST); $p=$v->path; $v=dval(pget($p)); if(isAsso($v)){$v=knob($v);};
+          if(isAsso($v)){$v=knob($v);}; if(!isKnob($v)&&!isNuma($v)){$v=[$v];};
+          ekko($v);
       }
 
 
