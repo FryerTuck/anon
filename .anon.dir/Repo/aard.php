@@ -34,10 +34,10 @@ namespace Anon;
       }
 
 
-      static function differ($lp='/',$rn='fromAnon')
+      static function differ($lp='/',$rn='fromAnon',$bn='master')
       {
-          expect::repo($lp); expect::word($rn);
-          $r=exec::{"git fetch $rn master && git diff --name-only HEAD~ HEAD"}($lp);
+          expect::repo($lp); expect::word($rn); expect::word($bn);
+          $r=exec::{"git fetch $rn master && git diff $bn $rn/$bn"}($lp);
           $r=swap($r,[COREPATH,ROOTPATH],'');
           return $r;
       }
