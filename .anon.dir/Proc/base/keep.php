@@ -5,6 +5,7 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function upkeep($dbs,$ldb,$tmn)
    {
+          signal::AnonUpdate("yo");
       lock::create("upkeep"); // only 1 process should run upkeep
       $h='/Proc/temp'; $x=['file','kban','lock','logs','refs','sesn'];
       $cln=sesn('CLAN'); $hsh=sesn('HASH'); $usr=sesn('USER');

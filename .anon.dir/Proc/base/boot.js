@@ -240,13 +240,14 @@
          });
       });
 
-      if(userDoes("sudo lead geek"))
-      {
+      // if(userDoes("sudo lead geek"))
+      // {
           listen("AnonUpdate",function(d)
           {
               dump("AnonUpdate:",d,"\n\n");
           });
-      };
+          dump("listening for: AnonUpdate");
+      // };
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
