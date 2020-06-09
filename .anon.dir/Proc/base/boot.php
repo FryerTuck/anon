@@ -269,14 +269,19 @@ namespace Anon;
    {
       static function __callStatic($c,$a)
       {
-         $un=sesn('USER'); $up="/User/data/$un"; if(!isset($a[0])){$a[0]=$up;}; $p=$a[0]; $v=(isset($a[1])?$a[1]:null); // TODO security check
+         $un=sesn('USER'); $up="/User/data/$un"; if(!isset($a[0])){$a[0]=$up;}; $p=$a[0];
+         $v=(isset($a[1])?$a[1]:null); // TODO security check
          $i=(isset($a[2])?$a[2]:''); if(!is_string($i)){return;}; $p=isee($p); if(!$p){return;};
-         if(($v!==null)&&!is_assoc_array($v)){return;}; $q=[0=>["pipe","r"], 1=>["pipe","w"], 2=>["pipe","w"]]; $r=proc_open($c,$q,$x,$p,$v);
+         if(($v!==null)&&!is_assoc_array($v)){return;}; $q=[0=>["pipe","r"], 1=>["pipe","w"], 2=>["pipe","w"]];
+         $r=proc_open($c,$q,$x,$p,$v);
          if(!is_resource($r)){return;};
-         //if($i&&($i!==NOFAIL)){wait(1000); fwrite($x[0],$i);}; 
+         //if($i&&($i!==NOFAIL)){wait(1000); fwrite($x[0],$i);};
          fclose($x[0]);
-         $o=trim(stream_get_contents($x[1])); fclose($x[1]); $e=trim(stream_get_contents($x[2])); fclose($x[2]); $z=trim(proc_close($r));
-         if($z){$z=(($e&&$o)?"$e ..\n$o":($e?$e:$o));}; if(!$z){wait(1); return $o;}; throw new \Exception("$z");
+         $o=trim(stream_get_contents($x[1])); fclose($x[1]); $e=trim(stream_get_contents($x[2])); fclose($x[2]);
+         $z=trim(proc_close($r)); if($z){$z=(($e&&$o)?"$e ..\n$o":($e?$e:$o));};
+         if(!$z){wait(1); return $o;};
+         $s=stak(); dbug::$temp=$s;
+         throw new \Exception("$z");
       }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
