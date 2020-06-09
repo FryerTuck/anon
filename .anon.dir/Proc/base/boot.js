@@ -253,8 +253,9 @@
                       Busy.edit("AnonUpdate",0); s=this;
                       purl("/Proc/update",(r)=>
                       {
-                          Busy.edit("AnonUpdate",0);
-                          r=r.body; if(r!=OK){s.root.exit(); fail("AnonUpdateError: ".r);return};
+                          Busy.edit("AnonUpdate",0); r=r.body;
+                          if(r==OK){popAlert(`updates applied successfully`,4);return};
+                          if(r!=OK){s.root.exit(); fail("AnonUpdateError: ".r);return};
                       });
                   },
                   "warn :: Maybe Later":function(){this.root.exit()},
