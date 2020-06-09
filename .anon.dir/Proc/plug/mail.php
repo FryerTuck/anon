@@ -198,17 +198,22 @@ namespace Anon;
       {
          Proc::signal('busy',['with'=>"mail",'done'=>21]); if(isAssa($a)){$a=knob($a,U);}; expect::knob($a);
          if(!$a->using){$a->using='INBOX';}; $L=$this->vivify($a->using,($a->touch?null:OP_READONLY));
-         $fltr=$a->fetch; if(!$fltr){$fltr='*';}; if(!isText($fltr)&&!isFlat($fltr)){fail('invalid `fetch` clause');}; $cols=$this->cols;
-         if($fltr==='*'){$fltr=$cols;}elseif(isText($fltr)){$fltr=[$fltr];}; $a->fetch=$fltr;
+         $fltr=$a->fetch; if(!$fltr){$fltr='*';}; if(!isText($fltr)&&!isFlat($fltr)){fail::mailPlug('invalid `fetch` clause');};
+         $cols=$this->cols; if($fltr==='*'){$fltr=$cols;}elseif(isText($fltr)){$fltr=[$fltr];}; $a->fetch=$fltr;
          if($a->where)
          {
             $oper=padded((explode(' ',EXPROPER)),' ');
-            if(isText($a->where)){$a->where=[$a->where];}; if(!isFlat($a->where)){fail('invalid `where` clause');};
+            if(isText($a->where)){$a->where=[$a->where];}; if(!isFlat($a->where)){fail::mailPlug('invalid `where` clause');};
             foreach($a->where as $c){$p=stub($c,$oper); if(!$p){fail('invalid `where` expression');}; if(!isin($fltr,$p[0])){$fltr[]=$p[0];}};
          };
 
-         foreach($fltr as $col)
-         {if(!isText($col)){fail('expecting `fetch` items as :TEXT:');}; if(!isin($cols,$col)){fail("fetch column `$col` is undefined");}};
+         $HF=0; foreach($fltr as $col)
+         {
+             if($HF){break;}; if(!isText($col)){$HF='expecting `fetch` items as :TEXT:'; break;};
+             if(!isin($cols,$col)){$HF="fetch column `$col` is undefined";}
+         };
+         if($HF){fail::mail($HF); exit;};
+
          $mail=imap_search($L,'ALL');
          if(!isArra($mail,1)){return [];}; rsort($mail); $r=[]; $limit=span($mail); $found=0;
          if($a->limit!==null){if(is_int($a->limit)){$limit=$a->limit;}else{fail('invalid `limit` value');}}; $nf=$this->prop;
