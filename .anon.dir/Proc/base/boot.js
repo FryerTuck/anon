@@ -258,7 +258,7 @@
                           if(r!=OK){s.root.exit(); fail("AnonUpdateError: ".r);return};
                       });
                   }},
-                  {butn:`.cool`, text:"Maybe Later", onclick:function()
+                  {butn:`.auto`, text:"Maybe Later", onclick:function()
                   {
                       this.root.exit()
                   }},
