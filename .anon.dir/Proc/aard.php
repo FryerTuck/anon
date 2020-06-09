@@ -400,6 +400,7 @@ namespace Anon;
       {
          permit::fubu('clan:lead,sudo');
          Repo::update('/','master','pull','fromAnon');
+         signal::ClientReboot("new system updates");
          return OK;
       }
    }
