@@ -149,7 +149,7 @@ namespace Anon;
       {
           permit::fubu('clan:lead,sudo,geek'); $v=knob($_POST); $p=$v->path; $d=decode::b64($v->bufr);
           $r=path::make($p,$d); if(!$r&&($r!==0)){fail::config("could not save $p");return;};
-          signal::ClientReboot("system configuration changed");
+          signal::ClientReboot("system configuration changed","*");
           ekko(OK);
       }
 
@@ -402,7 +402,7 @@ namespace Anon;
       {
          permit::fubu('clan:lead,sudo');
          Repo::update('/','master','pull','fromAnon');
-         signal::ClientReboot("new system updates");
+         signal::ClientReboot("new system updates","*");
          return OK;
       }
    }
