@@ -17,7 +17,7 @@ namespace Anon;
          if(!isee("$h/root"))
          {
             $b=conf('Code/forkName'); if(!is_funnic($b)){fail("invalid branch name in Code config");};
-            if(!isRepo('/')){repo::create('/'); wait(50);}; repo::cloned('/',"$h/root",$b,user('name'));
+            if(!isRepo('/')){Repo::create('/'); wait(50);}; Repo::cloned('/',"$h/root",$b,user('name'));
          };
 
          $r=path::tree($h); dump($r);
@@ -43,8 +43,8 @@ namespace Anon;
 
          if(!$x)
          {
-            expect::path($p,[W,F]); $r=path::make($p,$b); if(!$r){ekko(FAIL);}; $b=repo::branch($p);
-            if($b){repo::commit(repoOf($p),"saved '$p'");}elseif($p[0]!=='~'){Proc::signal('pathUpdate',['path'=>$p],'.work');};
+            expect::path($p,[W,F]); $r=path::make($p,$b); if(!$r){ekko(FAIL);}; $b=Repo::branch($p);
+            if($b){Repo::commit(repoOf($p),"saved '$p'");}elseif($p[0]!=='~'){Proc::signal('pathUpdate',['path'=>$p],'.work');};
             ekko(OK);
          };
 
@@ -57,22 +57,22 @@ namespace Anon;
       static function feedFile()
       {
          $v=knob($_POST); $p=$v->path; path::make($p,furl($v->data)->data);
-         $b=repo::branch($p); if($b){repo::commit(repoOf($p),"added '$p'");}
+         $b=Repo::branch($p); if($b){Repo::commit(repoOf($p),"added '$p'");}
          elseif($p[0]!=='~'){Proc::signal('pathUpdate',['path'=>path::stem($p)],'.work');}; ekko(OK);
       }
 
 
       static function pullRepo()
       {
-         $v=knob($_POST); $p=$v->path; $b=$v->fork; $s=repo::strife($p); if($s->ahead||!$s->behind){ekko('n/a');};
-         try{repo::update($p,$b);}catch(\Exception $e){ekko(FAIL);}; ekko(OK);
+         $v=knob($_POST); $p=$v->path; $b=$v->fork; $s=Repo::strife($p); if($s->ahead||!$s->behind){ekko('n/a');};
+         try{Repo::update($p,$b);}catch(\Exception $e){ekko(FAIL);}; ekko(OK);
       }
 
 
       static function pushRepo()
       {
-         $v=knob($_POST); $p=$v->path; $b=$v->fork; $s=repo::strife($p); $n=($s->ahead+$s->behind);
-         if(!$n){ekko(OK);}; $rsp=OK; try{repo::commit($p,"merge $n commit(s)",true,$b);}catch(\Exception $e){$rsp=$e->getMessage();};
+         $v=knob($_POST); $p=$v->path; $b=$v->fork; $s=Repo::strife($p); $n=($s->ahead+$s->behind);
+         if(!$n){ekko(OK);}; $rsp=OK; try{Repo::commit($p,"merge $n commit(s)",true,$b);}catch(\Exception $e){$rsp=$e->getMessage();};
          Proc::signal('repoUpdate',['fork'=>$b],'.work'); ekko($rsp);
       }
 

@@ -22,6 +22,7 @@ namespace Anon;
 
       static function __init()
       {
+         self::$meta = knob();
          self::$meta->hush = knob();
          self::$meta->hook = knob();
          self::$meta->wait = conf::Proc('sysClock')->server;
@@ -392,6 +393,15 @@ namespace Anon;
 
          return $r;
       }
+
+
+
+      static function update()
+      {
+         permit::fubu('clan:lead,sudo');
+         Repo::update('/','master','pull','fromAnon');
+         return OK;
+      }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -405,7 +415,11 @@ namespace Anon;
       {
          $e=trim($n); if(!is_funnic($e)){fail::Reference("invalid event name: $n");return;};
          $d=null; $t=null; if(isset($a[0])){$d=$a[0];}; if(isset($a[1])){$t=$a[1];};
-         $r=Proc::signal($n,$d,$t); $c=conf::Proc('sysClock')->server; if(!is_int($c)){ekko($c);}; wait($c+50); return $r;
+         $c=conf::Proc('sysClock')->server; if(!is_int($c)){$c=100;};
+         $r=Proc::signal($n,$d,$t); wait($c+10); return $r;
       }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+    Proc::__init();

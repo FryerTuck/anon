@@ -1,8 +1,4 @@
-/*
-
-!/.htaccess
-!/.anon.php
-!/.anon.dir
+/README.md
 
 /Bill/data/*
 /Bill/conf/autoMail

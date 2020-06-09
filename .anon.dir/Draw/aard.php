@@ -21,7 +21,7 @@ namespace Anon;
       static function treeMenu()
       {
          $u=user('name'); $h="/User/data/$u/home";
-         if(!isee("$h/root")){$b=conf('Code/forkName'); if(!is_funnic($b)){fail("invalid branch name");}; repo::cloned('/',"$h/root",$b);};
+         if(!isee("$h/root")){$b=conf('Code/forkName'); if(!is_funnic($b)){fail("invalid branch name");}; Repo::cloned('/',"$h/root",$b);};
          $r=path::tree($h); dump($r);
       }
 

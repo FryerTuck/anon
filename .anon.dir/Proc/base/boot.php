@@ -13,7 +13,6 @@ namespace Anon;
 
 # refs :: constants : short-hand references to values that are frequently used
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   $h=pget('/Proc/conf/hostName'); if(!$h){$h=envi('SERVER_NAME'); if(!$h){$h=envi('HOST');}};
    $p=envi('URL'); $b=envi('BASEPATH'); if($b!=='/'){$p=lshave($p,$b);}; if(!$p){$p='/';};
    defn
    ([
@@ -358,11 +357,14 @@ namespace Anon;
 
 # need :: tools : load dependencies
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   depend('F:/Proc/base/dbug.php');   // check if dbug exists .. with fail if not
+   depend('F:/Proc/base/dbug.php');      // check if dbug exists .. with fail if not
    require(path('/Proc/base/dbug.php')); // this will take care of any further issues with the framework and any subsequent runtime errors
    require(path('/Proc/base/abec.php')); // basic tools for heavy lifting .. if anything goes wrong in here, dbug will handle it .. awesomeness
    require(path('/Proc/base/base.php')); // ABEC is full .. extend any other essential functions in here
+   require(path('/Proc/base/base.php')); // ABEC is full .. extend any other essential functions in here
    require(path('/Proc/base/fwal.php')); // essential security .. right of passage through "the pass"
+   require(path('/Proc/aard.php'));      // initialize Proc class
+   require(path('/Repo/aard.php'));      // initialize Repo class
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 

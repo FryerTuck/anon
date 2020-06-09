@@ -5,6 +5,7 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function upkeep($dbs,$ldb,$tmn)
    {
+      lock::create("upkeep"); // only 1 process should run upkeep
       $h='/Proc/temp'; $x=['file','kban','lock','logs','refs','sesn'];
       $cln=sesn('CLAN'); $hsh=sesn('HASH'); $usr=sesn('USER');
 
@@ -20,6 +21,7 @@ namespace Anon;
          };
       };
 
+
       if(facing('GUI'))
       {
          if(!isee('/Proc/conf/hostName')){pset('/Proc/conf/hostName',HOSTNAME);};
@@ -27,19 +29,31 @@ namespace Anon;
       };
 
 
-      if(!isRepo('/')){repo::create('/'); wait(50);};
+      if(!isRepo('/')){Repo::create('/'); wait(50);}
+      else
+      {
+          $fa=conf('Repo/fromAnon'); $lo=Repo::origin('/');
+          if($lo===$fa)
+          {
+              Repo::create('/',BARE); $lo=path("$/Repo/data/".HOSTNAME.".git");
+              exec::{"git remote rename origin fromAnon"}('/');
+              exec::{"git remote add origin $lo"}('/');
+          };
+      };
 
+      $d=Repo::differ(); if($d){signal::AnonUpdate($d);};
 
       $h='/.anon.dir'; $l=conf('Proc/gitIgnor'); unset($i);
       foreach($l as $i)
       {
          if((strlen($i)>1)&&(substr($i,0,2)==='# ')){continue;}; // commented out
          $c=substr($i,0,1); if($c==='!'){$i=substr($i,1);}else{$c='';}; // negation
-         repo::ignore('/',write,($c.$h.$i));
+         Repo::ignore('/',write,($c.$h.$i));
       };
       unset($h,$l,$c,$i);
 
 
       path::make('/Proc/vars/lastDbug',$tmn);
+      lock::remove("upkeep");
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------

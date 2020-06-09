@@ -173,7 +173,7 @@ namespace Anon;
             if(!isee("$h/root"))
             {
                $b=conf('Code/forkName'); if(!is_funnic($b)){fail("invalid branch name in Code config");};
-               if(!isRepo('/')){repo::create('/'); wait(50);}; repo::cloned('/',"$h/root",$b,$u);
+               if(!isRepo('/')){Repo::create('/'); wait(50);}; Repo::cloned('/',"$h/root",$b,$u);
             };
          };
 
@@ -257,8 +257,8 @@ namespace Anon;
                if(isee($p)&&($t!=='repo')){done("`$p` already exists");};
                if((($t==='plug')||($t==='repo'))&&!isPurl($l)){fail("invalid $t link");};
                if($t!=='repo'){$r=path::make($p,$l); if(!$r){done($f);}; done(OK);};
-               $r=repo::cloned($l,$p); if(!$r){done($f);};  $h=path::twig($p); if(!isRepo($h)){done(OK);};
-               $i=path::leaf($p); repo::ignore($h,write,"$i/*"); repo::ignore($h,write,"/$i"); done(OK);
+               $r=Repo::cloned($l,$p); if(!$r){done($f);};  $h=path::twig($p); if(!isRepo($h)){done(OK);};
+               $i=path::leaf($p); Repo::ignore($h,write,"$i/*"); Repo::ignore($h,write,"/$i"); done(OK);
             };
 
             if(isin(['ftp','ftps'],$XP))
@@ -293,7 +293,7 @@ namespace Anon;
          {
             permit::clan('geek'); $r=self::ratingOf(user('mail'));
             if(($r<12)&&!isin(user('clan'),'sudo')){done("this feature is not available for rookies\n.. unless you know sudo-fu");};
-            if($t==="repo"){done(repo::origin($h));};
+            if($t==="repo"){done(Repo::origin($h));};
             done(pget($h));
          };
 
@@ -313,7 +313,7 @@ namespace Anon;
             {
                 $r=path::void($h); if(!$r){done("failed to delete $t");};
                 if(!isin($t,'repo')){done(OK);}; $t=path::twig($h); $i=path::leaf($h); if(!isRepo($t)){done(OK);};
-                repo::ignore($t,erase,"$i/*"); repo::ignore($t,erase,"/$i"); done(OK);
+                Repo::ignore($t,erase,"$i/*"); Repo::ignore($t,erase,"/$i"); done(OK);
             };
 
             if(isin(['ftp','ftps'],$XP))
@@ -348,8 +348,8 @@ namespace Anon;
 
             if(!$X)
             {
-                if($d==='pull'){$r=repo::update(); if($r){done(OK);}; done($f);};
-                $r=repo::commit($h,$m,true); if($r){done(OK);}; done($f);
+                if($d==='pull'){$r=Repo::update(); if($r){done(OK);}; done($f);};
+                $r=Repo::commit($h,$m,true); if($r){done(OK);}; done($f);
             };
 
             done("TODO :: update remote $t over $XP");
