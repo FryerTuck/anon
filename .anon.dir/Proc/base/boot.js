@@ -247,8 +247,8 @@
           ({
               body:`Would you like to install these updates now?`,
               foot:
-              {
-                  "cool :: Update Now":function(e,s)
+              [
+                  {butn:`.cool`, text:"Update Now", onclick:function(e,s)
                   {
                       Busy.edit("AnonUpdate",0); s=this;
                       purl("/Proc/update",(r)=>
@@ -257,16 +257,20 @@
                           if(r==OK){popAlert(`updates applied successfully`,4);return};
                           if(r!=OK){s.root.exit(); fail("AnonUpdateError: ".r);return};
                       });
-                  },
-                  "warn :: Maybe Later":function(){this.root.exit()},
-              }
+                  }},
+                  {butn:`.cool`, text:"Maybe Later", onclick:function()
+                  {
+                      this.root.exit()
+                  }},
+              ]
           });
       });
 
 
       server.listen("ClientReboot",function(d)
       {
-          let m=(d||`system request`); popConfirm
+          let m=(d||`system request`);
+          popConfirm
           (`
               ### Refresh Required
               This session needs to be refreshed as soon as possible.
