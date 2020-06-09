@@ -36,9 +36,9 @@ namespace Anon;
 
       static function differ($lp='/',$rn='fromAnon',$bn='master')
       {
-          expect::repo($lp); expect::word($rn); expect::word($bn);
-          $r=exec::{"git fetch $rn master && git diff --name-only $bn $rn/$bn"}($lp);
-          $f=path::leaf(COREPATH); $r=swap($r,[COREPATH,ROOTPATH],''); $r=swap($r,"$f/","$/");
+          expect::repo($lp); expect::word($rn); expect::word($bn); $r=null;
+          try{$r=exec::{"git fetch $rn master && git diff --name-only $bn $rn/$bn"}($lp);}catch(\Exception $e){};
+          if(!$r){return;}; $f=path::leaf(COREPATH); $r=swap($r,[COREPATH,ROOTPATH],''); $r=swap($r,"$f/","$/");
           return $r;
       }
 
