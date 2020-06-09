@@ -261,7 +261,7 @@
                   "warn :: Maybe Later":function(){this.root.exit()},
               }
           });
-      })};
+      });
 
 
       server.listen("ClientReboot",function(d)
