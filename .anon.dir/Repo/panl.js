@@ -17,7 +17,7 @@ select('#AnonAppsView').insert
             [
                {grid:
                [
-                  {row:[{col:'.slabMenuHead', contents:'site'}]},
+                  {row:[{col:'.slabMenuHead', contents:'repo'}]},
                   {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
                   {row:[{col:'.slabMenuBody', contents:[{panl:'#RepoTreeMenu'}]}]},
                ]}
