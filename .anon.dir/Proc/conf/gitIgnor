@@ -29,3 +29,5 @@
 !/User/data/anonymous/*
 !/User/data/master/*
 /User/conf/autoMail
+
+/Repo/data/*
