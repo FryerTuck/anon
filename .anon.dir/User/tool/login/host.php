@@ -14,7 +14,7 @@ $export=function($td,$un,$pw)
       Time::logEvent($un,$c,'API');
 // done('testing host');
       // $cv=guiStrap($un,0); $_COOKIE[$k]=$cv;
-      done(OK); // update session client side .. the client must refresh upon OK response
+      ekko(OK); // update session client side .. the client must refresh upon OK response
    };
 
 

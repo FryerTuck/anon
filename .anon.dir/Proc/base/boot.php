@@ -272,7 +272,9 @@ namespace Anon;
          $un=sesn('USER'); $up="/User/data/$un"; if(!isset($a[0])){$a[0]=$up;}; $p=$a[0]; $v=(isset($a[1])?$a[1]:null); // TODO security check
          $i=(isset($a[2])?$a[2]:''); if(!is_string($i)){return;}; $p=isee($p); if(!$p){return;};
          if(($v!==null)&&!is_assoc_array($v)){return;}; $q=[0=>["pipe","r"], 1=>["pipe","w"], 2=>["pipe","w"]]; $r=proc_open($c,$q,$x,$p,$v);
-         if(!is_resource($r)){return;}; if($i&&($i!==NOFAIL)){wait(1000); fwrite($x[0],$i);}; fclose($x[0]);
+         if(!is_resource($r)){return;};
+         //if($i&&($i!==NOFAIL)){wait(1000); fwrite($x[0],$i);}; 
+         fclose($x[0]);
          $o=trim(stream_get_contents($x[1])); fclose($x[1]); $e=trim(stream_get_contents($x[2])); fclose($x[2]); $z=trim(proc_close($r));
          if($z){$z=(($e&&$o)?"$e ..\n$o":($e?$e:$o));}; if(!$z){wait(1); return $o;}; throw new \Exception("$z");
       }
@@ -373,7 +375,12 @@ namespace Anon;
    if(!facing('DPR')&&!facing('BOT'))
    {
       $dbs=(pget('/User/conf/inactive')*1); $ldb=(pget('/Proc/vars/lastDbug')*1); $tmn=time();
-      if(($tmn-$ldb)>$dbs){require(path('/Proc/base/keep.php')); upkeep($dbs,$ldb,$tmn);}; unset($dbs,$ldb,$tmn);
+      if(($tmn-$ldb)>$dbs)
+      {
+          require(path('/Proc/base/keep.php'));
+          upkeep($dbs,$ldb,$tmn);
+      };
+      unset($dbs,$ldb,$tmn);
    }
 
    defn(['AUTOMAIL'=>pget('/Proc/conf/autoMail')]); // needed

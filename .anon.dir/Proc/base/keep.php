@@ -1,12 +1,14 @@
 <?
 namespace Anon;
 
+
+
 # func :: upkeep : delete old temp-files .. create temp folders if undefined .. remove stale sessions, locks, refs, etc.
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function upkeep($dbs,$ldb,$tmn)
    {
-          signal::AnonUpdate("yo");
-      lock::create("upkeep"); // only 1 process should run upkeep
+      if(lock::exists("upkeep")){return;}; lock::create("upkeep"); // only 1 process should run upkeep
+
       $h='/Proc/temp'; $x=['file','kban','lock','logs','refs','sesn'];
       $cln=sesn('CLAN'); $hsh=sesn('HASH'); $usr=sesn('USER');
 
@@ -30,21 +32,28 @@ namespace Anon;
       };
 
 
-      if(!isRepo('/')){Repo::create('/'); wait(50);}
+      if(!isRepo('/'))
+      {Repo::create('/'); wait(50);}
       else
       {
           $fa=conf('Repo/fromAnon'); $lo=Repo::origin('/');
+          $lr=path("$/Repo/data/".HOSTNAME.".git");
+          if(!isee($lr)){Repo::create('/',BARE);};
+
           if($lo===$fa)
           {
-              Repo::create('/',BARE); $lo=path("$/Repo/data/".HOSTNAME.".git");
               exec::{"git remote rename origin fromAnon"}('/');
-              exec::{"git remote add origin $lo"}('/');
+              exec::{"git remote add origin $lr"}('/');
+          }
+          else
+          {
+              $ao=Repo::getURL('/','fromAnon');
+              if(!$ao){exec::{"git remote add fromAnon $fa"}('/');};
           };
       };
 
       if(userDoes("sudo lead geek"))
       {
-          signal::AnonUpdate("yo");
           $d=Repo::differ(); if($d){signal::AnonUpdate($d);};
       };
 
@@ -55,7 +64,6 @@ namespace Anon;
          $c=substr($i,0,1); if($c==='!'){$i=substr($i,1);}else{$c='';}; // negation
          Repo::ignore('/',write,($c.$h.$i));
       };
-      unset($h,$l,$c,$i);
 
 
       path::make('/Proc/vars/lastDbug',$tmn);
