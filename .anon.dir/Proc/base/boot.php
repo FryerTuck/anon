@@ -361,7 +361,6 @@ namespace Anon;
    require(path('/Proc/base/dbug.php')); // this will take care of any further issues with the framework and any subsequent runtime errors
    require(path('/Proc/base/abec.php')); // basic tools for heavy lifting .. if anything goes wrong in here, dbug will handle it .. awesomeness
    require(path('/Proc/base/base.php')); // ABEC is full .. extend any other essential functions in here
-   require(path('/Proc/base/base.php')); // ABEC is full .. extend any other essential functions in here
    require(path('/Proc/base/fwal.php')); // essential security .. right of passage through "the pass"
    require(path('/Proc/aard.php'));      // initialize Proc class
    require(path('/Repo/aard.php'));      // initialize Repo class
