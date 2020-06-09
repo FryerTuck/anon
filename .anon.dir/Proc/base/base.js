@@ -483,7 +483,7 @@
             if(isFunc(h)){t=f; f=h; h=t;}; // swapped args
             if(isText(h,1)&&!!server.hashes[h]){return}; // already listening for this
 
-            if(isin(e,":")){c=stub(e,":"); e=trim(c[0]); c=c[2];};
+            if(isin(e,":")){c=stub(e,":"); e=trim(c[0]); c=trim(c[2]);};
             if(!isWord(e)){fail('expecting 1st arg as :word:');return};
             if(!isFunc(f)){fail('expecting 2nd arg as :func:');return};
 
