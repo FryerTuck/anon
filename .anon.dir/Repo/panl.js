@@ -51,7 +51,7 @@ extend(Anon)
       init:function()
       {
          Busy.edit('/Repo/panl.js',100);
-         // dump(`Repo ready`);
+         dump(`Repo ready`);
       },
 
 
