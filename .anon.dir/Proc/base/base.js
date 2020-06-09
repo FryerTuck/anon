@@ -477,17 +477,25 @@
          },
 
 
-         listen:function(e,f,h, t)
+         listen:function(e,f,h, t,c)
          {
+            if(!stak(0)){wack();return}; // omg! securityyyyy!!
             if(isFunc(h)){t=f; f=h; h=t;}; // swapped args
             if(isText(h,1)&&!!server.hashes[h]){return}; // already listening for this
-            if(!isWord(e)){fail('expecting 1st arg as :word:');return}; if(!isFunc(f)){fail('expecting 2nd arg as :func:');return};
+
+            if(isin(e,":")){c=stub(e,":"); e=trim(c[0]); c=c[2];};
+            if(!isWord(e)){fail('expecting 1st arg as :word:');return};
+            if(!isFunc(f)){fail('expecting 2nd arg as :func:');return};
+
+            if(c&&!userDoes(c)){return}; // specify clan after event .. server.listen("DataReady: geek mind",()=>{});
+
             this.vivify(()=>{server.stream.addEventListener(e,function(evnt)
             {
+               if(this.au&&!userDoes(this.au)){return;}; // security
                let d=atob(evnt.data);
                // if(isJson(d)){d=(decode.jso(d)||d)}; d=sval(d);
                this.cb(d);
-            }.bind({cb:f}),false);});
+            }.bind({cb:f,au:c}),false);});
             if(!isText(h,1)){return}; server.hashes[h]=1;
          },
 

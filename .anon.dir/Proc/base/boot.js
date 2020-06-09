@@ -240,13 +240,44 @@
          });
       });
 
-      if(userDoes("sudo lead geek"))
+
+      server.listen("AnonUpdate: sudo lead gang",function(d)
       {
-          server.listen("AnonUpdate",function(d)
-          {
-              dump("AnonUpdate:",d,"\n\n");
+          popModal(`cog :: New Updates`)
+          ({
+              body:`Would you like to install these updates now?`,
+              foot:
+              {
+                  "cool :: Update Now":function(e,s)
+                  {
+                      Busy.edit("AnonUpdate",0); s=this;
+                      purl("/Proc/update",(r)=>
+                      {
+                          Busy.edit("AnonUpdate",0);
+                          r=r.body; if(r!=OK){s.root.exit(); fail("AnonUpdateError: ".r);return};
+                      });
+                  },
+                  "warn :: Maybe Later":function(){this.root.exit()},
+              }
           });
-      };
+      })};
+
+
+      server.listen("ClientReboot",function(d)
+      {
+          let m=(d||`system request`); popConfirm
+          (`
+              ### Refresh Required
+              This session needs to be refreshed as soon as possible.
+              > ${m}
+
+              If you have any unsaved work, please save and manually refresh.
+          `)
+          ({
+              "good :: refresh now":function(){newGui({APIKEY:sesn('HASH')});},
+              "warn :: later":function(){this.root.exit()},
+          });
+      });
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
