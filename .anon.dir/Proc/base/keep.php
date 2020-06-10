@@ -10,9 +10,6 @@ namespace Anon;
       $h='/Proc/temp'; $x=['file','kban','lock','logs','refs','sesn'];
       $cln=sesn('CLAN'); $hsh=sesn('HASH'); $usr=sesn('USER');
 
-      if(lock::exists("upkeep")&&!userDoes("lead sudo gang")&&isee("$h/refs")){return;}; // .. less is more
-      lock::create("upkeep"); // run upkeep only when another power-user is not running it already
-
       foreach($x as $d)
       {
          if(!is_dir("$h/$d")){pset("$h/$d/"); usleep(10000);}; $l=pget("$h/$d/"); if(!is_array($l)||(count($l)<1)){continue;};
@@ -32,6 +29,9 @@ namespace Anon;
          // if(!path::indx('/')){path::copy('/Proc/dcor/README.md','/README.md');};
       };
 
+
+      if(lock::exists("upkeep")&&!userDoes("lead sudo gang")&&isee("$h/refs")){return;}; // .. less is more
+      lock::create("upkeep"); // run upkeep only when another power-user is not running it already
 
       if(!isRepo('/'))
       {Repo::create('/'); wait(50);}
