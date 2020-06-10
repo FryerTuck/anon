@@ -181,24 +181,48 @@ namespace Anon;
 
 
 
-      function delete($a)
+      function delete($a='*')
       {
          $L=$this->vivify(false); $I=$this->mean; $P=$I->path; if(isAssa($a)){$a=knob($a,U);}; if(span($a)<1){return;};
-         $W=(isPath($P)?$P:'/'); if(!isText($a)&&!isKnob($a)){fail('expecting assoc-array, or string, or object');};
+         $W=(isPath($P)?$P:'/'); $n=['*','.','/','./','/*','./*'];
 
-         if(isKnob($a)&&($a->using||$a->erase))
+
+         if(isText($a))
          {
-            $u=$a->using; $e=$a->erase; if($u&&!isPath($u)){if(!isPath("/$u")){fail('invalid `using` clause');}; $u="./$u";};
-            if($e&&!isPath($e)){if(!isPath("/$e")){fail('invalid `erase` clause');}; $e="./$e";};
-            if($u){$W=path::fuse($W,$u);}; if($e){$W=path::fuse($W,$e);};
-         }
-         else
-         {
-            if($a==='/'){$a='*';}; if($a==='*'){$a='';}; if($a&&!isPath($a)){if(!isPath("/$a")){fail("invalid filename `$a`");}; $a="./$a";};
-            if($a){$W=path::fuse($W,$a);};
+            if($a===""){continue;}; if(isin($n,$a)){$a="";};
+            if(($a!=="")&&!isPath($a)){if(!isPath("/$a")){fail::ftpPlug("invalid filename `$a`");}; $a="./$a";};
+            if($a!==""){$W=path::fuse($W,$a);}; $L->rdel($W); if($L->fail){fail::ftpPlug($L->fail);};
+            return true;
          };
 
-         $L->rdel($W); if($L->fail){fail($L->fail);}; return true;
+
+         if(isNuma($a))
+         {
+             $r=true; foreach($a as $e){$r=$this->delete($e); if(!$r){break;}};
+             if(!$r){$f=$L->fail; fail::ftpPlug($f?$f:"unknown error"); exit;};
+             return $r;
+         };
+
+
+         if(isKnob($a))
+         {
+            $u=$a->using; $e=$a->erase; if(span($e)<1){return;}; if(!isNuma($e)){$e=[$e];};
+            if(span($u)<1)){$u=null;}; if(($u!==null)&&!isText($u)){fail::ftpPlug('invalid `using` clause'); exit;};
+            if(($u!==null)&&!isPath($u)&&!isPath("/$u")){fail::ftpPlug('invalid `using` clause'); exit;};
+            if(($u!==null)&&!isPath($u)&&!arg($u)->startsWith('./')){$u="./$u";}; $f=0; $r=true;
+            foreach($e as $i)
+            {
+                if(!isText($i,1)){continue;}; if($f||!$r){break;}; // nothing to do
+                $x=isin($n,$i); if(!$x&&!isPath($i)&&!isPath("/$i")){$f='invalid `erase` clause'; break;};
+                $i="./$i"; $d="$W"; if($u!==null){$d=path::fuse($d,$u);};
+                if(!$x){$d=path::fuse($d,$i);}; $r=$this->delete($d);
+            };
+            if($f||!$r){fail::ftpPlug($f?$f:$L->fail); exit;};
+            return true;
+         };
+
+
+         fail::ftpPlug('expecting any: text, numa, knob');
       }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------

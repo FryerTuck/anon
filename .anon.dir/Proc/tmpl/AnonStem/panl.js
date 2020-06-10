@@ -1,35 +1,35 @@
 "use strict";
 
 
-requires(['/AnonStem/bits/aard.css']);
+requires(["/AnonStem/bits/aard.css"]);
 
 
 
-select('#AnonAppsView').insert
+select("#AnonAppsView").insert
 ([
-   {panl:'#AnonStemPanlSlab', contents:
+   {panl:"#AnonStemPanlSlab", contents:
    [
-      {grid:'.AnonPanlSlab', contents:
+      {grid:".AnonPanlSlab", contents:
       [
          {row:
          [
-            {col:'.treeMenuView', contents:
+            {col:".treeMenuView", contents:
             [
                {grid:
                [
-                  {row:[{col:'.slabMenuHead', contents:'AnonStem'}]},
-                  {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
-                  {row:[{col:'.slabMenuBody', contents:[{panl:'#AnonStemTreeMenu'}]}]},
+                  {row:[{col:".slabMenuHead", contents:"AnonStem"}]},
+                  {row:[{col:".panlHorzLine", contents:[{hdiv:""}]}]},
+                  {row:[{col:".slabMenuBody", contents:[{panl:"#AnonStemTreeMenu"}]}]},
                ]}
             ]},
-            {col:'.panlVertDlim', role:'gridFlex', axis:X, target:'<', contents:{vdiv:''}},
+            {col:".panlVertDlim", role:"gridFlex", axis:X, target:"<", contents:{vdiv:""}},
             {col:
             [
                {grid:
                [
-                  {row:[{col:'#AnonStemHeadView .slabViewHead', contents:[{tabber:'#AnonStemTabber', theme:'.dark', target:'#AnonStemBodyPanl'}]}]},
-                  {row:[{col:'.panlHorzLine', contents:{hdiv:''}}]},
-                  {row:[{col:'.slabViewBody', contents:{panl:'#AnonStemBodyPanl'}}]},
+                  {row:[{col:"#AnonStemHeadView .slabViewHead", contents:[{tabber:"#AnonStemTabber", theme:".dark", target:"#AnonStemBodyPanl"}]}]},
+                  {row:[{col:".panlHorzLine", contents:{hdiv:""}}]},
+                  {row:[{col:".slabViewBody", contents:{panl:"#AnonStemBodyPanl"}}]},
                ]}
             ]},
          ]}
@@ -50,13 +50,13 @@ extend(Anon)
 
       init:function()
       {
-         Busy.edit('/AnonStem/panl.js',100);
+         Busy.edit("/AnonStem/panl.js",100);
       },
 
 
       open:function(p)
       {
-         dump('TODO :: AnonStem.open file: '+p);
+         dump("TODO :: AnonStem.open "+p);
       },
    }
 });

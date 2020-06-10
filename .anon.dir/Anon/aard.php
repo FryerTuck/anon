@@ -10,30 +10,16 @@ namespace Anon;
       static $meta;
 
 
-      static function vacuum($purl=null)
-      {
-          permit::fubu("clan:sudo,lead,gang,geek"); $post=knob($_POST);
-          if(!$purl){$purl=$post->purl;}; expect::purl($purl);
-      }
-
-
       static function deploy($purl=null,$vars=null)
       {
-          permit::fubu("clan:sudo,lead,gang,geek"); $post=knob($_POST);
+          permit::fubu('clan:sudo,lead,gang,geek'); $post=knob($_POST);
           if(!$purl){$purl=$post->purl; $vars=$post->vars;}; expect::purl($purl);
 
-          $code = pget("$/Anon/base/deploy.php");
-          $code = impose($code,'{:',':}',$vars);
+          $code = impose(pget('$/Anon/base/deploy.php'),'{:',':}',$vars);
+          $plug = plug($purl);
 
-          plug($purl)->delete
-          ([
-              erase => ['.htaccess','index.php'],
-          ]);
-
-          plug($purl)->insert
-          ([
-              "index.php"=>$code,
-          ]);
+          $plug->delete(['.htaccess','index.php','index.html']);
+          $plug->insert(['index.php'=>$code]);
       }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
