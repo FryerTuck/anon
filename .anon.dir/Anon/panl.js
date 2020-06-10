@@ -103,14 +103,21 @@ extend(Anon)
               purl("/Anon/remoteDeploy",{purl:tgt},(rsl)=>
               {
                   rsl=rsl.body; if(!((rsl||"").startsWith("https://"))){dump(rsl); return};
-                  popConfirm(`thumbs-up :: All is well : ## Success!\n>Anon was deployed successfully.`)
+                  popModal
                   ({
-                      "cool :: visit now":function()
-                      {
-                          window.open(this.root.trgt);
-                          this.root.exit();
-                      }
-                      .bind({trgt:rsl}),
+                      head:`thumbs-up :: Deployed!`,
+                      body:`### Good News!\n>Anon was deployed successfully.`,
+                      foot:
+                      [
+                          {butn:`.cool`, text:`visit now`, trgt:rsl, onclick:function()
+                          {
+                              window.open(this.trgt); this.root.exit();
+                          }},
+                          {butn:`.auto`, text:`maybe later`, trgt:rsl, onclick:function()
+                          {
+                              this.root.exit();
+                          }},
+                      ]
                   });
               });
           },
