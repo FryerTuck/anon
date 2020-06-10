@@ -7,11 +7,11 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function upkeep($dbs,$ldb,$tmn)
    {
-      // if(lock::exists("upkeep")&&!userDoes("lead sudo gang")){return;}; // only for power-users .. less is more
-      // lock::create("upkeep"); // run upkeep only when another power-user is not running it already
-
       $h='/Proc/temp'; $x=['file','kban','lock','logs','refs','sesn'];
       $cln=sesn('CLAN'); $hsh=sesn('HASH'); $usr=sesn('USER');
+
+      if(lock::exists("upkeep")&&!userDoes("lead sudo gang")&&isee("$h/refs")){return;}; // .. less is more
+      lock::create("upkeep"); // run upkeep only when another power-user is not running it already
 
       foreach($x as $d)
       {
@@ -53,7 +53,7 @@ namespace Anon;
           };
       };
 
-      if(userDoes("sudo lead geek"))
+      if(userDoes("sudo lead gang"))
       {
           $d=Repo::differ(); if($d){signal::AnonUpdate($d);};
       };
