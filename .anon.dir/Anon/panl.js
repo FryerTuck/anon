@@ -103,8 +103,11 @@ extend(Anon)
               purl("/Anon/remoteDeploy",{purl:tgt},(rsl)=>
               {
                   rsl=rsl.body; if(!((rsl||"").startsWith("https://"))){dump(rsl); return};
-                  popAlert("thumb-up :: All is well : Anon was deployed successfully",4);
-                  tick.after(1000,()=>{window.open(rsl);});
+                  popConfirm(`thumbs-up :: All is well : ## Success!\n>Anon was deployed successfully.`)
+                  ({
+                      "cool :: visit now":function()
+                      {window.open(rsl);};
+                  });
               });
           },
       }
