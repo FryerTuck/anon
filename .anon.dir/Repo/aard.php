@@ -18,7 +18,7 @@ namespace Anon;
          {
              $u=exec::{"whoami"}($h); $g=exec::{"id -gn"}($h); path::make("$x/");
              exec::{"git init --bare --shared"}($x);  exec::{"cp hooks/post-update.sample hooks/post-update"}($x);
-             exec::{"git update-server-info"}($x);  exec::{"chown -R $u:$g"}($x);
+             exec::{"git update-server-info"}($x);  exec::{"chown -R $u:$g ."}($x);
              if($o===BARE){return OK;};  if(!$o){$o=path($x);};
          };
 
