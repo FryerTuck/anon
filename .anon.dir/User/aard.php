@@ -173,7 +173,8 @@ namespace Anon;
             if(!isee("$h/root"))
             {
                $b=conf('Code/forkName'); if(!is_funnic($b)){fail("invalid branch name in Code config");};
-               if(!isRepo('/')){Repo::create('/'); wait(50);}; Repo::cloned('/',"$h/root",$b,$u);
+               if(!isRepo('/')){Repo::create('/'); wait(50);};
+               // Repo::cloned('/',"$h/root",$b,$u);
             };
          };
 

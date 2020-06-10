@@ -86,7 +86,7 @@ extend(Anon)
                   ]},
                ]}]}
              ]}]},
-             {row:[{col:[{panl:`.AnonToolBody`, $:
+             {row:[{col:[{panl:`.AnonPanlBody`, $:
              [
              ]}]}]},
          ]});
@@ -95,10 +95,17 @@ extend(Anon)
 
       tool:
       {
-          remoteDeploy:function(tgt)
+          remoteDeploy:function(bdy, tgt)
           {
-              tgt=tgt.select(".AnonToolBody")[0];
-              tgt.innerHTML="test 1";
+              bdy=bdy.select(".AnonToolBody")[0]; bdy.innerHTML="";
+              tgt=bdy.select("#deployPurl").value;
+
+              purl("/Anon/remoteDeploy",{purl:tgt},(rsl)=>
+              {
+                  rsl=rsl.body; if((rsl||"").startsWith("https://")){dump(rsl); return};
+                  popAlert("thumb-up :: All is well : Anon was deployed successfully",4);
+                  window.open(rsl);
+              });
           },
       }
    }
