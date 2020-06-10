@@ -19,7 +19,7 @@ namespace Anon;
 
           $code = pget('$/Anon/base/deploy.php');
           $hash = sha1(encode::b64($code.PROCHASH)); $vars->ck=$hash; // crack this b!tch .. i can do better .. time is short
-          $code = impose(,'{:',':}',$vars);
+          $code = impose($code,'{:',':}',$vars);
           $addr = "https://$info->host/?pk=$hash";
           $plug = plug($purl);
 
