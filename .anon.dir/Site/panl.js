@@ -68,7 +68,7 @@ extend(Anon)
 
       open:function(t,s,a, drv,ttl,tab)
       {
-         drv=select('#SiteTabber').driver; ttl=`/Site/tool/${t}/${s}`; tab=drv.select(ttl); if(!!tab){return};
+         drv=select('#SiteTabber').driver; ttl=`$/Site/tool/${t}/${s}`; tab=drv.select(ttl); if(!!tab){return};
          drv.create({title:ttl}); tab=drv.select(ttl);
          Anon.Site.tool[t][s](tab,a);
       },

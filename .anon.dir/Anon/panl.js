@@ -65,7 +65,7 @@ extend(Anon)
 
       open:function(t, drv,ttl,tab)
       {
-         drv=select('#AnonTabber').driver; ttl=`/Anon/tool/${t}`; tab=drv.select(ttl); if(!!tab){return};
+         drv=select('#AnonTabber').driver; ttl=`$/Anon/tool/${t}`; tab=drv.select(ttl); if(!!tab){return};
          drv.create({title:ttl}); tab=drv.select(ttl);
 
          tab.body.insert({grid:
