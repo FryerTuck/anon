@@ -13,11 +13,16 @@ namespace Anon;
       static function remoteDeploy($purl=null,$vars=null)
       {
           permit::fubu('clan:sudo,lead,gang,geek'); $post=knob($_POST);
-          if(!$purl){$purl=$post->purl; $vars=$post->vars;};
-          expect::purl($purl); $info=path::info($purl); $addr="https://$info->host";
+          if(!$purl){$purl=$post->purl; $vars=$post->vars;}; if(!isKnob($vars)){$vars=knob();};
+          expect::purl($purl); $info=path::info($purl);
 
-          $code = impose(pget('$/Anon/base/deploy.php'),'{:',':}',$vars);
-          $plug = plug($purl);  $plug->vivify();
+          $code = pget('$/Anon/base/deploy.php');
+          $hash = sha1(encode::b64($code.PROCHASH)); $vars->ck=$hash; // crack this b!tch .. i can do better .. time is short
+          $code = impose(,'{:',':}',$vars);
+          $addr = "https://$info->host/?pk=$hash";
+          $plug = plug($purl);
+
+          $plug->vivify();
 
           if(!$plug->link){$f=$plug->fail; if(!$f){$f="connection failure";}; fail::remoteDeploy($f); exit;};
           signal::busy(['with'=>'remoteDeploy','done'=>10]);
@@ -30,8 +35,12 @@ namespace Anon;
           if(!$done){fail::remoteDeploy('unable to insert remote auto-handler'); exit;};
           signal::busy(['with'=>'remoteDeploy','done'=>30]);
 
+          $plug->pacify();
+
           $done = spuf($addr);
           if($done!==OK){fail::remoteDeploy("deployment failed\n\n$done"); exit;};
+          signal::busy(['with'=>'remoteDeploy','done'=>100]);
+
           return $addr;
       }
    }
