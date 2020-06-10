@@ -191,15 +191,15 @@ namespace Anon;
          {
             if($a===""){return;}; if(isin($n,$a)){$a="";};
             if(($a!=="")&&!isPath($a)){if(!isPath("/$a")){fail::ftpPlug("invalid filename `$a`");}; $a="./$a";};
-            if(($a!=="")&&!$deja){$W=path::fuse($W,$a);};
-            $L->rdel($W); if($L->fail){fail::ftpPlug($L->fail);};
+            if(($a!=="")&&!$deja){$W=path::fuse($W,$a);}else{$W="$a";};
+            $L->rdel($W); $f=$L->fail; if(!isin($f,'o such file or dir')){fail::ftpPlug($f); exit;};
             return true;
          };
 
 
          if(isNuma($a))
          {
-             $r=true; foreach($a as $e){$r=$this->delete($e,1); if(!$r){break;}};
+             $r=true; foreach($a as $i){$d=path::fuse($W,$i); $r=$this->delete($d,1); if(!$r){break;}};
              if(!$r){$f=$L->fail; fail::ftpPlug($f?$f:"unknown error"); exit;};
              return $r;
          };
