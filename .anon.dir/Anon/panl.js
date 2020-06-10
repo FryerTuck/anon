@@ -109,9 +109,9 @@ extend(Anon)
                       {
                           window.open(this.root.trgt);
                           this.root.exit();
-                      },
-                  })
-                  .trgt=rsl;
+                      }
+                      .bind({trgt:rsl}),
+                  });
               });
           },
       }
