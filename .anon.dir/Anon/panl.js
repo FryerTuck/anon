@@ -106,8 +106,12 @@ extend(Anon)
                   popConfirm(`thumbs-up :: All is well : ## Success!\n>Anon was deployed successfully.`)
                   ({
                       "cool :: visit now":function()
-                      {window.open(rsl);};
-                  });
+                      {
+                          window.open(this.root.trgt);
+                          this.root.exit();
+                      };
+                  })
+                  .trgt=rsl;
               });
           },
       }
