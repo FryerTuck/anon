@@ -192,7 +192,7 @@ namespace Anon;
             if($a===""){return;}; if(isin($n,$a)){$a="";};
             if(($a!=="")&&!isPath($a)){if(!isPath("/$a")){fail::ftpPlug("invalid filename `$a`");}; $a="./$a";};
             if(($a!=="")&&!$deja){$W=path::fuse($W,$a);}else{$W="$a";};
-            $L->rdel($W); $f=$L->fail; if(!isin($f,'o such file or dir')){fail::ftpPlug($f); exit;};
+            $L->rdel($W); $f=$L->fail; if($f&&!isin($f,['o such file or dir'])){fail::ftpPlug($f); exit;};
             return true;
          };
 
