@@ -48,6 +48,7 @@ extend(Anon)
       {
       },
 
+
       init:function(mnu)
       {
          Busy.edit("/Anon/panl.js",100);
@@ -89,8 +90,6 @@ extend(Anon)
              [
              ]}]}]},
          ]});
-
-         Anon.Anon.tool[t](tab);
       },
 
 
