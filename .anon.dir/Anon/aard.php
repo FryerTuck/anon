@@ -35,13 +35,16 @@ namespace Anon;
           $done = $plug->insert(['index.php'=>$code]);
           if(!$done){fail::remoteDeploy('unable to insert remote auto-handler'); exit;};
           signal::busy(['with'=>'remoteDeploy','done'=>60]);
-          $done = $plug->delete(['index.php']);
-          signal::busy(['with'=>'remoteDeploy','done'=>80]);
-
-          $plug->pacify();
 
           $done = spuf($addr);
           if($done!==OK){fail::remoteDeploy("deployment failed\n\n$done"); exit;};
+          signal::busy(['with'=>'remoteDeploy','done'=>80]);
+
+          $done = $plug->delete(['index.php']);
+          signal::busy(['with'=>'remoteDeploy','done'=>90]);
+
+          $plug->pacify();
+
           signal::busy(['with'=>'remoteDeploy','done'=>100]);
 
           return $addr;
