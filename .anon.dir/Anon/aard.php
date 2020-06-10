@@ -36,7 +36,8 @@ namespace Anon;
           if(!$done){fail::remoteDeploy('unable to insert remote auto-handler'); exit;};
           signal::busy(['with'=>'remoteDeploy','done'=>60]);
 
-          $done = spuf($addr);
+          $done = spuf($addr,null,null,55);
+//      spuf($uri,$uas=null,$ref=null,$tmo=12,$bin=0)
           if($done!==OK){fail::remoteDeploy("deployment failed\n\n$done"); exit;};
           signal::busy(['with'=>'remoteDeploy','done'=>80]);
 
