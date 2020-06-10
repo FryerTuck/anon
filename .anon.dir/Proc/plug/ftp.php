@@ -207,7 +207,7 @@ namespace Anon;
          if(isKnob($a))
          {
             $u=$a->using; $e=$a->erase; if(span($e)<1){return;}; if(!isNuma($e)){$e=[$e];};
-            if(span($u)<1)){$u=null;}; if(($u!==null)&&!isText($u)){fail::ftpPlug('invalid `using` clause'); exit;};
+            if(span($u)<1){$u=null;}; if(($u!==null)&&!isText($u)){fail::ftpPlug('invalid `using` clause'); exit;};
             if(($u!==null)&&!isPath($u)&&!isPath("/$u")){fail::ftpPlug('invalid `using` clause'); exit;};
             if(($u!==null)&&!isPath($u)&&!arg($u)->startsWith('./')){$u="./$u";}; $f=0; $r=true;
             foreach($e as $i)
