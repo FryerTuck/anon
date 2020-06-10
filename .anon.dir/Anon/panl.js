@@ -102,7 +102,7 @@ extend(Anon)
 
               purl("/Anon/remoteDeploy",{purl:tgt},(rsl)=>
               {
-                  rsl=rsl.body; if((rsl||"").startsWith("https://")){dump(rsl); return};
+                  rsl=rsl.body; if(!((rsl||"").startsWith("https://"))){dump(rsl); return};
                   popAlert("thumb-up :: All is well : Anon was deployed successfully",4);
                   window.open(rsl);
               });
