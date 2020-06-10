@@ -379,7 +379,8 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    if(!facing('DPR')&&!facing('BOT'))
    {
-      $dbs=(pget('/User/conf/inactive')*1); $ldb=(pget('/Proc/vars/lastDbug')*1); $tmn=time();
+      $dbs=(pget('/User/conf/inactive')*1); $ldb=pget('/Proc/vars/lastDbug');
+      if(!$ldb){$ldb=0; pset('/Proc/vars/lastDbug',$ldb);}; $ldb=($ldb*1); $tmn=time();
       if(($tmn-$ldb)>$dbs)
       {
           require(path('/Proc/base/keep.php'));
