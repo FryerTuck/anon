@@ -254,7 +254,7 @@
                       purl("/Proc/update",(r)=>
                       {
                           Busy.edit("AnonUpdate",100); r=r.body;
-                          if(r==OK){popAlert(`updates applied successfully`,4); s.root.exit(); return};
+                          if(r==OK){s.root.exit(); return};
                           fail("AnonUpdateError: ".r); s.root.exit();
                       });
                   }},
