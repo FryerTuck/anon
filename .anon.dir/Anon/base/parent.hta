@@ -1,14 +1,14 @@
 RewriteEngine on
 RewriteBase /
 
-RewriteCond %{HTTP_HOST} ^(.*)\.winelandsgas\.co\.za
+RewriteCond %{HTTP_HOST} ([a-z0-9]+)\.
 RewriteRule ^(.*)$ - [E=BASE:%1]
 
 RewriteCond %{DOCUMENT_ROOT}/%{ENV:BASE}/.anon.php -f
-RewriteRule ^(.*)$ %{ENV:BASE}/.anon.php [L,NC,QSA]
+RewriteRule ^(.*)$ %{ENV:BASE}/.anon.php [L,QSA]
 
 RewriteCond %{DOCUMENT_ROOT}/%{ENV:BASE}/index.php -f
-RewriteRule ^(.*)$ %{ENV:BASE}/index.php [L,NC,QSA]
+RewriteRule ^(.*)$ %{ENV:BASE}/index.php [L,QSA]
 
 RewriteCond %{DOCUMENT_ROOT}/%{ENV:BASE}/index.html -f
-RewriteRule ^(.*)$ %{ENV:BASE}/index.html [L,NC,QSA]
+RewriteRule ^(.*)$ %{ENV:BASE}/index.html [L,QSA]
