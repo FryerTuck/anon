@@ -97,7 +97,7 @@ extend(Anon)
       {
           remoteDeploy:function(bdy, tgt)
           {
-              bdy=bdy.select(".AnonToolBody")[0]; bdy.innerHTML="";
+              bdy=bdy.select(".AnonPanlBody")[0]; bdy.innerHTML="";
               tgt=bdy.select("#deployPurl").value;
 
               purl("/Anon/remoteDeploy",{purl:tgt},(rsl)=>
