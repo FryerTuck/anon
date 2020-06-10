@@ -1575,7 +1575,7 @@
          if(btn.length<2){radd(btn,{butn:'', text:'Cancel'})};
          parsed(txt,'markdown',(msg)=>
          {
-            popModal({class:'AnonPopAlert', theme:this.skn, size:this.sze})
+            let modl = popModal({class:'AnonPopAlert', theme:this.skn, size:this.sze})
             ({
                head:[{icon:this.ico},this.ttl],
                body:
@@ -1585,6 +1585,7 @@
                ],
                foot:btn,
             });
+            return modl;
          });
       }
       .bind({ttl:titl,msg:mesg,skn:skin,tne:(tone||'auto'),ico:(icon||'question-circle'),sze:size});
