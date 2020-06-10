@@ -181,7 +181,7 @@ namespace Anon;
 
 
 
-      function delete($a='*')
+      function delete($a='*',$deja=0)
       {
          $L=$this->vivify(false); $I=$this->mean; $P=$I->path; if(isAssa($a)){$a=knob($a,U);}; if(span($a)<1){return;};
          $W=(isPath($P)?$P:'/'); $n=['*','.','/','./','/*','./*'];
@@ -191,14 +191,15 @@ namespace Anon;
          {
             if($a===""){return;}; if(isin($n,$a)){$a="";};
             if(($a!=="")&&!isPath($a)){if(!isPath("/$a")){fail::ftpPlug("invalid filename `$a`");}; $a="./$a";};
-            if($a!==""){$W=path::fuse($W,$a);}; $L->rdel($W); if($L->fail){fail::ftpPlug($L->fail);};
+            if(($a!=="")&&!$deja){$W=path::fuse($W,$a);};
+            $L->rdel($W); if($L->fail){fail::ftpPlug($L->fail);};
             return true;
          };
 
 
          if(isNuma($a))
          {
-             $r=true; foreach($a as $e){$r=$this->delete($e); if(!$r){break;}};
+             $r=true; foreach($a as $e){$r=$this->delete($e,1); if(!$r){break;}};
              if(!$r){$f=$L->fail; fail::ftpPlug($f?$f:"unknown error"); exit;};
              return $r;
          };
@@ -215,7 +216,7 @@ namespace Anon;
                 if(!isText($i,1)){continue;}; if($f||!$r){break;}; // nothing to do
                 $x=isin($n,$i); if(!$x&&!isPath($i)&&!isPath("/$i")){$f='invalid `erase` clause'; break;};
                 $i="./$i"; $d="$W"; if($u!==null){$d=path::fuse($d,$u);};
-                if(!$x){$d=path::fuse($d,$i);}; $r=$this->delete($d);
+                if(!$x){$d=path::fuse($d,$i);}; $r=$this->delete($d,1);
             };
             if($f||!$r){fail::ftpPlug($f?$f:$L->fail); exit;};
             return true;
