@@ -189,7 +189,7 @@ namespace Anon;
 
          if(isText($a))
          {
-            if($a===""){continue;}; if(isin($n,$a)){$a="";};
+            if($a===""){return;}; if(isin($n,$a)){$a="";};
             if(($a!=="")&&!isPath($a)){if(!isPath("/$a")){fail::ftpPlug("invalid filename `$a`");}; $a="./$a";};
             if($a!==""){$W=path::fuse($W,$a);}; $L->rdel($W); if($L->fail){fail::ftpPlug($L->fail);};
             return true;
