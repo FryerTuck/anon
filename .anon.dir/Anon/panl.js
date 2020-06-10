@@ -106,7 +106,7 @@ extend(Anon)
                   popModal
                   ({
                       head:`thumbs-up :: Deployed!`,
-                      body:`### Good News!\n>Anon was deployed successfully.`,
+                      body:[{panl:`### Good News!\n>Anon was deployed successfully.`, format:"markdown"}],
                       foot:
                       [
                           {butn:`.cool`, text:`visit now`, trgt:rsl, onclick:function()
