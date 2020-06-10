@@ -106,16 +106,16 @@ extend(Anon)
                   popModal
                   ({
                       head:`thumbs-up :: Deployed!`,
-                      body:
+                      body:[{panl:
                       [
                           {h2:`Good News!`},
                           {p:`Anon was deployed successfully.`}
-                      ],
+                      ]}],
                       foot:
                       [
                           {butn:`.cool`, text:`visit now`, trgt:rsl, onclick:function()
                           {
-                              window.open(this.trgt); this.root.exit();
+                              window.open(this.trgt.split('?')[0]); this.root.exit();
                           }},
                           {butn:`.auto`, text:`maybe later`, trgt:rsl, onclick:function()
                           {
