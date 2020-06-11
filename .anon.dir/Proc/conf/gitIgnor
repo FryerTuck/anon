@@ -28,6 +28,7 @@
 /User/vote/*
 !/User/data/anonymous/*
 !/User/data/master/*
+/User/data/master/pass
 /User/conf/autoMail
 
 /Repo/data/*
