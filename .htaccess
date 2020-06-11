@@ -95,9 +95,13 @@
       </IfModule>
 
       RewriteCond %{HTTP_USER_AGENT} %{ENV:BOTMATCH} [NC,OR]
-      RewriteCond %{DOCUMENT_ROOT}/%{ENV:BASE}/%{ENV:DBUGPATH} !-f
-      RewriteRule ^ - [R=503,L,S=1]
+      RewriteRule ^ - [R=503,L]
+
+      RewriteCond %{DOCUMENT_ROOT}/%{ENV:DBUGPATH} -f
       RewriteRule ^(.*)$ %{ENV:DBUGPATH} [L]
+
+      RewriteCond %{DOCUMENT_ROOT}/%{ENV:BASE}/%{ENV:DBUGPATH} -f
+      RewriteRule ^(.*)$ %{ENV:BASE}/%{ENV:DBUGPATH} [L]
 
 #     ... YOU HAVE DIED ... let's be discreet about it; the world does not need to know our shame
    </IfModule>
