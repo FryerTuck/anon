@@ -311,7 +311,7 @@ namespace Anon;
          $o=trim(stream_get_contents($x[1])); fclose($x[1]); $e=trim(stream_get_contents($x[2])); fclose($x[2]);
          $z=trim(proc_close($r)); if($z){$z=(($e&&$o)?"$e ..\n$o":($e?$e:$o));};
          if(!$z){wait(1); return $o;}; // success!
-         $f=1; foreach(self::$dbug as $ends){if(arg($z)->endsWith($ends)){$f=0;break}}; // look for msgs to shut up about
+         $f=1; foreach(self::$dbug as $ends){if(arg($z)->endsWith($ends)){$f=0;break;}}; // look for msgs to shut up about
          if(!$f){return (($o!=='')$o:$z);}; // found a shusher mesg .. don't cry, just return whatever is in output
          $s=stak(); dbug::$temp=$s; // debug below
          throw new \Exception("$z");
