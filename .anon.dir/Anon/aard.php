@@ -45,7 +45,7 @@ namespace Anon;
           signal::busy(['with'=>'remoteDeploy','done'=>60]);
           $done = spuf($host);
 
-          if(isin($done,'503 Service Unavailable'))
+          if(isin($done,['503 Service Unavailable','<title>Index of /</title>']))
           {
               $done = $plug->delete(['.htaccess']);
               signal::busy(['with'=>'remoteDeploy','done'=>70]);
