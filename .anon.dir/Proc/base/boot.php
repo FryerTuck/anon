@@ -410,11 +410,11 @@ namespace Anon;
 
 
 
-# dbug :: keep : housekeeping
+# dbug :: keep : housekeeping .. run regularly - but only if appropriate .. and at least once per user session time
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    if(!facing('DPR')&&!facing('BOT'))
    {
-      $dbs=(pget('/User/conf/inactive')*1); $ldb=pget('/Proc/vars/lastDbug');
+      $dbs=ceil((pget('/User/conf/inactive')*1)/2); $ldb=pget('/Proc/vars/lastDbug');
       if(!$ldb){$ldb=0; pset('/Proc/vars/lastDbug',$ldb);}; $ldb=($ldb*1); $tmn=time();
       if(($tmn-$ldb)>$dbs)
       {
