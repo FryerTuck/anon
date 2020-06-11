@@ -25,18 +25,20 @@ $export=function($a,$u,$d)
       $cl=[]; foreach($co as $cn => $cv){$cl[]="- **$cn** - $cv";}; $cl=implode("\n",$cl); $vc=knob(dval(pget('/User/conf/viewConf')));
       $ck=$vc->toggleUserPanl; if(isin($ck,'`')){$ck="` $ck `";};
 
-      Proc::signal('busy',['with'=>"mail",'done'=>1]); wait(510);
+      pset("$h/name",$u); pset("$h/pass",$x); pset("$h/mail",$m); pset("$h/clan",implode(',',$d->clan));
+      pset("$h/face",'/User/dcor/mug2.jpg'); pset("$h/rate",'0'); $v=['userName'=>$u]; $p="$h/home/boot"; pset("$p/");
+      pset("$p/hack.js",import('/User/tmpl/bootHack.js',$v)); pset("$p/skin.css",import('/User/tmpl/bootSkin.css',$v));
+      Proc::signal('madeUser',['nick'=>$u,'mail'=>$m,'clan'=>$cl]);
+
+      signal::busy(['with'=>"mail",'done'=>50]);
       xeno::sendMarkDownMail
       ([
          'destAddy'=>$m, 'mesgBody'=>'/User/note/userMadeMail.md',
          'varsUsed'=>['username'=>$u, 'password'=>$p, 'clanList'=>$cl, 'ctrlKeys'=>$ck],
          'runDebug'=>true,
       ]);
+      signal::busy(['with'=>"mail",'done'=>100]);
 
-      pset("$h/name",$u); pset("$h/pass",$x); pset("$h/mail",$m); pset("$h/clan",implode(',',$d->clan));
-      pset("$h/face",'/User/dcor/mug2.jpg'); pset("$h/rate",'0'); $v=['userName'=>$u]; $p="$h/home/boot"; pset("$p/");
-      pset("$p/hack.js",import('/User/tmpl/bootHack.js',$v)); pset("$p/skin.css",import('/User/tmpl/bootSkin.css',$v));
-      Proc::signal('madeUser',['nick'=>$u,'mail'=>$m,'clan'=>$cl]); Proc::signal('done');
       ekko(OK);
    };
 
