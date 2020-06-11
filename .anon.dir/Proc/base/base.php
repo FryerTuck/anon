@@ -766,35 +766,6 @@ namespace Anon;
 
 
 
-# tool :: arg : returns object with methods that are both grammatical and functional .. e.g.  arg($a)->endsWith($b);
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-   class arg
-   {
-      private $xarg;
-
-      function __construct($a){$this->xarg=$a;}
-
-      public function endsWith($b)
-      {
-         $a=$this->xarg; if(!is_string($a)||!is_string($b)){return;}; $s=strlen($b); if(strlen($a)<$s){return false;};
-         return (substr($a,(0-$s),$s)===$b);
-      }
-
-      public function startsWith($b)
-      {
-         $a=$this->xarg; if(!is_string($a)||!is_string($b)){return;}; $s=strlen($b); if(strlen($a)<$s){return false;};
-         return (substr($a,0,$s)===$b);
-      }
-   }
-
-
-   function arg($a){return (new arg($a));}
-   function that($a){return (new arg($a));}
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-
 # func :: numr : turn any numeric(ish) text into a number .. returns unchanged-number if number given .. returns null if number not found
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function numr($d)
