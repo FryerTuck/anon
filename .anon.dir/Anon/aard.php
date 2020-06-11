@@ -52,23 +52,14 @@ namespace Anon;
               $plug->insert(['.htaccess'=>pget('$/Anon/base/access.cfg')]);
               signal::busy(['with'=>'remoteDeploy','done'=>80]);
               $done = spuf($host);
-              ekko("\n\n----------ALT-BEGIN----------\n$done\n----------ALT-END----------\n\n");
           };
 
-          signal::busy(['with'=>'remoteDeploy','done'=>100]);
-
-
           $plug->pacify();
-
-
-          ekko("\n\n----------BEGIN----------\n$done\n----------END----------\n\n");
-
-
           signal::busy(['with'=>'remoteDeploy','done'=>90]);
+          $chek = base64_encode(pget('/Proc/base/busy.htm'));
 
-
+          if(!isin($done($chek))){fail::remoteDeploy("response test was unsuccesful"); exit;};
           signal::busy(['with'=>'remoteDeploy','done'=>100]);
-
           return $addr;
       }
    }
