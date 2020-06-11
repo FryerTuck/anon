@@ -44,12 +44,12 @@ namespace Anon;
           if($lo===$fa)
           {
               exec::{"git remote rename origin fromAnon"}('/');
-              exec::{"git remote add origin $lr"}('/');
+              exec::{"git remote set-url origin $lr"}('/');
           }
           else
           {
               $ao=Repo::getURL('/','fromAnon');
-              if(!$ao){exec::{"git remote add fromAnon $fa"}('/');};
+              if(!$ao){exec::{"git remote set-url fromAnon $fa"}('/');};
           };
       };
 

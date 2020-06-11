@@ -46,13 +46,22 @@
       RewriteCond %{HTTP_HOST} ^[^.]+\.[^.]+$
       RewriteRule ^ %{REQUEST_SCHEME}://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
-    RewriteCond %{HTTP_HOST} ([a-z0-9]+)\.
-    RewriteRule ^(.*)$ - [E=BASE:%1]
+      RewriteCond %{HTTP_HOST} ([a-z0-9]+)\.
+      RewriteRule ^(.*)$ - [E=BASE:%1]
 
       RewriteRule .* - [E=DBUGPATH:.anon.dir/Proc/base/dbug.htm]
       RewriteRule .* - [E=BOTMATCH:bot|crawl|fetch|find|grab|scan|search|site|slurp|spider|wget|curl]
 
+      <IfModule mod_php.c>
+         RewriteRule .* - [E=MODPHP:1]
+      </IfModule>
       <IfModule mod_php_null.c>
+         RewriteRule .* - [E=MODPHP:1]
+      </IfModule>
+      <IfModule mod_php.c>
+         RewriteRule .* - [E=MODPHP:1]
+      </IfModule>
+      <IfModule mod_php_x.c>
          RewriteRule .* - [E=MODPHP:1]
       </IfModule>
       <IfModule mod_php7.c>
