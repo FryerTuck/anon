@@ -20,7 +20,8 @@ namespace Anon;
           $code = pget('$/Anon/base/deploy.php');
           $hash = sha1(encode::b64($code.PROCHASH)); $vars->ck=$hash; // crack this b!tch .. i can do better .. time is short
           $code = impose($code,'{:',':}',$vars);
-          $addr = "https://$info->host/?pk=$hash";
+          $host = "https://$info->host";
+          $addr = "$host/?pk=$hash";
           $plug = plug($purl);
 
           $plug->vivify();
@@ -34,17 +35,37 @@ namespace Anon;
 
           $done = $plug->insert(['index.php'=>$code]);
           if(!$done){fail::remoteDeploy('unable to insert remote auto-handler'); exit;};
-          signal::busy(['with'=>'remoteDeploy','done'=>60]);
+          signal::busy(['with'=>'remoteDeploy','done'=>50]);
 
           $done = spuf($addr,null,null,55);
 //      spuf($uri,$uas=null,$ref=null,$tmo=12,$bin=0)
           if($done!==OK){fail::remoteDeploy("deployment failed\n\n$done"); exit;};
-          signal::busy(['with'=>'remoteDeploy','done'=>80]);
 
           $done = $plug->delete(['index.php']);
-          signal::busy(['with'=>'remoteDeploy','done'=>90]);
+          signal::busy(['with'=>'remoteDeploy','done'=>60]);
+          $done = spuf($host);
+
+          if(isin($done,'503 Service Unavailable'))
+          {
+              $done = $plug->delete(['.htaccess']);
+              signal::busy(['with'=>'remoteDeploy','done'=>70]);
+              $plug->insert(['.htaccess'=>pget('$/Anon/base/access.cfg')]);
+              signal::busy(['with'=>'remoteDeploy','done'=>80]);
+              $done = spuf($host);
+              ekko("\n\n----------ALT-BEGIN----------\n$done\n----------ALT-END----------\n\n");
+          };
+
+          signal::busy(['with'=>'remoteDeploy','done'=>100]);
+
 
           $plug->pacify();
+
+
+          ekko("\n\n----------BEGIN----------\n$done\n----------END----------\n\n");
+
+
+          signal::busy(['with'=>'remoteDeploy','done'=>90]);
+
 
           signal::busy(['with'=>'remoteDeploy','done'=>100]);
 
