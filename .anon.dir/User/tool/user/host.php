@@ -74,7 +74,7 @@ $export=function($a,$u,$d)
          if(($u!==user('name'))&&!isin($cuc,['gang','lead','sudo'])){ekko("only `$u` and gangers, leaders, sudoers can do that");};
          path::make("$h/mail",$m); if(isRepo("$h/home/root")){exec::{"git config --local user.email \"$m\""}("$h/home/root");};
          // if the user has other repositories, then the above should be done for each
-         ekko('OK');
+         ekko(OK);
       };
 
       if($d->name)
@@ -104,6 +104,17 @@ $export=function($a,$u,$d)
    if($a==='list')
    {
       $r=pget('/User/data'); $r=fuse($r,"\n"); ekko($r);
+   };
+
+
+
+   if($a==='void')
+   {
+      if(!userDoes("sudo lead")){ekko("only leaders and sudoers can do that"); exit;};
+      if(!isee($h)){ekko("user `$u` is undefined"); exit;};  $s=find::sesnByUser($u);
+      signal::ClientReboot("user deleted","#$u"); wait(250);
+      if($s){path::void("/Proc/temp/sesn/$s");}; path::void($h);
+      ekko(OK);
    };
 
 
