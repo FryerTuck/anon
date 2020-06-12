@@ -46,7 +46,8 @@ namespace Anon;
       static function getURL($lp='/',$rn='origin')
       {
           expect::repo($lp); expect::word($rn);
-          $r=null; try{$r=exec::{"git remote get-url $rn"}($lp);}catch(\Exception $e){};
+          // $r=null; try{$r=exec::{"git remote get-url $rn"}($lp);}catch(\Exception $e){};
+          $r=null; try{$r=exec::{"git config remote.$rn.url"}($lp);}catch(\Exception $e){};
           if($r){$r=swap($r,[COREPATH,ROOTPATH],''); if(!$r){$r='/';};};
           return $r;
       }
