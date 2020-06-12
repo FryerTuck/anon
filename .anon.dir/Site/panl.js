@@ -90,31 +90,9 @@ extend(Anon)
                           {row:
                           [
                              {col:[{input:`#browseIndx .toolTextFeed .dark`, demo:`0`, title:`start from`}]},
-                             {col:[{butn:`#browseButn .AnonToolButn`, icon:`eye`, onclick:function(){this.exec()}, exec:function()
-                             {
-                                 let frm=((select(`#browseIndx`).value.trim()*1)||0);
-                                 if(!isInum(frm)){popAlert(`invalid "start from" number`);return};
-                                 // Busy.edit(`/Site/importBrowse`,0);
-                                 purl(`Site/importBrowse`,{from:frm},(rsp)=>
-                                 {
-                                     rsp=decode.jso(rsp.body);  let bdy=select(`#SiteBrwsBody`);
-                                     bdy.innerHTML=""; rsp.forEach((o)=>
-                                     {
-                                         bdy.insert({wrap:
-                                         [
-                                             {div:`.tmplItem .spanBoth`,
-                                                style:{backgroundImage:`url('${o.face}')`},
-                                                title:o.name,
-                                                targt:o.href,
-                                                onclick:function()
-                                                {
-                                                    Anon.Site.open(`import`,`fromURL`,this.targt);
-                                                }
-                                             }
-                                         ]});
-                                     });
-                                 });
-                             }}]},
+                             {col:[{butn:`#browseButn .AnonToolButn`, icon:`eye`,
+                                 onclick:function(){Anon.Site.import.lazyLoad()}}
+                             ]},
                           ]},
                        ]}]}
                      ]}]},
@@ -123,7 +101,42 @@ extend(Anon)
                      ]}]}]},
                 ]});
 
-                select(`#browseButn`).exec();
+                select(`#SiteBrwsBody`).listen(`scroll`,function()
+                {
+                    let sh,st; sh=this.scrollHeight; st=this.scrollTop;
+                    if(!sh||!st){return}; if((st/sh)>0.8){Anon.Site.import.lazyLoad();};
+                });
+                Anon.Site.import.lazyLoad();
+             },
+
+
+             lazyLoad:function(idx, frm,bdy,ldd)
+             {
+                 frm=((select(`#browseIndx`).value.trim()*1)||0);
+                 if(!isInum(frm)){popAlert(`invalid "start from" number`);return};
+                 bdy=select(`#SiteBrwsBody`);
+                 ldd=bdy.select(`.tmplItem`); if(ldd){frm+=(ldd.length+1)};
+
+
+                 purl(`Site/importBrowse`,{from:frm},(rsp)=>
+                 {
+                     rsp=decode.jso(rsp.body);
+                     bdy.innerHTML=""; rsp.forEach((o)=>
+                     {
+                         bdy.insert({wrap:
+                         [
+                             {div:`.tmplItem .spanBoth`,
+                                style:{backgroundImage:`url('${o.face}')`},
+                                title:o.name,
+                                targt:o.href,
+                                onclick:function()
+                                {
+                                    Anon.Site.open(`import`,`fromURL`,this.targt);
+                                }
+                             }
+                         ]});
+                     });
+                 });
              },
 
 
