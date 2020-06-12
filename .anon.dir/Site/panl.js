@@ -104,6 +104,7 @@ extend(Anon)
                 select(`#SiteBrwsBody`).listen(`scroll`,function()
                 {
                     let sh,st; sh=this.scrollHeight; st=this.scrollTop;
+                    dump([sh,st]);
                     if(!sh||!st){return}; if((st/sh)>0.8){Anon.Site.tool.import.lazyLoad();};
                 });
                 Anon.Site.tool.import.lazyLoad();
