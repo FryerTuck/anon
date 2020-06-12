@@ -103,10 +103,13 @@ extend(Anon)
 
                 select(`#SiteBrwsBody`).listen(`scroll`,function()
                 {
-                    let th,sh,st,sa; th=rectOf(this).height; sh=this.scrollHeight; st=this.scrollTop;
-                    sa=((st+sh)/th);
-                    dump(sa);
-                    if(!sh||!st){return}; if(sa>0.8){Anon.Site.tool.import.lazyLoad();};
+                    let th,sh,st,sa; th=rectOf(this).height; sh=this.scrollHeight; st=this.scrollTop; if(!sh||!st){return};
+                    sa=((st+sh)/th); dump('scrolling');
+                    if(this.busy){clearTimeout(this.busy);};
+                    this.busy=setTimeout(()=>{dump('stop');},500);
+
+                    // dump(sa);
+                    //  if(sa>0.8){Anon.Site.tool.import.lazyLoad();};
                 });
                 Anon.Site.tool.import.lazyLoad();
              },
@@ -118,28 +121,26 @@ extend(Anon)
                  if(!isInum(frm)){popAlert(`invalid "start from" number`);return};
                  bdy=select(`#SiteBrwsBody`);
                  ldd=bdy.select(`.tmplItem`); if(ldd){frm+=(ldd.length+1)};
-                 dump(frm);
 
-
-                 // purl(`Site/importBrowse`,{from:frm},(rsp)=>
-                 // {
-                 //     rsp=decode.jso(rsp.body);
-                 //     bdy.innerHTML=""; rsp.forEach((o)=>
-                 //     {
-                 //         bdy.insert({wrap:
-                 //         [
-                 //             {div:`.tmplItem .spanBoth`,
-                 //                style:{backgroundImage:`url('${o.face}')`},
-                 //                title:o.name,
-                 //                targt:o.href,
-                 //                onclick:function()
-                 //                {
-                 //                    Anon.Site.open(`import`,`fromURL`,this.targt);
-                 //                }
-                 //             }
-                 //         ]});
-                 //     });
-                 // });
+                 purl(`Site/importBrowse`,{from:frm},(rsp)=>
+                 {
+                     rsp=decode.jso(rsp.body);
+                     bdy.innerHTML=""; rsp.forEach((o)=>
+                     {
+                         bdy.insert({wrap:
+                         [
+                             {div:`.tmplItem .spanBoth`,
+                                style:{backgroundImage:`url('${o.face}')`},
+                                title:o.name,
+                                targt:o.href,
+                                onclick:function()
+                                {
+                                    Anon.Site.open(`import`,`fromURL`,this.targt);
+                                }
+                             }
+                         ]});
+                     });
+                 });
              },
 
 
