@@ -98,7 +98,10 @@ extend(Anon)
                              popConfirm(`warning :: Are you sure you want to destroy everything at the target specified?`)
                              ({
                                  "harm :: confirm":function()
-                                 { Anon.Anon.tool.remoteDeploy(this.trgt) },
+                                 {
+                                     Anon.Anon.tool.remoteDeploy(this.trgt);
+                                     this.root.exit();
+                                 },
                              });
                          }
                      },
