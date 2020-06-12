@@ -114,6 +114,8 @@ extend(Anon)
                     // dump(sa);
                     //  if(sa>0.8){Anon.Site.tool.import.lazyLoad();};
                 });
+
+                Anon.Site.tool.import.lazyLoad();
              },
 
 
