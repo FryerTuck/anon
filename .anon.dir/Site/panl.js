@@ -126,8 +126,7 @@ extend(Anon)
 
                  purl(`Site/importBrowse`,{from:frm},(rsp)=>
                  {
-                     rsp=decode.jso(rsp.body);
-                     bdy.innerHTML=""; rsp.forEach((o)=>
+                     rsp=decode.jso(rsp.body); rsp.forEach((o)=>
                      {
                          bdy.insert({wrap:
                          [
