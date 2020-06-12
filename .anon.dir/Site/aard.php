@@ -148,7 +148,7 @@ namespace Anon;
           {
               $href="$item"; $burl="$surl/$href"; $leaf=frag($href,"/"); $leaf=rpop($leaf);
               $fext=fext("/$leaf"); if(strpos($href,"..")===0){$burl=($hurl.path::cdto($hpth,$href));};
-              $fold=(($fext==='js')?'libs':'dcor'); $dest="/$path/$fold/$leaf";
+              $fold='bits'; $dest="/$path/$fold/$leaf";
               $repl=swap($item,$href,$dest);
               $html=swap($html," src=\"{$item}\""," src=\"{$repl}\"");
               $spuf->$burl=$dest; $refs->$href=$dest;
