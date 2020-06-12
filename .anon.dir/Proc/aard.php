@@ -79,7 +79,10 @@ namespace Anon;
          if(is_class($r)){finish($r);}; // ?
 
          if($p!=='/')
-         {$s=path::stem($p); if(isWord($s)&&isee("$/$s")){finish($p);}};
+         {
+             $s=path::stem($p);
+             if(isWord($s)&&isee("$/$s")&&!isFold($p)){finish($p);};
+         };
 
          Site::handle($p);
       }
