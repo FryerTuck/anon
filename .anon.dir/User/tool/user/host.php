@@ -112,7 +112,7 @@ $export=function($a,$u,$d)
    {
       if(!userDoes("sudo lead")){ekko("only leaders and sudoers can do that"); exit;};
       if(!isee($h)){ekko("user `$u` is undefined"); exit;};  $s=find::sesnByUser($u);
-      signal::ClientReboot("user deleted","#$u"); wait(250);
+      signal::ClientReboot("user deleted","#$u");
       if($s){path::void("/Proc/temp/sesn/$s");}; path::void($h);
       ekko(OK);
    };
