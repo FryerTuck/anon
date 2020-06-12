@@ -13,8 +13,8 @@ namespace Anon;
 
       static function __init()
       {
-          $rp=crop(NAVIPATH);
-          if(arg($rp)->startsWith("~/.tmp/Site/"))
+          $rp=NAVIPATH;
+          if(arg($rp)->startsWith("/~/.tmp/Site/"))
           {
               if(!userDoes("work sudo")||!isee($rp)){finish(404);};
               if(isFold($rp)){$rp="$rp/aard.htm";};
