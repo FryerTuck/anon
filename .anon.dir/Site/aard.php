@@ -20,7 +20,7 @@ namespace Anon;
       static function handle($p)
       {
         $sc=conf("Site/autoConf"); $tn=$sc->template; $ap="/Site/tmpl/Anon"; $np="$p";
-        if(isin($np,'/~/.tmp/Site/~/.tmp/Site/')){$np=swap($np,'/~/.tmp/Site/~/.tmp/Site/','/~/.tmp/Site/');}; // template fix/hack
+        $st='~/.tmp/Site/'; if(isin($np,($st.$st))){$np=swap($np,($st.$st),$st);}; // template fix/hack
         $tp="/Site/tmpl/$tn"; if(!isee($tp)){fail::template("missing path: `$tp`"); exit;};
         if(isFold($np)){$ix=path::indx($np,'aard.php'); if($ix){$np=(rshave($np,'/')."/$ix");}}; // check for index-file
         $tc=knob("/Site/tmpl/$tn/conf"); $rp=test::{$np}($tc->redirect);

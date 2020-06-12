@@ -81,7 +81,8 @@ namespace Anon;
          if($p!=='/')
          {
              $s=path::stem($p);
-             if(isWord($s)&&isee("$/$s")&&!isFold($p)){finish($p);};
+             if(isWord($s)&&isee("$/$s")&&!isFold($p)&&!isin($p,'~/.tmp/'))
+             {finish($p);};
          };
 
          Site::handle($p);
