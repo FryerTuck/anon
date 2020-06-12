@@ -105,7 +105,7 @@ extend(Anon)
                 {
                     if(this.busy){clearTimeout(this.busy);}; this.busy=setTimeout(()=>
                     {
-                        let sb=(this.scrollHeight-this.scrollTop>(this.clientHeight-100));
+                        let sb=(this.scrollHeight-this.scrollTop==(this.clientHeight));
                         if(sb){Anon.Site.tool.import.lazyLoad()};
                     },500);
 
