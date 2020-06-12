@@ -69,7 +69,7 @@ namespace Anon;
       static function checkUpdates()
       {
           $d=Repo::differ(); if($d){signal::AnonUpdate($d); ekko($d); exit;};
-          ekko("");
+          ekko(OK);
       }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------

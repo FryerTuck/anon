@@ -63,8 +63,8 @@ extend(Anon)
              {
                  purl("/Anon/checkUpdates",(rsl)=>
                  {
-                     rsl=rsl.body; dump(rsl);
-                     if(!rsl){popAlert("thumbs-up :: All is well : There are no new updates.");return};
+                     rsl=rsl.body;
+                     if(rsl==OK){popAlert("thumbs-up :: All is well : There are no new updates.");return};
                  });
              }},
          ]);
