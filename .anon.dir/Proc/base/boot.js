@@ -248,7 +248,7 @@
               body:[{panl:
               [
                   {h2:`Updates available`},
-                  {code:d},
+                  {pre:d},
                   {p:`Would you like to install now?`},
               ]}],
               foot:
