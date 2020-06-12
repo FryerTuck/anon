@@ -207,7 +207,7 @@ namespace Anon;
               }
               elseif($fext=='js')
               {
-                  $temp=swap($temp,'assets/img',"$path/$fold");
+                  $temp=swap($temp,'assets/img',"");
               };
 
               path::make("$path/$fold/$leaf",$temp); unset($temp);
