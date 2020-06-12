@@ -73,12 +73,13 @@ namespace Anon;
             finish(NAVIPATH,$v);
          }
 
-         $p=NAVIPATH; Time::logEvent(); if(strpos($p,'/~/')===0){$p=lshave($p,'/~/'); $u=user('name'); $p="/User/data/$u/home/$p";};
+         $p=NAVIPATH; Time::logEvent(); if(isin($p,'~/.tmp/Site/~/.tmp/Site')){ekko("boo"); exit;};
+
+         if(strpos($p,'/~/')===0){$p=lshave($p,'/~/'); $u=user('name'); $p="/User/data/$u/home/$p";};
          $r=path::call($p,__FILE__); // run PHP controller found in path .. this should exit here - else we handle it below:
          if(($r!==null)&&($r!==true)&&!is_class($r)){if(defn('HALT')||envi('HALT')){done($r);}; ekko($r);}; // respond with controller response
          if(is_class($r)){finish($r);}; // ?
 
-if(isin($p,'~/.tmp/Site/~/.tmp/Site')){ekko("boo"); exit;};
 
          if($p!=='/')
          {
