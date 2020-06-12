@@ -51,16 +51,15 @@
    butn .butnLine>vdiv
    {
       border-left:1px solid hsla(0,0%,0%,0.25); border-right:1px solid hsla(0,0%,100%,0.08);
-      margin-top:-2 !important;
+      margin-top:-2px !important;
    }
 
    col.butnLine
    {
-      padding-left:4px;
-      padding-right:4px;
+      padding-left:6px;
+      padding-right:6px;
       padding-top:0px;
    }
-
 
 
    butn.dark
