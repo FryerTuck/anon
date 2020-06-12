@@ -93,7 +93,8 @@ extend(Anon)
                      {butn:`.dark .harm`, icon:`skull`, text:`deploy`, trgt:tab.body, hint:`this is dangerous`,
                          onclick:function(evnt,trgt,r00t)
                          {
-                             trgt=this.trgt; root=this.root;
+                             trgt=this.trgt;
+                             r00t=this.root;
                              let pn,pv; pn=select(`#deployPurl`); pv=pn.value;
                              if(!pv.startsWith(`ftp://`)){pn.hint(`Only "ftp" is currently supported`); return};
                              popConfirm(`warning :: Are you sure you want to destroy everything at the target specified?`)
