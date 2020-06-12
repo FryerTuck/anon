@@ -245,12 +245,12 @@
       {
           popModal(`cog :: New Updates`)
           ({
-              body:
+              body:[{panl:
               [
                   {h2:`Updates available`},
-                  {code:d},
+                  {pre:d},
                   {p:`Would you like to install now?`},
-              ],
+              ]}],
               foot:
               [
                   {butn:`.cool`, text:"Update Now", onclick:function(e,s)
