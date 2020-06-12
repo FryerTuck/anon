@@ -10,6 +10,7 @@ namespace Anon;
       static $meta;
 
 
+
       static function remoteDeploy($purl=null,$vars=null)
       {
           permit::fubu('clan:sudo,lead,gang,geek'); $post=knob($_POST);
@@ -61,6 +62,14 @@ namespace Anon;
           if(!isin($done,$chek)){fail::remoteDeploy("response test was unsuccesful"); exit;};
           signal::busy(['with'=>'remoteDeploy','done'=>100]);
           return $addr;
+      }
+
+
+
+      static function checkUpdates()
+      {
+          $d=Repo::differ(); if($d){signal::AnonUpdate($d); ekko($d); exit;};
+          ekko("");
       }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------

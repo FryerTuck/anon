@@ -59,6 +59,14 @@ extend(Anon)
              {
                  Anon.Anon.open("remoteDeploy");
              }},
+             {butn:".longMenuButn", text:"check updates",onclick:function()
+             {
+                 purl("/Anon/checkUpdates",(rsl)=>
+                 {
+                     rsl=rsl.body;
+                     if(!rsl){popAlert("thumbs-up :: All is well : There are no new updates.");return};
+                 });
+             }},
          ]);
       },
 

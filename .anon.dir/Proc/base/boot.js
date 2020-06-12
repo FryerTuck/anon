@@ -245,7 +245,7 @@
       {
           popModal(`cog :: New Updates`)
           ({
-              body:`Would you like to install these updates now?`,
+              body:`### New updates available\n\`\`\`\n${d}\n\`\`\`\nWould you like to install these now?`,
               foot:
               [
                   {butn:`.cool`, text:"Update Now", onclick:function(e,s)
