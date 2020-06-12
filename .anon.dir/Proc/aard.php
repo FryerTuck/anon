@@ -34,7 +34,7 @@ namespace Anon;
       {
          if((NAVIPATH==='/Proc/listen')&&MADEFUBU)
          {
-             self::listen();
+             self::listen(); return;
          };
 
          boot(); // boot all bootable stems
@@ -170,6 +170,7 @@ namespace Anon;
 
       static function impede($a)
       {
+         permit::fubu();
          if(!isText($a,1)){return;}; self::$meta->hush->$a=1;
       }
 
@@ -177,6 +178,7 @@ namespace Anon;
 
       static function resume($a)
       {
+         permit::fubu();
          if(!isText($a,1)){return;}; unset(self::$meta->hush->$a);
       }
 
