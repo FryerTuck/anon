@@ -239,6 +239,7 @@ namespace Anon;
          $sxed=encode::jso(['time'=>$fade]); $fapi=facing('API'); $wapi=0; $lost=0; $fint=$fade; $lstn=knob(); $lpng=0;
          $emri=conf('Mail/checkSec'); if(!is_int($emri)||($emri<5)){$emri=5;}; $emlr=0; $work=userDoes('work');
 
+         if(!isFold($epth)){path::make("$epth/");}; 
          $stms=fuse(pget('$'),pget('/'));
 
          foreach($stms as $stem){if(isFold("/$stem/evnt"))
