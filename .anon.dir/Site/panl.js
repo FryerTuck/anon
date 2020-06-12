@@ -101,16 +101,13 @@ extend(Anon)
                      ]}]}]},
                 ]});
 
-                select(`#SiteBrwsBody`).listen(`wheel`,function(ev)
+                select(`#SiteBrwsBody`).listen(`wheel`,function()
                 {
-                    dump(ev.detail);
-                    // if(this.busy){clearTimeout(this.busy);}; this.busy=setTimeout(()=>
-                    // {
-                    //     let th,sh,st,sa; th=rectOf(this).height; sh=this.scrollHeight; st=this.scrollTop; if(!sh||!st){return};
-                    //     sa=(st/th);
-                    //     dump(sa);
-                    //     // Anon.Site.tool.import.lazyLoad();
-                    // },500);
+                    if(this.busy){clearTimeout(this.busy);}; this.busy=setTimeout(()=>
+                    {
+                        let sb=(this.scrollHeight-this.scrollTop==rectOf(this).height);
+                        if(sb){Anon.Site.tool.import.lazyLoad()};
+                    },500);
 
                     // dump(sa);
                     //  if(sa>0.8){Anon.Site.tool.import.lazyLoad();};
