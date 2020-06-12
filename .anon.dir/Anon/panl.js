@@ -90,8 +90,17 @@ extend(Anon)
                   ]},
                   {row:
                   [
-                     {butn:`.dark .good`, text:`deploy`, trgt:tab.body, hint:`deploy fresh Anon at the plug-url above`,
-                         onclick:function(){Anon.Anon.tool.remoteDeploy(this.trgt)}
+                     {butn:`.dark .harm`, icon:`skull`, text:`deploy`, trgt:tab.body, hint:`this is dangerous`,
+                         onclick:function()
+                         {
+                             let pv=select(`#deployPurl`).value;
+                             if(!pv.startsWith(`ftp://`)){popAlert(`Only "ftp" is currently supported`); return};
+                             popConfirm(`warning :: Are you sure you want to destroy everything at the target specified?`)
+                             ({
+                                 "harm :: confirm" => function()
+                                 { Anon.Anon.tool.remoteDeploy(this.trgt) },
+                             });
+                         }
                      },
                   ]},
                ]}]}
