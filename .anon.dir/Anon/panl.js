@@ -101,7 +101,7 @@ extend(Anon)
                                  {
                                      Anon.Anon.tool.remoteDeploy(this.trgt);
                                      this.root.exit();
-                                 }.bind({trgt:this.trgt}),
+                                 }.bind({trgt:this.trgt,root:this.root}),
                              });
                          }
                      },
