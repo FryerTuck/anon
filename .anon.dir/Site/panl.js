@@ -103,15 +103,17 @@ extend(Anon)
 
                 select(`#SiteBrwsBody`).listen(`scroll`,function()
                 {
-                    let th,sh,st,sa; th=rectOf(this).height; sh=this.scrollHeight; st=this.scrollTop; if(!sh||!st){return};
-                    sa=((st+sh)/th); dump('scrolling');
-                    if(this.busy){clearTimeout(this.busy);};
-                    this.busy=setTimeout(()=>{dump('stop');},500);
+                    if(this.busy){clearTimeout(this.busy);}; this.busy=setTimeout(()=>
+                    {
+                        let th,sh,st,sa; th=rectOf(this).height; sh=this.scrollHeight; st=this.scrollTop; if(!sh||!st){return};
+                        sa=((st+sh)/th);
+                        dump(sa);
+                        // Anon.Site.tool.import.lazyLoad();
+                    },500);
 
                     // dump(sa);
                     //  if(sa>0.8){Anon.Site.tool.import.lazyLoad();};
                 });
-                Anon.Site.tool.import.lazyLoad();
              },
 
 
