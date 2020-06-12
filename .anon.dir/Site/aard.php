@@ -102,7 +102,7 @@ namespace Anon;
                   if(isin($item,["http://","https://"])){continue;}; $href=unwrap($item);
                   $burl="$surl/$href"; $file=frag($href,"/"); $file=rpop($file);
                   if(strpos($href,"..")===0){$burl=($hurl.path::cdto($hpth,$href));};
-                  $dest="/$path/dcor/$file"; $repl=swap($repl,"url({$item})","url('$dest')");
+                  $dest="/$path/bits/$file"; $repl=swap($repl,"url({$item})","url('$dest')");
                   $spuf->$burl=$dest; $refs->$href=$dest;
               };
               unset($ulst,$item);
@@ -120,7 +120,7 @@ namespace Anon;
                   if(isin($item,["http://","https://"])){continue;}; $href=unwrap($item);
                   $burl="$surl/$href"; $file=frag($href,"/"); $file=rpop($file);
                   if(strpos($href,"..")===0){$burl=($hurl.path::cdto($hpth,$href));};
-                  $dest="/$path/dcor/$file"; $repl=swap($repl,"url({$item})","url('$dest')");
+                  $dest="/$path/bits/$file"; $repl=swap($repl,"url({$item})","url('$dest')");
                   $spuf->$burl=$dest; $refs->$href=$dest;
               };
               unset($ulst,$item);
@@ -136,7 +136,7 @@ namespace Anon;
               $href=expose($item,'href="','"'); if(!$href||isin($href[0],["http://","https://"])){continue;}; $href=$href[0];
               $burl="$surl/$href"; $leaf=frag($href,"/"); $leaf=rpop($leaf);
               if(strpos($href,"..")===0){$burl=($hurl.path::cdto($hpth,$href));};
-              $dest="/$path/dcor/$leaf"; $repl=swap($item,"href=\"$href\"","href=\"$dest\"");
+              $dest="/$path/bits/$leaf"; $repl=swap($item,"href=\"$href\"","href=\"$dest\"");
               $html=swap($html,"<link {$item}>","<link {$repl}>");
               $spuf->$burl=$dest;
           };
@@ -174,7 +174,7 @@ namespace Anon;
               if(isin($item,["http://","https://"])){continue;}; $href="$item";
               $burl="$surl/$href"; $file=frag($href,"/"); $file=rpop($file);
               if(strpos($href,"..")===0){$burl=($hurl.path::cdto($hpth,$href));};
-              $dest="/$path/dcor/$file"; $html=swap($html,"-src=\"$href\"","-src=\"$dest\"");
+              $dest="/$path/bits/$file"; $html=swap($html,"-src=\"$href\"","-src=\"$dest\"");
               $spuf->$burl=$dest; $refs->$href=$dest;
           };
           unset($list,$item);
@@ -184,7 +184,7 @@ namespace Anon;
           foreach($spuf as $furl => $save)
           {
               $indx++;
-              $leaf=frag($furl,"/"); $leaf=rpop($leaf); $fext=fext("/$leaf"); $fold=(($fext==="js")?"libs":"dcor");
+              $leaf=frag($furl,"/"); $leaf=rpop($leaf); $fext=fext("/$leaf"); $fold="bits";
               $temp=spuf($furl,null,$purl,12,(isin("js css",$fext)?0:1));
 
               if($fext==="css")
@@ -199,11 +199,15 @@ namespace Anon;
                       $burl="$curl/$href"; $file=frag($href,"/"); $file=rpop($file); $q=stub($file,'?');
                       if($q){$file=$q[0]; $q="?$q[2]";}else{$q='';}; $pref=($q?swap($href,$q,''):$href);
                       if(strpos($href,"..")===0){$burl=($hurl.path::cdto($twig,$pref));};
-                      $dest="/$path/dcor/$file"; $temp=swap($temp,"url({$item})","url('{$dest}{$q}')");
+                      $dest="/$path/bits/$file"; $temp=swap($temp,"url({$item})","url('{$dest}{$q}')");
                       $bufr=spuf($burl,null,$purl,12,1);
                       path::make($dest,$bufr); unset($bufr);
                   };
                   unset($list,$item);
+              }
+              elseif($fext=='js')
+              {
+                  $temp=swap($temp,'assets/img',"$path/$fold");
               };
 
               path::make("$path/$fold/$leaf",$temp); unset($temp);
