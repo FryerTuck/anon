@@ -21,7 +21,7 @@ $export=function($a,$u,$d)
       $l=pget('/User/data'); foreach($l as $i){if(pget("/User/$i/mail")===$m){ekko("email address `$m` is taken");}};
 
       requires::stem('Mail'); // dependencies
-      $p=random(8); $x=password_hash($p,PASSWORD_DEFAULT);
+      $pw=random(8); $x=password_hash($pw,PASSWORD_DEFAULT);
       $cl=[]; foreach($co as $cn => $cv){$cl[]="- **$cn** - $cv";}; $cl=implode("\n",$cl); $vc=knob(dval(pget('/User/conf/viewConf')));
       $ck=$vc->toggleUserPanl; if(isin($ck,'`')){$ck="` $ck `";};
 
@@ -34,7 +34,7 @@ $export=function($a,$u,$d)
       xeno::sendMarkDownMail
       ([
          'destAddy'=>$m, 'mesgBody'=>'/User/note/userMadeMail.md',
-         'varsUsed'=>['username'=>$u, 'password'=>$p, 'clanList'=>$cl, 'ctrlKeys'=>$ck],
+         'varsUsed'=>['username'=>$u, 'password'=>$pw, 'clanList'=>$cl, 'ctrlKeys'=>$ck],
          'runDebug'=>true,
       ]);
       signal::busy(['with'=>"mail",'done'=>100]);
