@@ -184,13 +184,21 @@ namespace Anon;
 
       if($r->fail)
       {
-         $f=$r->fail; $m="Cannot send mail\n.."; if(isin($f,'SMTP connect() failed'))
+         $f=$r->fail; $m="Cannot send mail\n..";
+         if(isin($f,'SMTP connect() failed'))
          {
             $i=path::info($c); $u="$i->user@$i->host";
             $r="$m Make sure `$u` allows API access, check its inbox; see Anon manual.\n\nError details:\n$f";
          }
+         elseif(arg($f)->startsWith('{"name":"Email","mesg":'))
+         {
+             $m=rstub($f,']}'); $m=($m[0].']}'); $m=decode::jso($m);
+             dbug::view($m); exit;
+         }
          else
-         {$r="$m $f\n.. make sure the mailbox exists";};
+         {
+             $r="$m $f\n.. make sure the mailbox exists";
+         };
          if($o->runDebug){fail($r);}; return $r;
       };
 

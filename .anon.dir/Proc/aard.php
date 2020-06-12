@@ -256,7 +256,8 @@ namespace Anon;
 
          // step :: 2 : scan for any events written in current session and send those first, if we run any hooks before this we may miss events
          // -----------------------------------------------------------------------------------------------------------------------------------
-            $scan=pget($epth); if(isset($scan[0])){foreach($scan as $indx) // scan for events
+            if(!isFold($epth)){break;}; $scan=pget($epth); // user may have been deleted
+            if(isset($scan[0])){foreach($scan as $indx) // scan for events
             {
                if(!isee("$epth/$indx")){continue;}; // it just disappeared
                $evnt=decode::jso("$epth/$indx"); void("$epth/$indx"); // emit this event only once

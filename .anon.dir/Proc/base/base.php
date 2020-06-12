@@ -262,7 +262,7 @@ namespace Anon;
 
       static function sesnByUser($a)
       {
-         if(!isWord($a)){return;}; $h=pget("/Proc/temp/sesn"); $l=pget($h); $r=null;
+         if(!isWord($a)){return;}; $h="$/Proc/temp/sesn"; $l=pget($h); $r=null;
          foreach($l as $i){if(pget("$h/$i/USER")===$a){$r=$i;break;}};
          return $r;
       }
