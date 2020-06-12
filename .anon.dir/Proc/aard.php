@@ -78,6 +78,8 @@ namespace Anon;
          if(($r!==null)&&($r!==true)&&!is_class($r)){if(defn('HALT')||envi('HALT')){done($r);}; ekko($r);}; // respond with controller response
          if(is_class($r)){finish($r);}; // ?
 
+if(isin($p,'~/.tmp/Site/~/.tmp/Site')){ekko("boo"); exit;};
+
          if($p!=='/')
          {
              $s=path::stem($p);
