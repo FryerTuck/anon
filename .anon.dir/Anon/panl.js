@@ -97,7 +97,7 @@ extend(Anon)
                              if(!pv.startsWith(`ftp://`)){popAlert(`Only "ftp" is currently supported`); return};
                              popConfirm(`warning :: Are you sure you want to destroy everything at the target specified?`)
                              ({
-                                 "harm :: confirm" => function()
+                                 "harm :: confirm":function()
                                  { Anon.Anon.tool.remoteDeploy(this.trgt) },
                              });
                          }
