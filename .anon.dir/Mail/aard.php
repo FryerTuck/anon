@@ -162,8 +162,9 @@ namespace Anon;
       $x=(new \Parsedown()); $x->setBreaksEnabled(true); $hb=$x->text($mb); $hb=import('/Proc/libs/marked/page.htm',['parsed'=>$hb]);
       $da=$o->destAddy; if(!$da){$da=$o->destAddr;}; $dn=$o->destName; $fa=$o->fromAddy; if(!$fa){$fa=$o->fromAddr;}; $fn=$o->fromName;
       $c=conf('Proc/autoMail'); if(!$c){$c=pget("/Mail/link/$fa");};
-      if(!isin($c,['mail://','imap://'])){fail('invalid plug specification .. make sure the `fromAddr` (autoMail -or plug) is valid');};
-      if(!online()){fail('`'.HOSTNAME.'` is offline');};
+      if(!isin($c,['mail://','imap://'])){fail('invalid plug specification .. make sure the `fromAddr` (autoMail -or plug) is valid'); exit;};
+      $mi=path::info($c); if(!$fa){$fa="$mi->user@$mi->host";};
+      if(!online()){fail('`'.HOSTNAME.'` is offline'); exit;};
 
       $r=crud($c)->insert
       ([
