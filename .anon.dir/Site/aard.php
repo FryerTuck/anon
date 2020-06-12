@@ -14,9 +14,9 @@ namespace Anon;
       static function __init()
       {
           $rp=crop(NAVIPATH);
-          if(userDoes("work")&&arg($rp)->startsWith("~/.tmp/Site/"))
+          if(arg($rp)->startsWith("~/.tmp/Site/"))
           {
-              if(!isee($rp)){finish(404);};
+              if(!userDoes("work sudo")||!isee($rp)){finish(404);};
               if(isFold($rp)){$rp="$rp/aard.htm";};
               finish($rp);
           };
