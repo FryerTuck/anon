@@ -198,7 +198,8 @@ extend(Anon)
                             if(nodeName(n)==`a`)
                             {
                                 let hr=n.getAttribute(`href`); if(isVoid(hr)){hr=""};
-                                if(!hr.startsWith(`#`)){n.setAttribute(`href`,`#`)};
+                                if(hr.startsWith(`http:/`)||hr.startsWith(`https:/`)||hr.startsWith(`//`))
+                                {n.setAttribute(`href`,`#`)};
                             };
 
                             let ch=(n.onclick||n.onClick||n.getAttribute("onclick")||n.getAttribute("onClick"));
@@ -210,7 +211,9 @@ extend(Anon)
 
                             n.addEventListener(`mouseover`,function(ev)
                             {
-                                ev.stopPropagation();  let cc=this.className; if(!isText(cc)){cc=""};
+                                if(!ev.ctrlKey){return};
+                                ev.preventDefault();  ev.stopPropagation();  ev.stopImmediatePropagation();
+                                let cc=this.className; if(!isText(cc)){cc=""};
                                 if(isin(cc,`AnonInspPick`)){return}; // this is selected .. do nothing
                                 cc=cc.split(` AnonInspects`).join(""); cc+=` AnonInspects`; // add focussed class
                                 delete this.className; this.className=cc;
