@@ -260,6 +260,13 @@ namespace Anon;
          return $r;
       }
 
+      static function sesnByUser($a)
+      {
+         if(!isWord($a)){return;}; $h=pget("/Proc/temp/sesn"); $l=pget($h); $r=null;
+         foreach($l as $i){if(pget("$h/$i/USER")===$a){$r=$i;break;}};
+         return $r;
+      }
+
       static function clanByUser($a)
       {
          if(!isWord($a)){return;}; $r=pget("/User/data/$a/clan"); if($r){$r=explode(',',$r);};
