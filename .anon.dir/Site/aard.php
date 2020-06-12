@@ -13,15 +13,13 @@ namespace Anon;
 
       static function __init()
       {
-         // self::$meta->done=[];
-         // $ac=conf('Site/autoConf');
-
-
-         // if(!isee("/www"){}){};
-
-         // $cp=conf('Site/clanPath'); $cc=sesn('CLAN'); $np=NAVIPATH; $un=sesn('USER');
-         // if($cp->$cc){finish($cp->$cc); exit;}; // serve for specified clans explicitly
-         // ekko("Hello $un");
+          $rp=crop(NAVIPATH);
+          if(userDoes("work")&&arg($rp)->startsWith("~/.tmp/Site/"))
+          {
+              if(!isee($rp)){finish(404);};
+              if(isFold($rp)){$rp="$rp/aard.htm";};
+              finish($rp);
+          };
       }
 
 
