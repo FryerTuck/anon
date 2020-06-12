@@ -51,7 +51,9 @@
    butn .butnLine>vdiv
    {
       border-left:1px solid hsla(0,0%,0%,0.25); border-right:1px solid hsla(0,0%,100%,0.08);
-      margin-left:4px; margin-right:4px; margin-top:-1;
+      margin-left:4px !important;
+      margin-right:4px !important;
+      margin-top:-1 !important;
    }
 
 
