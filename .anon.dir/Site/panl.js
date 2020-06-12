@@ -103,7 +103,8 @@ extend(Anon)
 
                 select(`#SiteBrwsBody`).listen(`scroll`,function()
                 {
-                    let sh,st,sa; sh=rectOf(this).height; st=this.scrollTop; sa=(st/sh);
+                    let th,sh,st,sa; th=rectOf(this).height; sh=this.scrollTop; st=this.scrollTop;
+                    sa=((st+sh)/th);
                     dump(sa);
                     if(!sh||!st){return}; if(sa>0.8){Anon.Site.tool.import.lazyLoad();};
                 });
