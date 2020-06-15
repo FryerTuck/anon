@@ -268,7 +268,7 @@ namespace Anon;
       $c=curl_init(); curl_setopt_array($c,$o); curl_setopt($c,CURLOPT_HTTPHEADER,array("REMOTE_ADDR: $ipa", "HTTP_X_FORWARDED_FOR: $ipa"));
       $r=curl_exec($c); $e=null; if(!$r){$x=curl_error($c); if($x){$e=$x;};}; curl_close($c);
       if($e){return "FAIL :: $e";}; return $r;
-   };
+   }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 

@@ -26,6 +26,14 @@ namespace Anon;
       if(facing('GUI'))
       {
          if(!isee('/Proc/conf/hostName')){pset('/Proc/conf/hostName',HOSTNAME);};
+
+         if(isset($_GET['upkeep'])&&($_GET['upkeep']==='init'))
+         {
+             if(!isset($_GET['rf'])||!isset($_GET['rk'])){wack(); exit;};
+             $rf=$_GET['rf']; $rp=(ROOTPATH."/$rf"); $rk=$_GET['rk'];
+             $rh=sha1(pget($rp)); if($rh!==$rk){wack(); exit;};
+             $nh=NAVIHOST; void($rp); header("Location: $nh"); exit;
+         };
          // if(!path::indx('/')){path::copy('/Proc/dcor/README.md','/README.md');};
       };
 
