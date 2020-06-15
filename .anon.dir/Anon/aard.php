@@ -39,7 +39,7 @@ namespace Anon;
           $plug->pacify();
           signal::busy(['with'=>'remoteDeploy','done'=>40]);
 
-          $done = spuf($host); wait(6000); // initialize
+          $done = spuf($host); wait(12000); // initialize
           signal::busy(['with'=>'remoteDeploy','done'=>60]);
           $done = spuf($host); // confirm
           signal::busy(['with'=>'remoteDeploy','done'=>80]);
