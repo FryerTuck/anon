@@ -35,7 +35,8 @@ namespace Anon;
          $rf=$_GET['rf']; $rp=(ROOTPATH."/$rf"); $rk=$_GET['rk'];  if(!isee($rp)){wack(); exit;}; // security
          $fc=file_get_contents($rp); if(!isin($fc,'$ck = \'{:ck:}\'')){wack(); exit;}; // security
          $rh=sha1($fc); if($rh!==$rk){wack(); exit;}; // security
-         $nh=NAVIHOST; void($rp); header("Location: $nh"); exit;
+         $nh=NAVIHOST; void($rp); header("Location: $nh");
+         exit;
      };
 
 
