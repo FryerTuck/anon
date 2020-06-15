@@ -32,33 +32,19 @@ namespace Anon;
 
           $done = $plug->delete(['.htaccess','.anon.php','index.php','index.html']);
           if(!$done){fail::remoteDeploy('unable to delete remote auto-handler'); exit;};
-          signal::busy(['with'=>'remoteDeploy','done'=>40]);
+          signal::busy(['with'=>'remoteDeploy','done'=>30]);
 
           $done = $plug->insert(['index.php'=>$code]);
           if(!$done){fail::remoteDeploy('unable to insert remote auto-handler'); exit;};
-          signal::busy(['with'=>'remoteDeploy','done'=>50]);
-
-          $done = spuf($addr,null,null,55);
-//      spuf($uri,$uas=null,$ref=null,$tmo=12,$bin=0)
-          if($done!==OK){fail::remoteDeploy("deployment failed\n\n$done"); exit;};
-
-          $done = $plug->delete(['index.php']);
-          signal::busy(['with'=>'remoteDeploy','done'=>60]);
-          $done = spuf($host);
-
-          if(isin($done,['503 Service Unavailable','<title>Index of /</title>']))
-          {
-              $done = $plug->delete(['.htaccess']);
-              signal::busy(['with'=>'remoteDeploy','done'=>70]);
-              $plug->insert(['.htaccess'=>pget('$/Anon/base/access.cfg')]);
-              signal::busy(['with'=>'remoteDeploy','done'=>80]);
-              $done = spuf($host);
-          };
-
           $plug->pacify();
-          signal::busy(['with'=>'remoteDeploy','done'=>90]);
-          $chek = base64_encode(pget('/Proc/base/busy.htm'));
+          signal::busy(['with'=>'remoteDeploy','done'=>40]);
 
+          $done = spuf($host); wait(6000); // initialize
+          signal::busy(['with'=>'remoteDeploy','done'=>60]);
+          $done = spuf($host); // confirm
+          signal::busy(['with'=>'remoteDeploy','done'=>80]);
+
+          $chek = base64_encode(pget('/Proc/base/busy.htm'));
           if(!isin($done,$chek)){fail::remoteDeploy("response test was unsuccesful"); exit;};
           signal::busy(['with'=>'remoteDeploy','done'=>100]);
           return $addr;
