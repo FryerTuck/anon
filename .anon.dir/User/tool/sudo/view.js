@@ -2,8 +2,10 @@ extend(repl)
 ({
    sudo:function(c,a, u,s,p,f,ct,lt)
    {
-      if(c&&c.length<1){return}; u=sesn('USER'); s=this; p=select('#AnonReplProm'); f=select('#AnonReplFeed'); // short refs
-      a=trim(a); ct=time(); lt=this.lastTime; if((ct-lt)<30){this.execCmnd(c,a);return};
+      if(c&&c.length<1){return};
+      u=sesn('USER'); s=this; p=select('#AnonReplProm'); f=select('#AnonReplFeed'); // short refs
+      a=trim(a); ct=time(); lt=this.lastTime;
+      if((ct-lt)<40){this.execCmnd(c,a);return}; // user is still here
 
       if(repl.ENV.target!='sudo') // no password given, command start
       {
