@@ -32,15 +32,17 @@ namespace Anon;
 
           $done = $plug->delete(['.htaccess','.anon.php','index.php','index.html']);
           if(!$done){fail::remoteDeploy('unable to delete remote auto-handler'); exit;};
-          signal::busy(['with'=>'remoteDeploy','done'=>40]);
+          signal::busy(['with'=>'remoteDeploy','done'=>30]);
 
           $done = $plug->insert(['index.php'=>$code]);
           if(!$done){fail::remoteDeploy('unable to insert remote auto-handler'); exit;};
           $plug->pacify();
-          signal::busy(['with'=>'remoteDeploy','done'=>60]);
+          signal::busy(['with'=>'remoteDeploy','done'=>40]);
 
-          $done = spuf($host);
-          signal::busy(['with'=>'remoteDeploy','done'=>90]);
+          $done = spuf($host); wait(6000); // initialize
+          signal::busy(['with'=>'remoteDeploy','done'=>60]);
+          $done = spuf($host); // confirm
+          signal::busy(['with'=>'remoteDeploy','done'=>80]);
 
           $chek = base64_encode(pget('/Proc/base/busy.htm'));
           if(!isin($done,$chek)){fail::remoteDeploy("response test was unsuccesful"); exit;};
