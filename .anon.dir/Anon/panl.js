@@ -91,18 +91,17 @@ extend(Anon)
                   {row:
                   [
                      {butn:`.dark .harm`, icon:`skull`, text:`deploy`, trgt:tab.body, hint:`this is dangerous`,
-                         onclick:function(evnt,trgt,r00t)
+                         onclick:function(evnt,trgt)
                          {
                              trgt=this.trgt;
-                             r00t=this.root;
-                             let pn,pv; pn=select(`#deployPurl`); pv=pn.value;
+                             let pn,pv,pc; pn=select(`#deployPurl`); pv=pn.value;
                              if(!pv.startsWith(`ftp://`)){pn.notify(`Only "ftp" is currently supported`); return};
                              popConfirm(`warning :: Are you sure you want to destroy everything at the target specified?`)
                              ({
                                  "harm :: confirm":function()
                                  {
                                      Anon.Anon.tool.remoteDeploy(trgt);
-                                     r00t.exit();
+                                     this.root.exit();
                                  },
                              });
                          }
