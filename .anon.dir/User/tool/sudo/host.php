@@ -3,7 +3,8 @@ namespace Anon;
 
 $export=function($c,$a,$h)
 {
-   if(!userDoes('sudo')){ekko(wack());}; $a=trim($a); if(!isText($a,1)){ekko('nothing to do');};
+   if(!userDoes('sudo')){ekko(wack());}; $a=trim(unwrap(trim($a))); 
+   if(!isText($a,1)){ekko('nothing to do');};
 
    if($c==='php')
    {
