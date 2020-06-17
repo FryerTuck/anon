@@ -47,7 +47,7 @@ namespace Anon;
 
           $co=knob
           ([
-              'TIMEOUT' => 10,
+              'TIMEOUT' => 24,
               'HEADER' => true,
               'RETURNTRANSFER' => true,
               'SSL_VERIFYPEER' => false,
