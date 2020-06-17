@@ -13,11 +13,27 @@
 
 // func :: userInfo : returns an object .. if user does not exist it is empty
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   const userInfo = function(d)
+   const userInfo = function(d, slf)
    {
-      if(!userDoes(`work lead sudo`)){return {}}; if(!stak(0)){wack();return}; // security
-      if(!isText(d,1)){return {}}; if(d!=INIT){return (this[d]||{})}; // validation & existing
-      purl(`/User/getUsers`,(r)=>{r=decode.jso(r.body); r.each((v,k)=>{this[k]=v;})}); // initialize
+      if(!userDoes(`work lead sudo`)){return {}}; if(!stak(0)){wack();return};  // security
+      if(!isText(d,1)){return {}}; if(d!=INIT){return (this[d]||{})}; slf=this; // validation & existing
+      purl
+      ({
+          target:`/User/getUsers`,
+          silent:true,
+          listen:
+          {
+              error:function(e)
+              {
+                  dump(`FAIL userInfo:`,e,"\n\n");
+              },
+              loadend:function(r)
+              {
+                  if(!isJson(r.body)){fail(`expecting JSON`); return};
+                  r=decode.jso(r.body); r.each((v,k)=>{slf[k]=v;})
+              },
+          }
+      });
    }
    .bind({});
 // --------------------------------------------------------------------------------------------------------------------------------------------

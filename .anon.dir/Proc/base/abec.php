@@ -67,6 +67,12 @@ namespace Anon;
       return isKnob(path::info($d,0));
    }
 
+   function isJson($d,$g=null,$l=null)
+   {
+       if(!isText($d,$g,$l)){return false;};
+       try{$r=json_decode($d); return $r;}catch(\Exception $e){return;};
+   };
+
    function isFold($d,$g=null,$l=null){$p=isPath($d,D); if(!$p){return;}; return $p;}
    function isFile($d,$g=null,$l=null){$p=isPath($d,F); if(!$p){return;}; return $p;}
    function isLink($d,$g=null,$l=null){$p=isPath($d,L); if(!$p){return;}; return $p;}
