@@ -301,7 +301,8 @@ namespace Anon;
          // -----------------------------------------------------------------------------------------------------------------------------------
             if(($tnow-$tlst)>=1)
             {
-               $tlst=$tnow; $utxs--; if((($tnow-$emlr)>=$emri)&&$work){$emlr=$tnow; $ping=0; self::emit('mailTime',$sxed);}; // fetch mail
+               $tlst=$tnow; $utxs--;
+               if((($tnow-$emlr)>=$emri)&&$work){$emlr=$tnow; $ping=0; xena::fetchNewAutoMail(); $lost=(time()-$tnow);}; // fetch mail
                $utla=pget("$sesn/TIME"); if(!$utla){$utla=0;}; $usfn=(($tnow-$utla)>=($utmx-($fade*2)-$lost)); // User-Session-Fades-Now (bool)
                if($usfn){$fint--;}; if($fint<1){$utxs=$utmx; $fint=$fade; if($work){$ping=0; self::emit('sesnFade',$sxed);}};
             };
