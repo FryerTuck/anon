@@ -422,6 +422,7 @@ namespace Anon;
          exec::{'git stash'}('/');
          Repo::update('/','master','pull','fromAnon');
          exec::{'git stash apply'}('/');
+         path::make($mp,$pw);
          signal::ClientReboot("new system updates","*");
          return OK;
       }
