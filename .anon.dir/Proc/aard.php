@@ -75,7 +75,7 @@ namespace Anon;
             $c=pget('/Proc/conf/autoMail'); if(!isin($c,'mail://')||!isin($c,'@')||!isin($c,'.')){$d[]='confAutoMail';}; // debug automail
             $v->badCfg=base64_encode(tval($d));
 
-            finish(NAVIPATH,$v);
+            finish(NAVIPATH,$v,FORGET);
          }
 
          $p=NAVIPATH; Time::logEvent(); $q='~/.tmp/Site/';

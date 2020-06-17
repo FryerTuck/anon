@@ -487,9 +487,10 @@ namespace Anon;
          };
 
 
-         ekko::head(['Content-Type'=>$m]); $r=import($a,$vo);
+         $h=['Content-Type'=>$m]; if($nx===FORGET){$h['cache'=>false];};
+         ekko::head($h); $r=import($a,$vo);
          if($r){print_r($r);}elseif(envi('ACCEPT')==='text/plain'){print_r(durl($p));}else{readfile($p);};
-         if(!$nx){die();};
+         if($nx!==NOEXIT){die();};
       };
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------

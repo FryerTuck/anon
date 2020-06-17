@@ -220,7 +220,10 @@ namespace Anon;
    function pget($p,$t=true)
    {
       clearstatcache(); $p=isee($p); if(!$p){return;};
-      if(!is_dir($p)){$r=file_get_contents($p); if($t){$r=trim($r);}; return $r;};
+
+      if(!is_dir($p))
+      {$r=file_get_contents($p); if($t){$r=trim($r);}; return $r;};
+
       $r=array_diff(scandir($p),['.','..']); if(!$t){$r=array_values($r); $r=sort($r); return $r;};
       $z=array(); do{$i=array_shift($r); if($i===null){continue;}; $c=substr($i,0,1); if($c!=='.'){$z[]=$i;};}while(count($r));
       $z=array_values($z); sort($z); return $z;
@@ -525,7 +528,7 @@ namespace Anon;
    defn('BARE LOOP REPO DENY AFTR BFOR FLAT DEEP HIDN EMPT GONE NOFAIL NOINIT NOMAKE NOEXIT DOEXIT OK');
    defn('A B C D E F G H I J K L M N O P Q R S T U V W X Y Z');
    defn('count fetch using alter write claim touch where group order limit parse shape apply erase purge debug dbase table field sproc funct after basis named param parts');
-   defn('NATIVE REMOTE ORIGIN');
+   defn('NATIVE REMOTE ORIGIN FORGET');
    defn('ANY ALL ASC DSC API BOT DPI GUI SSE');
 
    $h=pget('/Proc/conf/hostName'); if(!$h){$h=envi('SERVER_NAME'); if(!$h){$h=envi('HOST');}};
