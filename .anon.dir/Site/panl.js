@@ -91,7 +91,11 @@ extend(Anon)
                           [
                              {col:[{input:`#browseIndx .toolTextFeed .dark`, demo:`0`, title:`start from`}]},
                              {col:[{butn:`#browseButn .AnonToolButn`, icon:`eye`,
-                                 onclick:function(){Anon.Site.tool.import.lazyLoad()}}
+                                 onclick:function()
+                                 {
+                                     select(`#SiteBrwsBody`).innerHTML="";
+                                     Anon.Site.tool.import.lazyLoad();
+                                 }}
                              ]},
                           ]},
                        ]}]}
