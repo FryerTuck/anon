@@ -118,11 +118,13 @@
                {
                   globVars({mailBusy:0});
                   if(isJson(r)){fail(decode.jso(r));return};
+                  if(isin(r,"Network :: 503 Connection Failure")){return};
                   dump("pingMail error:\n"+r);
                },
                loadend:function pingMail(r)
                {
                   r=r.body; globVars({mailBusy:0}); if(r==OK){return;};
+                  if(isin(r,":BUSY:")){return};
                   dump(`mail fail:\n${r}\n\n`);
                },
             }
