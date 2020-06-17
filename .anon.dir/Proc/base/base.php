@@ -486,8 +486,7 @@ namespace Anon;
             $r=json_encode(knob(['name'=>'feed', 'data'=>$r])); print_r($r); flush(); die();
          };
 
-
-         $h=['Content-Type'=>$m]; if($nx===FORGET){$h['cache'=>false];};
+         $h=['Content-Type'=>$m]; if($nx===FORGET){$h['cache']=false;};
          ekko::head($h); $r=import($a,$vo);
          if($r){print_r($r);}elseif(envi('ACCEPT')==='text/plain'){print_r(durl($p));}else{readfile($p);};
          if($nx!==NOEXIT){die();};
