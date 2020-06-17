@@ -210,8 +210,9 @@ namespace Anon;
 
       static function jso($d,$v=null)
       {
-         if(isPath($d)){expect::path($d,[R,F]); $t=pget($d);}else{$t=$d;}; $o=wrapOf($t);
-         $r=json_decode($t); if($o==='{}'){$r=knob($r);}; return $r;
+         if(isPath($d)){$t=pget($d);}else{$t=$d;}; $r=isJson($t);
+         if((wrapOf($t)==='{}')&&!isVoid($r)){$r=knob($r);};
+         return $r;
       }
 
       static function hex($d)
