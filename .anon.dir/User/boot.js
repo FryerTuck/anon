@@ -25,6 +25,7 @@
           {
               error:function(e)
               {
+                  if(isin(e,"<title>403 - Forbidden</title>")){repl.exit();};
                   dump(`FAIL userInfo:`,e,"\n\n");
               },
               loadend:function(r)
