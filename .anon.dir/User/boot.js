@@ -62,15 +62,16 @@
                Busy.edit('initPanl',81); requires(['/User/initBoot/skin.css','/User/initBoot/hack.js'],()=>
                {
                   Busy.edit('initPanl',100); AnonPanl.show(); // finish up as expected
-                  tick.after(50,()=> // force Busy to close after 1 second
+                  tick.after(250,()=> // force Busy to close after 0.25 sec
                   {
-                     if(!select('#busyPane')){return}; if(span(Busy.jobs)>0){Busy.tint('yellow'); dump(Busy.jobs)}; Busy.kill();
+                     if(!select('#busyPane')){return}; if(span(Busy.jobs)>0){Busy.tint('yellow');}; Busy.kill();
                   }); // but show that+why it was forced
 
                   if(!userDoes('work,sudo,lead')){return}; // we want to do something (next) that requires privileges
-                  userInfo(INIT);
+                  userInfo(INIT); // populate user-info
                   let c=getBadConf(); if(!c){return}; // check for bad config, if none then all is good
 
+                  console.error(`badCfg: ${c}`);
                   purl(('/User/readNote/'+c),(r)=>
                   {
                      r=('\n'+r.body+'\n\n'); repl.mumble(r); let h=r.split('\n').length; select('#AnonReplPanl').scrollTop=0;
