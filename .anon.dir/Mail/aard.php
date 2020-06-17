@@ -188,6 +188,7 @@ namespace Anon;
          if(isin($f,'SMTP connect() failed'))
          {
             $i=path::info($c); $u="$i->user@$i->host";
+            if(wrapOf($f)=='{}'){$f=decode::jso($f); dbug::view($f); exit;};
             $r="$m Make sure `$u` allows API access, check its inbox; see Anon manual.\n\nError details:\n$f";
          }
          elseif(arg($f)->startsWith('{"name":"Email","mesg":'))
