@@ -219,8 +219,8 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function pget($p,$t=true)
    {
-      clearstatcache();
-      $p=isee($p); if(!$p){return;}; if(!is_dir($p)){$r=file_get_contents($p); if($t){$r=trim($r);}; return $r;};
+      clearstatcache(); $p=isee($p); if(!$p){return;};
+      if(!is_dir($p)){$r=file_get_contents($p); if($t){$r=trim($r);}; return $r;};
       $r=array_diff(scandir($p),['.','..']); if(!$t){$r=array_values($r); $r=sort($r); return $r;};
       $z=array(); do{$i=array_shift($r); if($i===null){continue;}; $c=substr($i,0,1); if($c!=='.'){$z[]=$i;};}while(count($r));
       $z=array_values($z); sort($z); return $z;
