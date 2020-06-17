@@ -25,7 +25,7 @@ If all went well, the view/page will refresh and you will be logged in.
 ### FIRST TIME
 If you are the one who installed this framework, then use:
 - username: `master`
-- password: `0m1cr0n!`
+- password: `{:/Proc/info/pass.inf:}`
 
 Directly after first login, change your password to something else.
 To get help with changing a password, use command: `help user`

@@ -70,8 +70,8 @@ namespace Anon;
                foreach($d as $f){if(!isText($f)){fail("invalid `autoboot` config in: `$p/autoboot`");}; $r[]=$f;};
             };
 
-            $v=knob(['bootList'=>tval($r)]); unset($d); $d=[];
-            $c=pget('/User/data/master/pass'); if(!$c){wack();}; if(password_verify('0m1cr0n!',$c)){$d[]='editRootPass';};
+            $v=knob(['bootList'=>tval($r)]); unset($d); $d=[]; $x=pget('$/Proc/info/pass.inf');
+            $c=pget('/User/data/master/pass'); if(!$c){wack();}; if(password_verify($x,$c)){$d[]='editRootPass';};
             $c=pget('/Proc/conf/autoMail'); if(!isin($c,'mail://')||!isin($c,'@')||!isin($c,'.')){$d[]='confAutoMail';}; // debug automail
             $v->badCfg=base64_encode(tval($d));
 
@@ -417,8 +417,11 @@ namespace Anon;
 
       static function update()
       {
-         permit::fubu('clan:lead,sudo');
+         permit::fubu('clan:lead,sudo'); $mp='$/User/data/master/pass';
+         $pw=pget($mp); path::make($mp,pget('$/Proc/info/pass.inf'));
+         exec::{'git stash'}('/');
          Repo::update('/','master','pull','fromAnon');
+         exec::{'git stash apply'}('/');
          signal::ClientReboot("new system updates","*");
          return OK;
       }
