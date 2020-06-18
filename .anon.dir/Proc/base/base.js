@@ -334,7 +334,7 @@
                         p=round(((a==X)?((sl+ew)/sw):((st+eh)/sh)),1);
                         z=round((a==M)?0:((a==X)?(sw-(sl+ew)):(sh-(st+eh)))); crd=[x,y,d,a,p,z];
                         if(tgt.scrolling){clearTimeout(tgt.scrolling)};
-                        tgt.scrolling=setTimeout(()=>{tgt.signal('scrollStop',crd)},400);
+                        tgt.scrolling=setTimeout(()=>{tgt.signal('scrollStop',crd)},300);
                      };
                   };
 
