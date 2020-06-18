@@ -83,7 +83,7 @@ extend(Anon)
 
              catMnu:function(f, l,n)
              {
-                 l=[]; n=select(`#browseFltr`);
+                 if(!f){f="*"}; l=[]; n=select(`#browseFltr`);
                  this.filter.forEach((i)=>
                  {
                      if((f!="*")&&!isin(i,f)){return};
@@ -132,12 +132,12 @@ extend(Anon)
 
                 select(`#browseFltr`).listen(`focus`,function(ev)
                 {
-                    Anon.Site.tool.import.catMnu("*");
+                    Anon.Site.tool.import.catMnu();
                 });
 
                 select(`#browseFltr`).listen(`typingStop`,function(ev)
                 {
-                    dump(`stopped typing`);
+                    Anon.Site.tool.import.catMnu(this.value);
                 });
 
                 Anon.Site.tool.import.lazyLoad();
