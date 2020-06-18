@@ -226,8 +226,10 @@
          let f=(((document.body.clientWidth/2)+"").indexOf(".")>-1); if(!f){return};
          (select(".modalBox")||[]).forEach((n)=>
          {
+            if(n.reposi){return};
             let r,x,y; r=rectOf(n); x=r.x; y=r.y;  if(!isFrac(x)){return};  n.reclan("cenmid:posAbs");
             x=Math.floor(x); y=Math.floor(y); n.style.left=`${x}px`; n.style.top=`${y}px`;
+            n.reposi=1;
          });
       });
 
