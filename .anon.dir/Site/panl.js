@@ -132,7 +132,7 @@ extend(Anon)
 
                 select(`#browseFltr`).listen(`focus`,function(ev)
                 {
-                    tick.after(600,()=>{Anon.Site.tool.import.catMnu()});
+                    tick.after(60,()=>{Anon.Site.tool.import.catMnu()});
                 });
 
                 select(`#browseFltr`).listen(`typingStop`,function(ev)
