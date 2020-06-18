@@ -23,6 +23,19 @@ namespace Anon;
       }
 
 
+
+      static function initConf()
+      {
+          permit::fubu("clan:sudo"); $v=knob($_POST);
+          if(!isPass($v->pass)){fail::config("Invalid password. Please try again."); exit;};
+          if(!isPlug($v->mail)){fail::config("Invalid mail-plug. Please try again"); exit;};
+          path::make("$/User/data/master/pass",$v->pass);
+          path::make("$/Proc/conf/autoMail",$v->mail);
+          ekko(OK);
+      }
+
+
+
       static function exists($d)
       {
          if(!isWord($d)){return;}; return (isee("/User/data/$d")?true:false);

@@ -5,7 +5,7 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const getBadConf = function()
    {
-      let l,r; try{l=JSON.parse(atob(badCfg))}catch(e){l=[]}; if(l.length<1){return}; r=l.shift(); return r;
+      let l,r; try{l=JSON.parse(atob(badCfg))}catch(e){l=[]}; if(l.length<1){return}; return l;
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -47,17 +47,17 @@
       // Busy.kill();
       c={ {:'/User/conf/viewConf':} }; c.each((v,k)=>{if(conf[k]){fail('`conf.'+k+'` is already defined');return}; conf[k]=v});
 
-      c=getBadConf(); if(!c){return}; // check for bad config, if none then all is good
-      c=(location.protocol+'//'+location.host); m=rtrim(location.href,'/'); if(m!=c){dump("newGui - from User/boot.js"); newGui('/'); return};
-
-      tick.after(999,()=>
-      {
-         m="!!! WARNING !!!\nSome configuration needs to be set in order for Anon to function properly.\n";
-         if(userDoes('sudo')){m+="See the terminal for more details."}
-         else{m+="Login as `master` -or a user in the `sudo` clan; for help: open the terminal and type: help login"};
-         m+="\nThis alert will go away when the required config has been set.";
-         alert(m);
-      });
+      // c=getBadConf(); if(!c){return}; // check for bad config, if none then all is good
+      // c=(location.protocol+'//'+location.host); m=rtrim(location.href,'/'); if(m!=c){dump("newGui - from User/boot.js"); newGui('/'); return};
+      //
+      // tick.after(999,()=>
+      // {
+      //    m="!!! WARNING !!!\nSome configuration needs to be set in order for Anon to function properly.\n";
+      //    if(userDoes('sudo')){m+="See the terminal for more details."}
+      //    else{m+="Login as `master` -or a user in the `sudo` clan; for help: open the terminal and type: help login"};
+      //    m+="\nThis alert will go away when the required config has been set.";
+      //    alert(m);
+      // });
    }());
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -87,7 +87,31 @@
                   userInfo(INIT); // populate user-info
                   let c=getBadConf(); if(!c){return}; // check for bad config, if none then all is good
 
-                  console.error(`badCfg: ${c}`);
+                  if(isin(c,"editRootPass")&&isin(c,"confAutoMail"))
+                  {
+                      popModal(`cog :: Base system configuration`)
+                      ({
+                          body:[{panl:
+                          [
+                              {p:`The master password and default mail account needs to be set before this system can be used.`},
+                              {input:`#pass`, type:`password`, demo:`master password`},
+                              {input:`#mail`, type:`text`, demo:`mail://username:PassW0rd@example.com`},
+                          ]}],
+                          foot:
+                          [
+                              {butn:`.good`, text:`Save`, onclick:function()
+                              {
+                                  purl(`/User/initConf`,{pass:select(`#pass`),mail:select(`#mail`)},(r)=>
+                                  {
+                                      r=r.body; if(r==OK){this.root.exit()};
+                                  });
+                              }},
+                              {butn:`Cancel`},
+                          ],
+                      });
+                      return;
+                  };
+
                   purl(('/User/readNote/'+c),(r)=>
                   {
                      r=('\n'+r.body+'\n\n'); repl.mumble(r); let h=r.split('\n').length; select('#AnonReplPanl').scrollTop=0;
