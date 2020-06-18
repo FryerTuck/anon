@@ -92,7 +92,7 @@ extend(Anon)
                  });
                  remove(`#AnonDropMenu`); if(l.length<1){return};
                  // dump(l,n.parentNode);
-                 dropMenu(l,n.parentNode);
+                 dropMenu(l);
              },
 
              browse:function(tab)
