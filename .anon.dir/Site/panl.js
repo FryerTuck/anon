@@ -88,7 +88,7 @@ extend(Anon)
                  {
                      if((f!="*")&&!isin(i,f)){return};
                      radd(l,{item:"", text:i, onclick:function()
-                     {n.value=this.text}});
+                     {n.value=this.select("span")[0].innerHTML}});
                  });
                  remove(`#AnonDropMenu`); if(l.length<1){return};
                  // dump(l,n.parentNode);
@@ -132,7 +132,7 @@ extend(Anon)
 
                 select(`#browseFltr`).listen(`focus`,function(ev)
                 {
-                    Anon.Site.tool.import.catMnu();
+                    tick.after(60,()=>{Anon.Site.tool.import.catMnu()});
                 });
 
                 select(`#browseFltr`).listen(`typingStop`,function(ev)
