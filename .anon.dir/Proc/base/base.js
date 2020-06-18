@@ -1644,17 +1644,18 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    extend(MAIN)
    ({
-      dropMenu:function(a)
+      dropMenu:function(a,h)
       {
-         remove('#AnonDropMenu'); if(isList(a)){return this.make(a)};
-         if(isKnob(a)){return function(l){return this.fnc(l,this.atr)}.bind({fnc:this.make,atr:a});};
+         remove('#AnonDropMenu'); if(isList(a)){return this.make(a,{},h)};
+         if(isKnob(a)){return function(l){return this.fnc(l,this.atr,this.tgt)}.bind({fnc:this.make,atr:a,tgt:h});};
          fail('expecting list or knob');
       }
-      .bind({make:function(l,a, r,c)
+      .bind({make:function(l,a,h, r,c)
       {
          if(!isKnob(l[0])){return}; r=create('dropmenu'); if(!isKnob(a)){a={}}; a.id='AnonDropMenu';
          c=a.context; delete a.context; r.modify(a); r.setStyle({left:cursor.posx,top:cursor.posy});
-         l.forEach((i)=>{i.context=c; r.insert(i)}); document.body.insert(r);
+         l.forEach((i)=>{i.context=c; r.insert(i)});
+         if(!isNode(h)){h=document.body}; h.insert(r);
       }}),
    });
 

@@ -65,10 +65,20 @@ namespace Anon;
       static function importBrowse()
       {
           permit::fubu("clan:work");
-          $vars=knob($_POST); $from=$vars->from; $host="https://www.free-css.com";
-          $html=spuf("$host/free-css-templates?start=$from",null,"$host/");
+          $vars=knob($_POST); $from=$vars->from; $fltr=$vars->fltr; $host="https://www.free-css.com";
+          $lpth=(($fltr==='*')?'free-css-templates':"template-categories/$fltr");
+          $resl=knob(['cats'=>[],'lyst'=>[]]);
+
+          if(($from===0)&&($fltr==='*'))
+          {
+              $html=spuf("$host/template-categories");
+              $html=expose($html,'<ul id="taglist"','</ul>')[0];
+              $resl->cats=expose($html,'/template-categories/','">');
+          };
+
+          $html=spuf("$host/$lpth?start=$from",null,"$host/");
           if(!$html){done(FAIL);}; $fixr='/free-css-templates';
-          $list=expose($html,"<figure>","</figure>"); $resl=[];
+          $list=expose($html,"<figure>","</figure>");
 
           foreach($list as $item)
           {
@@ -76,7 +86,7 @@ namespace Anon;
               $href=expose($item,'<a href="','"')[0];
               $href=("$host/assets/files".swap($href,$fixr,"$fixr/preview"));
               $face=expose($item,'<img src="','"')[0]; $face=swap($face,'/assets',"$host/assets");
-              $resl[]=knob(['name'=>$name,'href'=>"$href/",'face'=>$face]);
+              $resl->lyst[]=knob(['name'=>$name,'href'=>"$href/",'face'=>$face]);
           };
 
           ekko($resl);

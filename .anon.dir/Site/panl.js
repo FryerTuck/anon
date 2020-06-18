@@ -79,6 +79,19 @@ extend(Anon)
       {
          import:
          {
+             filter:[],
+
+             catMnu:function(f, l)
+             {
+                 l=[]; this.filter.forEach((i)=>
+                 {
+                     if(!isin(i,f)){return};
+                     radd(l,{item:"", text:i, onclick:function()
+                     {select(`#browseFltr`).value=this.text}});
+                 });
+                 remove(`#AnonDropMenu`); if(l.length<1){return};
+             },
+
              browse:function(tab)
              {
                 tab.body.insert({grid:
@@ -113,6 +126,11 @@ extend(Anon)
                     Anon.Site.tool.import.lazyLoad();
                 });
 
+                select(`#browseFltr`).listen(`focus`,function(ev)
+                {
+                    dropMenu();
+                });
+
                 select(`#browseFltr`).listen(`typingStop`,function(ev)
                 {
                     dump(`stopped typing`);
@@ -122,16 +140,19 @@ extend(Anon)
              },
 
 
-             lazyLoad:function(idx, frm,bdy,ldd)
+             lazyLoad:function(idx, frm,flt,bdy,ldd)
              {
                  frm=((select(`#browseIndx`).value.trim()*1)||0);
+                 flt=(select(`#browseFltr`).value.trim()||"*");
                  if(!isInum(frm)){popAlert(`invalid "start from" number`);return};
                  bdy=select(`#SiteBrwsBody`);
-                 ldd=bdy.select(`.tmplItem`); if(ldd){frm+=(ldd.length+1)};
+                 ldd=bdy.select(`.tmplItem`); if(ldd){frm+=ldd.length};
 
-                 purl(`Site/importBrowse`,{from:frm},(rsp)=>
+                 purl(`Site/importBrowse`,{from:frm,fltr:flt},(rsp)=>
                  {
-                     rsp=decode.jso(rsp.body); rsp.forEach((o)=>
+                     rsp=decode.jso(rsp.body);
+                     if((frm==0)&&(flt=='*')){Anon.Site.tool.import.filter=rsp.cats};
+                     rsp.lyst.forEach((o)=>
                      {
                          bdy.insert({wrap:
                          [
