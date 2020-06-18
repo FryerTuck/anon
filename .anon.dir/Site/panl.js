@@ -249,7 +249,7 @@ extend(Anon)
                             if(nodeName(n)==`a`)
                             {
                                 let hr=n.getAttribute(`href`); if(isVoid(hr)){hr=""};
-                                if(hr.startsWith(`http:/`)||hr.startsWith(`https:/`)||hr.startsWith(`//`))
+                                if(hr.startsWith(`http:/`)||hr.startsWith(`https:/`)||hr.startsWith(`//`)||isPath(hr)||isPath('/'+hr))
                                 {n.setAttribute(`href`,`#`)};
                             };
 
