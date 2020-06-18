@@ -86,7 +86,7 @@ extend(Anon)
                  l=[]; n=select(`#browseFltr`);
                  this.filter.forEach((i)=>
                  {
-                     if(!isin(i,f)){return};
+                     if((f!="*")&&!isin(i,f)){return};
                      radd(l,{item:"", text:i, onclick:function()
                      {n.value=this.text}});
                  });
@@ -130,7 +130,7 @@ extend(Anon)
 
                 select(`#browseFltr`).listen(`focus`,function(ev)
                 {
-                    dropMenu();
+                    Anon.Site.tool.import.catMnu("*");
                 });
 
                 select(`#browseFltr`).listen(`typingStop`,function(ev)
