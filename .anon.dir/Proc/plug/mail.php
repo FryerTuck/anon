@@ -170,7 +170,7 @@ namespace Anon;
          if(isVoid($html)){$html=(!isVoid($w->mesgBody)?$w->mesgBody:$text);};
          $dbug=3; dbug::$temp=''; $secu=(($port===587)?'tls':'ssl'); requires::phpx('openssl');
          if(isVoid($html)){$html='(no message)';};
-         $cert=pget("$/Mail/vars/$user"); $cert=(isin($cert,'novalidate-cert')?0:1);
+         if(!$fcrt){$fcrt=(isin(pget("$/Mail/vars/$user"),'novalidate-cert')?1:0);};
          $cdom=HOSTNAME; $z=knob(['done'=>0,'fail'=>null]); $skey=sesn('HASH');
          $send=array
          (
@@ -180,7 +180,7 @@ namespace Anon;
             'smtpPort' => $port,
             'smtpUser' => $user,
             'smtpPass' => $pass,
-            'certFail' => (!$cert),
+            'certFail' => $fcrt,
             'fromAddr' => $from,
             'fromName' => $name,
             'destAddr' => $da,
@@ -202,6 +202,8 @@ namespace Anon;
                'sendMail' => $send,
             ]
          ]);
+
+         if(isin($resp,'SMTP connect() failed')&&!$fcrt){$resp=$this->insert($oa,1);};
 
          $resp=trim($resp); if(!$resp){$resp='{"head":{},"body":""}';}; $resp=decode::jso($resp);
          if($resp->body===OK){$z->done=1;}else{$z->fail=$resp->body;};
