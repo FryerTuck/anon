@@ -83,10 +83,19 @@ namespace Anon;
 
          $fm=['Certificate failure','Can not authenticate','Retrying PLAIN authentication','IMAP connection broken'];
          $uf="unhandled IMAP connection error.\n\nThis spilled out:\n"; $ff=''; $lf='';
+         $cz=pget("$/Mail/vars/tested/$u");
+
+         if($cz)
+         {
+             $r=$this->engage($cz,$u,$p,$o); $f=$r->fail;
+             if($r->link){$this->link=$r->link; return $this->link;};
+             wait(250);
+         };
 
          foreach($ca as $cs)
          {
-             $r=$this->engage($cs,$u,$p,$o); $f=$r->fail; if($r->link){$this->link=$r->link; return $this->link;};
+             $r=$this->engage($cs,$u,$p,$o); $f=$r->fail;
+             if($r->link){$this->link=$r->link; path::make("$/Mail/vars/tested/$u",$cs); return $this->link;};
              if($f&&!$ff){$ff=$f;}; $f=trim(($f?$f:'')); $f=depose($f,'<title>','</title>');
              if(!isin($f,$fm))
              {
