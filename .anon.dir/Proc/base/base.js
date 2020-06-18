@@ -315,7 +315,7 @@
                      if(key&&(btn.slice(0,key.length)==key)){key=btn}else{key=VOID};
                      if(!this.ice&&this.kpr){if(key==btn){this.run(evnt);};return};
                      if(tgt.typing){clearTimeout(tgt.typing)};
-                     tgt.typing=setTimeout(()=>{tgt.signal('typingStop',crd)},300);
+                     tgt.typing=setTimeout(()=>{tgt.signal('typingStop',crd)},400);
                   }
                   else
                   {
