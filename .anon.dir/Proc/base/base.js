@@ -1650,12 +1650,13 @@
          if(isKnob(a)){return function(l){return this.fnc(l,this.atr,this.tgt)}.bind({fnc:this.make,atr:a,tgt:h});};
          fail('expecting list or knob');
       }
-      .bind({make:function(l,a,h, r,c)
+      .bind({make:function(l,a,h, r,p,c,b)
       {
          if(!isKnob(l[0])){return}; r=create('dropmenu'); if(!isKnob(a)){a={}}; a.id='AnonDropMenu';
-         c=a.context; delete a.context; r.modify(a); r.setStyle({left:cursor.posx,top:cursor.posy});
-         l.forEach((i)=>{i.context=c; r.insert(i)});
-         if(!isNode(h)){h=document.body}; h.insert(r);
+         if(!isNode(h)){h=document.body; p={x:cursor.posx,y:cursor.posy}}
+         else{b=rectOf(h); p={x:b.x,y:(b.y+b.height)}};
+         c=a.context; delete a.context; r.modify(a); r.setStyle({left:p.x,top:p.y});
+         l.forEach((i)=>{i.context=c; r.insert(i)}); h.insert(r);
       }}),
    });
 
