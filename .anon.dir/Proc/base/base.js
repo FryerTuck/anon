@@ -1653,10 +1653,10 @@
       .bind({make:function(l,a,h, r,p,c,b)
       {
          if(!isKnob(l[0])){return}; r=create('dropmenu'); if(!isKnob(a)){a={}}; a.id='AnonDropMenu';
-         if(!isNode(h)){h=document.body; p={x:cursor.posx,y:cursor.posy}}
+         if(!isNode(h)){p={x:cursor.posx,y:cursor.posy}}
          else{b=rectOf(h); p={x:b.x,y:(b.y+b.height)}};
          c=a.context; delete a.context; r.modify(a); r.setStyle({left:p.x,top:p.y});
-         l.forEach((i)=>{i.context=c; r.insert(i)}); h.insert(r);
+         l.forEach((i)=>{i.context=c; r.insert(i)}); document.body.insert(r);
       }}),
    });
 

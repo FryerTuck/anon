@@ -91,8 +91,8 @@ extend(Anon)
                      {n.value=this.text}});
                  });
                  remove(`#AnonDropMenu`); if(l.length<1){return};
-                 dump(l,n.parentNode);
-                 // dropMenu(l,n.parentNode);
+                 // dump(l,n.parentNode);
+                 dropMenu(l,n.parentNode);
              },
 
              browse:function(tab)
