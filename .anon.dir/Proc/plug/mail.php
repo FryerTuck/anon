@@ -155,17 +155,21 @@ namespace Anon;
       {
          $oa=dupe($a);
          if(isAssa($a)){$a=knob($a,1);}; expect::knob($a); $I=$this->mean;
-         if($a->debug){$dbug=1;}; if(!isKnob($a->write)){$w=dupe($a); $a=knob(['write'=>$w]);}else{$w=$a->write;}; expect::knob($w);
+         if($a->debug){$dbug=1;}; if(!isKnob($a->write)){$w=dupe($a); $a=knob(['write'=>$w]);}else{$w=$a->write;};
+         expect::knob($w); $da=$w->destAddy;
 
-         $da=$w->destAddy; if(!$da){$da=$w->destAddr;}; $dn=$w->destName; if(!$dn){$dnn=stub($da,'@')[0]; $dn=explode('.',$dn)[0];};
+         if(!$da){$da=$w->destAddr;}; $dn=$w->destName; if(!$dn){$dnn=stub($da,'@')[0]; $dn=explode('.',$dn)[0];};
 
          // validEmail($w->destAddy,'destAddy')[0];
-         $host="smtp.$I->host"; if($I->vars&&$I->vars->smtp){$host=$I->vars->smtp;}; $port=$I->port; if($port!==587){$port=465;};
+         $host="smtp.$I->host"; if($I->vars&&$I->vars->smtp){$host=$I->vars->smtp;};
+         $port=$I->port; if($port!==587){$port=465;};
          $user="$I->user@$I->host"; $pass=$I->pass;
          $name=($w->fromName?$w->fromName:$I->user); if(isin($name,'.')){$name=stub($name,'.')[0];};
          $from=($w->fromAddr?$w->fromAddr:$w->fromAddy); $html=$w->htmlBody; $text=$w->textBody;
-         $head=$w->mesgHead; if(isVoid($head)){$head='(no subject)';}; if(isVoid($html)){$html=(!isVoid($w->mesgBody)?$w->mesgBody:$text);};
-         $dbug=3; dbug::$temp=''; $secu=(($port===587)?'tls':'ssl'); requires::phpx('openssl'); if(isVoid($html)){$html='(no message)';};
+         $head=$w->mesgHead; if(isVoid($head)){$head='(no subject)';};
+         if(isVoid($html)){$html=(!isVoid($w->mesgBody)?$w->mesgBody:$text);};
+         $dbug=3; dbug::$temp=''; $secu=(($port===587)?'tls':'ssl'); requires::phpx('openssl');
+         if(isVoid($html)){$html='(no message)';};
          $cdom=HOSTNAME; $z=knob(['done'=>0,'fail'=>null]); $skey=sesn('HASH');
          $send=array
          (

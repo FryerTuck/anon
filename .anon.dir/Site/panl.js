@@ -58,7 +58,8 @@ extend(Anon)
          ([
             {butn:`.longMenuButn`, text:`browse templates`, onclick:function(){Anon.Site.open(`import`,`browse`)}},
             {butn:`.longMenuButn`, text:`import from URL`, onclick:function(){Anon.Site.open(`import`,`fromURL`)}},
-            {butn:`.longMenuButn`, text:`create template`, onclick:function(){Anon.Site.open(`create`,`brandNew`)}},
+            {butn:`.longMenuButn`, text:`modify website`, onclick:function(){Anon.Site.open(`modify`,`existing`)}},
+            // {butn:`.longMenuButn`, text:`create template`, onclick:function(){Anon.Site.open(`create`,`brandNew`)}},
          ]);
 
          Busy.edit('/Site/panl.js',100);
@@ -193,7 +194,6 @@ extend(Anon)
                           {row:
                           [
                              {butn:`.dark .warn`, text:`load`, hint:`loads the template in the URL above`, onclick:function(){Anon.Site.tool.import.load()}},
-                             {butn:`.dark .good`, text:`save`, hint:`saves changes made to the loaded template`, onclick:function(){Anon.Site.tool.import.save()}},
                              {butn:`.dark .need`, text:`pick`, hint:`use this template as main website template`, onclick:function(){Anon.Site.tool.import.pick()}},
                              {butn:`.dark .harm`, text:`void`, hint:`forgets this loaded/saved template so it can be loaded fresh`, onclick:function(){Anon.Site.tool.import.void()}},
                           ]},
@@ -291,12 +291,6 @@ extend(Anon)
             },
 
 
-            save:function()
-            {
-                dump(`save`);
-            },
-
-
             pick:function()
             {
                 dump(`pick`);
@@ -307,12 +301,6 @@ extend(Anon)
             {
                 dump(`void`);
             },
-
-
-            edit:function(n)
-            {
-                popAlert(`Edit Imported Template : Editing parts of an imported template`);
-            },
          },
 
 
@@ -320,6 +308,16 @@ extend(Anon)
          create:
          {
              brandNew:function(tab)
+             {
+                 popAlert(`TODO : This feature is not available yet.`);
+             },
+         },
+
+
+
+         modify:
+         {
+             existing:function(n)
              {
                  popAlert(`TODO : This feature is not available yet.`);
              },

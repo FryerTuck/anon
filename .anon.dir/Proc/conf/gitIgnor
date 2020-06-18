@@ -18,6 +18,9 @@
 /Proc/conf/hostName
 /Proc/vars/lastDbug
 
+/Site/tmpl/*
+!/Site/tmpl/Anon
+
 /Task/data/*
 /Task/vars/*
 /Task/conf/autoMail

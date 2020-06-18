@@ -230,6 +230,19 @@ namespace Anon;
 
 
 
+      static function importPick()
+      {
+          permit::fubu("clan:work");
+          $vars=knob($_POST); $purl=$vars->purl; $surl=rshave($purl,"/");
+          $hash=md5($purl); $tmpl=rstub($surl,"/")[2]; $path="$/Site/tmpl";
+          path::copy("$path/Anon/base","$path/$tmpl/base");
+          path::copy("$path/Anon/conf","$path/$tmpl/conf");
+          path::copy("~/.tmp/Site/$hash","$path/$tmpl");
+          path::move("$path/$tmpl/aard.htm","$path/$tmpl/base/surf.htm");
+      }
+
+
+
       static function brandNew()
       {
           permit::fubu("clan:work");

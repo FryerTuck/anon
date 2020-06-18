@@ -28,7 +28,7 @@ namespace Anon;
       $L->SMTPDebug  = 3;              // Enable verbose debug output
       $L->Host       = $O->smtpHost;   // Set the SMTP server to send through
       $L->SMTPAuth   = $O->smtpAuth;   // Enable SMTP authentication
-      $L->SMTPSecure = $O->smtpSecu;   // Enable TLS encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
+      $L->SMTPSecure = $O->smtpSecu;   // Enable TLS/SSL encryption; `PHPMailer::ENCRYPTION_SMTPS` encouraged
       $L->Port       = $O->smtpPort;   // TCP port to connect to, use 465 for `PHPMailer::ENCRYPTION_SMTPS` above
       $L->Username   = $O->smtpUser;   // SMTP username
       $L->Password   = $O->smtpPass;   // SMTP password
@@ -49,6 +49,7 @@ namespace Anon;
       }};
 
       ob_start(); $r=$L->send(); $ob=ob_get_clean();
-      ekko(($r?OK:$ob));
+      if($r){ekko($r); exit;};
+      print_r($ob); exit;
    });};
 // ----------------------------------------------------------------------------------------------------------------------------
