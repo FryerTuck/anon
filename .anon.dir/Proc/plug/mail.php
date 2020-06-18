@@ -170,6 +170,7 @@ namespace Anon;
          if(isVoid($html)){$html=(!isVoid($w->mesgBody)?$w->mesgBody:$text);};
          $dbug=3; dbug::$temp=''; $secu=(($port===587)?'tls':'ssl'); requires::phpx('openssl');
          if(isVoid($html)){$html='(no message)';};
+         $cert=pget("$/Mail/vars/$user"); $cert=(isin($cert,'novalidate-cert')?0:1);
          $cdom=HOSTNAME; $z=knob(['done'=>0,'fail'=>null]); $skey=sesn('HASH');
          $send=array
          (
@@ -179,6 +180,7 @@ namespace Anon;
             'smtpPort' => $port,
             'smtpUser' => $user,
             'smtpPass' => $pass,
+            'certFail' => (!$cert),
             'fromAddr' => $from,
             'fromName' => $name,
             'destAddr' => $da,

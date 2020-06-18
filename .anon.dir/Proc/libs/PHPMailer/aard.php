@@ -34,6 +34,18 @@ namespace Anon;
       $L->Password   = $O->smtpPass;   // SMTP password
 
       $L->isSMTP();                    // Send using SMTP
+
+      if($O->certFail)
+      {
+        $L->SMTPOptions = array(
+            'ssl' => array(
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+            )
+        );
+      };
+
       $L->isHTML(true);                // Use HTML formatted mail
       $L->setFrom($O->fromAddr,$O->fromName);
       $L->addAddress($O->destAddr,$O->destName);
