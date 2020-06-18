@@ -81,15 +81,17 @@ extend(Anon)
          {
              filter:[],
 
-             catMnu:function(f, l)
+             catMnu:function(f, l,n)
              {
-                 l=[]; this.filter.forEach((i)=>
+                 l=[]; n=select(`#browseFltr`);
+                 this.filter.forEach((i)=>
                  {
                      if(!isin(i,f)){return};
                      radd(l,{item:"", text:i, onclick:function()
-                     {select(`#browseFltr`).value=this.text}});
+                     {n.value=this.text}});
                  });
                  remove(`#AnonDropMenu`); if(l.length<1){return};
+                 dropMenu(l,n.parentNode);
              },
 
              browse:function(tab)
