@@ -108,7 +108,6 @@ extend(Anon)
                 select(`#SiteBrwsBody`).listen(`scrollStop`,function(ev)
                 {
                     let ed=ev.detail; if((ed[2]!=D)||(ed[5]>400)){return};
-                    dump(ed);
                     Anon.Site.tool.import.lazyLoad();
                 });
 
