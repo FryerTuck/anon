@@ -48,6 +48,7 @@
     max-height:300px;
     overflow:auto !important;
     margin-left:6px;
+    margin-top:-6px;
 }
 
 
