@@ -89,7 +89,8 @@ extend(Anon)
                        [
                           {row:
                           [
-                             {col:[{input:`#browseIndx .toolTextFeed .dark`, demo:`0`, title:`start from`}]},
+                             {col:[{input:`#browseIndx .toolTextFeed .dark`, demo:`0`, hint:`start from`}]},
+                             {col:[{input:`#browseFltr .toolTextFeed .dark`, demo:`*`, hint:`category`}]},
                              {col:[{butn:`#browseButn .AnonToolButn`, icon:`eye`,
                                  onclick:function()
                                  {
@@ -107,9 +108,14 @@ extend(Anon)
 
                 select(`#SiteBrwsBody`).listen(`scrollStop`,function(ev)
                 {
-                    let ed=ev.detail; //dump(ed); 
+                    let ed=ev.detail; //dump(ed);
                     if((ed[2]!=D)||(ed[5]>400)){return};
                     Anon.Site.tool.import.lazyLoad();
+                });
+
+                select(`#browseFltr`).listen(`typingStop`,function(ev)
+                {
+                    dump(`stopped typing`);
                 });
 
                 Anon.Site.tool.import.lazyLoad();
