@@ -105,16 +105,11 @@ extend(Anon)
                      ]}]}]},
                 ]});
 
-                select(`#SiteBrwsBody`).listen(`wheel`,function()
+                select(`#SiteBrwsBody`).listen(`scrollStop`,function(ev)
                 {
-                    if(this.busy){clearTimeout(this.busy);}; this.busy=setTimeout(()=>
-                    {
-                        let sb=(this.scrollHeight-this.scrollTop==(this.clientHeight));
-                        if(sb){Anon.Site.tool.import.lazyLoad()};
-                    },500);
-
-                    // dump(sa);
-                    //  if(sa>0.8){Anon.Site.tool.import.lazyLoad();};
+                    let ed=ev.detail; if((ed[2]!=D)||(ed[5]>400)){return};
+                    dump(ed);
+                    Anon.Site.tool.import.lazyLoad();
                 });
 
                 Anon.Site.tool.import.lazyLoad();

@@ -87,12 +87,13 @@ namespace Anon;
          foreach($ca as $cs)
          {
              $r=$this->engage($cs,$u,$p,$o); $f=$r->fail; if($r->link){$this->link=$r->link; return $this->link;};
-             if($f&&!$ff){$ff=$f;}; $f=trim(($f?$f:''));
+             if($f&&!$ff){$ff=$f;}; $f=trim(($f?$f:'')); $f=depose($f,'<title>','</title>');
              if(!isin($f,$fm))
              {
                 if(facing('SSE')){Proc::emit('dump',"$uf $f"); wait(550);}; // save debugging hours
-                if((wrapOf($f)==='{}')&&isin($f,'"name":"')&&isin($f,'"line":"')){$f=decode::jso($f); $f->mesg=($uf.$f->mesg); dbug::spew($f);};
-                fail("$uf $f"); return;
+                if((wrapOf($f)==='{}')&&isin($f,'"name":"')&&isin($f,'"line":"'))
+                {$f=decode::jso($f); $f->mesg=($uf.$f->mesg); dbug::spew($f); $this->fail=$f; return;};
+                fail::mail("$uf $f"); return;
              };
              wait(250);
          };

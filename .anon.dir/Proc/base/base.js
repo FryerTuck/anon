@@ -291,16 +291,16 @@
          if(!!obst&&!!ice){radd(obst.listensFor,ice)}; evt.forEach((e)=>
          {
             if(e.slice(0,2)=='on'){e=e.slice(2)}; self.events[e]=hash; if(!!obst&&!!ice){radd(obst.listensFor,e)};
-            Listen.jobs[hash]=[e,cbf]; let alt=VOID;
+            Listen.jobs[hash]=[e,cbf]; let alt=VOID; let evn=e;
 
             if(obst&&(e=='dragstart')){obst.draggable=true; obst.setAttribute('draggable',true);};
             if(obst&&((e=='drop')||(e=='feed'))){obst.onFeed(cbf);return};
             if(isin(once,e)){opt=ONCE};
 
-            if(isin(e,['down','up','key','click','Click','contextmenu','mouse','Mouse','wheel']))
+            if(isin(e,['down','up','key','click','Click','contextmenu','mouse','Mouse','wheel','scroll']))
             {
                let kpr; if(isin(e,'key')&&isin(e,':')){kpr=stub(e,':'); e=kpr[0]; kpr=kpr[2]; if(e=='key'){e='keydown'}};
-               if(e=='LeftClick'){e='click';}else if(e=='RightClick'){e='contextmenu'};
+               if(e=='LeftClick'){e='click';}else if(e=='RightClick'){e='contextmenu'}else if(e=='scroll'){e='wheel'};
 
                alt=function(evnt)
                {
@@ -322,11 +322,19 @@
                      else if(evnt.type=='mouseover'){btn='MouseOver'}else if(evnt.type=='mouseout'){btn='MouseOut'}
                      else if(evnt.which==null){btn=((evnt.button<2)?"LeftClick":((event.button==4)?"MiddleClick":"RightClick"))}
                      else{(btn=(evnt.which<2)?"LeftClick":((evnt.which==2)?"MiddleClick":"RightClick"))};
-                     crd=[evnt.clientX,evnt.clientY]; if(btn=='MouseWheel')
+                     crd=[evnt.clientX,evnt.clientY];
+                     if(btn=='MouseWheel')
                      {
                         // dump(evnt);
-                        let x=(Math.round(evnt.deltaX)||0); let y=(Math.round(evnt.deltaY)||0); if(!x){x=0;}; if(!y){y=0;};
-                        if(evnt.deltaMode==1){x*=12; y*=12}; crd=[x,y];
+                        let x=(Math.round(evnt.deltaX)||0); let y=(Math.round(evnt.deltaY)||0); let ew,sw,sl,bx,xr,xd,xp,a;
+                        let d; if(!x){x=0;}; if(!y){y=0;}; if(evnt.deltaMode==1){x*=12; y*=12}; let eh,sh,st,el,yr,yd,yp,p;
+                        el=tgt; bx=rectOf(el); ew=bx.width; eh=bx.height; sw=el.scrollWidth; sh=el.scrollHeight;
+                        d=((sw>ew)?((x>0)?R:((x<0)?L:M)):((sh>eh)?((y>0)?D:((y<0)?U:M)):M)); let z;
+                        a=((d==M)?M:(((d==L)||(d==R))?X:Y)); sl=el.scrollLeft; st=el.scrollTop;
+                        p=round(((a==X)?((sl+ew)/sw):((st+eh)/sh)),1);
+                        z=round((a==M)?0:((a==X)?(sw-(sl+ew)):(sh-(st+eh)))); crd=[x,y,d,a,p,z];
+                        if(tgt.scrolling){clearTimeout(tgt.scrolling)};
+                        tgt.scrolling=setTimeout(()=>{tgt.signal('scrollStop',crd)},400);
                      };
                   };
 
@@ -340,7 +348,7 @@
                   if(cmb&&(this.ice==cmb)){grb=1; this.run(evnt,grb); return};
                   return;
                }
-               .bind({tgt:self,cbf:cbf,ice:ice,pvk:[],kpr:kpr,run:function(fe,ge)
+               .bind({tgt:self,cbf:cbf,ice:ice,pvk:[],kpr:kpr,evn:e,run:function(fe,ge)
                {
                   if(ge){fe.preventDefault(); fe.stopPropagation();};
                   if(isNode(this.tgt)&&this.tgt.disabled&&this.tgt.inclan('disabled')){return};
