@@ -105,7 +105,7 @@ extend(Anon)
                           {row:
                           [
                              {col:[{input:`#browseIndx .toolTextFeed .dark`, demo:`0`, hint:`start from`}]},
-                             {col:[{input:`#browseFltr .toolTextFeed .dark`, demo:`*`, hint:`category`}]},
+                             {col:[{input:`#browseFltr .toolTextFeed .dark`, demo:`*`, hint:`category`, autocomplete:"off"}]},
                              {col:[{butn:`#browseButn .AnonToolButn`, icon:`eye`,
                                  onclick:function()
                                  {
