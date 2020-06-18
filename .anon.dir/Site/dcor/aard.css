@@ -76,3 +76,10 @@
 {
     background-size:cover;
 }
+
+
+.SiteBrwsCats
+{
+    max-height:300px;
+    overflow:auto !important;
+}

@@ -93,7 +93,10 @@ extend(Anon)
                  remove(`#AnonDropMenu`); if(l.length<1){return};
                  // dump(l,n.parentNode);
 
-                 tick.after(90,()=>{dropMenu(l,n.parentNode)});
+                 tick.after(60,()=>
+                 {
+                     dropMenu({class:"SiteBrwsCats"},n.parentNode)(l);
+                 });
              },
 
              browse:function(tab)
