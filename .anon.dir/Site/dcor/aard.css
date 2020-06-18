@@ -42,6 +42,15 @@
 }
 
 
+.SiteBrwsCats
+{
+    width:160px;
+    max-height:300px;
+    overflow:auto !important;
+    margin-left:6px;
+}
+
+
 #browseButn
 {
     margin-top:3px;
@@ -75,11 +84,4 @@
 #SiteBrwsBody .tmplItem
 {
     background-size:cover;
-}
-
-
-.SiteBrwsCats
-{
-    max-height:300px;
-    overflow:auto !important;
 }
