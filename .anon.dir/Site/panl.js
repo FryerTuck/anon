@@ -92,8 +92,8 @@ extend(Anon)
                  });
                  remove(`#AnonDropMenu`); if(l.length<1){return};
                  // dump(l,n.parentNode);
-                 dump("yo");
-                 dropMenu(l,n.parentNode);
+
+                 tick.after(90,()=>{dropMenu(l,n.parentNode)});
              },
 
              browse:function(tab)
@@ -132,7 +132,7 @@ extend(Anon)
 
                 select(`#browseFltr`).listen(`focus`,function(ev)
                 {
-                    tick.after(60,()=>{Anon.Site.tool.import.catMnu()});
+                    tick.after(600,()=>{Anon.Site.tool.import.catMnu()});
                 });
 
                 select(`#browseFltr`).listen(`typingStop`,function(ev)
