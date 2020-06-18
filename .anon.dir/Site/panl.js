@@ -155,7 +155,7 @@ extend(Anon)
                  purl(`Site/importBrowse`,{from:frm,fltr:flt},(rsp)=>
                  {
                      rsp=decode.jso(rsp.body);
-                     if((frm==0)&&(flt=='*')){Anon.Site.tool.import.filter=rsp.cats};
+                     if((frm==0)&&(flt=='*')){Anon.Site.tool.import.filter=rsp.cats.sort()};
                      rsp.lyst.forEach((o)=>
                      {
                          bdy.insert({wrap:
