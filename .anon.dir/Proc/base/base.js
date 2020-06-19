@@ -459,6 +459,7 @@
                   purl
                   ({
                      target:evnt.Target.purl,
+                     silent:true,
                      listen:
                      {
                         error:function(e)
