@@ -94,7 +94,7 @@
                           body:[{panl:
                           [
                               {p:`The master password and default mail account needs to be set before this system can be used.`},
-                              {input:`#pass`, type:`password`, demo:`master password`},
+                              {input:`#pass`, type:`password`, demo:`master password`, style:{marginBottom:10}},
                               {input:`#mail`, type:`text`, demo:`mail://username:PassW0rd@example.com`},
                           ]}],
                           foot:
