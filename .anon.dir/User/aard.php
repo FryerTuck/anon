@@ -29,7 +29,7 @@ namespace Anon;
           permit::fubu("clan:sudo"); $v=knob($_POST);
           if(!isPass($v->pass)){fail::config("Invalid password. Please try again."); exit;};
           if(!isPurl($v->mail)){fail::config("Invalid mail-plug. Please try again"); exit;};
-          path::make("$/User/data/master/pass",$v->pass);
+          path::make("$/User/data/master/pass",password_hash($v->pass,PASSWORD_DEFAULT));
           path::make("$/Proc/conf/autoMail",$v->mail);
           ekko(OK);
       }
