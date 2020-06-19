@@ -1995,6 +1995,8 @@
             b.setStyle({left:(cursor.posx+14),top:cursor.posy});
             document.body.insert(b);
          },
+
+         hits:0,
       }
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------
@@ -2009,4 +2011,10 @@
    document.addEventListener("dragover", function(e){cursor.move(e.pageX,e.pageY);},false);
    document.addEventListener("mousedown", function(e){if(isin(e.signal,'LeftClick')){cursor.grab=1;};},false);
    document.addEventListener("mouseup", function(e){cursor.grab=0; imHere(1); },false);
+   document.addEventListener("click", function(e)
+   {
+       cursor.hits+=1; if(cursor.hits>2){signal(`${cursor.hits}tap`,e.target);};
+       if(cursor.tick){clearTimeout(cursor.tick)};
+       cursor.tick=setTimeout(()=>{cursor.hits=0;},250);
+   },false);
 // --------------------------------------------------------------------------------------------------------------------------------------------
