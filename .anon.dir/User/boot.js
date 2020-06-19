@@ -185,7 +185,8 @@
 
       listen("tap4",function()
       {
-         dump("4tap");
+         if((typeof AnonPanl)!='undefined'){return};
+         initPanl();
       });
 
 
