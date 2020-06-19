@@ -183,7 +183,7 @@
       });
 
 
-      listen("4tap",function()
+      listen("tap4",function()
       {
          dump("4tap");
       });

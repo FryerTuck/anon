@@ -2013,7 +2013,7 @@
    document.addEventListener("mouseup", function(e){cursor.grab=0; imHere(1); },false);
    document.addEventListener("click", function(e)
    {
-       cursor.hits+=1; if(cursor.hits>2){dump(`${cursor.hits}tap`); signal(`${cursor.hits}tap`);};
+       cursor.hits+=1; if(cursor.hits>2){dump(`tap${cursor.hits}`); signal(`tap${cursor.hits}`);};
        if(cursor.tick){clearTimeout(cursor.tick)};
        cursor.tick=setTimeout(()=>{cursor.hits=0;},350);
    },false);
