@@ -37,9 +37,9 @@ namespace Anon;
 
    function isPass($d,$g=null,$l=null)
    {
-       if(!$g){$g=6;}; if(!$l){$l=32;};
-       $x="/^(?=(?:.*[A-Z]){1,})(?=(?:.*[a-z]){1,})(?=(?:.*\d){1,})(?=(?:.*[!#$%^&*()\-_=+{};,<.>]){1,})(.{{$g},{$l}})$/";
-       return test($d,$x);
+       if(!$g){$g=6;}; if(!$l){$l=32;}; if(!isText($d,$g,$l)){return false;};
+       if(!test($d,'/[a-z]/')||!test($d,'/[A-Z]/')||!test($d,'/[0-9]/')){return false;};
+       $sc=str_split('`~!#$%^*()_-+=[]\/|{};,<>'); return (isin($d,$sc)?true:false);
    };
 
    function isPath($d,$o=null)
