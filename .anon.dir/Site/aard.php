@@ -78,7 +78,7 @@ namespace Anon;
 
           $html=spuf("$host/$lpth?start=$from",null,"$host/");
           if(!$html){done(FAIL);}; $fixr='/free-css-templates';
-          $list=expose($html,"<figure>","</figure>");
+          $list=expose($html,"<figure>","</figure>"); if(!$list){$list=[];};
 
           foreach($list as $item)
           {
