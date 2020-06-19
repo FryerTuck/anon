@@ -104,7 +104,10 @@
                                   let pw,em; pw=select(`#AnonRootPass`).value; em=select(`#AnonAutoMail`).value;
                                   purl(`/User/initConf`,{pass:pw,mail:em},(r)=>
                                   {
-                                      r=r.body; if(r==OK){this.root.exit()};
+                                      r=r.body; if(r!=OK){return}; let m;
+                                      m=`Now you need to create a power-user that belong to the *sudo* and *work* clans.\n`+
+                                        `For help on this, type \`help user\` in the terminal and hit Enter on your keyboard.`;
+                                      popAlert(`thumbs-up :: Success! : Initial config set.\n\n${m}`);
                                   });
                               }},
                               {butn:`Cancel`},
