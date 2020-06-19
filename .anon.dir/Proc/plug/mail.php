@@ -151,7 +151,7 @@ namespace Anon;
 
 
 
-      function insert($a,$fcrt=0)
+      function insert($a)
       {
          $oa=dupe($a);
          if(isAssa($a)){$a=knob($a,1);}; expect::knob($a); $I=$this->mean;
@@ -161,7 +161,7 @@ namespace Anon;
          if(!$da){$da=$w->destAddr;}; $dn=$w->destName; if(!$dn){$dnn=stub($da,'@')[0]; $dn=explode('.',$dn)[0];};
 
          // validEmail($w->destAddy,'destAddy')[0];
-         $host="smtp.$I->host"; if($I->vars&&$I->vars->smtp){$host=$I->vars->smtp;};
+         $host="mail.$I->host"; if($I->vars&&$I->vars->smtp){$host=$I->vars->smtp;};
          $port=$I->port; if($port!==587){$port=465;};
          $user="$I->user@$I->host"; $pass=$I->pass;
          $name=($w->fromName?$w->fromName:$I->user); if(isin($name,'.')){$name=stub($name,'.')[0];};
@@ -170,7 +170,7 @@ namespace Anon;
          if(isVoid($html)){$html=(!isVoid($w->mesgBody)?$w->mesgBody:$text);};
          $dbug=3; dbug::$temp=''; $secu=(($port===587)?'tls':'ssl'); requires::phpx('openssl');
          if(isVoid($html)){$html='(no message)';};
-         if(!$fcrt){$fcrt=(isin(pget("$/Mail/vars/$user"),'novalidate-cert')?1:0);};
+         $fcrt=(isin(pget("$/Mail/vars/$user"),'novalidate-cert')?1:0);
          $cdom=HOSTNAME; $z=knob(['done'=>0,'fail'=>null]); $skey=sesn('HASH');
          $send=array
          (
@@ -192,10 +192,7 @@ namespace Anon;
 
          $resp=plug("https://$cdom/Proc/execPath")->insert
          ([
-            param =>
-            [
-               'Cookie' => "$skey=...",
-            ],
+            param => ['Cookie'=>"$skey=..."],
             write =>
             [
                'pathName' => '/Proc/libs/PHPMailer',
@@ -203,10 +200,27 @@ namespace Anon;
             ]
          ]);
 
-         if(isin($resp,'SMTP connect() failed')&&!$fcrt){$resp=$this->insert($oa,1);};
-
          $resp=trim($resp); if(!$resp){$resp='{"head":{},"body":""}';}; $resp=decode::jso($resp);
-         if($resp->body===OK){$z->done=1;}else{$z->fail=$resp->body;};
+         if($resp->body===OK){$z->done=1; return $z;}
+
+         if(!$fcrt&&isin($resp->body,'SMTP connect() failed'))
+         {
+             $send['certFail']=1;
+             $resp=plug("https://$cdom/Proc/execPath")->insert
+             ([
+                param => ['Cookie'=>"$skey=..."],
+                write =>
+                [
+                   'pathName' => '/Proc/libs/PHPMailer',
+                   'sendMail' => $send,
+                ]
+             ]);
+
+             $resp=trim($resp); if(!$resp){$resp='{"head":{},"body":""}';}; $resp=decode::jso($resp);
+             if($resp->body===OK){$z->done=1; return $z;};
+         };
+
+         $z->fail=$resp->body;
          return $z;
       }
 

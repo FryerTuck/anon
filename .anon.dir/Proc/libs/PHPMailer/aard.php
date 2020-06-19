@@ -37,6 +37,7 @@ namespace Anon;
 
       if($O->certFail)
       {
+        $L->SMTPAutoTLS = false;
         $L->SMTPOptions = array(
             'ssl' => array(
                 'verify_peer' => false,
@@ -61,7 +62,7 @@ namespace Anon;
       }};
 
       ob_start(); $r=$L->send(); $ob=ob_get_clean();
-      if($r){ekko($r); exit;};
+      if($r){ekko(OK); exit;};
       print_r($ob); exit;
    });};
 // ----------------------------------------------------------------------------------------------------------------------------
