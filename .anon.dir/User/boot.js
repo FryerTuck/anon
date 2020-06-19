@@ -102,7 +102,7 @@
                               {butn:`.good`, text:`Save`, onclick:function()
                               {
                                   let pw,em; pw=select(`#AnonRootPass`).value; em=select(`#AnonAutoMail`).value;
-                                  purl(`/User/initConf`,{pass:pw,mail:m},(r)=>
+                                  purl(`/User/initConf`,{pass:pw,mail:em},(r)=>
                                   {
                                       r=r.body; if(r==OK){this.root.exit()};
                                   });
