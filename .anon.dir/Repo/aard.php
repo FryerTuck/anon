@@ -34,6 +34,14 @@ namespace Anon;
       }
 
 
+      static function config($k,$v,$p='/')
+      {
+          expect::repo($p); $r=OK;
+          try{exec::{"git config $k \"$v\""}($p);}catch(\Exception $e){$r=$e->getMessage();};
+          return $r;
+      }
+
+
       static function differ($lp='/',$rn='fromAnon',$bn='master')
       {
           expect::repo($lp); expect::word($rn); expect::word($bn); $r=null;

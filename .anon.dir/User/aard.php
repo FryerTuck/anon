@@ -31,6 +31,8 @@ namespace Anon;
           if(!isPurl($v->mail)){fail::config("Invalid mail-plug. Please try again"); exit;};
           path::make("$/User/data/master/pass",password_hash($v->pass,PASSWORD_DEFAULT));
           path::make("$/Proc/conf/autoMail",$v->mail);
+          Repo::config("user.email",$v->mail);
+          Repo::config("user.name","master");
           ekko(OK);
       }
 
