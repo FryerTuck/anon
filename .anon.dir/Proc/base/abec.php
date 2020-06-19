@@ -34,7 +34,13 @@ namespace Anon;
    function isText($d,$g=null,$l=null){$r=is_string($d); if(!$r){return false;}; return (!is_int($g)?$r:spanIs($d,$g,$l));}
    function isWord($d){return test($d,'/^([a-zA-Z])([a-zA-Z0-9_]){1,36}$/');}
    function isMail($d){return test($d,'/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/');}
-   function isPass($d){return test($d,'/^(?=(?:.*[A-Z]){1,})(?=(?:.*[a-z]){1,})(?=(?:.*\d){1,})(?=(?:.*[!#$%^*\-_;,.~]){1,})(.{6,24})$/');};
+
+   function isPass($d,$g=null,$l=null)
+   {
+       if(!$g){$g=6;}; if(!$l){$l=32;};
+       $x="/^(?=(?:.*[A-Z]){1,})(?=(?:.*[a-z]){1,})(?=(?:.*\d){1,})(?=(?:.*[!#$%^&*()\-_=+{};,<.>]){1,})(.{{$g},{$l}})$/";
+       return test($d,$x);
+   };
 
    function isPath($d,$o=null)
    {
