@@ -94,14 +94,15 @@
                           body:[{panl:
                           [
                               {p:`The master password and default mail account needs to be set before this system can be used.`},
-                              {input:`#pass`, type:`password`, demo:`master password`, style:{marginBottom:10}},
-                              {input:`#mail`, type:`text`, demo:`mail://username:PassW0rd@example.com`},
+                              {input:`#AnonRootPass`, type:`password`, demo:`master password`, style:{marginBottom:10}},
+                              {input:`#AnonAutoMail`, type:`text`, demo:`mail://username:PassW0rd@example.com`},
                           ]}],
                           foot:
                           [
                               {butn:`.good`, text:`Save`, onclick:function()
                               {
-                                  purl(`/User/initConf`,{pass:select(`#pass`),mail:select(`#mail`)},(r)=>
+                                  let pw,em; pw=select(`#AnonRootPass`).value; em=select(`#AnonAutoMail`).value;
+                                  purl(`/User/initConf`,{pass:pw,mail:m},(r)=>
                                   {
                                       r=r.body; if(r==OK){this.root.exit()};
                                   });
