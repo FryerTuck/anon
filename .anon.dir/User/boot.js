@@ -185,7 +185,7 @@
 
       listen("tap4",function()
       {
-         if((typeof AnonPanl)!='undefined'){return};
+         if(!!select(`#AnonReplPanl`)){return};
          initPanl();
       });
 
