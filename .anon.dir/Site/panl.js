@@ -196,7 +196,7 @@ extend(Anon)
                              {butn:`.dark .warn`, text:`load`, hint:`loads the template in the URL above`, onclick:function(){Anon.Site.tool.import.load()}},
                              {butn:`.dark .cool`, text:`save`, hint:`save this template to use later`, onclick:function(){Anon.Site.tool.import.save(tab)}},
                              {butn:`.dark .need`, text:`pick`, hint:`use this template as main website template`, onclick:function(){Anon.Site.tool.import.pick(tab)}},
-                             {butn:`.dark .harm`, text:`void`, hint:`forgets this loaded/saved template so it can be loaded fresh`, onclick:function(){Anon.Site.tool.import.void()}},
+                             {butn:`.dark .harm`, text:`void`, hint:`forgets this loaded/saved template so it can be loaded fresh`, onclick:function(){Anon.Site.tool.import.void(tab)}},
                           ]},
                        ]}]}
                      ]}]},
