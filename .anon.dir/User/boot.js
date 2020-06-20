@@ -42,22 +42,11 @@
 
 // defn :: (config) : upgrade conf with this stem's viewConf
 // --------------------------------------------------------------------------------------------------------------------------------------------
+   const conf={};
    (function(c,h,m)
    {
       // Busy.kill();
       c={ {:'/User/conf/viewConf':} }; c.each((v,k)=>{if(conf[k]){fail('`conf.'+k+'` is already defined');return}; conf[k]=v});
-
-      // c=getBadConf(); if(!c){return}; // check for bad config, if none then all is good
-      // c=(location.protocol+'//'+location.host); m=rtrim(location.href,'/'); if(m!=c){dump("newGui - from User/boot.js"); newGui('/'); return};
-      //
-      // tick.after(999,()=>
-      // {
-      //    m="!!! WARNING !!!\nSome configuration needs to be set in order for Anon to function properly.\n";
-      //    if(userDoes('sudo')){m+="See the terminal for more details."}
-      //    else{m+="Login as `master` -or a user in the `sudo` clan; for help: open the terminal and type: help login"};
-      //    m+="\nThis alert will go away when the required config has been set.";
-      //    alert(m);
-      // });
    }());
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
