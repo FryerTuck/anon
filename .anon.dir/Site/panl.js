@@ -194,6 +194,7 @@ extend(Anon)
                           {row:
                           [
                              {butn:`.dark .warn`, text:`load`, hint:`loads the template in the URL above`, onclick:function(){Anon.Site.tool.import.load()}},
+                             {butn:`.dark .cool`, text:`save`, hint:`save this template to use later`, onclick:function(){Anon.Site.tool.import.save(tab)}},
                              {butn:`.dark .need`, text:`pick`, hint:`use this template as main website template`, onclick:function(){Anon.Site.tool.import.pick(tab)}},
                              {butn:`.dark .harm`, text:`void`, hint:`forgets this loaded/saved template so it can be loaded fresh`, onclick:function(){Anon.Site.tool.import.void()}},
                           ]},
@@ -291,15 +292,16 @@ extend(Anon)
             },
 
 
-            pick:function(tab, drv,url,nme)
+            save:function(tab, drv,url,nme)
             {
                 url=select(`#importPurl`).value; nme=rstub(url)[2];
-                purl(`/Site/importPick`,{purl:url},(r)=>
+                purl(`/Site/importSave`,{purl:url},(r)=>
                 {
-                    if(r.body!=OK){dump(r.body); return};
-                    drv=select('#SiteTabber').driver;
-                    drv.delete(tab.head.title,true);
-                    Anon.Site.tool.modify.load(nme);
+                    if(r.body!=OK){popAlert(r.body); return};
+                    popAlert(`thumbs-up :: Saved : The ***${nme}*** template is ready to use.`);
+                    // drv=select('#SiteTabber').driver;
+                    // drv.delete(tab.head.title,true);
+                    // Anon.Site.tool.modify.load(nme);
                 });
             },
 
@@ -316,6 +318,7 @@ extend(Anon)
          {
              load:function(n)
              {
+                 popAlert(`TODO : modify.load("${n}") `);
                  popAlert(`TODO : modify.load("${n}") `);
              },
          },

@@ -230,11 +230,19 @@ namespace Anon;
 
 
 
-      static function importPick()
+      static function importSave()
       {
           permit::fubu("clan:work");
           $vars=knob($_POST); $purl=$vars->purl; $surl=rshave($purl,"/");
           $hash=md5($purl); $tmpl=rstub($surl,"/")[2]; $path="$/Site/tmpl";
+
+          if(isee("$path/$tmpl"))
+          {
+              $m="- first **void** it\n- then **import** it again and hit **save**";
+              ekko("The ***$tmpl*** template is already saved.\n\nTo refresh it:\n$m");
+              exit;
+          };
+
           path::copy("$path/Anon/base","$path/$tmpl/base");
           path::copy("$path/Anon/conf","$path/$tmpl/conf");
           path::copy("~/.tmp/Site/$hash","$path/$tmpl");
