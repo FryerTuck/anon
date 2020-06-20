@@ -98,7 +98,7 @@ namespace Anon;
       {
           permit::fubu("clan:work");
           $vars=knob($_POST); $purl=$vars->purl; $surl=rshave($purl,"/"); $hash=md5($purl);
-          $path="~/.tmp/Site/$hash"; if(isee($path)){ekko($path);}; // exit here
+          $path="~/.tmp/Site/$hash"; if(isee($path)){ekko($path); exit;}; // exit here
           $html=spuf($purl); if(!$html){done(FAIL);}; path::make("$path/");
           $info=path::info($purl);
           $hurl="$info->plug://$info->host"; $hpth=$info->path; $spuf=knob(); $refs=knob();
@@ -191,7 +191,8 @@ namespace Anon;
           unset($list,$item);
 
           $span=span($spuf); $indx=0; signal::busy(['with'=>"/Site/importOpen","done"=>0]);
-          path::make("$path/aard.htm",$html);
+          path::make("$path/aard.htm",$html); wait(50);
+          if(!isee("$path/aard.htm")){path::make("$path/aard.htm",$html); wait(50);};
 
           foreach($spuf as $furl => $save)
           {
