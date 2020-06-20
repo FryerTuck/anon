@@ -308,7 +308,7 @@ extend(Anon)
 
             void:function(tab, drv,url,nme,msg)
             {
-                url=select(`#importPurl`).value; nme=rstub(url,"/")[2];
+                url=select(`#importPurl`).value; nme=rstub(rtrim(url,"/"),"/")[2];
                 msg=`You are about to delete the stored template: "${nme}" -and site data related to it.\n\nAre you sure?`;
                 if(!confirm(msg)){return};
 
