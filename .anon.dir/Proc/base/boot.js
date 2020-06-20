@@ -1,25 +1,6 @@
 "use strict";
 
 
-
-// hack :: protection : hijack some functions and methods that can be used against us using dev-tools and address-bar
-// --------------------------------------------------------------------------------------------------------------------------------------------
-   select('script').forEach((n)=>{remove(n)});
-
-   hijack(['eval','alert','Element.prototype.appendChild','Element.prototype.setAttribute','Element.prototype.addEventListener','XMLHttpRequest.prototype.open'],function()
-   {if(stak(0)){return listOf(arguments)}; wack()});
-
-   hijack([`console.log`,`console.error`,`console.debug`,`console.warn`,`console.info`],function()
-   {
-      let j={"[Intervention] Slow network":`Fallback font will be used`}; // junk
-      let a,i; a=listOf(arguments); a.forEach((s)=>{j.each((v,k)=>{if(isin(s,k)&&isin(s,v)){i=1;return STOP}})});
-      if(i||!userDoes(`geek sudo`)){return}; // .. sweet screams
-      return a;
-   });
-// --------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
 // func :: envi : this is used for syntax-sugar only .. the argument-value is got from server at serve-time
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const envi = function(s)
@@ -39,11 +20,35 @@
       {:'/Proc/conf/viewConf':}
    };
 
+   globVars({protectHacking:conf.protectHacking});
+
    const timeVars = {e6:0};
 
    const badCfg='{:badCfg:}';
 
    globVars({mime:decode.jso(`{:conf('Proc/mimeType'):}`)});
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// hack :: protection : hijack some functions and methods that can be used against us using dev-tools and address-bar
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   select('script').forEach((n)=>{remove(n)});
+
+
+   if(globVars(`protectHacking`))
+   {
+       hijack(['eval','alert','Element.prototype.appendChild','Element.prototype.setAttribute','Element.prototype.addEventListener','XMLHttpRequest.prototype.open'],function()
+       {if(stak(0)){return listOf(arguments)}; wack()});
+
+       hijack([`console.log`,`console.error`,`console.debug`,`console.warn`,`console.info`],function()
+       {
+          let j={"[Intervention] Slow network":`Fallback font will be used`}; // junk
+          let a,i; a=listOf(arguments); a.forEach((s)=>{j.each((v,k)=>{if(isin(s,k)&&isin(s,v)){i=1;return STOP}})});
+          if(i||!userDoes(`geek sudo`)){return}; // .. sweet screams
+          return a;
+       });
+   };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
