@@ -16,6 +16,7 @@
 /Proc/temp/*
 /Proc/conf/autoMail
 /Proc/conf/hostName
+/Proc/conf/viewConf
 /Proc/vars/lastDbug
 
 /Site/tmpl/*
