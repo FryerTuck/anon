@@ -294,7 +294,7 @@ extend(Anon)
 
             save:function(tab, drv,url,nme)
             {
-                url=select(`#importPurl`).value; nme=rstub(url)[2];
+                url=select(`#importPurl`).value; nme=rstub(url,"/")[2];
                 purl(`/Site/importSave`,{purl:url},(r)=>
                 {
                     if(r.body!=OK){popAlert(r.body); return};
