@@ -353,12 +353,6 @@ extend(Anon)
                         return;
                     };
 
-                    let l=[]; r.forEach((i)=>
-                    {
-                        radd(l,{item:"", text:i, onclick:function()
-                        {select(`#configTmpl`).value=this.select("span")[0].innerHTML}});
-                    });
-
                     tab.body.insert({grid:
                     [
                         {row:[{col:`.SitePanlHead`, $:
@@ -367,11 +361,16 @@ extend(Anon)
                            [
                               {row:
                               [
-                                 {col:[{input:`#configTmpl .toolTextFeed .dark`, lyst:l, style:{width:200}, demo:`template`, onfocus:function()
+                                 {col:[{input:`#configTmpl .toolTextFeed .dark`, lyst:r, style:{width:200}, demo:`template`, onfocus:function()
                                  {
+                                    let l=[]; this.lyst.forEach((i)=>
+                                    {
+                                        radd(l,{item:"", text:i, onclick:function()
+                                        {select(`#configTmpl`).value=this.select("span")[0].innerHTML}});
+                                    });
                                     tick.after(120,()=>
                                     {
-                                        dropMenu({class:"SiteTmplMenu"},this.parentNode)(this.lyst);
+                                        dropMenu({class:"SiteTmplMenu"},this.parentNode)(l);
                                     });
                                  }}]},
                               ]},
