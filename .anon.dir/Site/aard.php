@@ -247,9 +247,9 @@ namespace Anon;
               exit;
           };
 
-          path::make("$trgt/base/"); path::make("$trgt/conf/"); path::make("$trgt/bits/");
-          path::copy("$path/Anon/base/","$trgt/base/"); path::copy("$path/Anon/conf/","$trgt/conf/");
-          path::copy("$temp/bits/","$trgt/bits/"); path::move("$temp/aard.htm","$trgt/base/surf.htm");
+          // path::make("$trgt/base/"); path::make("$trgt/conf/"); path::make("$trgt/bits/");
+          path::copy("$path/Anon/base","$trgt/"); path::copy("$path/Anon/conf","$trgt/");
+          path::copy("$temp/bits","$trgt/"); path::move("$temp/aard.htm","$trgt/base/surf.htm");
 
           ekko(OK);
       }
