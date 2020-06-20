@@ -389,7 +389,7 @@ extend(Anon)
 
                     select(`#configTmpl`).listen(`focus`,function(ev)
                     {
-                        tick.after(60,()=>
+                        tick.after(1000,()=>
                         {
                             dropMenu({class:"SiteBrwsCats"},this.parentNode)
                             (Anon.Site.tool.config.tmplList);
