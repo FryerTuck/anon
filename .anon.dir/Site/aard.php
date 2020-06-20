@@ -254,6 +254,14 @@ namespace Anon;
           path::copy("$temp/bits","$trgt/");
           path::copy("$temp/aard.htm","$trgt/base/surf.htm");
 
+          $html=pget("$trgt/base/surf.htm"); $html=swap($html,$temp,$trgt);
+          path::make("$trgt/base/surf.htm",$html);
+          $bits=pget("$trgt/bits"); foreach($bits as $file)
+          {
+              if(!isin("css,js",fext("/$file"))){continue;};
+              $bufr=pget("$trgt/bits/$file"); $bufr=swap($bufr,$temp,$trgt);
+              path::make("$trgt/bits/$file",$bufr);
+          };
           ekko(OK);
       }
 
