@@ -282,6 +282,17 @@ namespace Anon;
 
 
 
+      static function configPick()
+      {
+          permit::fubu("clan:work"); $vars=knob($_POST); $bufr=[];
+          $conf=conf("Site/autoConf"); $conf->template=$vars->data;
+          foreach($conf as $k =>$v){$bufr[]="$k: $v";};
+          $bufr=fuse($bufr,"\n"); path::make("$/Site/autoConf",$bufr);
+          ekko(OK);
+      }
+
+
+
       static function brandNew()
       {
           permit::fubu("clan:work");

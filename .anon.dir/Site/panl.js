@@ -378,7 +378,7 @@ extend(Anon)
                               [
                                  {butn:`.dark .good`, text:`view`, hint:`opens the template chosen above`, onclick:function(){Anon.Site.tool.config.view()}},
                                  {butn:`.dark .cool`, text:`save`, hint:`save changes made to the chosen template`, onclick:function(){Anon.Site.tool.config.save(tab)}},
-                                 {butn:`.dark .need`, text:`pick`, hint:`choose the above template for live website`, onclick:function(){Anon.Site.tool.config.pick(tab)}},
+                                 {butn:`.dark .warn`, text:`pick`, hint:`choose the above template for live website`, onclick:function(){Anon.Site.tool.config.pick(tab)}},
                                  {butn:`.dark .harm`, text:`void`, hint:`delete all saved data related to the chosen template above`, onclick:function(){Anon.Site.tool.config.void(tab)}},
                               ]},
                            ]}]}
@@ -391,6 +391,34 @@ extend(Anon)
              },
 
 
+             view:function()
+             {
+                 popAlert(`TODO : This feature is not available yet.`);
+             },
+
+
+             save:function()
+             {
+                 popAlert(`TODO : This feature is not available yet.`);
+             },
+
+
+             pick:function( tmpl)
+             {
+                 tmpl=trim(select(`#configTmpl`).value);
+                 if(!tmpl){popAlert(`choose a template first`); return};
+                 purl(`/Site/configPick`,{data:tmpl},(r)=>
+                 {
+                     if(r.body!=OK){popAlert(r.body);return};
+                     popAlert(`thumbs-up :: Done : The live template is now: **${tmpl}**`);
+                 });
+             },
+
+
+             void:function()
+             {
+                 popAlert(`TODO : This feature is not available yet.`);
+             },
          },
 
 
