@@ -361,7 +361,7 @@ extend(Anon)
                            [
                               {row:
                               [
-                                 {col:[{input:`#configTmpl .toolTextFeed .dark`, demo:`template`, value:""}]},
+                                 {col:[{input:`#configTmpl .toolTextFeed .dark`, style:{width:200}, demo:`template`, value:""}]},
                               ]},
                               {row:
                               [
@@ -389,10 +389,8 @@ extend(Anon)
 
                     select(`#configTmpl`).listen(`focus`,function(ev)
                     {
-                        tick.after(60,()=>
-                        {
-                            dropMenu({class:"SiteBrwsCats"},this.parentNode)(this.tmplList);
-                        });
+                        dropMenu({class:"SiteBrwsCats"},this.parentNode)
+                        (Anon.Site.tool.config.tmplList);
                     });
                 });
              },
