@@ -32,7 +32,7 @@
 // hack :: protection : hijack some functions and methods that can be used against us using dev-tools and address-bar
 // --------------------------------------------------------------------------------------------------------------------------------------------
    select('script').forEach((n)=>{remove(n)});
-dump(`protectHacking: `+globVars(`viewConf`).protectHacking);
+dump(`protectHacking: `+globVars(`viewConf`));
 
    if(globVars(`protectHacking`))
    {
