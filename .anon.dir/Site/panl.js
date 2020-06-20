@@ -58,7 +58,7 @@ extend(Anon)
          ([
             {butn:`.longMenuButn`, text:`browse templates`, onclick:function(){Anon.Site.open(`import`,`browse`)}},
             {butn:`.longMenuButn`, text:`import from URL`, onclick:function(){Anon.Site.open(`import`,`fromURL`)}},
-            {butn:`.longMenuButn`, text:`modify website`, onclick:function(){Anon.Site.open(`modify`,`existing`)}},
+            {butn:`.longMenuButn`, text:`template config`, onclick:function(){Anon.Site.open(`config`,`template`)}},
             // {butn:`.longMenuButn`, text:`create template`, onclick:function(){Anon.Site.open(`create`,`brandNew`)}},
          ]);
 
@@ -281,7 +281,7 @@ extend(Anon)
                             n.addEventListener(`dblclick`,function(ev)
                             {
                                 ev.preventDefault(); ev.stopPropagation(); ev.stopImmediatePropagation();
-                                Anon.Site.tool.update.popOptions(this);
+                                Anon.Site.tool.modify.elem(this);
                             },false);
                         });
 
@@ -333,12 +333,80 @@ extend(Anon)
 
 
 
+         config:
+         {
+             tmplList:[],
+
+
+             template:function(tab, drv)
+             {
+                drv=select('#SiteTabber').driver;
+
+                purl(`/Site/tmplList`,(r)=>
+                {
+                    r=decode.jso(r.body);
+                    if(r.length<1)
+                    {
+                        drv.delete(tab.head.title,true);
+                        Anon.Site.open(`import`,`browse`);
+                        popAlert(`There are no saved templates; browse and choose one, then hit **save**.`);
+                        return;
+                    };
+
+                    tab.body.insert({grid:
+                    [
+                        {row:[{col:`.SitePanlHead`, $:
+                        [
+                           {div:`.panlHeadBanr`, contents:[{grid:
+                           [
+                              {row:
+                              [
+                                 {col:[{input:`#configTmpl .toolTextFeed .dark`, demo:`template`, value:""}]},
+                              ]},
+                              {row:
+                              [
+                                 {butn:`.dark .good`, text:`view`, hint:`opens the template chosen above`, onclick:function(){Anon.Site.tool.config.view()}},
+                                 {butn:`.dark .cool`, text:`save`, hint:`save changes made to the chosen template`, onclick:function(){Anon.Site.tool.config.save(tab)}},
+                                 {butn:`.dark .need`, text:`pick`, hint:`choose the above template for live website`, onclick:function(){Anon.Site.tool.config.pick(tab)}},
+                                 {butn:`.dark .harm`, text:`void`, hint:`delete all saved data related to the chosen template above`, onclick:function(){Anon.Site.tool.config.void(tab)}},
+                              ]},
+                           ]}]}
+                         ]}]},
+                         {row:[{col:[{panl:`#SiteTmplBody .SiteTmplBody`, $:
+                         [
+                         ]}]}]},
+                    ]});
+
+
+                    this.tmplList=[];
+
+                    r.forEach((i)=>
+                    {
+                        radd(this.tmplList,{item:"", text:i, onclick:function()
+                        {select(`#configTmpl`).value=this.select("span")[0].innerHTML}});
+                    });
+
+
+                    select(`#configTmpl`).listen(`focus`,function(ev)
+                    {
+                        tick.after(60,()=>
+                        {
+                            dropMenu({class:"SiteBrwsCats"},this.parentNode)(this.tmplList);
+                        });
+                    });
+                });
+             },
+
+
+         },
+
+
+
          modify:
          {
-             load:function(n)
+             elem:function(n)
              {
-                 popAlert(`TODO : modify.load("${n}") `);
-                 popAlert(`TODO : modify.load("${n}") `);
+                 popAlert(`TODO : modify.load("${n}")`);
              },
          },
 

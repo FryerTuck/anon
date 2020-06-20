@@ -273,6 +273,15 @@ namespace Anon;
 
 
 
+      static function tmplList()
+      {
+          permit::fubu("clan:work");
+          $r=array_diff(pget("$/Site/tmpl"),["Anon"]);
+          ekko($r);
+      }
+
+
+
       static function brandNew()
       {
           permit::fubu("clan:work");
