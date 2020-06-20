@@ -389,8 +389,11 @@ extend(Anon)
 
                     select(`#configTmpl`).listen(`focus`,function(ev)
                     {
-                        dropMenu({class:"SiteBrwsCats"},this.parentNode)
-                        (Anon.Site.tool.config.tmplList);
+                        tick.after(60,()=>
+                        {
+                            dropMenu({class:"SiteBrwsCats"},this.parentNode)
+                            (Anon.Site.tool.config.tmplList);
+                        });
                     });
                 });
              },
