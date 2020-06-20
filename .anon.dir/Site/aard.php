@@ -190,7 +190,8 @@ namespace Anon;
           };
           unset($list,$item);
 
-          $span=span($spuf); $indx=0; signal::busy(['with'=>"/Site/importOpen","done"=>10]);
+          $span=span($spuf); $indx=0; signal::busy(['with'=>"/Site/importOpen","done"=>0]);
+          path::make("$path/aard.htm",$html);
 
           foreach($spuf as $furl => $save)
           {
@@ -227,7 +228,6 @@ namespace Anon;
               $indx++;
           };
 
-          path::make("$path/aard.htm",$html);
           ekko($path);
       }
 
