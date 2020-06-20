@@ -248,8 +248,11 @@ namespace Anon;
           };
 
           // path::make("$trgt/base/"); path::make("$trgt/conf/"); path::make("$trgt/bits/");
-          path::copy("$path/Anon/base","$trgt/"); path::copy("$path/Anon/conf","$trgt/");
-          path::copy("$temp/bits","$trgt/"); path::move("$temp/aard.htm","$trgt/base/surf.htm");
+          path::copy("$path/Anon/base","$trgt/");
+          path::copy("$path/Anon/conf","$trgt/");
+          path::copy("$path/Anon/page/home.htm","$trgt/page/home.htm");
+          path::copy("$temp/bits","$trgt/");
+          path::move("$temp/aard.htm","$trgt/base/surf.htm");
 
           ekko(OK);
       }
