@@ -194,7 +194,7 @@ extend(Anon)
                           {row:
                           [
                              {butn:`.dark .warn`, text:`load`, hint:`loads the template in the URL above`, onclick:function(){Anon.Site.tool.import.load()}},
-                             {butn:`.dark .need`, text:`pick`, hint:`use this template as main website template`, onclick:function(){Anon.Site.tool.import.pick()}},
+                             {butn:`.dark .need`, text:`pick`, hint:`use this template as main website template`, onclick:function(){Anon.Site.tool.import.pick(tab)}},
                              {butn:`.dark .harm`, text:`void`, hint:`forgets this loaded/saved template so it can be loaded fresh`, onclick:function(){Anon.Site.tool.import.void()}},
                           ]},
                        ]}]}
@@ -291,9 +291,16 @@ extend(Anon)
             },
 
 
-            pick:function()
+            pick:function(tab, drv,url,nme)
             {
-                dump(`pick`);
+                url=select(`#importPurl`).value; nme=rstub(url)[2];
+                purl(`/Site/importPick`,{purl:url},(r)=>
+                {
+                    if(r.body!=OK){dump(r.body); return};
+                    drv=select('#SiteTabber').driver;
+                    drv.delete(tab.head.title,true);
+                    Anon.Site.tool.modify.load(nme);
+                });
             },
 
 
@@ -305,19 +312,19 @@ extend(Anon)
 
 
 
-         create:
+         modify:
          {
-             brandNew:function(tab)
+             load:function(n)
              {
-                 popAlert(`TODO : This feature is not available yet.`);
+                 popAlert(`TODO : modify.load("${n}") `);
              },
          },
 
 
 
-         modify:
+         create:
          {
-             existing:function(n)
+             brandNew:function(tab)
              {
                  popAlert(`TODO : This feature is not available yet.`);
              },

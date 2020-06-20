@@ -239,6 +239,7 @@ namespace Anon;
           path::copy("$path/Anon/conf","$path/$tmpl/conf");
           path::copy("~/.tmp/Site/$hash","$path/$tmpl");
           path::move("$path/$tmpl/aard.htm","$path/$tmpl/base/surf.htm");
+          ekko(OK);
       }
 
 
