@@ -398,7 +398,7 @@ extend(Anon)
              },
 
 
-             code:function()
+             code:function(tmpl)
              {
                 tmpl=trim(select(`#configTmpl`).value);
                 if(!tmpl){popAlert(`choose a template first`); return};
