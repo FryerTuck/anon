@@ -353,6 +353,12 @@ extend(Anon)
                         return;
                     };
 
+                    let l=[]; r.forEach((i)=>
+                    {
+                        radd(l,{item:"", text:i, onclick:function()
+                        {select(`#configTmpl`).value=this.select("span")[0].innerHTML}});
+                    });
+
                     tab.body.insert({grid:
                     [
                         {row:[{col:`.SitePanlHead`, $:
@@ -361,7 +367,13 @@ extend(Anon)
                            [
                               {row:
                               [
-                                 {col:[{input:`#configTmpl .toolTextFeed .dark`, style:{width:200}, demo:`template`, value:""}]},
+                                 {col:[{input:`#configTmpl .toolTextFeed .dark`, list:l, style:{width:200}, demo:`template`, onfocus:function()
+                                 {
+                                    tick.after(120,()=>
+                                    {
+                                        dropMenu({class:"SiteTmplMenu"},this.parentNode)(this.list);
+                                    });
+                                 }}]},
                               ]},
                               {row:
                               [
@@ -376,25 +388,6 @@ extend(Anon)
                          [
                          ]}]}]},
                     ]});
-
-
-                    this.tmplList=[];
-
-                    r.forEach((i)=>
-                    {
-                        radd(this.tmplList,{item:"", text:i, onclick:function()
-                        {select(`#configTmpl`).value=this.select("span")[0].innerHTML}});
-                    });
-
-
-                    select(`#configTmpl`).listen(`focus`,function(ev)
-                    {
-                        tick.after(120,()=>
-                        {
-                            dropMenu({class:"SiteTmplMenu"},this.parentNode)
-                            (Anon.Site.tool.config.tmplList);
-                        });
-                    });
                 });
              },
 
