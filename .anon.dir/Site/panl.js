@@ -367,11 +367,11 @@ extend(Anon)
                            [
                               {row:
                               [
-                                 {col:[{input:`#configTmpl .toolTextFeed .dark`, list:l, style:{width:200}, demo:`template`, onfocus:function()
+                                 {col:[{input:`#configTmpl .toolTextFeed .dark`, lyst:l, style:{width:200}, demo:`template`, onfocus:function()
                                  {
                                     tick.after(120,()=>
                                     {
-                                        dropMenu({class:"SiteTmplMenu"},this.parentNode)(this.list);
+                                        dropMenu({class:"SiteTmplMenu"},this.parentNode)(this.lyst);
                                     });
                                  }}]},
                               ]},
