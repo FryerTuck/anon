@@ -235,7 +235,7 @@ namespace Anon;
           permit::fubu("clan:work");
           $vars=knob($_POST); $purl=$vars->purl; $surl=rshave($purl,"/");
           $hash=md5($purl); $tmpl=rstub($surl,"/")[2];
-          $temp="~/.tmp/Site/$hash"; $path="$/Site/tmpl"; $trgt="$path/$tmpl"
+          $temp="~/.tmp/Site/$hash"; $path="$/Site/tmpl"; $trgt="$path/$tmpl";
 
           if(isee("$path/$tmpl"))
           {
