@@ -15,12 +15,10 @@
 
 // defn :: conf : front-end configuration
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   const conf = // object
+   globVars({viewConf:
    {
       {:'/Proc/conf/viewConf':}
-   };
-
-   globVars({protectHacking:conf.protectHacking});
+   }});
 
    const timeVars = {e6:0};
 
@@ -34,7 +32,7 @@
 // hack :: protection : hijack some functions and methods that can be used against us using dev-tools and address-bar
 // --------------------------------------------------------------------------------------------------------------------------------------------
    select('script').forEach((n)=>{remove(n)});
-dump(`protectHacking: `+globVars(`protectHacking`));
+dump(`protectHacking: `+globVars(`viewConf`).protectHacking);
 
    if(globVars(`protectHacking`))
    {
