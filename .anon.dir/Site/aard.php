@@ -286,8 +286,10 @@ namespace Anon;
       {
           permit::fubu("clan:work"); $vars=knob($_POST); $bufr=[];
           $conf=conf("Site/autoConf"); $conf->template=$vars->data;
+          signal::dump($conf);
           foreach($conf as $k =>$v){$bufr[]="$k: $v";};
-          $bufr=fuse($bufr,"\n"); path::make("$/Site/autoConf",$bufr);
+          $bufr=fuse($bufr,"\n");
+          path::make("$/Site/autoConf",$bufr);
           ekko(OK);
       }
 
