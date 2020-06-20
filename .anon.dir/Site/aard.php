@@ -191,8 +191,7 @@ namespace Anon;
           unset($list,$item);
 
           $span=span($spuf); $indx=0; signal::busy(['with'=>"/Site/importOpen","done"=>0]);
-          path::make("$path/aard.htm",$html); wait(50);
-          if(!isee("$path/aard.htm")){path::make("$path/aard.htm",$html); wait(50);};
+          path::make("$path/aard.htm",$html);
 
           foreach($spuf as $furl => $save)
           {
@@ -253,7 +252,7 @@ namespace Anon;
           path::copy("$path/Anon/conf","$trgt/");
           path::copy("$path/Anon/page/home.htm","$trgt/page/home.htm");
           path::copy("$temp/bits","$trgt/");
-          path::move("$temp/aard.htm","$trgt/base/surf.htm");
+          path::copy("$temp/aard.htm","$trgt/base/surf.htm");
 
           ekko(OK);
       }
