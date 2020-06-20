@@ -377,7 +377,7 @@ extend(Anon)
                               {row:
                               [
                                  {butn:`.dark .good`, text:`view`, hint:`opens the template chosen above`, onclick:function(){Anon.Site.tool.config.view()}},
-                                 {butn:`.dark .need`, text:`code`, hint:`modify the details of the template chosen above`, onclick:function(){Anon.Site.tool.config.save(tab)}},
+                                 {butn:`.dark .need`, text:`code`, hint:`modify the details of the template chosen above`, onclick:function(){Anon.Site.tool.config.code(tab)}},
                                  {butn:`.dark .cool`, text:`save`, hint:`save changes made to the chosen template`, onclick:function(){Anon.Site.tool.config.save(tab)}},
                                  {butn:`.dark .warn`, text:`pick`, hint:`choose the above template for live website`, onclick:function(){Anon.Site.tool.config.pick(tab)}},
                                  {butn:`.dark .harm`, text:`void`, hint:`delete all saved data related to the chosen template above`, onclick:function(){Anon.Site.tool.config.void(tab)}},
