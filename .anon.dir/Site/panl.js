@@ -403,7 +403,7 @@ extend(Anon)
                 tmpl=trim(select(`#configTmpl`).value);
                 if(!tmpl){popAlert(`choose a template first`); return};
                 repl.exec(`cd $/Site/tmpl/${tmpl}`);
-                AnonMenu.init(`Code`);
+                tick.after(2000,()=>{AnonMenu.init(`Code`);});
              },
 
 
