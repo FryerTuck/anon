@@ -234,7 +234,7 @@ namespace Anon;
       {
           permit::fubu("clan:work");
           $vars=knob($_POST); $purl=$vars->purl; $surl=rshave($purl,"/");
-          $hash=md5($purl); $tmpl=rstub($surl,"/")[2]; $path="$/Site/tmpl";
+          $hash=md5($purl); $tmpl=rstub($surl,"/")[2]; $temp="~/.tmp/Site/$hash"; $path="$/Site/tmpl";
 
           if(isee("$path/$tmpl"))
           {
@@ -245,8 +245,8 @@ namespace Anon;
 
           path::copy("$path/Anon/base","$path/$tmpl/base");
           path::copy("$path/Anon/conf","$path/$tmpl/conf");
-          path::copy("~/.tmp/Site/$hash/","$path/$tmpl");
-          path::move("$path/$tmpl/aard.htm","$path/$tmpl/base/surf.htm");
+          path::copy("$temp/bits","$path/$tmpl/bits");
+          path::move("$temp/aard.htm","$path/$tmpl/base/surf.htm");
           ekko(OK);
       }
 
