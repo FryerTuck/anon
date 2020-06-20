@@ -247,6 +247,21 @@ namespace Anon;
           path::copy("$path/Anon/conf","$path/$tmpl/conf");
           path::copy("$temp/bits","$path/$tmpl/bits");
           path::move("$temp/aard.htm","$path/$tmpl/base/surf.htm");
+
+          ekko(OK);
+      }
+
+
+
+      static function importVoid()
+      {
+          permit::fubu("clan:work");
+          $vars=knob($_POST); $purl=$vars->purl; $surl=rshave($purl,"/");
+          $hash=md5($purl); $tmpl=rstub($surl,"/")[2]; $temp="~/.tmp/Site/$hash"; $path="$/Site/tmpl";
+
+          path::void("$path/$tmpl");
+          path::void($temp);
+
           ekko(OK);
       }
 

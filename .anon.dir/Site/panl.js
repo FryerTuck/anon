@@ -306,9 +306,20 @@ extend(Anon)
             },
 
 
-            void:function()
+            void:function(tab, drv,url,nme,msg)
             {
-                dump(`void`);
+                url=select(`#importPurl`).value; nme=rstub(url,"/")[2];
+                msg=`You are about to delete the stored template: "${nme}" -and site data related to it.\n\nAre you sure?`;
+                if(!confirm(msg)){return};
+
+                purl(`/Site/importVoid`,{purl:url},(r)=>
+                {
+                    if(r.body!=OK){popAlert(r.body); return};
+                    popAlert(`thumbs-up :: Deleted : The ***${nme}*** template is gone from memory and can be imported anew.`);
+                    drv=select('#SiteTabber').driver;
+                    drv.delete(tab.head.title,true);
+                    // Anon.Site.tool.modify.load(nme);
+                });
             },
          },
 
