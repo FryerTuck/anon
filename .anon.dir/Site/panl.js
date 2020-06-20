@@ -389,9 +389,9 @@ extend(Anon)
 
                     select(`#configTmpl`).listen(`focus`,function(ev)
                     {
-                        tick.after(1000,()=>
+                        tick.after(120,()=>
                         {
-                            dropMenu({class:"SiteBrwsCats"},this.parentNode)
+                            dropMenu({class:"SiteTmplMenu"},this.parentNode)
                             (Anon.Site.tool.config.tmplList);
                         });
                     });
