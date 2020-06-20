@@ -100,7 +100,8 @@ namespace Anon;
           $vars=knob($_POST); $purl=$vars->purl; $surl=rshave($purl,"/"); $hash=md5($purl);
           $path="~/.tmp/Site/$hash"; if(isee($path)){ekko($path);}; // exit here
           $html=spuf($purl); if(!$html){done(FAIL);}; path::make("$path/");
-          $info=path::info($purl); $hurl="$info->plug://$info->host"; $hpth=$info->path; $spuf=knob(); $refs=knob();
+          $info=path::info($purl);
+          $hurl="$info->plug://$info->host"; $hpth=$info->path; $spuf=knob(); $refs=knob();
 
 
           $list=expose($html,"<style ","</style>"); if(!$list){$list=[];};
@@ -193,7 +194,6 @@ namespace Anon;
 
           foreach($spuf as $furl => $save)
           {
-              $indx++;
               $leaf=frag($furl,"/"); $leaf=rpop($leaf); $fext=fext("/$leaf"); $fold="bits";
               $temp=spuf($furl,null,$purl,12,(isin("js css",$fext)?0:1));
 
@@ -205,13 +205,15 @@ namespace Anon;
 
                   foreach($list as $item)
                   {
-                      if(isin($item,["http://","https://"])){continue;}; $href=unwrap($item);
+                      if(isin($item,["http://","https://"])){continue;}; $href=unwrap($item); $span++;
                       $burl="$curl/$href"; $file=frag($href,"/"); $file=rpop($file); $q=stub($file,'?');
                       if($q){$file=$q[0]; $q="?$q[2]";}else{$q='';}; $pref=($q?swap($href,$q,''):$href);
                       if(strpos($href,"..")===0){$burl=($hurl.path::cdto($twig,$pref));};
                       $dest="/$path/bits/$file"; $temp=swap($temp,"url({$item})","url('{$dest}{$q}')");
                       $bufr=spuf($burl,null,$purl,12,1);
                       path::make($dest,$bufr); unset($bufr);
+                      signal::busy(['with'=>"/Site/importOpen","done"=>floor(($indx/$span)*100)]);
+                      $indx++;
                   };
                   unset($list,$item);
               }
@@ -221,7 +223,8 @@ namespace Anon;
               };
 
               path::make("$path/$fold/$leaf",$temp); unset($temp);
-              signal::busy(['with'=>"/Site/importOpen","done"=>floor((($indx+1)/$span)*100)]);
+              signal::busy(['with'=>"/Site/importOpen","done"=>floor(($indx/$span)*100)]);
+              $indx++;
           };
 
           path::make("$path/aard.htm",$html);
