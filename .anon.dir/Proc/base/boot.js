@@ -30,8 +30,6 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    select('script').forEach((n)=>{remove(n)});
 
-dump(decode.jso(`{:conf('Proc/viewConf'):}`));
-dump(globVars(`viewConf`));
    if(globVars(`viewConf`).shieldOn)
    {
        hijack(['eval','alert','Element.prototype.appendChild','Element.prototype.setAttribute','Element.prototype.addEventListener','XMLHttpRequest.prototype.open'],function()
