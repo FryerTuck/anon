@@ -15,10 +15,7 @@
 
 // defn :: conf : front-end configuration
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   globVars({viewConf:
-   {
-      {:'/Proc/conf/viewConf':}
-   }});
+   globVars({viewConf:decode.jso(`{:conf('Proc/viewConf'):}`)});
 
    const timeVars = {e6:0};
 
