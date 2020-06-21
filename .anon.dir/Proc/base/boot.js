@@ -31,10 +31,10 @@
    select('script').forEach((n)=>{remove(n)});
 
    globVars({jack:
-   [
+   {
        main:['eval','alert','Element.prototype.appendChild','Element.prototype.setAttribute','Element.prototype.addEventListener','XMLHttpRequest.prototype.open'],
        info:[`console.log`,`console.error`,`console.debug`,`console.warn`,`console.info`],
-   ]});
+   }});
 
 
    if(globVars(`viewConf`).shieldOn)
