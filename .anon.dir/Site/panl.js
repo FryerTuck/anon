@@ -376,7 +376,7 @@ extend(Anon)
                               ]},
                               {row:
                               [
-                                 {butn:`.dark .good`, text:`view`, hint:`opens the template chosen above`, onclick:function(){Anon.Site.tool.config.view()}},
+                                 {butn:`.dark .good`, text:`open`, hint:`opens the template chosen above`, onclick:function(){Anon.Site.tool.config.open(tab)}},
                                  {butn:`.dark .need`, text:`code`, hint:`modify the details of the template chosen above`, onclick:function(){Anon.Site.tool.config.code(tab)}},
                                  {butn:`.dark .cool`, text:`save`, hint:`save changes made to the chosen template`, onclick:function(){Anon.Site.tool.config.save(tab)}},
                                  {butn:`.dark .warn`, text:`pick`, hint:`choose the above template for live website`, onclick:function(){Anon.Site.tool.config.pick(tab)}},
@@ -384,7 +384,7 @@ extend(Anon)
                               ]},
                            ]}]}
                          ]}]},
-                         {row:[{col:[{panl:`#SiteTmplBody .SiteTmplBody`, $:
+                         {row:[{col:[{panl:`#SiteEditBody .SiteEditBody`, $:
                          [
                          ]}]}]},
                     ]});
@@ -392,9 +392,79 @@ extend(Anon)
              },
 
 
-             view:function()
+             open:function(tab, tgt,bdy,frm)
              {
-                 popAlert(`TODO : This feature is not available yet.`);
+                tgt=select(`#configTmpl`).value;
+                bdy=select(`#SiteEditBody`);
+                frm=create({iframe:`#SiteEditView`, src:`/Site/tmpl/${tgt}/base/surf.htm`, onload:function()
+                {
+                    let root=this.contentWindow;
+                    let cntx=root.document;
+
+                    let focs=cntx.createElement("style");
+                    focs.innerHTML=`
+                    .AnonInspects
+                    {
+                      outline:auto !important;
+                      outline-color:hsla(220,100%,60%,1) !important;
+                      background-color:hsla(220,100%,60%,0.3) !important;
+                      box-shadow:0px 0px 1px hsla(0,0%,100%,1), 0px 0px 2px hsla(0,0%,100%,1), 0px 0px 15px hsla(0,0%,0%,0.5) !important;
+                    }
+
+                    .AnonInspPick
+                    {
+                      outline:auto !important;
+                      outline-color:hsla(100,100%,60%,1) !important;
+                      background-color:hsla(100,100%,60%,0.3) !important;
+                      box-shadow:0px 0px 1px hsla(0,0%,100%,1), 0px 0px 2px hsla(0,0%,100%,1), 0px 0px 15px hsla(0,0%,0%,0.5) !important;
+                    }
+                    `;
+
+                    cntx.head.appendChild(focs);
+
+                    listOf(cntx.body.getElementsByTagName("*")).forEach((n)=>
+                    {
+                        n.ROOT=root; n.CNTX=cntx;
+
+                        if(nodeName(n)==`a`)
+                        {
+                            let hr=n.getAttribute(`href`); if(isVoid(hr)){hr=""};
+                            if(hr.startsWith(`http:/`)||hr.startsWith(`https:/`)||hr.startsWith(`//`)||isPath(hr)||isPath('/'+hr))
+                            {n.setAttribute(`href`,`#`)};
+                        };
+
+                        let ch=(n.onclick||n.onClick||n.getAttribute("onclick")||n.getAttribute("onClick"));
+                        if(isFunc(ch)){ch=ch.toString()}; if(isin(ch,["window.open","location.href"]))
+                        {
+                            delete n.onclick; delete n.onClick;
+                            n.removeAttribute("onclick"); n.removeAttribute("onClick");
+                        };
+
+                        n.addEventListener(`mouseover`,function(ev)
+                        {
+                            if(!ev.ctrlKey){return};
+                            ev.preventDefault();  ev.stopPropagation();  ev.stopImmediatePropagation();
+                            let cc=this.className; if(!isText(cc)){cc=""};
+                            if(isin(cc,`AnonInspPick`)){return}; // this is selected .. do nothing
+                            cc=cc.split(` AnonInspects`).join(""); cc+=` AnonInspects`; // add focussed class
+                            delete this.className; this.className=cc;
+                        },false);
+
+                        n.addEventListener(`mouseout`,function(ev)
+                        {
+                            ev.stopPropagation();  let cc=this.className; if(!isText(cc)){cc=""};
+                            cc=cc.split(` AnonInspects`).join("");
+                            delete this.className; this.className=cc;
+                        },false);
+
+                        n.addEventListener(`dblclick`,function(ev)
+                        {
+                            ev.preventDefault(); ev.stopPropagation(); ev.stopImmediatePropagation();
+                            Anon.Site.tool.modify.elem(this);
+                        },false);
+                    });
+                }});
+                bdy.insert(frm);
              },
 
 
