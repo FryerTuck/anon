@@ -30,6 +30,7 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    select('script').forEach((n)=>{remove(n)});
 
+dump(decode.jso(`{:conf('Proc/viewConf'):}`));
 dump(globVars(`viewConf`));
    if(globVars(`viewConf`).shieldOn)
    {
