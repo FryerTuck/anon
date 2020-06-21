@@ -30,12 +30,19 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    select('script').forEach((n)=>{remove(n)});
 
+   globVars({jack:
+   [
+       main:['eval','alert','Element.prototype.appendChild','Element.prototype.setAttribute','Element.prototype.addEventListener','XMLHttpRequest.prototype.open'],
+       info:[`console.log`,`console.error`,`console.debug`,`console.warn`,`console.info`],
+   ]});
+
+
    if(globVars(`viewConf`).shieldOn)
    {
-       hijack(['eval','alert','Element.prototype.appendChild','Element.prototype.setAttribute','Element.prototype.addEventListener','XMLHttpRequest.prototype.open'],function()
+       hijack(globVars(`jack`).main,function()
        {if(stak(0)){return listOf(arguments)}; wack()});
 
-       hijack([`console.log`,`console.error`,`console.debug`,`console.warn`,`console.info`],function()
+       hijack(globVars(`jack`).info,function()
        {
           let j={"[Intervention] Slow network":`Fallback font will be used`}; // junk
           let a,i; a=listOf(arguments); a.forEach((s)=>{j.each((v,k)=>{if(isin(s,k)&&isin(s,v)){i=1;return STOP}})});
@@ -299,14 +306,46 @@
    {
       let bl=decode.JSON(('{:bootList:}'||'[]'));
       extend(MAIN)({Anon:{}}); bz(50);
-      requires(bl,()=>
+      requires(bl,( np)=>
       {
          bz(60);
-            // console.clear();
-         let np=location.href; np+=((isin(np,"?")?"&":"?")+"init=1");
+         np=location.href; np+=((isin(np,"?")?"&":"?")+"init=1");
          render(np,(r)=>
          {
-            let mv=select('#anonMainView'); mv.insert(r);
+            if(nodeName(r)=="iframe")
+            {
+                r.id="AnonSiteView"; r.listen("load",function(ev,dm,se)
+                {
+                    dm=this.contentDocument;
+                    dm.AnonSiteView=this;
+
+                    dm.addEventListener("click",function()
+                    {
+                        this.AnonSiteView.hits+=1; if(this.AnonSiteView.hits<3){return;};
+                        if(this.AnonSiteView.tick){clearTimeout(this.AnonSiteView.tick)};
+                        this.AnonSiteView.tick=setTimeout(()=>
+                        {
+                            this.AnonSiteView.hits=0;
+                            if(!!select(`#AnonReplPanl`)){return};
+                            initPanl();
+                        },350);
+                    });
+
+
+                    // se=dm.createElement("script");
+                    // se.onload=function()
+                    // {
+                    //    if(!globVars(`viewConf`).shieldOn){return};
+                    //    // hijack(globVars(`jack`).main,function(){});
+                    //    // hijack(globVars(`jack`).info,function(){});
+                    //
+                    // };
+                    // se.src="/Proc/base/abec.js";
+                    // dm.head.appendChild(se);
+                });
+            };
+
+            select('#anonMainView').insert(r);
             bz(80);
             tick.after(250,()=>
             {
