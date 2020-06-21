@@ -397,7 +397,7 @@ extend(Anon)
                 tgt=select(`#configTmpl`).value;
                 if(!tgt){popAlert(`choose a template first`); return};
                 bdy=select(`#SiteEditBody`);
-                frm=create({iframe:`#SiteEditView`, src:`/Site/tmpl/${tgt}/base/surf.htm`, onload:function()
+                frm=create({iframe:`#SiteEditView .posAbs .spanFull`, src:`/Site/tmpl/${tgt}/base/surf.htm`, onload:function()
                 {
                     let root=this.contentWindow;
                     let cntx=root.document;
@@ -508,7 +508,7 @@ extend(Anon)
          {
              elem:function(n)
              {
-                 popAlert(`TODO : modify.load("${n}")`);
+
              },
          },
 
