@@ -395,6 +395,7 @@ extend(Anon)
              open:function(tab, tgt,bdy,frm)
              {
                 tgt=select(`#configTmpl`).value;
+                if(!tgt){popAlert(`choose a template first`); return};
                 bdy=select(`#SiteEditBody`);
                 frm=create({iframe:`#SiteEditView`, src:`/Site/tmpl/${tgt}/base/surf.htm`, onload:function()
                 {
