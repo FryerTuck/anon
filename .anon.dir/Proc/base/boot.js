@@ -34,7 +34,7 @@
    select('script').forEach((n)=>{remove(n)});
 
 
-   if(globVars(`protectHacking`))
+   if(globVars(`viewConf`).protectHacking)
    {
        hijack(['eval','alert','Element.prototype.appendChild','Element.prototype.setAttribute','Element.prototype.addEventListener','XMLHttpRequest.prototype.open'],function()
        {if(stak(0)){return listOf(arguments)}; wack()});
