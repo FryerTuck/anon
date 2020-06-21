@@ -542,6 +542,7 @@
    .spanHorz {width:100% !important;}
    .spanVert {height:100% !important;}
    .spanBoth {width:100% !important; height:100% !important;}
+   .spanFull {width:100% !important; height:100% !important;}
 
    .flipHorz{transform:scale(-1,1);}
    .flipVert{transform:scale(1,-1);}

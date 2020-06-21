@@ -1057,8 +1057,10 @@
       s=this; purl(p,(r)=>
       {
          // if(MAIN.HALT){return};
-         let m,q,t,x; m=r.head.ContentType.split(';')[0].split('/x-').join('/'); q=m.split('/'); t=q[0]; x=q[1];
-         if(!isin(parser,t)){t=x}; parsed(r.body,t,(z)=>
+         let m,q,t,x; m=r.head.ContentType.split(';')[0].split('/x-').join('/');
+         q=m.split('/'); t=q[0]; x=q[1]; if(!isin(parser,t)){t=x};
+         r=trim(r.body); if(!r){f(r);};
+         parsed(r,t,(z)=>
          {
             if(t=='markdown'){z=create({div:'.markdown-page',contents:[z]})}; f(z);
          });

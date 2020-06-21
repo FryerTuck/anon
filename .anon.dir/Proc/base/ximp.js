@@ -53,7 +53,9 @@
 
       html:function(d,f)
       {
-         f(xdom(d));
+         if(!isin(d,"</html>")){f(xdom(d));return};
+         f(create({iframe:`.posAbs .spanFull`, srcdoc:d}));
+
       },
 
 
