@@ -8,7 +8,7 @@
       fs=stak(); if(!fs){console.error(fs);wack();return}; // get the call-stack, if empty -> wack the abuser, else use it for from-auth
       if(isText(f)){f=[f];}; if((f!==VOID)&&!isList(f)){fail("invalid globVars auth-from");return}; // verify auth, must be text-list, or VOID
       if(f){y=0;f.forEach((p)=>{if(!isText(p)){fail("invalid globVars auth-from");y=1}}); if(y){return}}; // verify each text if from-auth
-      if(isText(d,1)){if(d=="viewConf"){dump("\n```",this.vars[d],"```\n");}; return dupe(this.vars[d])}; 
+      if(isText(d,1)){if(d=="viewConf"){dump("\n\n\n```",this.vars[d],"```\n\n\n");}; return dupe(this.vars[d])}; 
       if(!isKnob(d,1)){return}; // return copy of requested value, or VOID if not object
       // below will attempt to create/update global variables using from-auth security (if any -else it's immutable)
       si=rstub(fs[1]," ")[0]; rb=true; d.each((v,k)=>
