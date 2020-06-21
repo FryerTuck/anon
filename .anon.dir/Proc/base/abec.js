@@ -417,6 +417,7 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const copyOf = function(v,n, r)
    {
+      if(isVoid(v)||(v===null)||(v==="")||isBool(v)){return v};
       if(isNumr(v)||isText(v)){if(!n){return v}; v=(v+''); n=parseInt(n); r=''; for(let i=0;i<n;i++){r+=v}; return r};
       if((v instanceof Element)){return (v.cloneNode(true))};
       if(isList(v)){r=[]; v=([].slice.call(v)); v.forEach((i)=>{r.push(copyOf(i))}); return r};
