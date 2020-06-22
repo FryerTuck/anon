@@ -659,12 +659,6 @@ namespace Anon;
    $s=(strpos($r,"https://$h")===0); $f=envi('DBUGPATH'); if($s&&$k){$_SERVER['MADEFUBU']=true;}else{$_SERVER['MADEFUBU']=false;};
    if(($s&&!$k)&&($p!==$f)){$s=false;}; // logged out
 
-   if(!$k&&$b)
-   {
-       $rp=envi('URI'); $rh="Location: https://{$h}{$p}";
-       if(isset($_GET['test'])){die("503 testing $b <br>$rh");};
-   };
-
 
    if($s&&!$k)
    {
@@ -676,8 +670,13 @@ namespace Anon;
 
    if(($b&&($b!=='BOT'))||post('INTRFACE')||kuki('INTRFACE'))
    {
-      if(!$k&&$s){$k=mksesn('anonymous');};
-      // if(!$k&&$s){};
+      // if(!$k&&$b)
+      // {
+      //     $rp=envi('URI'); $rh="Location: https://{$h}{$p}";
+      // };
+
+              if(isset($_GET['test'])){die("503 testing $s");};
+
       if(!$k){harakiri('missing -or invalid session key');}; // YOU HAVE DIED
       $fn=($b?$b:post('INTRFACE')); if(!$fn){$fn=kuki('INTRFACE');};
       $_SERVER['INTRFACE']="$fn"; unset($fn);
