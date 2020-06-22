@@ -319,17 +319,21 @@
                     dm=this.contentDocument; db=dm.body;
                     dm.AnonSiteView=this;    db.tapHit=0;
 
-                    db.addEventListener("click",function()
+                    if(!db.tapSeq)
                     {
-                        this.tapHit+=1; if(this.tapHit<4){return;};
-                        if(this.tapTmo){clearTimeout(this.tapTmo)};
-                        this.tapTmo=setTimeout(()=>
+                        db.tapSeq=1;
+                        db.addEventListener("click",function()
                         {
-                            this.tapHit=0;
-                            if(!!select(`#AnonReplPanl`)){return};
-                            // initPanl();
-                        },350);
-                    });
+                            this.tapHit+=1; if(this.tapHit<4){return;};
+                            if(this.tapTmo){clearTimeout(this.tapTmo)};
+                            this.tapTmo=setTimeout(()=>
+                            {
+                                this.tapHit=0;
+                                if(!!select(`#AnonReplPanl`)){return};
+                                // initPanl();
+                            },350);
+                        });
+                    };
 
                     listOf(dm.body.getElementsByTagName("a")).forEach((n)=>
                     {
