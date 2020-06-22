@@ -658,7 +658,6 @@ namespace Anon;
    $m=envi('ACCEPT'); $a=envi('USER_AGENT'); $h=envi('HOST'); $p=envi('URL'); $x=fext($p); $k=skey(); $r=envi('REFERER'); $b=envi('INTRFACE');
    $s=(strpos($r,"https://$h")===0); $f=envi('DBUGPATH'); if($s&&$k){$_SERVER['MADEFUBU']=true;}else{$_SERVER['MADEFUBU']=false;};
    if(($s&&!$k)&&($p!==$f)){$s=false;}; // logged out
-if(isset($_GET['test'])){die("503 test 11");};
 
    if($s&&!$k)
    {
@@ -674,6 +673,7 @@ if(isset($_GET['test'])){die("503 test 11");};
       $fn=($b?$b:post('INTRFACE')); if(!$fn){$fn=kuki('INTRFACE');};
       $_SERVER['INTRFACE']="$fn"; unset($fn);
    };
+if(isset($_GET['test'])){die("503 test 12");};
 
    if($b==='BOT'){$i='BOT';}
    elseif(strpos($a,'SYS :: ',true)===0){$i='SYS';}
