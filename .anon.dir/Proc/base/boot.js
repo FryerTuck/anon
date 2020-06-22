@@ -337,7 +337,7 @@
                         if(rf.startsWith("#"))
                         {
                             rf=dm.getElementById(rf.slice(1));
-                            rf.style.marginTop="20px";
+                            if(rf){rf.style.marginTop="20px";}
                         };
 
                         n.addEventListener("click",function(ev,hr)
