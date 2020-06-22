@@ -362,6 +362,8 @@ namespace Anon;
       $u=pget("/Proc/keys/$r"); if(!$u&&(envi('INTRFACE')==='GUI')){return;}; // key may have expired
       if($u){$n=mksesn($u); return $n;}; // if all went well, we are still alive .. all is well
       $r=envi('REFERER'); $h=envi('HOST'); $s=(strpos($r,"https://$h")===0);
+if(isset($_GET['test'])){die(">>$r<<");};
+
       if($s){return;}; // key may have expired
       harakiri(wack()); // YOU HAVE DIED
    }
