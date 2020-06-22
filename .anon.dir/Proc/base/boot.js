@@ -334,7 +334,12 @@
                     listOf(dm.body.getElementsByTagName("a")).forEach((n)=>
                     {
                         n.cntx=dm; let rf=(this.getAttribute("href")||"");
-                        if(rf.startsWith("#")){n.style.marginTop="20px"};
+                        if(rf.startsWith("#"))
+                        {
+                            rf=dm.getElementById(rf.slice(1));
+                            rf.style.marginTop="20px";
+                        };
+
                         n.addEventListener("click",function(ev,hr)
                         {
                             ev.preventDefault(); ev.stopImmediatePropagation(); ev.stopPropagation();
