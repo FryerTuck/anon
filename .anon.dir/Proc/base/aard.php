@@ -660,10 +660,7 @@ namespace Anon;
 
    if($s&&!$k&&(($b&&($b!=='BOT'))||post('INTRFACE')||kuki('INTRFACE')))
    {
-       if(isset($_GET['test']))
-       {
-           die("test 1");
-       };
+       $p=envi('URI'); header("Location: https://{$h}{$p}"); exit;
    };
 
 
