@@ -568,7 +568,6 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
-if(isset($_GET['test'])){die("test 3");};
 
 # dbug :: pre-flight : check essential server vars .. set roots .. get rid of bad bots .. check if web-server passed us the right stuff
 # ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -576,6 +575,7 @@ if(isset($_GET['test'])){die("test 3");};
    $d=envi('ROOTPATH'); $s=skey(); $u=''; $c=envi('COREPATH'); //$c=explode('/',envi('COREPATH')); $c=array_pop($c);
    $g=envi('DBUGPATH'); $b=rshave(str_replace($d,'',envi('BASE')),'/'); if(!$b){$b='/';}; $_SERVER['BASEPATH']=$b;
    $_SERVER['DBUGPATH']=lshave($g,'.anon.dir'); unset($b,$g);
+if(isset($_GET['test'])){die("test 4");};
 
    if($s){$s="$c/Proc/temp/sesn/$s/USER"; if(file_exists($s)){$u=file_get_contents($s);}};
    if(!$u){$u='anonymous';}; $_SERVER['USERNAME']=$u; $_SERVER['USERPATH']="$c/User/data/$u/home";
