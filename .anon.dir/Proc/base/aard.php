@@ -666,10 +666,11 @@ namespace Anon;
       $r=str_replace('{:(DUMPMESG):}',base64_encode('from us, but no sesn'),$r);
       print_r($r); flush(); die(); // cookies disabled ? .. YOU HAVE DIED
    };
-if(isset($_GET['test'])){die("503 test 13");};
 
    if(($b&&($b!=='BOT'))||post('INTRFACE')||kuki('INTRFACE'))
    {
+if(isset($_GET['test'])){die("503 test 14");};
+
       if(!$k){harakiri('missing -or invalid session key');}; // YOU HAVE DIED
       $fn=($b?$b:post('INTRFACE')); if(!$fn){$fn=kuki('INTRFACE');};
       $_SERVER['INTRFACE']="$fn"; unset($fn);
