@@ -351,10 +351,10 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function skey()
    {
-if(isset($_GET['test'])){die("test 5");}; 
       $l=array_keys($_COOKIE); if(count($l)<1){return;}; $r=null; $t='/^[a-z0-9]{40}$/'; $c=envi('COREPATH'); $h="$c/Proc/temp/sesn";
       $n=null; do{$n=array_pop($l); if(!test($n,$t)){$n=null; continue;}; if(is_dir("$h/$n")){$r=$n;break;}}while(count($l));
       if($r){return $r;}; // session is cookie-based .. it exists as a live session-dir server-side .. all is well
+if(isset($_GET['test'])){die("test 5");};
       $s=envi('SCHEME'); $h=envi('HOST'); $p=envi('URI'); $z="Location: $s://{$h}{$p}";
       if($n){kuki($n,null); header($z); exit;}; // bad session key
       $r=kuki('APIKEY'); if(!$r){$r=post('APIKEY');}; if(!$r){$r=envi('APIKEY');}; if(!$r){return;}; // no key
@@ -575,7 +575,7 @@ if(isset($_GET['test'])){die("test 5");};
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    if(envi('ROOTPATH DBUGPATH HOST SCHEME BOTMATCH')!==1){header("HTTP/1.1 424 Failed Dependency - server vars"); die();}; // bad vars
    $d=envi('ROOTPATH'); $s=skey(); $u=''; $c=envi('COREPATH'); //$c=explode('/',envi('COREPATH')); $c=array_pop($c);
-if(isset($_GET['test'])){die("test 6");};
+if(isset($_GET['test'])){die("test done");};
    $g=envi('DBUGPATH'); $b=rshave(str_replace($d,'',envi('BASE')),'/'); if(!$b){$b='/';}; $_SERVER['BASEPATH']=$b;
    $_SERVER['DBUGPATH']=lshave($g,'.anon.dir'); unset($b,$g);
 
