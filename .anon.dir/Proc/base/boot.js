@@ -341,7 +341,7 @@
                             if(hr.startsWith("#"))
                             {
                                 let trgt=this.cntx.getElementById(hr.slice(1));
-                                if(trgt){trgt.scrollIntoView({behavior:"smooth", block:"nearest"})};
+                                if(trgt){trgt.scrollIntoView({behavior:"smooth", block:"start"})};
                             };
                         },false);
                     });
