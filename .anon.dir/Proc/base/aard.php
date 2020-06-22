@@ -632,7 +632,6 @@ namespace Anon;
       halt(500,"SSL check ~ $r");  // YOU HAVE DIED ... our journey ended because we are too insecure ... invalid SSL
    };
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-if(isset($_GET['test'])){die("503 test 10");};
 
 
 
@@ -659,6 +658,7 @@ if(isset($_GET['test'])){die("503 test 10");};
    $m=envi('ACCEPT'); $a=envi('USER_AGENT'); $h=envi('HOST'); $p=envi('URL'); $x=fext($p); $k=skey(); $r=envi('REFERER'); $b=envi('INTRFACE');
    $s=(strpos($r,"https://$h")===0); $f=envi('DBUGPATH'); if($s&&$k){$_SERVER['MADEFUBU']=true;}else{$_SERVER['MADEFUBU']=false;};
    if(($s&&!$k)&&($p!==$f)){$s=false;}; // logged out
+if(isset($_GET['test'])){die("503 test 11");};
 
    if($s&&!$k)
    {
