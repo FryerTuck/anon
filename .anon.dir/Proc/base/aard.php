@@ -355,7 +355,7 @@ namespace Anon;
       $n=null; do{$n=array_pop($l); if(!test($n,$t)){$n=null; continue;}; if(is_dir("$h/$n")){$r=$n;break;}}while(count($l));
       if($r){return $r;}; // session is cookie-based .. it exists as a live session-dir server-side .. all is well
       $s=envi('SCHEME'); $h=envi('HOST'); $p=envi('URI'); $z="Location: $s://{$h}{$p}";
-      if($n){$n=mksesn('anonymous'); return $n;}; // session key expired
+      if($n){unset($_COOKIE[$n]); return;}; // session key expired
       $r=kuki('APIKEY'); if(!$r){$r=post('APIKEY');}; if(!$r){$r=envi('APIKEY');}; if(!$r){return;}; // no key
       if(!test($r,$t)){harakiri(wack());}; // invalid session key .. YOU HAVE DIED
       if(is_dir("$h/$r")){return $r;}; // session is live
