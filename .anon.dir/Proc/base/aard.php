@@ -567,7 +567,6 @@ namespace Anon;
    if(!$y){header("HTTP/1.1 400 Bad Request"); die();}; $_SERVER['USERADDR']=envi($y);  unset($l,$y,$s,$i,$v,$x,$z);
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
-if(isset($_GET['test'])){die("test 2");};
 
 
 # dbug :: pre-flight : check essential server vars .. set roots .. get rid of bad bots .. check if web-server passed us the right stuff
@@ -590,6 +589,7 @@ if(isset($_GET['test'])){die("test 2");};
    if((strpos($q,$dbbs)!==false)&&isee($dbbs)){header('Content-Type: image/gif'); readfile(isee($dbbs)); exit;}; unset($dbwp,$dbbs);
    if((strlen($q)>8)&&((substr($q,-7,7)==='.js.map')||(substr($q,-8,8)==='.css.map'))){die('');}; unset($q); // hands off!!
    $b=cbot(true); // check for bad robot .. if facing bad-robot then bot is "served" and the process exits here ... rinse and repeat
+if(isset($_GET['test'])){die("test 3");};
 
    $h=sha1(envi('USERADDR').envi('USER_AGENT')); $p=path("/Proc/temp/kban/$h"); if(is_link($p))
    {
