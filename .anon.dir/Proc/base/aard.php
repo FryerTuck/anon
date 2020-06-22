@@ -700,7 +700,7 @@ namespace Anon;
    $_SERVER['INTRFACE']=$i; defn(['USERSKEY'=>$k]); unset($a,$h,$p,$x,$r,$b,$s,$k,$i);
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
-
+if(isset($_GET['test'])){die("test 1");};
 
 # info :: proc : here we are out of "the swamp" .. we got rid of BS and identified the interface .. next we boot through "the woods"
 # ---------------------------------------------------------------------------------------------------------------------------------------------
