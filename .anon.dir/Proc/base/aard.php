@@ -525,6 +525,7 @@ namespace Anon;
    function lstub($t,$d){return stub($t,$d);};  function rstub($t,$d){return stub($t,$d,1);}
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
+if(isset($_GET['test'])){die("test 1");};
 
 
 # refs :: constants : these help us express specific directives .. they all have the value of the word wrapped in `:` .. like :AUTO:
@@ -637,7 +638,6 @@ namespace Anon;
    $x=envi('REQUEST_METHOD'); if(isset($l[$x])){$_SERVER['USERDEED']=$l[$x];}else{header('HTTP/1.1 405 Method Not Allowed'); die();};
    if($x=='OPTIONS'){$l=implode(array_keys($l,', ')); header('HTTP/1.1 200 OK'); header("Allow: $l"); die();}; unset($x,$l); // all is well
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-if(isset($_GET['test'])){die("test 1");};
 
 
 
