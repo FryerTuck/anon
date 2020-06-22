@@ -327,7 +327,7 @@
                         {
                             this.tapHit=0;
                             if(!!select(`#AnonReplPanl`)){return};
-                            initPanl();
+                            // initPanl();
                         },350);
                     });
 
