@@ -577,9 +577,9 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    if(envi('ROOTPATH DBUGPATH HOST SCHEME BOTMATCH')!==1){header("HTTP/1.1 424 Failed Dependency - server vars"); die();}; // bad vars
    $d=envi('ROOTPATH'); $s=skey(); $u=''; $c=envi('COREPATH'); //$c=explode('/',envi('COREPATH')); $c=array_pop($c);
-// if(isset($_GET['test'])){die("503 test done");};
    $g=envi('DBUGPATH'); $b=rshave(str_replace($d,'',envi('BASE')),'/'); if(!$b){$b='/';}; $_SERVER['BASEPATH']=$b;
    $_SERVER['DBUGPATH']=lshave($g,'.anon.dir'); unset($b,$g);
+if(isset($_GET['test'])){die("503 test 6");};
 
    if($s){$s="$c/Proc/temp/sesn/$s/USER"; if(file_exists($s)){$u=file_get_contents($s);}};
    if(!$u){$u='anonymous';}; $_SERVER['USERNAME']=$u; $_SERVER['USERPATH']="$c/User/data/$u/home";
@@ -593,7 +593,7 @@ namespace Anon;
    if((strpos($q,$dbwp)!==false)&&isee($dbwp)){header('Content-Type: image/jpeg'); readfile(isee($dbwp)); exit;};
    if((strpos($q,$dbbs)!==false)&&isee($dbbs)){header('Content-Type: image/gif'); readfile(isee($dbbs)); exit;}; unset($dbwp,$dbbs);
    if((strlen($q)>8)&&((substr($q,-7,7)==='.js.map')||(substr($q,-8,8)==='.css.map'))){die('');}; unset($q); // hands off!!
-
+//
    $b=cbot(true); // check for bad robot .. if facing bad-robot then bot is "served" and the process exits here ... rinse and repeat
 
    $h=sha1(envi('USERADDR').envi('USER_AGENT')); $p=path("/Proc/temp/kban/$h"); if(is_link($p))
