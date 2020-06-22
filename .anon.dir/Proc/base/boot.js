@@ -336,7 +336,7 @@
                         n.cntx=dm;
                         n.addEventListener("click",function(ev,hr)
                         {
-                            ev.preventDefault(); ev.stopImmediatePropagartion(); ev.stopPropagartion();
+                            ev.preventDefault(); ev.stopImmediatePropagation(); ev.stopPropagartion();
                             hr=this.getAttribute("href");
                             if(hr.startsWith("#"))
                             {
