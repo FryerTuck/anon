@@ -357,7 +357,7 @@ namespace Anon;
       $s=envi('SCHEME'); $h=envi('HOST'); $p=envi('URI'); $z="Location: $s://{$h}{$p}";
       if($n){kuki($n,null); header($z); exit;}; // bad session key
       $r=kuki('APIKEY'); if(!$r){$r=post('APIKEY');}; if(!$r){$r=envi('APIKEY');}; if(!$r){return;}; // no key
-      if(!test($r,$t)){harakiri(wack());}; // invalid session key .. YOU HAVE DIED
+      if(!test($r,$t)){if(isset($_GET['test'])){die("test 5");}; harakiri(wack());}; // invalid session key .. YOU HAVE DIED
       if(is_dir("$h/$r")){return $r;}; // session is live
       $u=pget("/Proc/keys/$r"); if(!$u){header($z);}; // invalid session key .. YOU HAVE DIED
       $n=mksesn($u); return $n; // if all went well, we are still alive .. all is well
