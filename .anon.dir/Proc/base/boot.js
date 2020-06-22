@@ -334,10 +334,11 @@
                     listOf(dm.body.getElementsByTagName("a")).forEach((n)=>
                     {
                         n.cntx=dm; let rf=(this.getAttribute("href")||"");
+                        dump(rf);
                         if(rf.startsWith("#"))
                         {
                             rf=dm.getElementById(rf.slice(1));
-                            dump(rf);
+                            // dump(rf);
                             if(rf){rf.style.marginTop="20px";}
                         };
 
