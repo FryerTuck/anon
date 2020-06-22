@@ -525,7 +525,6 @@ namespace Anon;
    function lstub($t,$d){return stub($t,$d);};  function rstub($t,$d){return stub($t,$d,1);}
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
-if(isset($_GET['test'])){die("test 1");};
 
 
 # refs :: constants : these help us express specific directives .. they all have the value of the word wrapped in `:` .. like :AUTO:
@@ -568,6 +567,7 @@ if(isset($_GET['test'])){die("test 1");};
    if(!$y){header("HTTP/1.1 400 Bad Request"); die();}; $_SERVER['USERADDR']=envi($y);  unset($l,$y,$s,$i,$v,$x,$z);
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
+if(isset($_GET['test'])){die("test 2");};
 
 
 # dbug :: pre-flight : check essential server vars .. set roots .. get rid of bad bots .. check if web-server passed us the right stuff
