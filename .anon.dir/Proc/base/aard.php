@@ -360,8 +360,8 @@ namespace Anon;
       if(!test($r,$t)){harakiri(wack());}; // invalid session key .. YOU HAVE DIED
       if(is_dir("$h/$r")){return $r;}; // session is live
       $u=pget("/Proc/keys/$r"); if(!$u&&(envi('INTRFACE')==='GUI')){return;}; // key may have expired
-if(isset($_GET['test'])){die("503 test 4");};
       if(!$u){harakiri(wack());}; // invalid session key .. YOU HAVE DIED
+if(isset($_GET['test'])){die("503 test 5");};
       $n=mksesn($u); return $n; // if all went well, we are still alive .. all is well
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
