@@ -583,12 +583,12 @@ namespace Anon;
    $_SERVER['oblevl']=0; $_SERVER['obfail']=''; $_SERVER['cbfail']=null; // for deFail & enFail
    $_SERVER['SESNHASH']=null; $_SERVER['SESNUSER']=null; $_SERVER['SESNCLAN']=null; // for security .. bite me
 
+if(isset($_GET['test'])){die("test 3");};
 
    $q=envi('URL'); $dbwp='/User/dcor/wal1.jpg'; $dbbs='/User/dcor/anm1.gif';
    if((strpos($q,$dbwp)!==false)&&isee($dbwp)){header('Content-Type: image/jpeg'); readfile(isee($dbwp)); exit;};
    if((strpos($q,$dbbs)!==false)&&isee($dbbs)){header('Content-Type: image/gif'); readfile(isee($dbbs)); exit;}; unset($dbwp,$dbbs);
    if((strlen($q)>8)&&((substr($q,-7,7)==='.js.map')||(substr($q,-8,8)==='.css.map'))){die('');}; unset($q); // hands off!!
-if(isset($_GET['test'])){die("test 3");};
 
    $b=cbot(true); // check for bad robot .. if facing bad-robot then bot is "served" and the process exits here ... rinse and repeat
 
