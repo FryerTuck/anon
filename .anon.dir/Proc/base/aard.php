@@ -357,8 +357,8 @@ namespace Anon;
       $s=envi('SCHEME'); $h=envi('HOST'); $p=envi('URI'); $z="Location: $s://{$h}{$p}";
       if($n){unset($_COOKIE[$n]); return;}; // session key expired
       $r=kuki('APIKEY'); if(!$r){$r=post('APIKEY');}; if(!$r){$r=envi('APIKEY');}; if(!$r){return;}; // no key
-if(isset($_GET['test'])){die("503 test 2");};
       if(!test($r,$t)){harakiri(wack());}; // invalid session key .. YOU HAVE DIED
+if(isset($_GET['test'])){die("503 test 3");};
       if(is_dir("$h/$r")){return $r;}; // session is live
       $u=pget("/Proc/keys/$r"); if(!$u&&(envi('INTRFACE')==='GUI')){return;}; // key may have expired
       if(!$u){harakiri(wack());}; // invalid session key .. YOU HAVE DIED
