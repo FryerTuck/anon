@@ -322,15 +322,15 @@
                     if(!db.tapSeq)
                     {
                         db.tapSeq=1;
-                        db.addEventListener("click",function(ev)
+                        db.addEventListener("click",function(ev,ms)
                         {
-                            this.tapHit+=1; if(this.tapHit<4){return;};
+                            ms=this; ms.tapHit+=1; if(ms.tapHit<4){return;};
                             ev.preventDefault(); ev.stopImmediatePropagation(); ev.stopPropagation();
 
-                            if(this.tapTmo){clearTimeout(this.tapTmo)};
-                            this.tapTmo=setTimeout(()=>
+                            if(ms.tapTmo){clearTimeout(ms.tapTmo)};
+                            ms.tapTmo=setTimeout(()=>
                             {
-                                this.tapHit=0;
+                                if(ms.tapHit<4){return;}; ms.tapHit=0;
                                 if(!!select(`#AnonReplPanl`)){return};
                                 initPanl();
                             },350);
