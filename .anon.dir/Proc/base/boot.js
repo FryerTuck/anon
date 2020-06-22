@@ -314,7 +314,7 @@
          {
             if(nodeName(r)=="iframe")
             {
-                r.id="AnonSiteView"; r.listen("load",function(ev,dm,se)
+                r.id="AnonSiteView"; r.listen("load",function(evnt,dm,se)
                 {
                     dm=this.contentDocument;
                     dm.AnonSiteView=this;
@@ -331,6 +331,20 @@
                         },350);
                     });
 
+                    listOf(dm.body.getElementsByTagName("a")).forEach((n)=>
+                    {
+                        n.cntx=dm;
+                        n.addEventListener("click",function(ev,hr)
+                        {
+                            ev.preventDefault(); ev.stopImmediatePropagartion(); ev.stopPropagartion();
+                            hr=this.getAttribute("href");
+                            if(hr.startsWith("#"))
+                            {
+                                let trgt=this.cntx.getElementById(hr.slice(1));
+                                if(trgt){trgt.scrollIntoView({behavior:"smooth"})};
+                            };
+                        },false);
+                    });
 
                     // se=dm.createElement("script");
                     // se.onload=function()

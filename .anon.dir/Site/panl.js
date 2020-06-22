@@ -427,18 +427,18 @@ extend(Anon)
                     {
                         n.ROOT=root; n.CNTX=cntx;
 
-                        if(nodeName(n)==`a`)
-                        {
-                            let hr=n.getAttribute(`href`); if(isVoid(hr)){hr=""};
-                            if(hr.startsWith(`http:/`)||hr.startsWith(`https:/`)||hr.startsWith(`//`)||isPath(hr)||isPath('/'+hr))
-                            {n.setAttribute(`href`,`#`)};
-                        };
-
                         let ch=(n.onclick||n.onClick||n.getAttribute("onclick")||n.getAttribute("onClick"));
                         if(isFunc(ch)){ch=ch.toString()}; if(isin(ch,["window.open","location.href"]))
                         {
                             delete n.onclick; delete n.onClick;
                             n.removeAttribute("onclick"); n.removeAttribute("onClick");
+                        };
+
+                        if(nodeName(n)==`a`)
+                        {
+                            let hr=n.getAttribute(`href`); if(isVoid(hr)){hr=""};
+                            if(hr.startsWith(`http:/`)||hr.startsWith(`https:/`)||hr.startsWith(`//`)||isPath(hr)||isPath('/'+hr))
+                            {n.setAttribute(`href`,`#`)};
                         };
 
                         n.addEventListener(`mouseover`,function(ev)
