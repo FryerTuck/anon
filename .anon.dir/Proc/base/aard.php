@@ -351,6 +351,7 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function skey()
    {
+if(isset($_GET['test'])){die("503 test 1");};
       $l=array_keys($_COOKIE); if(count($l)<1){return;}; $r=null; $t='/^[a-z0-9]{40}$/'; $c=envi('COREPATH'); $h="$c/Proc/temp/sesn";
       $n=null; do{$n=array_pop($l); if(!test($n,$t)){$n=null; continue;}; if(is_dir("$h/$n")){$r=$n;break;}}while(count($l));
       if($r){return $r;}; // session is cookie-based .. it exists as a live session-dir server-side .. all is well
@@ -359,7 +360,7 @@ namespace Anon;
       $r=kuki('APIKEY'); if(!$r){$r=post('APIKEY');}; if(!$r){$r=envi('APIKEY');}; if(!$r){return;}; // no key
       if(!test($r,$t)){harakiri(wack());}; // invalid session key .. YOU HAVE DIED
       if(is_dir("$h/$r")){return $r;}; // session is live
-      $u=pget("/Proc/keys/$r"); if(!$u){header($z);}; // invalid session key .. YOU HAVE DIED
+      $u=pget("/Proc/keys/$r"); if(!$u){kuki($r,null); header($z);}; // invalid session key .. YOU HAVE DIED
 // if(isset($_GET['test'])){die("503 test 10");};
       $n=mksesn($u); return $n; // if all went well, we are still alive .. all is well
    }
