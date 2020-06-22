@@ -317,7 +317,7 @@
                 r.id="AnonSiteView"; r.listen("load",function(evnt,dm,db,se)
                 {
                     dm=this.contentDocument; db=dm.body;
-                    dm.AnonSiteView=this; dm.tapHit=0;
+                    dm.AnonSiteView=this;    db.tapHit=0;
 
                     db.addEventListener("click",function()
                     {
