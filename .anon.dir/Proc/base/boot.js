@@ -337,8 +337,8 @@
 
                         if(rf.startsWith("#"))
                         {
-                            rf=dm.getElementById(rf.slice(1));
-                            if(rf){rf.style.paddingTop="20px";}
+                            rf=dm.getElementById(rf.slice(1)); let pt;
+                            if(rf){pt=(cStyle(rf,'padding-top')||0); rf.style.paddingTop=((pt+20)+"px");}
                         };
 
                         n.addEventListener("click",function(ev,hr)
