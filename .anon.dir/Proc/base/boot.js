@@ -324,16 +324,10 @@
                         db.tapSeq=1;
                         db.addEventListener("click",function(ev,ms)
                         {
-                            ms=this; ms.tapHit+=1; if(ms.tapHit<4){return;};
-                            ev.preventDefault(); ev.stopImmediatePropagation(); ev.stopPropagation();
-
+                            ms=this; ms.tapHit+=1;
                             if(ms.tapTmo){clearTimeout(ms.tapTmo)};
-                            ms.tapTmo=setTimeout(()=>
-                            {
-                                if(ms.tapHit<4){return;}; ms.tapHit=0;
-                                if(!!select(`#AnonReplPanl`)){return};
-                                initPanl();
-                            },350);
+                            if(ms.tapHit<4){ms.tapTmo=setTimeout(()=>{ms.tapHit=0;},350); return;};
+                            if(!select(`#AnonReplPanl`)){initPanl();};
                         });
                     };
 
