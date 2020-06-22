@@ -317,15 +317,15 @@
                 r.id="AnonSiteView"; r.listen("load",function(evnt,dm,se)
                 {
                     dm=this.contentDocument;
-                    dm.AnonSiteView=this; dm.AnonSiteView.hits=0;
+                    dm.AnonSiteView=this; dm.tapHit=0;
 
                     dm.addEventListener("click",function()
                     {
-                        this.AnonSiteView.hits+=1; if(this.AnonSiteView.hits<3){return;};
-                        if(this.AnonSiteView.tick){clearTimeout(this.AnonSiteView.tick)};
-                        this.AnonSiteView.tick=setTimeout(()=>
+                        this.tapHit+=1; if(this.tapHit<3){return;};
+                        if(this.tapTmo){clearTimeout(this.tapTmo)};
+                        this.tapTmo=setTimeout(()=>
                         {
-                            this.AnonSiteView.hits=0;
+                            this.tapHit=0;
                             if(!!select(`#AnonReplPanl`)){return};
                             initPanl();
                         },350);
