@@ -672,7 +672,7 @@ namespace Anon;
        if(!$k)
        {
            $rs=envi('SCHEME'); $rp=envi('URI'); $rh="Location: https://{$h}{$p}";
-           if(isset($_GET['test'])){die("503 test $b<br>$rh");};
+           if(isset($_GET['test'])){die("503 testing $b<br>$rh");};
        };
       if(!$k&&$s){$k=mksesn('anonymous');};
       // if(!$k&&$s){};
