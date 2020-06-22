@@ -579,7 +579,6 @@ namespace Anon;
    $d=envi('ROOTPATH'); $s=skey(); $u=''; $c=envi('COREPATH'); //$c=explode('/',envi('COREPATH')); $c=array_pop($c);
    $g=envi('DBUGPATH'); $b=rshave(str_replace($d,'',envi('BASE')),'/'); if(!$b){$b='/';}; $_SERVER['BASEPATH']=$b;
    $_SERVER['DBUGPATH']=lshave($g,'.anon.dir'); unset($b,$g);
-if(isset($_GET['test'])){die("503 test 6");};
 
    if($s){$s="$c/Proc/temp/sesn/$s/USER"; if(file_exists($s)){$u=file_get_contents($s);}};
    if(!$u){$u='anonymous';}; $_SERVER['USERNAME']=$u; $_SERVER['USERPATH']="$c/User/data/$u/home";
@@ -587,6 +586,7 @@ if(isset($_GET['test'])){die("503 test 6");};
    $z=pget('/Proc/conf/timeZone'); if(is_string($z)&&(strpos($z,'/'))){date_default_timezone_set("$z");}; unset($z); // set server time zone
    $_SERVER['oblevl']=0; $_SERVER['obfail']=''; $_SERVER['cbfail']=null; // for deFail & enFail
    $_SERVER['SESNHASH']=null; $_SERVER['SESNUSER']=null; $_SERVER['SESNCLAN']=null; // for security .. bite me
+if(isset($_GET['test'])){die("503 test 7");};
 
 
    $q=envi('URL'); $dbwp='/User/dcor/wal1.jpg'; $dbbs='/User/dcor/anm1.gif';
