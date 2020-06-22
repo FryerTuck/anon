@@ -658,7 +658,6 @@ namespace Anon;
    $m=envi('ACCEPT'); $a=envi('USER_AGENT'); $h=envi('HOST'); $p=envi('URL'); $x=fext($p); $k=skey(); $r=envi('REFERER'); $b=envi('INTRFACE');
    $s=(strpos($r,"https://$h")===0); $f=envi('DBUGPATH'); if($s&&$k){$_SERVER['MADEFUBU']=true;}else{$_SERVER['MADEFUBU']=false;};
    if(($s&&!$k)&&($p!==$f)){$s=false;}; // logged out
-if(isset($_GET['test'])){die("503 test 12");};
 
    if($s&&!$k)
    {
@@ -667,6 +666,7 @@ if(isset($_GET['test'])){die("503 test 12");};
       $r=str_replace('{:(DUMPMESG):}',base64_encode('from us, but no sesn'),$r);
       print_r($r); flush(); die(); // cookies disabled ? .. YOU HAVE DIED
    };
+if(isset($_GET['test'])){die("503 test 13");};
 
    if(($b&&($b!=='BOT'))||post('INTRFACE')||kuki('INTRFACE'))
    {
