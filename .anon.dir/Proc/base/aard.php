@@ -588,8 +588,9 @@ namespace Anon;
    if((strpos($q,$dbwp)!==false)&&isee($dbwp)){header('Content-Type: image/jpeg'); readfile(isee($dbwp)); exit;};
    if((strpos($q,$dbbs)!==false)&&isee($dbbs)){header('Content-Type: image/gif'); readfile(isee($dbbs)); exit;}; unset($dbwp,$dbbs);
    if((strlen($q)>8)&&((substr($q,-7,7)==='.js.map')||(substr($q,-8,8)==='.css.map'))){die('');}; unset($q); // hands off!!
-   $b=cbot(true); // check for bad robot .. if facing bad-robot then bot is "served" and the process exits here ... rinse and repeat
 if(isset($_GET['test'])){die("test 3");};
+
+   $b=cbot(true); // check for bad robot .. if facing bad-robot then bot is "served" and the process exits here ... rinse and repeat
 
    $h=sha1(envi('USERADDR').envi('USER_AGENT')); $p=path("/Proc/temp/kban/$h"); if(is_link($p))
    {
