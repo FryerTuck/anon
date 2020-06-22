@@ -360,7 +360,7 @@ namespace Anon;
       if(!test($r,$t)){harakiri(wack());}; // invalid session key .. YOU HAVE DIED
       if(is_dir("$h/$r")){return $r;}; // session is live
       $u=pget("/Proc/keys/$r"); if(!$u){header($z);}; // invalid session key .. YOU HAVE DIED
-if(isset($_GET['test'])){die("test 10");};
+// if(isset($_GET['test'])){die("503 test 10");};
       $n=mksesn($u); return $n; // if all went well, we are still alive .. all is well
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -575,7 +575,7 @@ if(isset($_GET['test'])){die("test 10");};
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    if(envi('ROOTPATH DBUGPATH HOST SCHEME BOTMATCH')!==1){header("HTTP/1.1 424 Failed Dependency - server vars"); die();}; // bad vars
    $d=envi('ROOTPATH'); $s=skey(); $u=''; $c=envi('COREPATH'); //$c=explode('/',envi('COREPATH')); $c=array_pop($c);
-if(isset($_GET['test'])){die("test done");};
+// if(isset($_GET['test'])){die("503 test done");};
    $g=envi('DBUGPATH'); $b=rshave(str_replace($d,'',envi('BASE')),'/'); if(!$b){$b='/';}; $_SERVER['BASEPATH']=$b;
    $_SERVER['DBUGPATH']=lshave($g,'.anon.dir'); unset($b,$g);
 
