@@ -333,12 +333,11 @@
 
                     listOf(dm.body.getElementsByTagName("a")).forEach((n)=>
                     {
-                        n.cntx=dm; let rf=(this.getAttribute("href")||"");
-                        dump(rf);
+                        n.cntx=dm; let rf=(n.getAttribute("href")||"");
+
                         if(rf.startsWith("#"))
                         {
                             rf=dm.getElementById(rf.slice(1));
-                            // dump(rf);
                             if(rf){rf.style.marginTop="20px";}
                         };
 
