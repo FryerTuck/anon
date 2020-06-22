@@ -669,7 +669,11 @@ namespace Anon;
 
    if(($b&&($b!=='BOT'))||post('INTRFACE')||kuki('INTRFACE'))
    {
-      if(!$k&&$s){$k=mksesn('anonymous'); if(isset($_GET['test'])){die("503 test 15");};};
+       if(!$k)
+       {
+            if(isset($_GET['test'])){die("503 test 15");};
+       };
+      if(!$k&&$s){$k=mksesn('anonymous');};
       // if(!$k&&$s){$s=envi('SCHEME'); $p=envi('URI'); $z="Location: $s://{$h}{$p}";};
       if(!$k){harakiri('missing -or invalid session key');}; // YOU HAVE DIED
       $fn=($b?$b:post('INTRFACE')); if(!$fn){$fn=kuki('INTRFACE');};
