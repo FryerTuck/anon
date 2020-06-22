@@ -655,7 +655,7 @@ namespace Anon;
 
 # dbug :: vars : INTRFACE - identify the kind of interface .. verify REFERER from "self" .. deny bots any methods other than HEAD and GET
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   $m=envi('ACCEPT'); $a=envi('USER_AGENT'); $h=envi('HOST'); $p=envi('URL'); $x=fext($p); $k=skey(); $r=envi('REFERER'); $b=envi('INTRFACE');
+   $m=envi('ACCEPT'); $a=envi('USER_AGENT'); $h=HOSTNAME; $p=envi('URL'); $x=fext($p); $k=skey(); $r=envi('REFERER'); $b=envi('INTRFACE');
    $s=(strpos($r,"https://$h")===0); $f=envi('DBUGPATH'); if($s&&$k){$_SERVER['MADEFUBU']=true;}else{$_SERVER['MADEFUBU']=false;};
    if(($s&&!$k)&&($p!==$f)){$s=false;}; // logged out
 
@@ -669,8 +669,7 @@ namespace Anon;
 
    if(($b&&($b!=='BOT'))||post('INTRFACE')||kuki('INTRFACE'))
    {
-if(isset($_GET['test'])){die("503 test 14");};
-
+      if(!$k&&$s){$k=mksesn('anonymous');};
       if(!$k){harakiri('missing -or invalid session key');}; // YOU HAVE DIED
       $fn=($b?$b:post('INTRFACE')); if(!$fn){$fn=kuki('INTRFACE');};
       $_SERVER['INTRFACE']="$fn"; unset($fn);
