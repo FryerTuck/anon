@@ -659,10 +659,10 @@ namespace Anon;
    $s=(strpos($r,"https://$h")===0); $f=envi('DBUGPATH'); if($s&&$k){$_SERVER['MADEFUBU']=true;}else{$_SERVER['MADEFUBU']=false;};
    if(($s&&!$k)&&($p!==$f)){$s=false;}; // logged out
 
-   if(!$k)
+   if(!$k&&$b)
    {
        $rp=envi('URI'); $rh="Location: https://{$h}{$p}";
-       if(isset($_GET['test'])){die("503 testing $b<br>$rh");};
+       if(isset($_GET['test'])){die("503 testing $b <br>$rh");};
    };
 
 
