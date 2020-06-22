@@ -572,8 +572,8 @@ namespace Anon;
 # dbug :: pre-flight : check essential server vars .. set roots .. get rid of bad bots .. check if web-server passed us the right stuff
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    if(envi('ROOTPATH DBUGPATH HOST SCHEME BOTMATCH')!==1){header("HTTP/1.1 424 Failed Dependency - server vars"); die();}; // bad vars
-if(isset($_GET['test'])){die("test 4");};
    $d=envi('ROOTPATH'); $s=skey(); $u=''; $c=envi('COREPATH'); //$c=explode('/',envi('COREPATH')); $c=array_pop($c);
+if(isset($_GET['test'])){die("test 5");};
    $g=envi('DBUGPATH'); $b=rshave(str_replace($d,'',envi('BASE')),'/'); if(!$b){$b='/';}; $_SERVER['BASEPATH']=$b;
    $_SERVER['DBUGPATH']=lshave($g,'.anon.dir'); unset($b,$g);
 
