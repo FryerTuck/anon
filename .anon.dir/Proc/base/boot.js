@@ -333,12 +333,12 @@
 
                     listOf(dm.body.getElementsByTagName("a")).forEach((n)=>
                     {
-                        n.cntx=dm; let rf=this.getAttribute("href");
+                        n.cntx=dm; let rf=(this.getAttribute("href")||"");
                         if(rf.startsWith("#")){n.style.marginTop="20px"};
                         n.addEventListener("click",function(ev,hr)
                         {
                             ev.preventDefault(); ev.stopImmediatePropagation(); ev.stopPropagation();
-                            hr=this.getAttribute("href");
+                            hr=(this.getAttribute("href")||"");
                             if(hr.startsWith("#"))
                             {
                                 let trgt=this.cntx.getElementById(hr.slice(1));
