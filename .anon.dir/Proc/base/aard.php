@@ -675,7 +675,7 @@ namespace Anon;
       //     $rp=envi('URI'); $rh="Location: https://{$h}{$p}";
       // };
 
-              if(isset($_GET['test'])){die("503 testing<br>$r<br>https://$h");};
+              if(isset($_GET['test'])){die("503 testing<br>$r<br>https://$h<br>$s");};
 
       if(!$k){harakiri('missing -or invalid session key');}; // YOU HAVE DIED
       $fn=($b?$b:post('INTRFACE')); if(!$fn){$fn=kuki('INTRFACE');};
