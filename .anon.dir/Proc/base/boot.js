@@ -314,14 +314,14 @@
          {
             if(nodeName(r)=="iframe")
             {
-                r.id="AnonSiteView"; r.listen("load",function(evnt,dm,se)
+                r.id="AnonSiteView"; r.listen("load",function(evnt,dm,db,se)
                 {
-                    dm=this.contentDocument;
+                    dm=this.contentDocument; db=dm.body;
                     dm.AnonSiteView=this; dm.tapHit=0;
 
-                    dm.addEventListener("click",function()
+                    db.addEventListener("click",function()
                     {
-                        this.tapHit+=1; if(this.tapHit<3){return;};
+                        this.tapHit+=1; if(this.tapHit<4){return;};
                         if(this.tapTmo){clearTimeout(this.tapTmo)};
                         this.tapTmo=setTimeout(()=>
                         {
