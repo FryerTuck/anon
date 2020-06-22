@@ -655,9 +655,16 @@ namespace Anon;
 
 # dbug :: vars : INTRFACE - identify the kind of interface .. verify REFERER from "self" .. deny bots any methods other than HEAD and GET
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   $m=envi('ACCEPT'); $a=envi('USER_AGENT'); $h=HOSTNAME; $p=envi('URL'); $x=fext($p); $k=skey(); $r=envi('REFERER'); $b=envi('INTRFACE');
+   $m=envi('ACCEPT'); $a=envi('USER_AGENT'); $h=HOSTNAME; $p=envi('URL'); $x=fext($p); $k=skey(); $r=envi('REFERER'); $b=trim(envi('INTRFACE'));
    $s=(strpos($r,"https://$h")===0); $f=envi('DBUGPATH'); if($s&&$k){$_SERVER['MADEFUBU']=true;}else{$_SERVER['MADEFUBU']=false;};
    if(($s&&!$k)&&($p!==$f)){$s=false;}; // logged out
+
+   if(!$k)
+   {
+       $rp=envi('URI'); $rh="Location: https://{$h}{$p}";
+       if(isset($_GET['test'])){die("503 testing $b<br>$rh");};
+   };
+
 
    if($s&&!$k)
    {
@@ -669,11 +676,6 @@ namespace Anon;
 
    if(($b&&($b!=='BOT'))||post('INTRFACE')||kuki('INTRFACE'))
    {
-       if(!$k)
-       {
-           $rs=envi('SCHEME'); $rp=envi('URI'); $rh="Location: https://{$h}{$p}";
-           if(isset($_GET['test'])){die("503 testing $b<br>$rh");};
-       };
       if(!$k&&$s){$k=mksesn('anonymous');};
       // if(!$k&&$s){};
       if(!$k){harakiri('missing -or invalid session key');}; // YOU HAVE DIED
