@@ -322,15 +322,17 @@
                     if(!db.tapSeq)
                     {
                         db.tapSeq=1;
-                        db.addEventListener("click",function()
+                        db.addEventListener("click",function(ev)
                         {
                             this.tapHit+=1; if(this.tapHit<4){return;};
+                            ev.preventDefault(); ev.stopImmediatePropagation(); ev.stopPropagation();
+
                             if(this.tapTmo){clearTimeout(this.tapTmo)};
                             this.tapTmo=setTimeout(()=>
                             {
                                 this.tapHit=0;
                                 if(!!select(`#AnonReplPanl`)){return};
-                                // initPanl();
+                                initPanl();
                             },350);
                         });
                     };
