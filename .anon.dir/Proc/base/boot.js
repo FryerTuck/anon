@@ -338,7 +338,7 @@
                         if(rf.startsWith("#"))
                         {
                             rf=dm.getElementById(rf.slice(1));
-                            if(rf){rf.style.marginTop="20px";}
+                            if(rf){rf.style.paddingTop="20px";}
                         };
 
                         n.addEventListener("click",function(ev,hr)
@@ -348,7 +348,7 @@
                             if(hr.startsWith("#"))
                             {
                                 let trgt=this.cntx.getElementById(hr.slice(1));
-                                if(trgt){trgt.scrollIntoView({behavior:"smooth", block:"nearest"})};
+                                if(trgt){trgt.scrollIntoView({behavior:"smooth", block:"start"})};
                             };
                         },false);
                     });
