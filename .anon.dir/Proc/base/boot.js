@@ -337,6 +337,7 @@
                         if(rf.startsWith("#"))
                         {
                             rf=dm.getElementById(rf.slice(1));
+                            dump(rf);
                             if(rf){rf.style.marginTop="20px";}
                         };
 
