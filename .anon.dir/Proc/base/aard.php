@@ -568,6 +568,7 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
+if(isset($_GET['test'])){die("test 3");};
 
 # dbug :: pre-flight : check essential server vars .. set roots .. get rid of bad bots .. check if web-server passed us the right stuff
 # ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -583,7 +584,6 @@ namespace Anon;
    $_SERVER['oblevl']=0; $_SERVER['obfail']=''; $_SERVER['cbfail']=null; // for deFail & enFail
    $_SERVER['SESNHASH']=null; $_SERVER['SESNUSER']=null; $_SERVER['SESNCLAN']=null; // for security .. bite me
 
-if(isset($_GET['test'])){die("test 3");};
 
    $q=envi('URL'); $dbwp='/User/dcor/wal1.jpg'; $dbbs='/User/dcor/anm1.gif';
    if((strpos($q,$dbwp)!==false)&&isee($dbwp)){header('Content-Type: image/jpeg'); readfile(isee($dbwp)); exit;};
