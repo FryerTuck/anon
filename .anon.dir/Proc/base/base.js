@@ -166,12 +166,14 @@
 
       cb=o.listen.loadend; delete o.listen.loadend; o.listen.loadend=function() // event done
       {
-         let h=dval(this.getAllResponseHeaders()); if((h!=null)&&h.Cookies){h.Cookies=decode.jso(decode.b64(h.Cookies))};
+         let h=dval(this.getAllResponseHeaders());
+         if((h!=null)&&h.Cookies){h.Cookies=decode.jso(decode.b64(h.Cookies))};
+         h.each((v,k)=>{h[k]=trim(v)});
          let r={path:this.purl,head:h,body:this.response}; this.done=100;  let s=this.status;
          if(s==200){pe(100,this.purl);if(this.busy&&!!select("#busyPane")){Busy.edit(this.purl,100)};};
          if(x.silent){tick.after(250,()=>{delete server.silent[this.purl]})}; if(s<400){cb.apply(this,[r]);return}; // all good
-         if(MAIN.HALT){console.error("xhrMuted");return}; let eo=r.body;
-         if(!isJson(eo)){eo=('Network :: '+s+' '+(this.statusText||'Connection Failure')+"\n\n"+eo)};
+         if(MAIN.HALT){console.error("xhrMuted");return}; let eo=trim(r.body);
+         if(eo.startsWith(`{"name":`)&&isin(eo,`"mesg":`)&&isin(eo,`]}<br />`)){eo=(stub(eo,`]}<br />`)[0]+"]}");};
          ee.apply(this,[eo]);
       };
 
@@ -844,8 +846,10 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const durl = function(d,f, p,n,o)
    {
-      p=pathOf(d); if(!p){decode.BLOB(d,f);return}; n=d.split('/').pop();
-      o=select(`img[src="${p}"]`); if(o){d=o[0].toDataURL(mimeType(n)); f(d,n);return};
+      if(!!d&&isDurl(d)||isDurl(d.data)){f(!!d.data?d.data:d);return};
+      p=pathOf(d); if(!p){decode.BLOB(d,f); return};
+      n=d.split('/').pop(); o=select(`img[src="${p}"]`);
+      if(o){d=o[0].toDataURL(mimeType(n)); f(d,n);return};
       purl('/Proc/makeDurl',{purl:d},(r)=>{f(r.body,n)});
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
@@ -1031,7 +1035,7 @@
    const parsed = function(v,x,f)
    {
       // if(MAIN.HALT){return};
-      if(!isText(v,1)){fail('expecting 1st arg as text');return}; v=v.trim(); if(v.length<1){f(v);};
+      if(!isText(v,1)&&!isKnob(v)){fail('expecting 1st arg as text -or knob');return};
       if(!isText(x)){fail('expecting 2nd arg as text');return};
       if(!isin(keys(parser),x)){fail('no parser defined for mimeType `'+x+'`');return};
       if(!isFunc(parser[x])){fail('expecting parser extension `'+x+'` as a function');return};
@@ -1056,10 +1060,9 @@
       // expect({path:p,func:f});
       s=this; purl(p,(r)=>
       {
-         // if(MAIN.HALT){return};
          let m,q,t,x; m=r.head.ContentType.split(';')[0].split('/x-').join('/');
-         q=m.split('/'); t=q[0]; x=q[1]; if(!isin(parser,t)){t=x};
-         r=trim(r.body); if(!r){f(r);};
+         q=m.split('/'); t=trim(q[0]); x=trim(q[1]); if(!isin(keys(parser),t)){t=x};
+         if(!trim(r.body)){f("");};
          parsed(r,t,(z)=>
          {
             if(t=='markdown'){z=create({div:'.markdown-page',contents:[z]})}; f(z);

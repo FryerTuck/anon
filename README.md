@@ -5,6 +5,15 @@
 
 <!--[/User/note/homePageWorx.md]--->
 
+## Installation
+Dependencies: `PHP5.6+ Git Mbstring Sqlite`
+- download this file: https://github.com/FryerTuck/anon/blob/master/.anon.dir/Anon/base/deploy.php
+- copy it into your web-server's `docroot` (web-root), or into a sub-folder directly in `docroot` that represents a subdomain
+- make sure there is no `.htaccess` file in the destination folder
+- visit the URL to it e.g: www.example.com/deploy.php
+
+<br>
+
 ## Introduction
 Anon is a remote business management system with built-in productivity tools such as a **Task**-manager, a **Draw**ing app, a **Code**-editor, a **Data**base management system, auto-**Time**-tracking and many more.
 
@@ -236,23 +245,16 @@ There is a lot more info available in the "Help" docs and each stem can have its
 
 <br>
 
-## Installation
-- You'll need a Linux OS with Apache & PHP installed.
-- Clone the repository, or download & extract its contents to your web-server's `doc-root` folder, then visit its URL
-- Log in (instructions below) and change the `master` password
-- (optional) - change the `remote origin` of this (cloned) repo to your own by using the Anon terminal
 
->If you're on Windows (-or OSX) then use VirtualBox, or something similar and install any decent Linux distro on it; *Arch* is great.
->More info available in the *Help* docs
-
-#### Getting started
+## Getting started
 
 In order to change anything in your Anon system (the Anon way), you'll need to use the *WorkPanel*.
 >You benefit from using "the Anon way" because Anon logs your time and provides security and assistance relative to what you're doing.
 
-#### How to toggle the WorkPanel on and off
+## How to toggle the WorkPanel on and off
 - To open: on your keyboard press -and hold the `` {:CTRLKEYS:} `` keys in sequence together then let go .. quickly does it ;)
 - To shut: do the exact same thing as above :D
+- Alternatively just click/tap 4 times on the main view (actual website)
 
 
 There is a default *root* user in Anon named `master` -which is used to set system configuration and to create/delete users with/without "lead" privileges. If you haven't changed the master password yet, you'll need to change it now.

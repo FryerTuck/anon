@@ -53,7 +53,7 @@ namespace Anon;
             $rc=isin($uc,$cl); if(!$rc){fail::template("invalid user clan: `$uc`");};
         };
 
-        $gv=knob($_GET); if(!$gv->init){finish($np);}; // serve without template
+        if(!isin(keys($_GET["init"]),"init")){finish($np);}; // serve without template
         $pt=null; $tl=["$tp/base/$rc.$fx","$ap/base/aard.$fx","$ap/base/$rc.$fx","$ap/base/aard.$fx"];
         if(!arg($np)->startsWith("$tp/base/")){foreach($tl as $xt){if(isee($tl)){$pt="$xt"; break;}}};
         if(!$pt){finish($np); exit;}; // without template

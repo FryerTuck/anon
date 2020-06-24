@@ -37,8 +37,6 @@ namespace Anon;
              self::listen(); return;
          };
 
-         boot(); // boot all bootable stems
-
          if(NAVIPATH==='/Proc/execPath')
          {
             // skip past all the INIT stuff and run quickly, yet -with security
@@ -50,6 +48,8 @@ namespace Anon;
             // skip past all the INIT stuff and run quickly, yet -with security
             self::xenoCall(); exit;
          };
+
+         boot(); // boot all bootable stems
 
          if(facing('GUI'))
          {

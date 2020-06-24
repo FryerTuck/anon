@@ -486,9 +486,22 @@ namespace Anon;
             $r=json_encode(knob(['name'=>'feed', 'data'=>$r])); print_r($r); flush(); die();
          };
 
-         $h=['Content-Type'=>$m]; if($nx===FORGET){$h['cache']=false;};
-         ekko::head($h); $r=import($a,$vo);
-         if($r){print_r($r);}elseif(envi('ACCEPT')==='text/plain'){print_r(durl($p));}else{readfile($p);};
+         $h=['Content-Type'=>$m]; if($nx===FORGET){$h['cache']=false;}; ekko::head($h);
+         $r=import($a,$vo); if($r){print_r($r); if($nx!==NOEXIT){die();}};
+         $t=(isin(envi('ACCEPT'),'text/plain')||isin(envi('CONTENT_TYPE'),'text/plain')||facing('API'));
+
+         if(isin($m,'image/'))
+         {
+             $c=conf("Proc/antiHack"); $i=img($p); $d=$i->descry('size');
+             $s=$c->stainLimit; $s=[($s[0]*1),($s[1]*1)];
+             if(($d[0]>=$s[0])||($d[1]>=$s[1]))
+             {
+                 $i->impose($c->stainImage); $r=$i->raster(); unset($i);
+                 echo ($t?durl($r):$r); if($nx!==NOEXIT){die();};
+             };
+         };
+
+         if($t){echo(durl($p));}else{readfile($p);};
          if($nx!==NOEXIT){die();};
       };
    }
@@ -507,10 +520,12 @@ namespace Anon;
       static function head($a,$nx=true)
       {
          $hs=\headers_sent(); if($hs){return false;};
+         while(ob_get_level()){ob_end_clean();};
+
          if(is_int($a))
          {
             $c=conf('Proc/httpCode'); $m=$c->$a; if(!$m){$a=501; $m=$c->$a;};
-            while(ob_get_level()){ob_end_clean();}; self::$stat=1;
+            self::$stat=1;
 
             if(facing('SSE'))
             {
@@ -735,22 +750,6 @@ namespace Anon;
          return $r;
       }
    }
-
-
-// function ftp_rdel ($handle, $path)
-// {
-//
-//   if (@ftp_delete ($handle, $path) === false)
-//   {
-//
-//     if($children = @ftp_nlist ($handle, $path))
-//     {
-//       foreach($children as $p){ftp_rdel($handle,$p);};
-//     }
-//
-//     @ftp_rmdir ($handle, $path);
-//   }
-// }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -783,4 +782,76 @@ namespace Anon;
       if(($i==='.')&&(strpos($r,'.')!==false)){continue;}; $r.=$i;}; $r=shaved($r,'.'); if(strlen($r)<1){return;};
       if(!is_numeric($r)){return;}; $r=($r*1); return $r;
    }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+# tool :: img : image processing
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+    class img
+    {
+        private $meta;
+        private $refs;
+
+
+        function __construct($p)
+        {
+            requires::phpx("imagick"); expect::path($p,[R,F]); $fext=fext($p);
+            self::$meta=knob(); self::$meta->fext=$fext; $fp=path($p);
+            self::$refs=knob(["png"=>"png24","jpg"=>"jpeg"]);
+
+            self::$meta->imag=(new Imagick());
+            self::$meta->imag->readImage($fp);
+
+            return $this;
+        }
+
+
+        function __destruct()
+        {
+            self::$meta->imag->clear();
+            self::$meta->imag->destroy();
+        }
+
+
+        function descry($p=null)
+        {
+            $img=self::$meta->imag; $r=knob();
+            $r->size=[$img->getImageWidth(),$img->getImageHeight()];
+            if(isText($p,1)){return $r->$p;};
+            return $r;
+        }
+
+
+        function impose($pth,$dim=null,$pos=null)
+        {
+            expect::path($pth,[R,F]); $w=null; $h=null; $x=0; $y=0;
+            if(isNuma($dim)){$w=$dim[0]; $h=$dim[1];}; if(isNuma($pos)){$x=$pos[0]; $y=$pos[1];};
+            $img=self::$meta->imag; $mrk=(new Imagick()); $mrk->readImage($pth);
+            if(!$w){$w=$mrk->getImageWidth();}; if(!$h){$h=$mrk->getImageHeight();};
+            $mrk->scaleImage($w,$h); $img->compositeImage($mrk,imagick::COMPOSITE_OVER,$x,$y);
+        }
+
+
+        function raster($x="png",$w=null,$h=null)
+        {
+            $t=self::$refs->$x; if(!$t){$t=$x;};
+            if(!$w){$w=self::$meta->imag->getImageWidth();};
+            if(!$h){$h=self::$meta->imag->getImageHeight();};
+            self::$meta->imag->setImageFormat($t);
+            $f=(($x!=="gif")?"getImageBlob":"getImagesBlob");
+
+            if($x==="png"){self::$meta->imag->resizeImage($w,$h,imagick::FILTER_LANCZOS,1);}
+            else{self::$meta->imag->resizeImage($w,$h);};
+
+            return self::$meta->imag->$f();
+        }
+    }
+
+
+    function img($p)
+    {
+        return (new img($p));
+    };
 # ---------------------------------------------------------------------------------------------------------------------------------------------

@@ -3,15 +3,14 @@
    ({
       image:function(d,f)
       {
-         let n=create({img:'',src:d}); n.rectInfo((i)=>
-         {
-         });
+         durl({mime:d.head.ContentType,data:d.body},(r)=>{f(create({img:``,src:r}))});
       },
 
 
 
       markdown:function(d,f)
       {
+         if(d&&d.body){d=d.body};
          requires
          ([
             'marked:/Proc/libs/marked/marked.js','/Proc/libs/marked/marked.css',
@@ -53,6 +52,7 @@
 
       html:function(d,f)
       {
+         if(d&&d.body){d=d.body};
          if(!isin(d,"</html>")){f(xdom(d));return};
          f(create({iframe:`.posAbs .spanFull`, srcdoc:d}));
 
@@ -62,6 +62,7 @@
 
       javascript:function(d,f)
       {
+         if(d&&d.body){d=d.body};
          document.head.appendChild(create({script:d}));
          tick.after(100,f);
       },

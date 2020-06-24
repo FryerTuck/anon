@@ -187,6 +187,71 @@ namespace Anon;
 
 
 
+
+# tool :: arg : returns object with methods that are both grammatical and functional .. e.g.  arg($a)->endsWith($b);
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   class arg
+   {
+      private $xarg;
+
+      function __construct($a){$this->xarg=$a;}
+
+      public function endsWith($b)
+      {
+         $a=$this->xarg; if(!is_string($a)||!is_string($b)){return;}; $s=strlen($b); if(strlen($a)<$s){return false;};
+         return (substr($a,(0-$s),$s)===$b);
+      }
+
+      public function startsWith($b)
+      {
+         $a=$this->xarg; if(!is_string($a)||!is_string($b)){return;}; $s=strlen($b); if(strlen($a)<$s){return false;};
+         return (substr($a,0,$s)===$b);
+      }
+   }
+
+
+   function arg($a){return (new arg($a));}
+   function that($a){return (new arg($a));}
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+# tool :: exec : run server command .. returns output -or null if invalid
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   class exec
+   {
+      static $dbug=["Cloning into 'anon'..."];
+
+      static function __callStatic($c,$a)
+      {
+         if(!isset($a[0])){$a[0]=envi('ROOTPATH');}; $p=$a[0];
+         $v=(isset($a[1])?$a[1]:null); // TODO security check
+         $i=(isset($a[2])?$a[2]:''); if(!is_string($i)){return;}; $p=isee($p); if(!$p){return;};
+         if(($v!==null)&&!is_assoc_array($v)){return;}; $q=[0=>["pipe","r"], 1=>["pipe","w"], 2=>["pipe","w"]];
+         $r=proc_open($c,$q,$x,$p,$v);
+         if(!is_resource($r)){return;};
+         //if($i&&($i!==NOFAIL)){wait(1000); fwrite($x[0],$i);};
+         fclose($x[0]);
+         $o=trim(stream_get_contents($x[1])); fclose($x[1]); $e=trim(stream_get_contents($x[2])); fclose($x[2]);
+         $z=trim(proc_close($r)); if($z){$z=(($e&&$o)?"$e ..\n$o":($e?$e:$o));};
+         if(!$z){wait(1); return $o;}; // success!
+
+         $f=1; $db=self::$dbug;
+         foreach($db as $ends){if(arg($z)->endsWith($ends)){$f=0;break;}}; // look for msgs to shut up about
+         if(!$f){return (($o!=='')?$o:$z);}; // found a shusher mesg .. don't cry, just return whatever is in output
+         $s=stak(); if(is_class('dbug')){dbug::$temp=$s;}; // debug below
+         throw new \Exception("$z");
+      }
+   }
+
+   function bash($d)
+   {
+       return exec::{"$d"}();
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 # func :: isee : check existance of a reference in order: path, function, class, extension .. checks path readability .. no autoload
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function isee($d)
@@ -240,8 +305,8 @@ namespace Anon;
    function pset($p,$v='')
    {
       if(!is_string($p)){return;}; if(strlen($p)<2){return;}; $d=0; if(substr($p,-1,1)==='/'){$d=1;}; $p=path($p); if(!$p){return;};
-      if($d&&is_dir($p)){return true;}; $h=rshave($p,'/'); $h=explode('/',$h); $b=array_pop($h); $h=implode('/',$h); $u=umask(); umask(0);
-      if(!isee($h)){$r=explode('/',$h); array_pop($r); $r=implode('/',$r); if(!is_writable($r)){return;}; mkdir($h,0777,true);};
+      if($d&&isee($p)){return true;}; $h=rshave($p,'/'); $h=explode('/',$h); $b=array_pop($h); $h=implode('/',$h); $u=umask(); umask(0);
+      if(!isee($h)){bash("mkdir -p $h");}; if(!is_writable($h)){bash("chmod +w $h");};
       if($d){$r=mkdir($p,0777,true);}else{$r=file_put_contents($p,$v);}; umask($u); return $r;
    };
 # ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -431,6 +496,7 @@ namespace Anon;
 
       header("HTTP/1.1 $c $t"); if(!$g){print_r($z); flush(); exit;}; if(!$p){die("FAIL :: $c : $m");}; $h=skey();
 
+      if(!isee('/Proc/temp')){pset('/Proc/temp/');};
       if(!isee('/Proc/temp/sesn')){pset('/Proc/temp/sesn/');};
       if(!is_writable(isee('/Proc/temp/sesn'))){$c=417; $m='Expectation Failed - writable temp.sesn'; $f=__FILE__; $l=__LINE__;}
       else
@@ -534,10 +600,10 @@ namespace Anon;
 # refs :: constants : these help us express specific directives .. they all have the value of the word wrapped in `:` .. like :AUTO:
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    defn('AUTO KEYS VALS WORD XACT VOID NONE STEM TOOL FUNC PATH FOLD FILE LINK DUMP DONE GOOD INFO WARN FAIL MINI MIDI MAXI SKIP STOP TODO');
-   defn('BARE LOOP REPO DENY AFTR BFOR FLAT DEEP HIDN EMPT GONE NOFAIL NOINIT NOMAKE NOEXIT DOEXIT OK');
+   defn('BARE LOOP REPO DENY AFTR BFOR FLAT DEEP HIDN EMPT GONE FULL MIDL OK');
    defn('A B C D E F G H I J K L M N O P Q R S T U V W X Y Z');
    defn('count fetch using alter write claim touch where group order limit parse shape apply erase purge debug dbase table field sproc funct after basis named param parts');
-   defn('NATIVE REMOTE ORIGIN FORGET');
+   defn('NOFAIL NOINIT NOMAKE NOEXIT DOEXIT NATIVE REMOTE ORIGIN FORGET');
    defn('ANY ALL ASC DSC API BOT DPI GUI SSE');
 
    $h=pget('/Proc/conf/hostName'); if(!$h){$h=envi('SERVER_NAME'); if(!$h){$h=envi('HOST');}};

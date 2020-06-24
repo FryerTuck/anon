@@ -80,7 +80,7 @@
    const isWord = function(v,g,l){if(!test(trim(v,'_'),/^([a-zA-Z])([a-zA-Z0-9_]{1,35})+$/)){return}; return (isVoid(g)||spanIs(v,g,l))};
    const isPath = function(v,g,l){if(!test(v,/^([a-zA-Z0-9-\/\._@~$]){1,432}$/)){return FALS}; return ((v[0]=='/')&&(isVoid(g)||spanIs(v,g,l)))};
    const isJson = function(v,g,l){return (isin(['[]','{}','""'],wrapOf(v))?TRUE:FALS);};
-   const isDurl = function(v,g,l){return (isText(v,20)&&(v.indexOf('data:')===0)&&isin(v,';base64,'));};
+   const isDurl = function(v,g,l){return (isText(v)&&(v.indexOf('data:')===0)&&(v.indexOf(';base64,')>0));};
    const isHtml = function(v,g,l)
    {
        if(!isText(v)){return false}; v=v.trim(); if(!v){return false};
@@ -1142,10 +1142,23 @@
 
       decode:
       {
-         BLOB:function(data,func)
+         BLOB:function(d,f)
          {
-            var pars = new FileReader(); pars.onloadend=function(){func(pars.result);};
-            pars.readAsDataURL(data);
+            if(d instanceof Blob)
+            {
+                var p=(new FileReader()); p.onloadend=function(){f(p.result);};
+                p.readAsDataURL(d); return;
+            };
+
+            if(isKnob(d)&&isText(d.mime))
+            {
+                let l,s,a,r; s=d.data.length; l=(new Array(s));
+                for(let i=0; i<s; i++){l[i]=d.data.charCodeAt(i)};
+                a=(new Uint8Array(l)); r=(new Blob([a],{type:d.mime}));
+                decode.BLOB(r,f); return;
+            };
+
+            fail("invalid 1st parameter");
          },
 
          JSON:function(data,nofail, r)

@@ -309,7 +309,7 @@
       requires(bl,( np)=>
       {
          bz(60);
-         np=location.href; np+=((isin(np,"?")?"&":"?")+"init=1");
+         np=location.href; np+=((isin(np,"?")?"&":"?")+"init");
          render(np,(r)=>
          {
             if(nodeName(r)=="iframe")
@@ -328,7 +328,7 @@
                             if(ms.tapTmo){clearTimeout(ms.tapTmo)};
                             if(ms.tapHit<4){ms.tapTmo=setTimeout(()=>{ms.tapHit=0;},350); return;};
                             initPanl();
-                            
+
                         });
                     };
 

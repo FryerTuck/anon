@@ -42,11 +42,7 @@
    <IfModule mod_expires.c>
       ExpiresActive On
       ExpiresByType text/html "access plus 1 second"
-      ExpiresByType text/css "access plus 1 second"
-      ExpiresByType text/x-javascript "access plus 1 second"
-      ExpiresByType application/javascript "access plus 1 second"
-      ExpiresByType application/json "access plus 1 second"
-      ExpiresDefault "access plus 5 minutes"
+      ExpiresDefault "access plus 1 second"
    </IfModule>
 # -----------------------------------------------------------------------------------------------------------------------------
 

@@ -117,35 +117,6 @@ namespace Anon;
 
 
 
-
-# tool :: arg : returns object with methods that are both grammatical and functional .. e.g.  arg($a)->endsWith($b);
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-   class arg
-   {
-      private $xarg;
-
-      function __construct($a){$this->xarg=$a;}
-
-      public function endsWith($b)
-      {
-         $a=$this->xarg; if(!is_string($a)||!is_string($b)){return;}; $s=strlen($b); if(strlen($a)<$s){return false;};
-         return (substr($a,(0-$s),$s)===$b);
-      }
-
-      public function startsWith($b)
-      {
-         $a=$this->xarg; if(!is_string($a)||!is_string($b)){return;}; $s=strlen($b); if(strlen($a)<$s){return false;};
-         return (substr($a,0,$s)===$b);
-      }
-   }
-
-
-   function arg($a){return (new arg($a));}
-   function that($a){return (new arg($a));}
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
 # func :: dump : used for quick plain text response .. respects interface, won't show anything to crawlers
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function dump()
@@ -288,37 +259,6 @@ namespace Anon;
    }
 
    lock::init();
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-# tool :: exec : run server command .. returns output -or null if invalid
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-   class exec
-   {
-      static $dbug=["Cloning into 'anon'..."];
-
-      static function __callStatic($c,$a)
-      {
-         $un=sesn('USER'); $up="/User/data/$un"; if(!isset($a[0])){$a[0]=$up;}; $p=$a[0];
-         $v=(isset($a[1])?$a[1]:null); // TODO security check
-         $i=(isset($a[2])?$a[2]:''); if(!is_string($i)){return;}; $p=isee($p); if(!$p){return;};
-         if(($v!==null)&&!is_assoc_array($v)){return;}; $q=[0=>["pipe","r"], 1=>["pipe","w"], 2=>["pipe","w"]];
-         $r=proc_open($c,$q,$x,$p,$v);
-         if(!is_resource($r)){return;};
-         //if($i&&($i!==NOFAIL)){wait(1000); fwrite($x[0],$i);};
-         fclose($x[0]);
-         $o=trim(stream_get_contents($x[1])); fclose($x[1]); $e=trim(stream_get_contents($x[2])); fclose($x[2]);
-         $z=trim(proc_close($r)); if($z){$z=(($e&&$o)?"$e ..\n$o":($e?$e:$o));};
-         if(!$z){wait(1); return $o;}; // success!
-
-         $f=1; $db=self::$dbug;
-         foreach($db as $ends){if(arg($z)->endsWith($ends)){$f=0;break;}}; // look for msgs to shut up about
-         if(!$f){return (($o!=='')?$o:$z);}; // found a shusher mesg .. don't cry, just return whatever is in output
-         $s=stak(); dbug::$temp=$s; // debug below
-         throw new \Exception("$z");
-      }
-   }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
