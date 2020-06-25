@@ -842,7 +842,7 @@ namespace Anon;
             $this->meta->imag->setImageFormat($t);
             $f=(($x!=="gif")?"getImageBlob":"getImagesBlob");
 
-            if($x==="png"){$this->meta->imag->resizeImage($w,$h,imagick::FILTER_LANCZOS,1);}
+            if($x==="png"){$this->meta->imag->resizeImage($w,$h,\Imagick::FILTER_LANCZOS,1);}
             else{$this->meta->imag->resizeImage($w,$h);};
 
             return $this->meta->imag->$f();
