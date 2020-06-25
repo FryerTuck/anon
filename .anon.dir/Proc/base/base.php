@@ -496,7 +496,7 @@ namespace Anon;
              $s=$c->stainWhenExceeds; $s=[($s[0]*1),($s[1]*1)];
              if(($d[0]>=$s[0])||($d[1]>=$s[1]))
              {
-                 $i->impose($c->stainImageSource,SPAN); $r=$i->raster(); unset($i);
+                 $i->impose($c->stainImageSource,SPAN,null,0.3); $r=$i->raster(); unset($i);
                  echo ($t?durl($r):$r); if($nx!==NOEXIT){die();};
              };
          };
