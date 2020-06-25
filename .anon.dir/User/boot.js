@@ -94,7 +94,7 @@
                                   purl(`/User/initConf`,{pass:pw,mail:em},(r)=>
                                   {
                                       r=r.body; if(r!=OK){return}; let m;
-                                      m=`Now create a power-user that belongs to (at least) these clans: \`work sort sudo\`\n`+
+                                      m=`Now create a power-user that belongs to (at least) these clans:\n\`work sort geek sudo\`\n`+
                                         `For help on this, type \`help user\` in the terminal and hit Enter on your keyboard.`;
                                       popAlert(`thumbs-up :: Success! : Initial config set.\n\n${m}`);
                                       this.root.exit();
@@ -124,7 +124,7 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
     listen("tap4",function()
     {
-        
+
         // if(!!select(`#AnonReplPanl`)){return};
         initPanl();
     });
