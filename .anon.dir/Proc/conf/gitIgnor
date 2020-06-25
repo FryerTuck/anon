@@ -14,6 +14,7 @@
 /Mail/vars/lastRead
 
 /Proc/temp/*
+/Proc/conf/antiHack
 /Proc/conf/autoMail
 /Proc/conf/hostName
 /Proc/vars/lastDbug

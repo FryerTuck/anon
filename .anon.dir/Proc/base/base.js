@@ -1060,7 +1060,6 @@
       // expect({path:p,func:f});
       s=this; purl(p,(r)=>
       {
-dump(r); return;
          let m,q,t,x; m=r.head.ContentType.split(';')[0].split('/x-').join('/');
          q=m.split('/'); t=trim(q[0]); x=trim(q[1]); if(!isin(keys(parser),t)){t=x};
          if(!trim(r.body)){f("");};
