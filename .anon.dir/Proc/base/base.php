@@ -490,7 +490,7 @@ namespace Anon;
          $r=import($a,$vo); if($r){print_r($r); if($nx!==NOEXIT){die();}};
          $t=(isin(envi('ACCEPT'),'text/plain')||isin(envi('CONTENT_TYPE'),'text/plain')||facing('API'));
 
-         if(isin($m,'image/'))
+         if(isin($m,'image/')&&($x!=='ico'))
          {
              $c=conf("Proc/antiHack"); $i=img($p); $d=$i->descry('size');
              $s=$c->stainLimit; $s=[($s[0]*1),($s[1]*1)];
