@@ -792,8 +792,8 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
     class img
     {
-        private $meta;
-        private $refs;
+        public $meta;
+        public $refs;
 
 
         function __construct($p)
