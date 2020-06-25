@@ -802,7 +802,6 @@ namespace Anon;
             expect::path($p,[R,F]);
             $fext=fext($p);
             $this->meta=knob(["fext"=>$fext]);
-                 die("olo");
             $fp=path($p);
             $this->refs=knob(["png"=>"png24","jpg"=>"jpeg"]);
 
