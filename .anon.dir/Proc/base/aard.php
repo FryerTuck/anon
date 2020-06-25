@@ -600,7 +600,7 @@ namespace Anon;
 # refs :: constants : these help us express specific directives .. they all have the value of the word wrapped in `:` .. like :AUTO:
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    defn('AUTO KEYS VALS WORD XACT VOID NONE STEM TOOL FUNC PATH FOLD FILE LINK DUMP DONE GOOD INFO WARN FAIL MINI MIDI MAXI SKIP STOP TODO');
-   defn('BARE LOOP REPO DENY AFTR BFOR FLAT DEEP HIDN EMPT GONE FULL MIDL OK');
+   defn('BARE LOOP REPO DENY AFTR BFOR FLAT DEEP HIDN EMPT GONE FULL SPAN MIDL OK');
    defn('A B C D E F G H I J K L M N O P Q R S T U V W X Y Z');
    defn('count fetch using alter write claim touch where group order limit parse shape apply erase purge debug dbase table field sproc funct after basis named param parts');
    defn('NOFAIL NOINIT NOMAKE NOEXIT DOEXIT NATIVE REMOTE ORIGIN FORGET');

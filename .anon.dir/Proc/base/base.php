@@ -496,7 +496,7 @@ namespace Anon;
              $s=$c->stainLimit; $s=[($s[0]*1),($s[1]*1)];
              if(($d[0]>=$s[0])||($d[1]>=$s[1]))
              {
-                 $i->impose($c->stainImage); $r=$i->raster(); unset($i);
+                 $i->impose($c->stainImage,SPAN); $r=$i->raster(); unset($i);
                  echo ($t?durl($r):$r); if($nx!==NOEXIT){die();};
              };
          };
@@ -829,9 +829,9 @@ namespace Anon;
         {
             expect::path($pth,[R,F]); $w=null; $h=null; $x=0; $y=0;
             if(isNuma($dim)){$w=$dim[0]; $h=$dim[1];}; if(isNuma($pos)){$x=$pos[0]; $y=$pos[1];};
-            $img=$this->meta->imag; $mrk=(new \Imagick());
+            $img=$this->meta->imag; $mrk=(new \Imagick()); $gdf=(($dim===SPAN)?$img:$mrk);
             $mrk->setBackgroundColor(new \ImagickPixel('transparent')); $mrk->readImage(path($pth));
-            if(!$w){$w=$mrk->getImageWidth();}; if(!$h){$h=$mrk->getImageHeight();};
+            if(!$w){$w=$gdf->getImageWidth();}; if(!$h){$h=$gdf->getImageHeight();};
             $mrk->scaleImage($w,$h); $img->compositeImage($mrk,\Imagick::COMPOSITE_OVER,$x,$y);
         }
 
