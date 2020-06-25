@@ -195,10 +195,13 @@ namespace Anon;
 
       static function ignore($h,$a,$i)
       {
-         expect::repo($h); $h=rshave($h,'/'); $p="$h/.git/info/exclude"; expect::path($p,[W,F]);
+         expect::repo($h); $h=rshave($h,'/'); $p="$h/.git/info/exclude"; if(!$h){$h='/';}; expect::path($p,[W,F]);
          if(($a!==write)&&($a!==erase)){fail('expecting 2nd arg as either :write: or :erase:');};
-         expect::text($i,2); $r=pget($p); $q="\n$i"; if((($a===write)&&isin($r,$q))||(($a===erase)&&!isin($r,$q))){return OK;};
-         if($a===write){$r.=$q;}else{$r=swap($r,$q,'');}; path::make($p,$r); return OK;
+         expect::text($i,2); $r=pget($p); $q="\n$i";
+         if((($a===write)&&isin($r,$q))||(($a===erase)&&!isin($r,$q))){return OK;}; // nothing to do
+         if($a===write){$r.=$q;}else{$r=swap($r,$q,'');}; path::make($p,$r); // finish exclude
+         $x=(($a===write)?"git rm --cached":"git add"); exec::{"$x $i"}($h);}; // update git tracking
+         return OK;
       }
 
 

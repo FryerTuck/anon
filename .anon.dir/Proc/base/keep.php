@@ -72,7 +72,8 @@ namespace Anon;
       $h='/.anon.dir'; $l=conf('Proc/gitIgnor'); unset($i);
       foreach($l as $i)
       {
-         if((strlen($i)>1)&&(substr($i,0,2)==='# ')){continue;}; // commented out
+         if(strlen(trim($i))<1){continue;}; // empty line
+         if(substr($i,0,2)==='# '){continue;}; // commented out
          $c=substr($i,0,1); if($c==='!'){$i=substr($i,1);}else{$c='';}; // negation
          Repo::ignore('/',write,($c.$h.$i));
       };
