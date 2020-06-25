@@ -62,8 +62,8 @@ namespace Anon;
 
       static function name($d=0)
       {
-         if(!is_int($d)){$d=0;}; if(isset(self::$code[$d])){return self::$code[$d];};
-         $o=conf('Proc/httpCode'); if(isset($o[$d])){return $o[$d];}; return self::$code[0]; if($n===null){$n=0;};
+         if(!is_int($d)){$d=0;}; if(isset(self::$code[$d])){return self::$code[$d];}; $o=conf('Proc/httpCode');
+         if(!isKnob($o)){$o=knob($o);}; if($d===null){$d=0;}; if($o->$d){return $o->$d;}; return self::$code[0];
       }
 
 
