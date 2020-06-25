@@ -200,8 +200,9 @@ namespace Anon;
          expect::text($i,2); $r=pget($p); $q="\n$i";
          if((($a===write)&&isin($r,$q))||(($a===erase)&&!isin($r,$q))){return OK;}; // nothing to do
          if($a===write){$r.=$q;}else{$r=swap($r,$q,'');}; path::make($p,$r); // finish exclude
-         $x=((($a===write)&&(substr($i,0,1)!=='!'))?"git rm --cached":"git add");
-         $i=rshave($i,'*'); exec::{"$x $i"}($h); // update git tracking
+         $c=frst($i); $i=lshave($i,'!'); $x=((($a===write)&&($c!=='!'))?"git rm --cached":"git add");
+         $i=rshave($i,'*'); $r=ROOTPATH; if(!isee("$r/$i")){return OK;};
+         exec::{"$x $i"}($h); // update git tracking
          return OK;
       }
 
