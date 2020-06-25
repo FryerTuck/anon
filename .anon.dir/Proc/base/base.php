@@ -832,7 +832,7 @@ namespace Anon;
             $img=$this->meta->imag; $mrk=(new \Imagick()); $gdf=(($dim===SPAN)?$img:$mrk);
             $mrk->setBackgroundColor(new \ImagickPixel('transparent')); $mrk->readImage(path($pth));
             if(!$w&&!$h){$w=$gdf->getImageWidth();}; if(!$h&&!$w){$h=$gdf->getImageHeight();};
-            $mrk->setImageOpacity($opa);
+            @$mrk->setImageOpacity($opa);
             $mrk->scaleImage($w,$h); $img->compositeImage($mrk,\Imagick::COMPOSITE_OVER,$x,$y);
         }
 
