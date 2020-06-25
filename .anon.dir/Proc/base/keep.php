@@ -69,7 +69,7 @@ namespace Anon;
           $d=Repo::differ(); if($d){signal::AnonUpdate($d);};
       };
 
-      $h='/.anon.dir'; $l=conf('Proc/gitIgnor'); unset($i);
+      $h='.anon.dir'; $l=conf('Proc/gitIgnor'); unset($i);
       foreach($l as $i)
       {
          if(strlen(trim($i))<1){continue;}; // empty line

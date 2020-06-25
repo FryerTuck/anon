@@ -224,7 +224,7 @@ namespace Anon;
 
       static function __callStatic($c,$a)
       {
-         if(!isset($a[0])){$a[0]=envi('ROOTPATH');}; $p=$a[0];
+         if(!isset($a[0])){$a[0]='/';}; $p=$a[0];
          $v=(isset($a[1])?$a[1]:null); // TODO security check
          $i=(isset($a[2])?$a[2]:''); if(!is_string($i)){return;}; $p=isee($p); if(!$p){return;};
          if(($v!==null)&&!is_assoc_array($v)){return;}; $q=[0=>["pipe","r"], 1=>["pipe","w"], 2=>["pipe","w"]];
