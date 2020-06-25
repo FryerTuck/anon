@@ -492,11 +492,11 @@ namespace Anon;
 
          if(isin($m,'image/')&&($x!=='ico'))
          {
+                 die("olo");
              $c=conf("Proc/antiHack"); $i=img($p); $d=$i->descry('size');
              $s=$c->stainLimit; $s=[($s[0]*1),($s[1]*1)];
              if(($d[0]>=$s[0])||($d[1]>=$s[1]))
              {
-                 die("olo");
                  $i->impose($c->stainImage); $r=$i->raster(); unset($i);
                  echo ($t?durl($r):$r); if($nx!==NOEXIT){die();};
              };
