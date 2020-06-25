@@ -54,9 +54,9 @@ namespace Anon;
         };
 
         if(!isin(keys($_GET["init"]),"init")){finish($np);}; // serve without template
+signal::dump($np); wait(3000);
         $pt=null; $tl=["$tp/base/$rc.$fx","$ap/base/aard.$fx","$ap/base/$rc.$fx","$ap/base/aard.$fx"];
         if(!arg($np)->startsWith("$tp/base/")){foreach($tl as $xt){if(isee($xt)){$pt="$xt"; break;}}};
-signal::dump($np);
         if(!$pt){finish($np); exit;}; // without template
         finish($pt,['contents'=>$np]); exit; // with template
       }
