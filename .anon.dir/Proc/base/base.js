@@ -171,7 +171,8 @@
          h.each((v,k)=>{h[k]=trim(v)});
          let r={path:this.purl,head:h,body:this.response}; this.done=100;  let s=this.status;
          if(s==200){pe(100,this.purl);if(this.busy&&!!select("#busyPane")){Busy.edit(this.purl,100)};};
-         if(x.silent){tick.after(250,()=>{delete server.silent[this.purl]})}; if(s<400){cb.apply(this,[r]);return}; // all good
+         if(x.silent){tick.after(250,()=>{delete server.silent[this.purl]})};
+         if((s<400)||(this.purl.endsWith("?init")&&(s<500))){cb.apply(this,[r]);return}; // all good
          if(MAIN.HALT){console.error("xhrMuted");return}; let eo=trim(r.body);
          if(eo.startsWith(`{"name":`)&&isin(eo,`"mesg":`)&&isin(eo,`]}<br />`)){eo=(stub(eo,`]}<br />`)[0]+"]}");};
          ee.apply(this,[eo]);
