@@ -69,13 +69,14 @@ namespace Anon;
           $d=Repo::differ(); if($d){signal::AnonUpdate($d);};
       };
 
-      $h='.anon.dir'; $l=conf('Proc/gitIgnor'); unset($i);
+      $h=ROOTPATH; $l=conf('Proc/gitIgnor'); unset($i);
       foreach($l as $i)
       {
          if(strlen(trim($i))<1){continue;}; // empty line
          if(substr($i,0,2)==='# '){continue;}; // commented out
          $c=substr($i,0,1); if($c==='!'){$i=substr($i,1);}else{$c='';}; // negation
-         Repo::ignore('/',write,($c.$h.$i));
+         $p=swap(path($i),"$h/",'');
+         Repo::ignore('/',write,($c.$p));
       };
 
 
