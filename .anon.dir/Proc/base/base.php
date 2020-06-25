@@ -792,8 +792,8 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
     class img
     {
-        public $meta;
-        public $refs;
+        private $meta;
+        private $refs;
 
 
         function __construct($p)
@@ -801,13 +801,13 @@ namespace Anon;
             requires::phpx("imagick");
             expect::path($p,[R,F]);
             $fext=fext($p);
-            self::$meta=[];
+            $this->meta=knob(["fext"=>$fext]);
                  die("olo");
-            // $fp=path($p);
-            // self::$refs=knob(["png"=>"png24","jpg"=>"jpeg"]);
-            //
-            // self::$meta->imag=(new Imagick());
-            // self::$meta->imag->readImage($fp);
+            $fp=path($p);
+            $this->refs=knob(["png"=>"png24","jpg"=>"jpeg"]);
+
+            $this->meta->imag=(new Imagick());
+            $this->meta->imag->readImage($fp);
 
             return $this;
         }
@@ -815,15 +815,15 @@ namespace Anon;
 
         function __destruct()
         {
-            // if(!self::$meta->imag){return;};
-            // self::$meta->imag->clear();
-            // self::$meta->imag->destroy();
+            if(!$this->meta->imag){return;};
+            $this->meta->imag->clear();
+            $this->meta->imag->destroy();
         }
 
 
         function descry($p=null)
         {
-            $img=self::$meta->imag; $r=knob();
+            $img=$this->meta->imag; $r=knob();
             $r->size=[$img->getImageWidth(),$img->getImageHeight()];
             if(isText($p,1)){return $r->$p;};
             return $r;
@@ -834,7 +834,7 @@ namespace Anon;
         {
             expect::path($pth,[R,F]); $w=null; $h=null; $x=0; $y=0;
             if(isNuma($dim)){$w=$dim[0]; $h=$dim[1];}; if(isNuma($pos)){$x=$pos[0]; $y=$pos[1];};
-            $img=self::$meta->imag; $mrk=(new Imagick()); $mrk->readImage($pth);
+            $img=$this->meta->imag; $mrk=(new Imagick()); $mrk->readImage($pth);
             if(!$w){$w=$mrk->getImageWidth();}; if(!$h){$h=$mrk->getImageHeight();};
             $mrk->scaleImage($w,$h); $img->compositeImage($mrk,imagick::COMPOSITE_OVER,$x,$y);
         }
@@ -842,16 +842,16 @@ namespace Anon;
 
         function raster($x="png",$w=null,$h=null)
         {
-            $t=self::$refs->$x; if(!$t){$t=$x;};
-            if(!$w){$w=self::$meta->imag->getImageWidth();};
-            if(!$h){$h=self::$meta->imag->getImageHeight();};
-            self::$meta->imag->setImageFormat($t);
+            $t=$this->refs->$x; if(!$t){$t=$x;};
+            if(!$w){$w=$this->meta->imag->getImageWidth();};
+            if(!$h){$h=$this->meta->imag->getImageHeight();};
+            $this->meta->imag->setImageFormat($t);
             $f=(($x!=="gif")?"getImageBlob":"getImagesBlob");
 
-            if($x==="png"){self::$meta->imag->resizeImage($w,$h,imagick::FILTER_LANCZOS,1);}
-            else{self::$meta->imag->resizeImage($w,$h);};
+            if($x==="png"){$this->meta->imag->resizeImage($w,$h,imagick::FILTER_LANCZOS,1);}
+            else{$this->meta->imag->resizeImage($w,$h);};
 
-            return self::$meta->imag->$f();
+            return $this->meta->imag->$f();
         }
     }
 
