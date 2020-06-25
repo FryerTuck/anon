@@ -993,7 +993,7 @@ namespace Anon;
          elseif(function_exists($lc)){$f=$lc;}else{fail("functions `$uc` and `$lc` are undefined");};
          $r=call_user_func_array($f,$a); if($r){return $r;};
          $m="expecting $n";
-         if(isset($a[1])&&is_int($a[1])){$m="$m with an item count of between $a[0] and $a[1]";}
+         if(isset($a[0])&&is_int($a[0])&&isset($a[1])&&is_int($a[1])){$m="$m with an item count of between $a[0] and $a[1]";}
          elseif(isset($a[0])&&is_int($a[0])){$m="$m with an item count of at least $a[0]";}
          elseif(($n==='path')&&isset($a[1])&&(isText($a[1])||isNuma($a[1])))
          {
