@@ -19,7 +19,7 @@ namespace Anon;
 
       static function handle($p)
       {
-if(isin($p,'wal2.jpg')){signal::dump($p););
+if(isin(keys($_GET),"init")){die("Site.handle: $p");};
         $sc=conf("Site/autoConf"); $tn=$sc->template; $ap="/Site/tmpl/Anon"; $np="$p";
         $tp="/Site/tmpl/$tn"; if(!isee($tp)){fail::template("missing path: `$tp`"); exit;};
         if(isFold($np)){$ix=path::indx($np,'aard.php'); if($ix){$np=(rshave($np,'/')."/$ix");}}; // check for index-file
@@ -54,7 +54,7 @@ if(isin($p,'wal2.jpg')){signal::dump($p););
             $rc=isin($uc,$cl); if(!$rc){fail::template("invalid user clan: `$uc`");};
         };
 
-        if(!isin(keys($_GET["init"]),"init")){finish($np);}; // serve without template
+        if(!isin(keys($_GET),"init")){finish($np);}; // serve without template
         $pt=null; $tl=["$tp/base/$rc.$fx","$ap/base/aard.$fx","$ap/base/$rc.$fx","$ap/base/aard.$fx"];
         if(!arg($np)->startsWith("$tp/base/")){foreach($tl as $xt){if(isee($xt)){$pt="$xt"; break;}}};
         if(!$pt){finish($np); exit;}; // without template

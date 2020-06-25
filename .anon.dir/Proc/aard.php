@@ -87,7 +87,7 @@ namespace Anon;
          if(is_class($r)){finish($r);}; // ?
 
 
-         if($p!=='/')
+         if(($p!=='/')&&!isin(keys($_GET),"init"))
          {
              $s=path::stem($p);
              if(isWord($s)&&isee("$/$s")&&!isFold($p))
