@@ -815,6 +815,7 @@ namespace Anon;
 
         function __destruct()
         {
+            if(!self::$meta->imag){return;};
             self::$meta->imag->clear();
             self::$meta->imag->destroy();
         }
