@@ -15,7 +15,7 @@
 
 // defn :: conf : front-end configuration
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   globVars({viewConf:decode.jso(`{:conf('Proc/viewConf'):}`)});
+   globVars({antiHack:decode.jso(`{:conf('Proc/antiHack'):}`)});
 
    const timeVars = {e6:0};
 
@@ -37,7 +37,7 @@
    }});
 
 
-   if(globVars(`viewConf`).shieldOn)
+   if(globVars(`antiHack`).scriptWack)
    {
        hijack(globVars(`jack`).main,function()
        {if(stak(0)){return listOf(arguments)}; wack()});
@@ -357,7 +357,7 @@
                     // se=dm.createElement("script");
                     // se.onload=function()
                     // {
-                    //    if(!globVars(`viewConf`).shieldOn){return};
+                    //    if(!globVars(`antiHack`).scriptWack){return};
                     //    // hijack(globVars(`jack`).main,function(){});
                     //    // hijack(globVars(`jack`).info,function(){});
                     //
