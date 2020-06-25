@@ -798,15 +798,11 @@ namespace Anon;
 
         function __construct($p)
         {
-            requires::phpx("imagick");
-            expect::path($p,[R,F]);
-            $fext=fext($p);
-            $this->meta=knob(["fext"=>$fext]);
-            $fp=path($p);
+            requires::phpx("imagick"); expect::path($p,[R,F]);
+            $fext=fext($p); $this->meta=knob(["fext"=>$fext]);
             $this->refs=knob(["png"=>"png24","jpg"=>"jpeg"]);
-
-            $this->meta->imag=(new Imagick());
-            $this->meta->imag->readImage($fp);
+            $this->meta->imag=(new \Imagick());
+            $this->meta->imag->readImage(path($p));
 
             return $this;
         }
