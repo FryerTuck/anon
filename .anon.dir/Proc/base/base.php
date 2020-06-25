@@ -493,10 +493,10 @@ namespace Anon;
          if(isin($m,'image/')&&($x!=='ico'))
          {
              $c=conf("Proc/antiHack"); $i=img($a); $d=$i->descry('size');
-             $s=$c->stainLimit; $s=[($s[0]*1),($s[1]*1)];
+             $s=$c->stainWhenExceeds; $s=[($s[0]*1),($s[1]*1)];
              if(($d[0]>=$s[0])||($d[1]>=$s[1]))
              {
-                 $i->impose($c->stainImage,SPAN); $r=$i->raster(); unset($i);
+                 $i->impose($c->stainImageSource,SPAN); $r=$i->raster(); unset($i);
                  echo ($t?durl($r):$r); if($nx!==NOEXIT){die();};
              };
          };
@@ -825,13 +825,14 @@ namespace Anon;
         }
 
 
-        function impose($pth,$dim=null,$pos=null)
+        function impose($pth,$dim=null,$pos=null,$opa=1)
         {
             expect::path($pth,[R,F]); $w=0; $h=0; $x=0; $y=0;
             if(isNuma($dim)){$w=$dim[0]; $h=$dim[1];}; if(isNuma($pos)){$x=$pos[0]; $y=$pos[1];};
             $img=$this->meta->imag; $mrk=(new \Imagick()); $gdf=(($dim===SPAN)?$img:$mrk);
             $mrk->setBackgroundColor(new \ImagickPixel('transparent')); $mrk->readImage(path($pth));
             if(!$w&&!$h){$w=$gdf->getImageWidth();}; if(!$h&&!$w){$h=$gdf->getImageHeight();};
+            try{$mrk->setImageOpacity($opa);}catch(\Exception $e){$mrk->setImageAlpha($opa);};
             $mrk->scaleImage($w,$h); $img->compositeImage($mrk,\Imagick::COMPOSITE_OVER,$x,$y);
         }
 

@@ -1,3 +1,7 @@
-scriptWack: true
-stainImage: $/Proc/dcor/mark.svg
-stainLimit: 720,405
+denyDomainSpoofs: true
+denyScriptInject: true
+seeConsoleOutput: false
+stainLargeImages: true
+stainWhenExceeds: 1280,720
+stainIgnoreThese: null
+stainImageSource: $/Proc/dcor/mark.svg

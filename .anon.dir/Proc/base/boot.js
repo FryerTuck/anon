@@ -37,11 +37,15 @@
    }});
 
 
-   if(globVars(`antiHack`).scriptWack)
+   if(globVars(`antiHack`).denyScriptInject)
    {
        hijack(globVars(`jack`).main,function()
        {if(stak(0)){return listOf(arguments)}; wack()});
+   };
 
+
+   if(!globVars(`antiHack`).seeConsoleOutput)
+   {
        hijack(globVars(`jack`).info,function()
        {
           let j={"[Intervention] Slow network":`Fallback font will be used`}; // junk
