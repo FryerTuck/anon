@@ -33,9 +33,8 @@ namespace Anon;
      if(isset($_GET['upkeep'])&&($_GET['upkeep']==='init'))
      {
          if(!isset($_GET['rf'])||!isset($_GET['rk'])){wack(); exit;}; // security
-         $rf=$_GET['rf']; $rp="/$rf"; $rk=$_GET['rk']; $fc=pget($rf);
-         if(!isin($fc,'$ck = \'{:ck:}\'')){wack(); exit;}; // security
-         $rh=sha1($fc); if($rh!==$rk){wack(); exit;}; // security
+         $rf=$_GET['rf']; $rp="/$rf"; $rk=$_GET['rk']; $fc=pget($rf); $rh=sha1($fc);
+         if(!isin($fc,'$ck = \'{:ck:}\'')||($rh!==$rk)){wack(); exit;}; // security
          $pf="$/Proc/info/pass.inf"; $mp=password_hash(pget($pf),PASSWORD_DEFAULT);
          pset($pf,$mp); $nh=NAVIHOST; void($rp); wait(500);
          header("Location: $nh"); exit;
