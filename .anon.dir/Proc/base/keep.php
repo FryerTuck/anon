@@ -76,6 +76,7 @@ namespace Anon;
          if(substr($i,0,2)==='# '){continue;}; // commented out
          $c=substr($i,0,1); if($c==='!'){$i=substr($i,1);}else{$c='';}; // negation
          $p=swap(path($i),"$h/",'');
+         if(strlen(($c.$p))<2){die("$i");};
          Repo::ignore('/',write,($c.$p));
       };
 
