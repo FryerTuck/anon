@@ -19,7 +19,6 @@ namespace Anon;
 
       static function handle($p)
       {
-if(isin(keys($_GET),"init")){die("Site.handle: $p");};
         $sc=conf("Site/autoConf"); $tn=$sc->template; $ap="/Site/tmpl/Anon"; $np="$p";
         $tp="/Site/tmpl/$tn"; if(!isee($tp)){fail::template("missing path: `$tp`"); exit;};
         if(isFold($np)){$ix=path::indx($np,'aard.php'); if($ix){$np=(rshave($np,'/')."/$ix");}}; // check for index-file
