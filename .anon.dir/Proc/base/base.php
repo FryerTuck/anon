@@ -803,11 +803,11 @@ namespace Anon;
             $fext=fext($p);
             self::$meta=[];
                  die("olo");
-            $fp=path($p);
-            self::$refs=knob(["png"=>"png24","jpg"=>"jpeg"]);
-
-            self::$meta->imag=(new Imagick());
-            self::$meta->imag->readImage($fp);
+            // $fp=path($p);
+            // self::$refs=knob(["png"=>"png24","jpg"=>"jpeg"]);
+            //
+            // self::$meta->imag=(new Imagick());
+            // self::$meta->imag->readImage($fp);
 
             return $this;
         }
@@ -815,9 +815,9 @@ namespace Anon;
 
         function __destruct()
         {
-            if(!self::$meta->imag){return;};
-            self::$meta->imag->clear();
-            self::$meta->imag->destroy();
+            // if(!self::$meta->imag){return;};
+            // self::$meta->imag->clear();
+            // self::$meta->imag->destroy();
         }
 
 
