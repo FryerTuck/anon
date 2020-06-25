@@ -800,9 +800,9 @@ namespace Anon;
         {
             requires::phpx("imagick");
             expect::path($p,[R,F]);
-                 die("olo");
             $fext=fext($p);
-            self::$meta=knob(); self::$meta->fext=$fext; $fp=path($p);
+            self::$meta=knob(["fext"=>$fext]); $fp=path($p);
+                 die("olo");
             self::$refs=knob(["png"=>"png24","jpg"=>"jpeg"]);
 
             self::$meta->imag=(new Imagick());
