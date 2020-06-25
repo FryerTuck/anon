@@ -801,8 +801,8 @@ namespace Anon;
             requires::phpx("imagick");
             expect::path($p,[R,F]);
             $fext=fext($p);
+            self::$meta=[];
                  die("olo");
-            self::$meta=knob(["fext"=>$fext]);
             $fp=path($p);
             self::$refs=knob(["png"=>"png24","jpg"=>"jpeg"]);
 
