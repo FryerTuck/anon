@@ -828,7 +828,8 @@ namespace Anon;
         {
             expect::path($pth,[R,F]); $w=null; $h=null; $x=0; $y=0;
             if(isNuma($dim)){$w=$dim[0]; $h=$dim[1];}; if(isNuma($pos)){$x=$pos[0]; $y=$pos[1];};
-            $img=$this->meta->imag; $mrk=(new \Imagick()); $mrk->readImage(path($pth));
+            $img=$this->meta->imag; $mrk=(new \Imagick());
+            $img->setBackgroundColor(new \ImagickPixel('transparent')); $mrk->readImage(path($pth));
             if(!$w){$w=$mrk->getImageWidth();}; if(!$h){$h=$mrk->getImageHeight();};
             $mrk->scaleImage($w,$h); $img->compositeImage($mrk,\Imagick::COMPOSITE_OVER,$x,$y);
         }
