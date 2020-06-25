@@ -830,7 +830,7 @@ namespace Anon;
             if(isNuma($dim)){$w=$dim[0]; $h=$dim[1];}; if(isNuma($pos)){$x=$pos[0]; $y=$pos[1];};
             $img=$this->meta->imag; $mrk=(new \Imagick()); $mrk->readImage(path($pth));
             if(!$w){$w=$mrk->getImageWidth();}; if(!$h){$h=$mrk->getImageHeight();};
-            $mrk->scaleImage($w,$h); $img->compositeImage($mrk,imagick::COMPOSITE_OVER,$x,$y);
+            $mrk->scaleImage($w,$h); $img->compositeImage($mrk,\Imagick::COMPOSITE_OVER,$x,$y);
         }
 
 
