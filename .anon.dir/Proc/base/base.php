@@ -827,11 +827,11 @@ namespace Anon;
 
         function impose($pth,$dim=null,$pos=null)
         {
-            expect::path($pth,[R,F]); $w=null; $h=null; $x=0; $y=0;
+            expect::path($pth,[R,F]); $w=0; $h=0; $x=0; $y=0;
             if(isNuma($dim)){$w=$dim[0]; $h=$dim[1];}; if(isNuma($pos)){$x=$pos[0]; $y=$pos[1];};
             $img=$this->meta->imag; $mrk=(new \Imagick()); $gdf=(($dim===SPAN)?$img:$mrk);
             $mrk->setBackgroundColor(new \ImagickPixel('transparent')); $mrk->readImage(path($pth));
-            if(!$w){$w=$gdf->getImageWidth();}; if(!$h){$h=$gdf->getImageHeight();};
+            if(!$w&&!$h){$w=$gdf->getImageWidth();}; if(!$h&&!$w){$h=$gdf->getImageHeight();};
             $mrk->scaleImage($w,$h); $img->compositeImage($mrk,\Imagick::COMPOSITE_OVER,$x,$y);
         }
 
