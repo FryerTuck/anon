@@ -75,8 +75,8 @@ namespace Anon;
          if(strlen(trim($i))<1){continue;}; // empty line
          if(substr($i,0,2)==='# '){continue;}; // commented out
          $c=substr($i,0,1); if($c==='!'){$i=substr($i,1);}else{$c='';}; // negation
-         $p=swap(path($i),"$h/",'');
-         if(strlen($p)<2){die("$i");};
+         $a=''; if(last($i)==='*'){$a='*';}; $p=path(rshave($i,'*'));
+         $p=swap($p,"$h/",''); $p.=$a;
          Repo::ignore('/',write,($c.$p));
       };
 
