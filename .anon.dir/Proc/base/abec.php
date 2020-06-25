@@ -1082,6 +1082,7 @@ namespace Anon;
       if(isset($x['V']['export'])){$r=$x['V']['export']; if(is_class($r)&&!$c){$c="Anon\\$r"; unset($x['V']['export']);}else{return $r;}};
       if(!$c){if(span($x['V'])>0){return (new module($x['V']));}; return true;}; // not a class
       if(isin($c,'meta')&&!$c::$meta){$c::$meta=knob();}; $im=is_method("$c::__init"); if(!$im||($im&&$ni)){return $c;}; // no calling __init
-      try{$ic=$c::__init(); $er=error_get_last();}catch(\Exception $er){throw $er;}; if($er){fail("severe import error");};
+      $e=null; try{$ic=$c::__init(); $e=\error_get_last();}catch(\Exception $er){throw $er;}; if(!$e){return true;};
+      dbug::view(knob(['name'=>dbug::name($e['type']),'mesg'=>trim($e['message']."\n".$b),'file'=>$e['file'],'line'=>$e['line']]));
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
