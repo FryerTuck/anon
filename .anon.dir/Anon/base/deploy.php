@@ -119,7 +119,7 @@
     need("version_compare");
 
     if(version_compare(phpversion(),'5.6','<'))
-    { bail('PHP version too old'); };
+    { bail('PHP version too old, needs at least PHP 5.6'); };
 
     need("curl_init");
     need("ftp_get");

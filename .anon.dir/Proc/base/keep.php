@@ -29,13 +29,15 @@ namespace Anon;
          // if(!path::indx('/')){path::copy('/Proc/dcor/README.md','/README.md');};
       };
 
+
      if(isset($_GET['upkeep'])&&($_GET['upkeep']==='init'))
      {
          if(!isset($_GET['rf'])||!isset($_GET['rk'])){wack(); exit;}; // security
-         $rf=$_GET['rf']; $rp=(ROOTPATH."/$rf"); $rk=$_GET['rk'];  if(!isee($rp)){wack(); exit;}; // security
-         $fc=file_get_contents($rp); if(!isin($fc,'$ck = \'{:ck:}\'')){wack(); exit;}; // security
+         $rf=$_GET['rf']; $rp="/$rf"; $rk=$_GET['rk']; $fc=pget($rf);
+         if(!isin($fc,'$ck = \'{:ck:}\'')){wack(); exit;}; // security
          $rh=sha1($fc); if($rh!==$rk){wack(); exit;}; // security
-         $nh=NAVIHOST; void($rp); header("Location: $nh");
+         $pf="$/Proc/info/pass.inf"; $mp=password_hash(pget($pf),PASSWORD_DEFAULT);
+         pset($pf,$mp); $nh=NAVIHOST; void($rp); header("Location: $nh");
          exit;
      };
 
