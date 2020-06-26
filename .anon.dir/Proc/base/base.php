@@ -479,10 +479,10 @@ namespace Anon;
 
          if(facing('SSE')){signal::feed(durl($a)); return;}; // feed data-URL to SSE
          // if(facing('BOT')){dump('TODO :: feed bot : '.$a);};
-if(isin($a,"wal2.jpg")&&isset($_GET["init"])){die("test 3");};
 
          if(envi('ACCEPT')==='application/json')
          {
+if(isin($a,"wal2.jpg")&&isset($_GET["init"])){die("test 4");};
             $r=import($a,$vo); header('Content-Type: application/json');
             if((strpos($r,'data:')!==0)&&(strpos($r,';base64,')!==false)){$r=base64_encode($r); $r="data:text/plain;base64,$r";};
             $r=json_encode(knob(['name'=>'feed', 'data'=>$r])); print_r($r); flush(); die();
