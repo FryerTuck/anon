@@ -5,3 +5,4 @@ stainLargeImages: true
 stainWhenExceeds: 1280,720
 stainIgnoreThese: null
 stainImageSource: $/Proc/dcor/mark.svg
+stainBaseOpacity: 0.3
