@@ -927,8 +927,9 @@ namespace Anon;
 
 # func :: durl : returns data-url from file-path .. returns null if invalid-path or not-a-readable-file or no-extension or undefined-mime-type
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   function durl($d)
+   function durl($d,$m=null)
    {
+      if(isText($m,3)&&isin($m,'/')&&is_string($d)){$r=base64_encode($d); return "data:$m;base64,$r";};
       $p=path($d); $m=mime($p); if(!$p||!$m||!is_readable($p)){return;};
       $r=base64_encode((($m==='inode/directory')?json_encode(scan($d)):scan($d))); return "data:$m;base64,$r";
    }
