@@ -809,8 +809,8 @@ namespace Anon;
 
         function __construct($p)
         {
-            requires::phpx("imagick"); expect::path($p,[R,F]);
             $fext=fext($p); $this->meta=knob(["fext"=>$fext]);
+            requires::phpx("imagick"); expect::path($p,[R,F]);
             $this->refs=knob(["png"=>"png32","jpg"=>"jpeg"]);
             $this->meta->imag=(new \Imagick());
             if(isin("png,svg,gif",$fext)){$this->meta->imag->setBackgroundColor(new \ImagickPixel('transparent'));};
