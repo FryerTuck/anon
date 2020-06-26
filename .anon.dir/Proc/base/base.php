@@ -495,7 +495,7 @@ namespace Anon;
          {
              $c=conf("Proc/antiHack"); $o=$c->stainIgnoreThese;
              if(isText($o)){$o=[$o];}; $o=((isNuma($o,1)&&pick($a,$o))?1:0);
-             if(!$o)
+             if($c->stainLargeImages&&!$o)
              {
                  $s=$c->stainWhenExceeds; $s=[($s[0]*1),($s[1]*1)];
                  $i=img($a); $d=$i->descry('size');
