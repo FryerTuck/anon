@@ -499,7 +499,7 @@ namespace Anon;
              if(($d[0]>=$s[0])||($d[1]>=$s[1]))
              {
                  $i->impose($c->stainImageSource,SPAN,null,0.3); $r=$i->raster(); unset($i);
-                 if($t){$r=durl($r);};
+                 if($t){$r=durl($r,$m);};
                  echo $r; if($nx!==NOEXIT){die();};
              };
          };
