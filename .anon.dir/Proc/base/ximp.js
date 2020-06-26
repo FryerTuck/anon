@@ -3,7 +3,6 @@
    ({
       image:function(d,f)
       {
-          dump(d);
          durl({mime:d.head.ContentType,data:d.body},(r)=>{f(create({img:``,src:r}))});
       },
 
