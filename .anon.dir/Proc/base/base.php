@@ -468,6 +468,7 @@ namespace Anon;
          $t=$vo->tmpl; if(!isee($t)){$t='/Proc/base/stat.htm';};
          $r=import($t,['code'=>$a,'text'=>$m]); echo ($r); exit;
       };
+if(isin($a,"wal2.jpg")&&isset($_GET["init"])){die("test 1");};
 
       if(path($a))
       {
