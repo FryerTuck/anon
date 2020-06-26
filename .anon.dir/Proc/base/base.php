@@ -489,7 +489,7 @@ namespace Anon;
 
          $t=(isin(envi('ACCEPT'),'text/plain')||isin(envi('CONTENT_TYPE'),'text/plain')||facing('API'));
          $h=['Content-Type'=>$m]; if($nx===FORGET){$h['cache']=false;};
-         ekko::head($h);
+         ekko::head($h); $dne=0;
 
          if(isin($m,'image/')&&($x!=='ico'))
          {
@@ -504,16 +504,19 @@ namespace Anon;
                  {
                      $i->impose($c->stainImageSource,SPAN,null,$c->stainBaseOpacity);
                      if($t){echo (durl($i->raster(),$m));}else{echo $i;};
-                     if($nx!==NOEXIT){die();};
+                     if($nx!==NOEXIT){die();}; $dne=1;
                  }
                  else
                  {unset($i);};
              };
          };
 
-         $r=import($a,$vo); if($r){print_r($r); if($nx!==NOEXIT){die();}};
-         if($t){echo(durl($p));}else{readfile($p);};
-         if($nx!==NOEXIT){die();};
+         if(!$dne)
+         {
+             $r=import($a,$vo); if($r){print_r($r); if($nx!==NOEXIT){die();}};
+             if($t){echo(durl($p));}else{readfile($p);};
+             if($nx!==NOEXIT){die();};
+         };
       };
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
