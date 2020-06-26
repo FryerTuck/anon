@@ -488,7 +488,7 @@ namespace Anon;
          };
 
          $h=['Content-Type'=>$m]; if($nx===FORGET){$h['cache']=false;}; ekko::head($h);
-if(isin($a,"wal2.jpg")){die("test 3 .. $m");};
+if(isin($a,"wal2.jpg")){die("test 4 .. $m");};
 
          if(isin($m,'image/')&&($x!=='ico'))
          {
