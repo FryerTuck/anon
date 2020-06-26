@@ -54,6 +54,7 @@ namespace Anon;
         };
 
         if(!isin(keys($_GET),"init")){finish($np);}; // serve without template
+if(isin($np,"wal2.jpg")){die("yoHO");};
         $pt=null; $tl=["$tp/base/$rc.$fx","$ap/base/aard.$fx","$ap/base/$rc.$fx","$ap/base/aard.$fx"];
         if(!arg($np)->startsWith("$tp/base/")){foreach($tl as $xt){if(isee($xt)){$pt="$xt"; break;}}};
         if(!$pt){finish($np); exit;}; // without template
