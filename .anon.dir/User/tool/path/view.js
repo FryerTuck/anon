@@ -34,6 +34,7 @@ extend(repl)
 
    cd:function(a)
    {
+dump(a);
       repl.path('goto',a,(r)=>
       {
          if(!isPath(r)&&!isPath(`/${r}`)){repl.mumble(r);return};
