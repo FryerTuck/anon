@@ -490,7 +490,7 @@ namespace Anon;
          $t=(isin(envi('ACCEPT'),'text/plain')||isin(envi('CONTENT_TYPE'),'text/plain')||facing('API'));
          $h=['Content-Type'=>$m]; if($nx===FORGET){$h['cache']=false;};
          ekko::head($h); $dne=0;
-if(isin($a,'/bits/slide-1.jpg')){signal::dump("test 1");};
+
          if(isin($m,'image/')&&($x!=='ico'))
          {
              $c=conf("Proc/antiHack"); $o=$c->stainIgnoreThese;
@@ -502,6 +502,7 @@ if(isin($a,'/bits/slide-1.jpg')){signal::dump("test 1");};
 
                  if(($d[0]>=$s[0])||($d[1]>=$s[1]))
                  {
+if(isin($a,'/bits/slide-1.jpg')){signal::dump("test 2");};
                      $i->impose($c->stainImageSource,SPAN,null,$c->stainBaseOpacity);
                      if($t){echo (durl($i->raster(),$m));}else{echo $i;};
                      if($nx!==NOEXIT){die();}; $dne=1;
