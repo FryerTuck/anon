@@ -24,7 +24,9 @@ extend(MAIN)
 
          argsOf:function(s, r,b,q)
          {
-            r=[]; if(!isText(s,1)){return r}; b=''; q=0; s=s.trim(); if(s.length<1){return r}; s.split('').forEach(function(c)
+            r=[]; if(!isText(s,1)){return r}; b=''; q=0; s=s.trim();
+            if(s.length<1){return r};  if(s.length<2){return [s];};
+            s.split('').forEach(function(c)
             {
                if(isin(['"',"'",'`'],c))
                {if(!q){q=c;b+=c;return}; b+=c; if(q!=c){return}; q=0; r.push(b); b=''; return}; // quoted
