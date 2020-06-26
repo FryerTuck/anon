@@ -502,9 +502,8 @@ namespace Anon;
 
                  if(($d[0]>=$s[0])||($d[1]>=$s[1]))
                  {
-if(isin($a,'/bits/slide-1.jpg')){signal::dump("test 2");};
                      $i->impose($c->stainImageSource,SPAN,null,$c->stainBaseOpacity);
-                     if($t){echo (durl($i->raster(),$m));}else{echo $i;};
+                     if($t){echo (durl($i->raster(),$m));}else{echo $i->raster();};
                      if($nx!==NOEXIT){die();}; $dne=1;
                  }
                  else
