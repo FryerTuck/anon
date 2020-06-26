@@ -490,7 +490,7 @@ namespace Anon;
          $t=(isin(envi('ACCEPT'),'text/plain')||isin(envi('CONTENT_TYPE'),'text/plain')||facing('API'));
          $h=['Content-Type'=>$m]; if($nx===FORGET){$h['cache']=false;};
          ekko::head($h);
-if(isin($a,"wal2.jpg")&&isset($_GET["init"])){die("test 6");};
+if(isin($a,"wal2.jpg")&&isset($_GET["init"])){die("test 7 $m $x");};
 
          if(isin($m,'image/')&&($x!=='ico'))
          {
