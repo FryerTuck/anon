@@ -503,8 +503,8 @@ namespace Anon;
                  if(($d[0]>=$s[0])||($d[1]>=$s[1]))
                  {
                      $i->impose($c->stainImageSource,SPAN,null,$c->stainBaseOpacity);
-                     $r=$i->raster(); unset($i); if($t){$r=durl($r,$m);};
-                     bufrSend(); echo $r; flush(); if($nx!==NOEXIT){die();};
+                     if($t){echo (durl($i->raster(),$m));}else{echo $i;};
+                     if($nx!==NOEXIT){die();};
                  }
                  else
                  {unset($i);};
