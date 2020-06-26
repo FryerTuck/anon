@@ -640,7 +640,7 @@ signal::dump(pick($a,$o));
       if(!$h){return;}; expect::flat($n,1);
       foreach($n as $i)
       {
-          if(((last($i)==='*')||(frst($i)==='*'))&&akin($h,$n)){return $i;};
+          if((last($i)==='*')||(frst($i)==='*')){if(akin($h,$i)){return $i;};continue;};
           if(isin($h,$i)){return $i;};
       };
    }
