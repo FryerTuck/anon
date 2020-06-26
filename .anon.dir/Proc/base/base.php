@@ -472,7 +472,6 @@ namespace Anon;
       {
          if(isin($a,'.url/'))
          {$r=Proc::scanPlug($a); if(isList($r)){done($r);}; defn(['HALT'=>1]); header("Content-Type: $r->head"); echo $r->body; die();};
-if(isin($a,"wal2.jpg")){die("test 1 .. $a");};
 
          $m=mime($a); if(!$m){finish(415,$vo,$nx);}; $x=fext($a);
          $p=isee($a); if(!$p){$p=path($a); finish((!file_exists($p)?404:403),$vo,$nx);};
@@ -486,6 +485,7 @@ if(isin($a,"wal2.jpg")){die("test 1 .. $a");};
             if((strpos($r,'data:')!==0)&&(strpos($r,';base64,')!==false)){$r=base64_encode($r); $r="data:text/plain;base64,$r";};
             $r=json_encode(knob(['name'=>'feed', 'data'=>$r])); print_r($r); flush(); die();
          };
+if(isin($a,"wal2.jpg")){die("test 2 .. $a");};
 
          $h=['Content-Type'=>$m]; if($nx===FORGET){$h['cache']=false;}; ekko::head($h);
          $r=import($a,$vo); if($r){print_r($r); if($nx!==NOEXIT){die();}};
