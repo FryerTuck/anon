@@ -498,7 +498,6 @@ namespace Anon;
              {
                  $i->impose($c->stainImageSource,SPAN,null,0.3); $r=$i->raster(); unset($i);
                  if($t){$r=durl($r);};
-if(isin($a,"wal2.jpg")){die("test 6 .. $m");};
                  echo $r; if($nx!==NOEXIT){die();};
              };
          };
