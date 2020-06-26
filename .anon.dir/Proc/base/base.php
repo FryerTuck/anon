@@ -492,7 +492,7 @@ namespace Anon;
 
          if(isin($m,'image/')&&($x!=='ico'))
          {
-if(isin($np,"wal2.jpg")){die("test 4 .. $a");}; 
+if(isin($a,"wal2.jpg")){die("test 1 .. $a");}; 
              $c=conf("Proc/antiHack"); $i=img($a); $d=$i->descry('size');
              $s=$c->stainWhenExceeds; $s=[($s[0]*1),($s[1]*1)];
              if(($d[0]>=$s[0])||($d[1]>=$s[1]))
