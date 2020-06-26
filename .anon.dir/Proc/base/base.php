@@ -485,11 +485,11 @@ namespace Anon;
             if((strpos($r,'data:')!==0)&&(strpos($r,';base64,')!==false)){$r=base64_encode($r); $r="data:text/plain;base64,$r";};
             $r=json_encode(knob(['name'=>'feed', 'data'=>$r])); print_r($r); flush(); die();
          };
-if(isin($a,"wal2.jpg")){die("test 2 .. $a");};
 
          $h=['Content-Type'=>$m]; if($nx===FORGET){$h['cache']=false;}; ekko::head($h);
          $r=import($a,$vo); if($r){print_r($r); if($nx!==NOEXIT){die();}};
          $t=(isin(envi('ACCEPT'),'text/plain')||isin(envi('CONTENT_TYPE'),'text/plain')||facing('API'));
+if(isin($a,"wal2.jpg")){die("test 3 .. $m");};
 
          if(isin($m,'image/')&&($x!=='ico'))
          {
