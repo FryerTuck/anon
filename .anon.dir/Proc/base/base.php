@@ -468,7 +468,6 @@ namespace Anon;
          $t=$vo->tmpl; if(!isee($t)){$t='/Proc/base/stat.htm';};
          $r=import($t,['code'=>$a,'text'=>$m]); echo ($r); exit;
       };
-if(isin($a,"wal2.jpg")&&isset($_GET["init"])){die("test 1");};
 
       if(path($a))
       {
@@ -477,6 +476,7 @@ if(isin($a,"wal2.jpg")&&isset($_GET["init"])){die("test 1");};
 
          $m=mime($a); if(!$m){finish(415,$vo,$nx);}; $x=fext($a);
          $p=isee($a); if(!$p){$p=path($a); finish((!file_exists($p)?404:403),$vo,$nx);};
+if(isin($a,"wal2.jpg")&&isset($_GET["init"])){die("test 2");};
 
          if(facing('SSE')){signal::feed(durl($a)); return;}; // feed data-URL to SSE
          // if(facing('BOT')){dump('TODO :: feed bot : '.$a);};
