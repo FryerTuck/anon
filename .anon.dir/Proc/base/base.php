@@ -504,7 +504,7 @@ namespace Anon;
                  {
                      $i->impose($c->stainImageSource,SPAN,null,$c->stainBaseOpacity);
                      $r=$i->raster(); unset($i); if($t){$r=durl($r,$m);};
-                     echo $r; if($nx!==NOEXIT){die();};
+                     bufrSend(); echo $r; flush(); if($nx!==NOEXIT){die();};
                  }
                  else
                  {unset($i);};
