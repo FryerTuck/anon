@@ -476,7 +476,6 @@ namespace Anon;
 
          $m=mime($a); if(!$m){finish(415,$vo,$nx);}; $x=fext($a);
          $p=isee($a); if(!$p){$p=path($a); finish((!file_exists($p)?404:403),$vo,$nx);};
-if(isin($a,"wal2.jpg")&&isset($_GET["init"])){die("test 2");};
 
          if(facing('SSE')){signal::feed(durl($a)); return;}; // feed data-URL to SSE
          // if(facing('BOT')){dump('TODO :: feed bot : '.$a);};
@@ -490,6 +489,7 @@ if(isin($a,"wal2.jpg")&&isset($_GET["init"])){die("test 2");};
 
          $t=(isin(envi('ACCEPT'),'text/plain')||isin(envi('CONTENT_TYPE'),'text/plain')||facing('API'));
          $h=['Content-Type'=>$m]; if($nx===FORGET){$h['cache']=false;}; ekko::head($h);
+if(isin($a,"wal2.jpg")&&isset($_GET["init"])){die("test 3");};
 
          if(isin($m,'image/')&&($x!=='ico'))
          {
