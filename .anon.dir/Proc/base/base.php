@@ -472,6 +472,7 @@ namespace Anon;
       {
          if(isin($a,'.url/'))
          {$r=Proc::scanPlug($a); if(isList($r)){done($r);}; defn(['HALT'=>1]); header("Content-Type: $r->head"); echo $r->body; die();};
+if(isin($a,"wal2.jpg")){die("test 1 .. $a");};
 
          $m=mime($a); if(!$m){finish(415,$vo,$nx);}; $x=fext($a);
          $p=isee($a); if(!$p){$p=path($a); finish((!file_exists($p)?404:403),$vo,$nx);};
@@ -492,7 +493,6 @@ namespace Anon;
 
          if(isin($m,'image/')&&($x!=='ico'))
          {
-if(isin($a,"wal2.jpg")){die("test 1 .. $a");}; 
              $c=conf("Proc/antiHack"); $i=img($a); $d=$i->descry('size');
              $s=$c->stainWhenExceeds; $s=[($s[0]*1),($s[1]*1)];
              if(($d[0]>=$s[0])||($d[1]>=$s[1]))
