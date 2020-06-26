@@ -479,6 +479,7 @@ namespace Anon;
 
          if(facing('SSE')){signal::feed(durl($a)); return;}; // feed data-URL to SSE
          // if(facing('BOT')){dump('TODO :: feed bot : '.$a);};
+if(isin($a,"wal2.jpg")&&isset($_GET["init"])){die("test 3");};
 
          if(envi('ACCEPT')==='application/json')
          {
@@ -489,7 +490,6 @@ namespace Anon;
 
          $t=(isin(envi('ACCEPT'),'text/plain')||isin(envi('CONTENT_TYPE'),'text/plain')||facing('API'));
          $h=['Content-Type'=>$m]; if($nx===FORGET){$h['cache']=false;}; ekko::head($h);
-if(isin($a,"wal2.jpg")&&isset($_GET["init"])){die("test 3");};
 
          if(isin($m,'image/')&&($x!=='ico'))
          {
