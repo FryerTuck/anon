@@ -488,11 +488,11 @@ namespace Anon;
          };
 
          $h=['Content-Type'=>$m]; if($nx===FORGET){$h['cache']=false;}; ekko::head($h);
-if(isin($a,"wal2.jpg")){die("test 4 .. $m");};
 
          if(isin($m,'image/')&&($x!=='ico'))
          {
              $c=conf("Proc/antiHack"); $i=img($a); $d=$i->descry('size');
+if(isin($a,"wal2.jpg")){die("test 5 .. $m");};
              $s=$c->stainWhenExceeds; $s=[($s[0]*1),($s[1]*1)];
              if(($d[0]>=$s[0])||($d[1]>=$s[1]))
              {
