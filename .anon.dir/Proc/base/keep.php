@@ -29,7 +29,8 @@ namespace Anon;
          // if(!path::indx('/')){path::copy('/Proc/dcor/README.md','/README.md');};
       };
 
-         die("test 1");
+      $uk="fail"; if(isset($_GET['upkeep'])){$uk=$_GET['upkeep'];};
+         die("$uk");
 
      if(isset($_GET['upkeep'])&&($_GET['upkeep']==='init'))
      {
