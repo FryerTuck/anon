@@ -105,6 +105,7 @@ extend(Anon)
         repl.exec(`cd ${twg}`); tick.after(999,()=>
         {
             app=(mim.startsWith("image")?"Draw":"Code");
+            if(!!Anon[app]){Anon[app].open(pth); return};
             AnonMenu.init(app); listen(`${app}AppReady`,()=>
             {
                 // dump(pth);
