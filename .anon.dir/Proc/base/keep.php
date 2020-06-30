@@ -7,6 +7,7 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function upkeep($dbs,$ldb,$tmn,$ini)
    {
+      clearstatcache(); clearstatcache(true);
       if($ini)
       {
           die("test 4");

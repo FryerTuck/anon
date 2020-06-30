@@ -353,9 +353,11 @@ namespace Anon;
 
       if(!$ldb||($tdf>$dbs))
       {
+          clearstatcache(); clearstatcache(true);
           require(path('/Proc/base/keep.php'));
           upkeep($dbs,$ldb,time(),$ini);
           pset('/Proc/vars/lastDbug',time());
+          clearstatcache(); clearstatcache(true);
       };
 
       unset($dbs,$ldb,$tmn,$tdf);
