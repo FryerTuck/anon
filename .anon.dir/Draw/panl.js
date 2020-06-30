@@ -144,7 +144,7 @@ extend(Anon)
                if(isin(mimeType(p),'font')){radd(fnt,p);return};
                row.insert({col:[{img:'.DrawScanPick', src:`/${p}`, title:p, draggable:true, listen:
                {
-                  ready:function(){dne++; Busy.edit(pth,((dne/rsl.length)*100))},
+                  ready:function(){dne++; Busy.edit(pth,((dne/len)*100))},
                   dblclick:function(){Anon.Draw.feed(this.toDataURL(),this.src.split('/').pop())},
                }}]});
             });
