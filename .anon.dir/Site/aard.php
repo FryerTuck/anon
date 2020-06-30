@@ -86,6 +86,7 @@ namespace Anon;
               $href=expose($item,'<a href="','"')[0];
               $href=("$host/assets/files".swap($href,$fixr,"$fixr/preview"));
               $face=expose($item,'<img src="','"')[0]; $face=swap($face,'/assets',"$host/assets");
+              $mime=mime($face); $face=spuf($face,null,"$host/",12,1); $face=durl($face,$mime);
               $resl->lyst[]=knob(['name'=>$name,'href'=>"$href/",'face'=>$face]);
           };
 
