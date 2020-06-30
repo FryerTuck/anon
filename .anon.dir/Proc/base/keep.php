@@ -39,9 +39,7 @@ namespace Anon;
          $mp=password_hash(pget("$/Proc/info/pass.inf"),PASSWORD_DEFAULT);
          pset("$/User/data/master/pass",$mp); $nh=NAVIHOST; void($rp); wait(500);
          header("Location: $nh"); exit;
-      }
-      else
-      { die(NAVIFURI); }
+     };
 
       if(lock::exists("upkeep")&&!userDoes("lead sudo gang")&&isee("$h/refs")){return;}; // .. less is more
       lock::create("upkeep"); // run upkeep only when another power-user is not running it already
