@@ -349,13 +349,14 @@ namespace Anon;
    {
       $dbs=ceil((pget('/User/conf/inactive')*1)/2); $ldb=pget('/Proc/vars/lastDbug');
       if(!$ldb){$ldb=0; pset('/Proc/vars/lastDbug',$ldb);}; $ldb=($ldb*1); $tmn=time();
-      if(($tmn-$ldb)>$dbs)
-      {
 
       if(isset($_GET['upkeep'])&&($_GET['upkeep']==='init'))
       {
-          die("test 7");
+          die("test ($tmn - $ldb) > $dbs");
       };
+
+      if(($tmn-$ldb)>$dbs)
+      {
           require(path('/Proc/base/keep.php'));
           upkeep($dbs,$ldb,$tmn);
       };
