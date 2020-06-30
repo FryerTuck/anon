@@ -8,11 +8,6 @@ namespace Anon;
    function upkeep($dbs,$ldb,$tmn,$ini)
    {
       clearstatcache(); clearstatcache(true);
-      if(!$ini)
-      {
-          die("test $ini");
-      };
-
 
       $h='/Proc/temp'; $x=['file','kban','lock','logs','refs','sesn'];
       $cln=sesn('CLAN'); $hsh=sesn('HASH'); $usr=sesn('USER');
@@ -38,7 +33,7 @@ namespace Anon;
 
       if($ini==='init')
       {
-          die("test 4");
+          die("test init OK");
       };
 
          // if(!isset($_GET['rf'])||!isset($_GET['rk'])){wack(); exit;}; // security
