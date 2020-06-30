@@ -8,10 +8,7 @@ namespace Anon;
    function upkeep($dbs,$ldb,$tmn,$ini)
    {
       clearstatcache(); clearstatcache(true);
-      if($ini)
-      {
           die("test 4");
-      };
 
 
       $h='/Proc/temp'; $x=['file','kban','lock','logs','refs','sesn'];

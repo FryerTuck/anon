@@ -353,7 +353,6 @@ namespace Anon;
 
       if(!$ldb||($tdf>$dbs))
       {
-die("test 1");
           clearstatcache(); clearstatcache(true);
           require(path('/Proc/base/keep.php'));
           upkeep($dbs,$ldb,time(),$ini);
