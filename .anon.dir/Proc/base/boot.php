@@ -353,7 +353,6 @@ namespace Anon;
 
       if(!$ldb||($tdf>$dbs))
       {
-          die("test $upk");
           require(path('/Proc/base/keep.php'));
           upkeep($dbs,$ldb,time());
           pset('/Proc/vars/lastDbug',time());
