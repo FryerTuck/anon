@@ -107,8 +107,8 @@ extend(Anon)
             app=(mim.startsWith("image")?"Draw":"Code");
             AnonMenu.init(app); listen(`${app}AppReady`,()=>
             {
-                dump(pth);
-                // Anon[app].open(pth);
+                // dump(pth);
+                Anon[app].open(pth);
             });
         });
         AnonMenu.init(`Code`);
