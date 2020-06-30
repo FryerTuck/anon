@@ -27,8 +27,9 @@ select('#DrawPropLayr').insert
                {butn:'.dark .toolButnTiny .icon-lock1', name:'lock', onclick:function(){Anon.Draw.tool.layrTogl('lock')}},
                {butn:'.dark .toolButnTiny .icon-chevron-up', name:'mvup', onclick:function(){Anon.Draw.tool.layrShft('up')}},
                {butn:'.dark .toolButnTiny .icon-chevron-down', name:'mvdn', onclick:function(){Anon.Draw.tool.layrShft('dn')}},
-               {butn:'.dark .toolButnTiny .icon-download2', name:'mrge', onclick:function(){Anon.Draw.tool.layrMrgd()}},
                {butn:'.dark .toolButnTiny .icon-copy', name:'copy', onclick:function(){Anon.Draw.tool.layrCopy()}},
+               {butn:'.dark .toolButnTiny .icon-screen-normal', name:'span', onclick:function(){Anon.Draw.tool.layrSpan()}},
+               {butn:'.dark .toolButnTiny .icon-download2', name:'mrge', onclick:function(){Anon.Draw.tool.layrMrgd()}},
                {butn:'.dark .toolButnTiny .icon-cross', name:'void', onclick:function(){Anon.Draw.tool.layrVoid()}},
             ]},
          ]},
@@ -125,6 +126,12 @@ extend(Anon.Draw.tool)
       let ai,ci; ai=Anon.Draw.vars.actv; ci=ai.vars.canvas; ci.find('Transformer').destroy(); ci.batchDraw();
       if(d=='up'){ai.vars.flayer.moveUp()}else{ai.vars.flayer.moveDown()};
       this.layrAnew();
+   },
+
+
+   layrSpan:function(d)
+   {
+      let ai,ci; ai=Anon.Draw.vars.actv; ci=ai.vars.canvas; ci.find('Transformer').destroy(); ci.batchDraw();
    },
 
 
