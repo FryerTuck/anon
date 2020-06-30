@@ -351,14 +351,9 @@ namespace Anon;
       if(!$ldb){$ldb=0;}; $ldb=($ldb*1); $tdf=(time()-$ldb);
       $upk='fail'; if(isset($_GET['upkeep'])){$upk=$_GET['upkeep'];};
 
-if(!$ldb){die("$upk");};
-          if(isset($_GET['upkeep'])&&($_GET['upkeep']==='init'))
-          {
-              die("test $tdf");
-          };
-
-      if($tdf>$dbs)
+      if(!$ldb||($tdf>$dbs))
       {
+          die("test $upk");
           require(path('/Proc/base/keep.php'));
           upkeep($dbs,$ldb,time());
           pset('/Proc/vars/lastDbug',time());
