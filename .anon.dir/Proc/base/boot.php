@@ -349,7 +349,7 @@ namespace Anon;
    {
       clearstatcache(); clearstatcache(true);
       $dbs=ceil((pget('/User/conf/inactive')*1)/2); $dbn=("\n".pget('/Proc/vars/lastDbug')." "); clearstatcache(true);
-      $ldb=trim($dbn); if(!$ldb){$ldb='0'; pset('/Proc/vars/lastDbug',time());}; $ldb=($ldb*1); $tdf=(time()-$ldb);
+      $ldb=trim($dbn); if(!$ldb){$ldb='0'; pset('/Proc/vars/lastDbug',time());clearstatcache(true);}; $ldb=($ldb*1); $tdf=(time()-$ldb);
       $upk=0; if(isset($_GET['upkeep'])){$upk=$_GET['upkeep'];};
 clearstatcache(true);
       if(!$ldb||($tdf>$dbs))
