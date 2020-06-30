@@ -8,9 +8,9 @@ namespace Anon;
    function upkeep($dbs,$ldb,$tmn,$ini)
    {
       clearstatcache(); clearstatcache(true);
-      if($ini)
+      if(!$ini)
       {
-          die("test 420");
+          die("test $ini");
       };
 
 
