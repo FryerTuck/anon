@@ -276,7 +276,7 @@ namespace Anon;
             if(isset($scan[0])){foreach($scan as $indx) // scan for events
             {
                if(!isee("$epth/$indx")){continue;}; // it just disappeared
-               // if(aged("$epth/$indx")>$mxrt){void("$epth/$indx"); continue;}; // stale .. avoid old events
+               if(aged("$epth/$indx")>$mxrt){self::emit("dump",$mxrt); continue;}; // stale .. avoid old events
                $evnt=decode::jso("$epth/$indx"); void("$epth/$indx"); // read and destroy
 
                if(is_object($evnt)) // safety-check .. avoid errors and warnings & notices here
