@@ -102,14 +102,17 @@ extend(Anon)
         if(tpe==`fold`){return}; // normal click on folder does nothing
 
         twg=twig(pth); mim=(mimeType(pth)||"");
-        repl.exec(`cd ${twg}`); tick.after(999,()=>
+        repl.exec(`cd ${twg}`); tick.after(500,()=>
         {
             app=(mim.startsWith("image")?"Draw":"Code");
-            AnonMenu.init(app); if(!!Anon[app]){Anon[app].open(pth); return};
-            listen(`${app}AppReady`,()=>
+            AnonMenu.init(app); tick.after(60,()=>
             {
-                // dump(pth);
-                Anon[app].open(pth);
+                if(!!Anon[app]){Anon[app].open(pth); return};
+                listen(`${app}AppReady`,()=>
+                {
+                    // dump(pth);
+                    Anon[app].open(pth);
+                });
             });
         });
       },
