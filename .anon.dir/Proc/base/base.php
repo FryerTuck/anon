@@ -488,8 +488,7 @@ namespace Anon;
          };
 
          $t=(isin(envi('ACCEPT'),'text/plain')||isin(envi('CONTENT_TYPE'),'text/plain')||facing('API'));
-         $h=['Content-Type'=>$m]; if($nx===FORGET){$h['cache']=false;};
-         ekko::head($h); $dne=0;
+         $h=['Content-Type'=>$m]; if($nx===FORGET){$h['cache']=false;}; $dne=0;
 
          if(isin($m,'image/')&&($x!=='ico'))
          {
@@ -502,6 +501,7 @@ namespace Anon;
 
                  if(($d[0]>=$s[0])||($d[1]>=$s[1]))
                  {
+                     $h['cache']=false; ekko::head($h);
                      $i->impose($c->stainImageSource,SPAN,null,$c->stainBaseOpacity);
                      if($t){echo (durl($i->raster(),$m));}else{echo $i->raster();};
                      if($nx!==NOEXIT){die();}; $dne=1;
@@ -513,6 +513,7 @@ namespace Anon;
 
          if(!$dne)
          {
+             ekko::head($h);
              $r=import($a,$vo); if($r){print_r($r); if($nx!==NOEXIT){die();}};
              if($t){echo(durl($p));}else{readfile($p);};
              if($nx!==NOEXIT){die();};
