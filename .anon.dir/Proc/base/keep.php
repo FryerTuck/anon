@@ -29,11 +29,10 @@ namespace Anon;
          // if(!path::indx('/')){path::copy('/Proc/dcor/README.md','/README.md');};
       };
 
-      $uk="fail"; if(isset($_GET['upkeep'])){$uk=$_GET['upkeep'];};
-         die("$uk");
 
-     if(isset($_GET['upkeep'])&&($_GET['upkeep']==='init'))
+     if(isset($_GET['upkeep'])&&(trim($_GET['upkeep'])==='init'))
      {
+         die("test 2");
          // if(!isset($_GET['rf'])||!isset($_GET['rk'])){wack(); exit;}; // security
          // $rf=$_GET['rf']; $rp="/$rf"; $rk=$_GET['rk']; $fc=pget($rp,0); $rh=sha1($fc);
          // if(!isin($fc,'$ck = \'{:ck:}\'')||($rh!==$rk)){wack(); exit;}; // security
