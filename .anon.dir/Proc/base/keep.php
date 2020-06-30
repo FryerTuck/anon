@@ -30,8 +30,8 @@ namespace Anon;
       };
 
       $iu="fail"; if(isset($_GET['upkeep'])){$iu=$_GET['upkeep'];};
-die("test: ".isin($iu,"init"));
-     if($iu==='init')
+
+     if(isin($iu,"init"))
      {
          die("test 4");
          // if(!isset($_GET['rf'])||!isset($_GET['rk'])){wack(); exit;}; // security
