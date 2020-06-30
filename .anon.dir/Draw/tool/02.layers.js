@@ -129,9 +129,12 @@ extend(Anon.Draw.tool)
    },
 
 
-   layrSpan:function(d)
+   layrSpan:function(d, w,h)
    {
       let ai,ci; ai=Anon.Draw.vars.actv; ci=ai.vars.canvas; ci.find('Transformer').destroy(); ci.batchDraw();
+      let lr,lc; lr=ai.vars.flayer; lc=lr.getChildren(); w=0; h=0;
+      lc.forEach((n)=>{let bx=n.fg.getClientRect(); w+=bx.width; h+=bx.height;});
+      Anon.Draw.tool.crop(w,h);
    },
 
 
