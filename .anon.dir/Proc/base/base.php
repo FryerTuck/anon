@@ -490,7 +490,7 @@ namespace Anon;
          $t=(isin(envi('ACCEPT'),'text/plain')||isin(envi('CONTENT_TYPE'),'text/plain')||facing('API'));
          $h=['Content-Type'=>$m]; if($nx===FORGET){$h['cache']=false;}; $dne=0;
 
-         if(isin($m,'image/')&&($x!=='ico'))
+         if(isin($m,'image/')&&($x!=='ico')&&!userdoes("work,lead,sudo"))
          {
              $c=conf("Proc/antiHack"); $o=$c->stainIgnoreThese;
              if(isText($o)){$o=[$o];}; $o=((isNuma($o,1)&&pick($a,$o))?1:0);
