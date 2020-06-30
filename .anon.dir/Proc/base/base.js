@@ -636,7 +636,7 @@
             }); return;
          };
 
-         if(isin(['woff','ttf','otf'],x))
+         if(isin(['woff','woff2','ttf','otf'],x))
          {
             loadFont(i,function(fnt)
             {
