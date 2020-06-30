@@ -348,8 +348,8 @@ namespace Anon;
    if(!facing('DPR')&&!facing('BOT'))
    {
       clearstatcache(); clearstatcache(true);
-      $dbs=ceil((pget('/User/conf/inactive')*1)/2); $ldb=pget('/Proc/vars/lastDbug');
-      if(!$ldb){$ldb=0; pset('/Proc/vars/lastDbug',time());}; $ldb=($ldb*1); $tdf=(time()-$ldb);
+      $dbs=ceil((pget('/User/conf/inactive')*1)/2); $dbn=("\n".pget('/Proc/vars/lastDbug')." ");
+      $ldb=trim($dbn); if(!$ldb){$ldb='0'; pset('/Proc/vars/lastDbug',time());}; $ldb=($ldb*1); $tdf=(time()-$ldb);
       $ini=0; if(isset($_GET['upkeep'])){$ini=$_GET['upkeep'];};
 
       if(!$ldb||($tdf>$dbs))
