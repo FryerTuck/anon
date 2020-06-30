@@ -356,6 +356,10 @@ namespace Anon;
       {
           require(path('/Proc/base/keep.php'));
           upkeep($dbs,$ldb,time(),$ini);
+      }
+      elseif(!isFold("/Proc/temp/sesn"))
+      {
+          halt(500,"The server cache is causing issues");
       };
 
       clearstatcache(); clearstatcache(true);
