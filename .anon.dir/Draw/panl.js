@@ -130,17 +130,17 @@ extend(Anon)
 
 
 
-      scan:function(pth,clr,cbf, pnl,dne,fnt)
+      scan:function(pth,clr,cbf, pnl,dne,fnt,len)
       {
          pnl=select('#DrawScanPanl'); Busy.edit(pth,0); dne=0; if(clr){pnl.innerHTML=""};
          purl("/Draw/scanFold",{path:pth},(rsl)=>
          {
-            rsl=decode.jso(rsl.body); fnt=[];
+            rsl=decode.jso(rsl.body); fnt=[]; len=rsl.length;
             if(clr){pnl.insert({grid:'.noSpanHorz', contents:[{row:[]}]});}; let row=pnl.select('row')[0];
 
             rsl.forEach((p)=>
             {
-               if(isin("svg,woff2",fext(p))){return}; // TODO :: woff2 & fix svg-fonts
+               if(isin("svg,woff2",fext(p))){len--; return}; // TODO :: woff2 & fix svg-fonts
                if(isin(mimeType(p),'font')){radd(fnt,p);return};
                row.insert({col:[{img:'.DrawScanPick', src:`/${p}`, title:p, draggable:true, listen:
                {
@@ -165,7 +165,7 @@ extend(Anon)
             },
             ()=>
             {
-               dne++; Busy.edit(pth,((dne/rsl.length)*100));
+               dne++; Busy.edit(pth,((dne/len)*100));
             });
          });
       },
