@@ -85,15 +85,21 @@ extend(MAIN)
 
       vivify:function(a)
       {
-          select("#AnonReplView").setStyle({height:200});
-          let pnl=select('#AnonReplPanl'); pnl.scrollTop=pnl.scrollHeight;
+          tick.after(10,()=>
+          {
+              select("#AnonReplView").setStyle({height:200});
+              let pnl=select('#AnonReplPanl'); pnl.scrollTop=pnl.scrollHeight;
+          });
       },
 
 
       pacify:function(a)
       {
-          select("#AnonReplView").setStyle({height:(!focusObj.node.contains(this)?40:200)});
-          let pnl=select('#AnonReplPanl'); pnl.scrollTop=pnl.scrollHeight;
+          tick.after(110,()=>
+          {
+              select("#AnonReplView").setStyle({height:(!focusObj.node.contains(this)?40:200)});
+              let pnl=select('#AnonReplPanl'); pnl.scrollTop=pnl.scrollHeight;
+          });
       },
 
 

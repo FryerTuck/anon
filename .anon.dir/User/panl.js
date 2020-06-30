@@ -72,14 +72,8 @@
                               'key:ArrowUp':function(){repl.ENV.cmdlog.seek(-1)},
                               'key:ArrowDown':function(){repl.ENV.cmdlog.seek(1)},
                               // 'Control c':function(){repl.echo('Ctrl c')},
-                              'focus':function(){tick.after(10,()=>
-                              {
-                                  repl.vivify();
-                              })},
-                              'blur':function(){tick.after(110,()=>
-                              {
-                                  repl.pacify();
-                              })},
+                              'focus':function(){repl.vivify();},
+                              'blur':function(){repl.pacify();},
                            }}]},
                         ]}
                      ]}
