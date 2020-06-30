@@ -222,7 +222,7 @@ extend(Anon)
             {
                select('#DrawScanPanl').reclan('show:hide');
                select('#DrawScanPanl').setStyle({opacity:1});
-               Busy.edit('/Draw/panl.js',100);
+               Busy.edit('/Draw/panl.js',100); signal("DrawAppReady");
             });});
          });
       },

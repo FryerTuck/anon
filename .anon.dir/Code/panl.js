@@ -241,7 +241,7 @@ extend(Anon)
          select('#CodeTreePanl').select('treeview')[0].listen('loaded',ONCE,()=>
          {
             select('#CodeToolHold').reclan('show:hide');
-            Busy.edit('/Code/panl.js',100);
+            Busy.edit('/Code/panl.js',100); signal("CodeAppReady");
             // TODO .. repo stuff here
             if(!!ini.openItem){Anon.Code.open(ini.openItem);};
          });

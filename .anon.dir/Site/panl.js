@@ -96,8 +96,18 @@ extend(Anon)
       },
 
 
-      edit:function()
+      edit:function(pth,tpe,hld, twg,mim,app)
       {
+        if(hld){dump(`Site.edit ${tpe} ${pth}`); return}; // ctrl or shft
+        if(tpe==`fold`){return}; // normal click on folder does nothing
+
+        twg=twig(pth); mim=(mimeType(pth)||"");
+        repl.exec(`cd ${twg}`); tick.after(999,()=>
+        {
+            app=(mim.startsWith("image")?"Draw":"Code");
+            AnonMenu.init(app); listen(`${app}AppReady`,()=>{Anon[app].open(pth)});
+        });
+        AnonMenu.init(`Code`);
 
       },
 
