@@ -112,8 +112,6 @@ extend(Anon)
                 Anon[app].open(pth);
             });
         });
-        AnonMenu.init(`Code`);
-
       },
 
 
