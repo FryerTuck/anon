@@ -348,13 +348,12 @@ namespace Anon;
    if(!facing('DPR')&&!facing('BOT'))
    {
       clearstatcache(); clearstatcache(true);
-      $dbs=ceil((pget('/User/conf/inactive')*1)/2); $dbn=("\n".pget('/Proc/vars/lastDbug')." "); clearstatcache(true);
-      $ldb=trim($dbn); if(!$ldb){$ldb='0'; pset('/Proc/vars/lastDbug',time());clearstatcache(true);}; $ldb=($ldb*1); $tdf=(time()-$ldb);
+      $dbs=ceil((pget('/User/conf/inactive')*1)/2); $ldb=pget('/Proc/vars/lastDbug');
+      if(!$ldb){$ldb='0'; path::make('/Proc/vars/lastDbug',time());}; $ldb=($ldb*1); $tdf=(time()-$ldb);
       $upk=0; if(isset($_GET['upkeep'])){$upk=$_GET['upkeep'];};
-clearstatcache(true);
-      if(!$ldb||($tdf>$dbs))
+
+      if(!$ldb||($tdf>$dbs)||$upk)
       {
-clearstatcache(true);
           require(path('/Proc/base/keep.php'));
           upkeep($dbs,$ldb,time(),$upk);
       }
@@ -362,8 +361,6 @@ clearstatcache(true);
       {
           halt(500,"The server cache is causing issues");
       };
-clearstatcache(true);clearstatcache(true);clearstatcache(true);clearstatcache(true);clearstatcache(true);
-      clearstatcache(); clearstatcache(true);
       unset($dbs,$ldb,$tmn,$tdf);
    }
 
