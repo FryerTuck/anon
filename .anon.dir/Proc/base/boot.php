@@ -347,17 +347,15 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    if(!facing('DPR')&&!facing('BOT'))
    {
-
-      if(isset($_GET['upkeep'])&&($_GET['upkeep']==='init'))
-      {
-          die("test 6");
-      };
-
-
       $dbs=ceil((pget('/User/conf/inactive')*1)/2); $ldb=pget('/Proc/vars/lastDbug');
       if(!$ldb){$ldb=0; pset('/Proc/vars/lastDbug',$ldb);}; $ldb=($ldb*1); $tmn=time();
       if(($tmn-$ldb)>$dbs)
       {
+
+      if(isset($_GET['upkeep'])&&($_GET['upkeep']==='init'))
+      {
+          die("test 7");
+      };
           require(path('/Proc/base/keep.php'));
           upkeep($dbs,$ldb,$tmn);
       };
