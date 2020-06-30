@@ -102,7 +102,7 @@
 
          RewriteCond %{ENV:MODPHP} ^1$
          RewriteCond %{DOCUMENT_ROOT}/%{ENV:BASE}/.anon.php -f
-         RewriteRule ^(.*)$ .anon.php [L]
+         RewriteRule ^(.*)$ .anon.php [QSA,L]
 #        we made it out of "the pit" .. now we trudge forward through "the mud"
       </IfModule>
 
