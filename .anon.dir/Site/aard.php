@@ -304,7 +304,7 @@ namespace Anon;
 
       static function treeMenu()
       {
-          permit::fubu("clan:work"); $c=conf("Site/autoConf"); $h="$/Site/$c->template";
+          permit::fubu("clan:work"); $c=conf("Site/autoConf"); $h="$/Site/tmpl/$c->template";
           $r=path::tree($h); ekko($r);
       }
 
