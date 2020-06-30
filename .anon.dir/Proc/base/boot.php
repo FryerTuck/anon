@@ -13,8 +13,6 @@ namespace Anon;
 
 # refs :: constants : short-hand references to values that are frequently used
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   ini_set('opcache.enable',0); // please .. for the love of sanity - f*ck off!
-
    $p=envi('URL'); $b=envi('BASEPATH'); if($b!=='/'){$p=lshave($p,$b);}; if(!$p){$p='/';};
    defn
    ([
@@ -350,7 +348,7 @@ namespace Anon;
    if(!facing('DPR')&&!facing('BOT'))
    {
       $dbs=ceil((pget('/User/conf/inactive')*1)/2); $ldb=pget('/Proc/vars/lastDbug');
-      if(!$ldb){$ldb=0;}; $ldb=($ldb*1); $tmn=time(); $tdf=($tmn-$ldb);
+      if(!$ldb){$ldb=0; die("test 1");}; $ldb=($ldb*1); $tmn=time(); $tdf=($tmn-$ldb);
 
           if(isset($_GET['upkeep'])&&($_GET['upkeep']==='init'))
           {

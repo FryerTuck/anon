@@ -21,7 +21,6 @@ namespace Anon;
    ini_set('output_encoding','UTF-8'); mb_internal_encoding('UTF-8'); mb_http_output('UTF-8'); // force utf8
    ini_set("precision",16); // accuracy matters .. to get accurate decimal value from float, use: number_format($number,$precision);
    set_time_limit(60); // max execution time from here on
-   ini_set('opcache.enable',0); // please .. for the love of sanity - f*ck off!
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
