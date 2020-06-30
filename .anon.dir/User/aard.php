@@ -180,6 +180,7 @@ namespace Anon;
 
       static function treeMenu()
       {
+         permit::fubu("clan:work");
          $v=knob($_POST); $h=$v->root; if(!$h){$h='~';};
 
          if(arg($h)->startsWith('~'))

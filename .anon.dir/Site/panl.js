@@ -19,7 +19,12 @@ select('#AnonAppsView').insert
                [
                   {row:[{col:'.slabMenuHead', contents:'Site'}]},
                   {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
-                  {row:[{col:'.slabMenuBody', contents:[{panl:'#SiteToolMenu'}]}]},
+                  {row:[{col:'.slabMenuBody', contents:[{grid:
+                  [
+                     {row:[{col:'#NaviTreeView', contents:[{panl:'#SiteTreeMenu'}]}]},
+                     {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
+                     {row:[{col:'#NaviToolView', contents:[{panl:'#SiteToolMenu'}]}]},
+                  ]}]}]},
                ]}
             ]},
             {col:'.panlVertDlim', role:'gridFlex', axis:X, target:'<', contents:{vdiv:''}},
@@ -53,6 +58,8 @@ extend(Anon)
       init:function()
       {
          let panl=select(`#SiteToolMenu`);
+         let tree=select(`#SiteTreeMenu`);
+         let cnfg=decode.jso(`{:conf("Site/autoConf"):}`);
 
          panl.insert
          ([
@@ -62,9 +69,37 @@ extend(Anon)
             // {butn:`.longMenuButn`, text:`create template`, onclick:function(){Anon.Site.open(`create`,`brandNew`)}},
          ]);
 
+         tree.insert({treeview:'', source:'/Site/treeMenu', uproot:true, listen:
+         {
+           'LeftClick':function(evnt)
+           {
+              let ctrl=evnt.ctrlKey; let shft=evnt.shiftKey;
+              if(ctrl||shft){evnt.stopImmediatePropagation(); evnt.preventDefault(); evnt.stopPropagation();};
+              Anon.Site.edit(this.info.path,this.info.type,(ctrl?'ctrl':(shft?'shft':VOID)));
+           },
+
+           'mouseover,mouseout':function(evnt)
+           {
+              if(evnt.type=='mouseout'){this.declan('treeItemCtrl'); this.declan('treeItemShft'); this.blur(); return};
+              this.focus(); if(evnt.ctrlKey){this.enclan('treeItemCtrl')}else if(evnt.shiftKey){this.enclan('treeItemShft')};
+           },
+
+           'keydown,keyup':function(evnt)
+           {
+              let k=evnt.signal; if((k!='Control')&&(k!='Shift')){return}; k=((k=='Control')?'Ctrl':'Shft');
+              if(evnt.type=='keydown'){this.enclan('treeItem'+k);return}; this.declan('treeItem'+k);
+           },
+         }});
+
+
          Busy.edit('/Site/panl.js',100);
       },
 
+
+      edit:function()
+      {
+
+      },
 
 
       open:function(t,s,a, drv,ttl,tab)
