@@ -348,20 +348,21 @@ namespace Anon;
    if(!facing('DPR')&&!facing('BOT'))
    {
       clearstatcache(); clearstatcache(true);
-      $dbs=ceil((pget('/User/conf/inactive')*1)/2); $dbn=("\n".pget('/Proc/vars/lastDbug')." ");
+      $dbs=ceil((pget('/User/conf/inactive')*1)/2); $dbn=("\n".pget('/Proc/vars/lastDbug')." "); clearstatcache(true);
       $ldb=trim($dbn); if(!$ldb){$ldb='0'; pset('/Proc/vars/lastDbug',time());}; $ldb=($ldb*1); $tdf=(time()-$ldb);
-      $ini=0; if(isset($_GET['upkeep'])){$ini=$_GET['upkeep'];};
-
+      $upk=0; if(isset($_GET['upkeep'])){$upk=$_GET['upkeep'];};
+clearstatcache(true);
       if(!$ldb||($tdf>$dbs))
       {
+clearstatcache(true);
           require(path('/Proc/base/keep.php'));
-          upkeep($dbs,$ldb,time(),$ini);
+          upkeep($dbs,$ldb,time(),$upk);
       }
       elseif(!isFold("/Proc/temp/sesn"))
       {
           halt(500,"The server cache is causing issues");
       };
-
+clearstatcache(true);clearstatcache(true);clearstatcache(true);clearstatcache(true);clearstatcache(true);
       clearstatcache(); clearstatcache(true);
       unset($dbs,$ldb,$tmn,$tdf);
    }
