@@ -13,6 +13,8 @@ namespace Anon;
 
 # refs :: constants : short-hand references to values that are frequently used
 # ---------------------------------------------------------------------------------------------------------------------------------------------
+   ini_set('opcache.enable',0); // please .. for the love of sanity - f*ck off!
+
    $p=envi('URL'); $b=envi('BASEPATH'); if($b!=='/'){$p=lshave($p,$b);}; if(!$p){$p='/';};
    defn
    ([
@@ -347,7 +349,6 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    if(!facing('DPR')&&!facing('BOT'))
    {
-      clearstatcache(); clearstatcache(true);
       $dbs=ceil((pget('/User/conf/inactive')*1)/2); $ldb=pget('/Proc/vars/lastDbug');
       if(!$ldb){$ldb=0;}; $ldb=($ldb*1); $tmn=time(); $tdf=($tmn-$ldb);
 
@@ -363,7 +364,6 @@ namespace Anon;
       };
 
       pset('/Proc/vars/lastDbug',time());
-      clearstatcache(); clearstatcache(true);
       unset($dbs,$ldb,$tmn,$tdf);
    }
 
