@@ -104,6 +104,7 @@ extend(Anon)
         twg=twig(pth); mim=(mimeType(pth)||"");
         repl.exec(`cd ${twg}`); tick.after(500,()=>
         {
+            select("#AnonReplFeed").blur();
             app=(mim.startsWith("image")?"Draw":"Code");
             AnonMenu.init(app); tick.after(60,()=>
             {
