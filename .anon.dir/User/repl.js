@@ -83,6 +83,20 @@ extend(MAIN)
       },
 
 
+      vivify:function(a)
+      {
+          select("#AnonReplView").setStyle({height:200});
+          let pnl=select('#AnonReplPanl'); pnl.scrollTop=pnl.scrollHeight;
+      },
+
+
+      pacify:function(a)
+      {
+          select("#AnonReplView").setStyle({height:(!focusObj.node.contains(this)?40:200)});
+          let pnl=select('#AnonReplPanl'); pnl.scrollTop=pnl.scrollHeight;
+      },
+
+
       echo:function()
       {
          let a=listOf(arguments); if((a.length>1)&&((a[1]!='>>')||!isPath(a[2]))){repl.mumble('invalid arguments');};

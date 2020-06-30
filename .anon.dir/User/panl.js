@@ -74,13 +74,11 @@
                               // 'Control c':function(){repl.echo('Ctrl c')},
                               'focus':function(){tick.after(10,()=>
                               {
-                                  select("#AnonReplView").setStyle({height:200});
-                                  let pnl=select('#AnonReplPanl'); pnl.scrollTop=pnl.scrollHeight;
+                                  repl.vivify();
                               })},
                               'blur':function(){tick.after(110,()=>
                               {
-                                  select("#AnonReplView").setStyle({height:(!focusObj.node.contains(this)?40:200)});
-                                  let pnl=select('#AnonReplPanl'); pnl.scrollTop=pnl.scrollHeight;
+                                  repl.pacify();
                               })},
                            }}]},
                         ]}
