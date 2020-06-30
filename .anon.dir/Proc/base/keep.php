@@ -7,6 +7,12 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function upkeep($dbs,$ldb,$tmn,$ini)
    {
+      if($ini)
+      {
+          die("test 4");
+      };
+
+
       $h='/Proc/temp'; $x=['file','kban','lock','logs','refs','sesn'];
       $cln=sesn('CLAN'); $hsh=sesn('HASH'); $usr=sesn('USER');
 
