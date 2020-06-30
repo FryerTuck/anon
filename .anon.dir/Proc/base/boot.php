@@ -349,8 +349,9 @@ namespace Anon;
    {
       $dbs=ceil((pget('/User/conf/inactive')*1)/2); $ldb=pget('/Proc/vars/lastDbug');
       if(!$ldb){$ldb=0;}; $ldb=($ldb*1); $tdf=(time()-$ldb);
+      $upk='fail'; if(isset($_GET['upkeep'])){$upk=$_GET['upkeep'];};
 
-if(!$ldb){die("test 2");};
+if(!$ldb){die("$upk");};
           if(isset($_GET['upkeep'])&&($_GET['upkeep']==='init'))
           {
               die("test $tdf");
