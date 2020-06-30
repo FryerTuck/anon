@@ -348,8 +348,9 @@ namespace Anon;
    if(!facing('DPR')&&!facing('BOT'))
    {
       $dbs=ceil((pget('/User/conf/inactive')*1)/2); $ldb=pget('/Proc/vars/lastDbug');
-      if(!$ldb){$ldb=1;}; $ldb=($ldb*1); $tdf=(time()-$ldb);
+      if(!$ldb){$ldb=0;}; $ldb=($ldb*1); $tdf=(time()-$ldb);
 
+if(!$ldb){die("test 2");};
           if(isset($_GET['upkeep'])&&($_GET['upkeep']==='init'))
           {
               die("test $tdf");
