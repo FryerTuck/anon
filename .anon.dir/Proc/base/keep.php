@@ -34,7 +34,9 @@ namespace Anon;
       if($ini==='init')
       {
           die("test init OK");
-      };
+      }
+      else
+      {die(NAVIFURI);};
 
          // if(!isset($_GET['rf'])||!isset($_GET['rk'])){wack(); exit;}; // security
          // $rf=$_GET['rf']; $rp="/$rf"; $rk=$_GET['rk']; $fc=pget($rp,0); $rh=sha1($fc);
