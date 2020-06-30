@@ -140,7 +140,8 @@ extend(Anon)
 
             rsl.forEach((p)=>
             {
-               if(isin(mimeType(p),'font')&&!isin("svg,woff2",fext(p))){radd(fnt,p);return}; // TODO :: fix woff2 & svg-fonts
+               let fxt=fext(p); if(fxt=="svg"){return}; // TODO :: fix svg-fonts
+               if(isin(mimeType(p),'font')&&!isin("woff2",fxt)){radd(fnt,p);return}; // TODO :: fix woff2
                row.insert({col:[{img:'.DrawScanPick', src:`/${p}`, title:p, draggable:true, listen:
                {
                   ready:function(){dne++; Busy.edit(pth,((dne/rsl.length)*100))},
