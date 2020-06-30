@@ -122,9 +122,8 @@
             if(np&&ea&&!dj&&!!Anon[ns]&&isFunc(Anon[ns].anew)){Anon[ns].anew(()=>{AnonMenu.init(id,ea,1)});return};
             Busy.edit(('/'+ns+'/panl.js'),0);
 
-            requires(('/'+ns+'/panl.js'),(r)=> // get new-panel
+            requires(('/'+ns+'/panl.js'),()=> // get new-panel
             {
-               dump(r.head);
                Busy.edit(('/'+ns+'/panl.js'),30);
                let nn=('#'+ns+'PanlSlab'); np=select(nn); if(!np){fail(('expecting new panel id for `'+ns+'` as `'+nn+'`'));return};
                if(nodeName(np)!='panl'){fail('expecting `'+nn+'` as `panl` element');return};
