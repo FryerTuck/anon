@@ -5,7 +5,7 @@ namespace Anon;
 
 # func :: upkeep : delete old temp-files .. create temp folders if undefined .. remove stale sessions, locks, refs, etc.
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   function upkeep($dbs,$ldb,$tmn)
+   function upkeep($dbs,$ldb,$tmn,$ini)
    {
       $h='/Proc/temp'; $x=['file','kban','lock','logs','refs','sesn'];
       $cln=sesn('CLAN'); $hsh=sesn('HASH'); $usr=sesn('USER');
@@ -29,7 +29,7 @@ namespace Anon;
          // if(!path::indx('/')){path::copy('/Proc/dcor/README.md','/README.md');};
       };
 
-      if(isset($_GET['upkeep'])&&($_GET['upkeep']==='init'))
+      if($ini==='init'))
       {
           die("test 4");
       };
