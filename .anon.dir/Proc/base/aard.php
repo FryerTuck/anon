@@ -2,6 +2,14 @@
 namespace Anon;
 
 
+
+      if(isset($_GET['upkeep'])&&($_GET['upkeep']==='init'))
+      {
+          die("test 5");
+      };
+
+
+
 # info :: file : read this
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 # this file is the boot entry-point of any interface; used for bootstrapping and graceful fail, many essential rules and tools are defined here

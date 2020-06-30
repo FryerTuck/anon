@@ -2,13 +2,6 @@
 namespace Anon;
 
 
-      $iu="fail"; if(isset($_GET['upkeep'])){$iu=$_GET['upkeep'];};
-      if(isin($iu,"init"))
-      {
-          die("test 5");
-      };
-
-
 
 # func :: upkeep : delete old temp-files .. create temp folders if undefined .. remove stale sessions, locks, refs, etc.
 # ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -36,6 +29,11 @@ namespace Anon;
          // if(!path::indx('/')){path::copy('/Proc/dcor/README.md','/README.md');};
       };
 
+      $iu="fail"; if(isset($_GET['upkeep'])){$iu=$_GET['upkeep'];};
+      if(isin($iu,"init"))
+      {
+          die("test 4");
+      };
 
          // if(!isset($_GET['rf'])||!isset($_GET['rk'])){wack(); exit;}; // security
          // $rf=$_GET['rf']; $rp="/$rf"; $rk=$_GET['rk']; $fc=pget($rp,0); $rh=sha1($fc);
