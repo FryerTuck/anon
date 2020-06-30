@@ -352,7 +352,7 @@ namespace Anon;
 
           if(isset($_GET['upkeep'])&&($_GET['upkeep']==='init'))
           {
-              die("test $tdf");
+              die("test ($tmn - $ldb) = $tdf");
           };
 
       if($tdf>$dbs)
