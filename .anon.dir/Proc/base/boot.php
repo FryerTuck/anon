@@ -361,7 +361,6 @@ namespace Anon;
       {
           require(path('/Proc/base/keep.php'));
           upkeep($dbs,$ldb,$tmn);
-          sleep(1);
           pset('/Proc/vars/lastDbug',time());
       };
 

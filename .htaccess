@@ -93,6 +93,7 @@
             php_value max_execution_time  60
             php_value default_charset     UTF-8
             php_value allow_url_fopen     On
+            php_value opcache.enable      Off
          </If>
 
          RewriteCond %{ENV:MODPHP} ^1$
