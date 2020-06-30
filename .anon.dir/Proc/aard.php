@@ -90,8 +90,7 @@ namespace Anon;
          if(($p!=='/')&&!isin(keys($_GET),"init"))
          {
              $s=path::stem($p);
-             if(($p==="/$s/panl.js")&&!userdoes(knob("/$s/pack.inf")->forClans))
-             {signal::fail("Permission denied.\nMake sure you belong to the required clans."); finish(403);};
+             if(($p==="/$s/panl.js")&&!userdoes(knob("/$s/pack.inf")->forClans)){finish(403);};
              if(isWord($s)&&isee("$/$s")&&!isFold($p)){finish($p);};
          };
 

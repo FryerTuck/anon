@@ -124,6 +124,7 @@
 
             requires(('/'+ns+'/panl.js'),(r)=> // get new-panel
             {
+               dump(r.head);
                Busy.edit(('/'+ns+'/panl.js'),30);
                let nn=('#'+ns+'PanlSlab'); np=select(nn); if(!np){fail(('expecting new panel id for `'+ns+'` as `'+nn+'`'));return};
                if(nodeName(np)!='panl'){fail('expecting `'+nn+'` as `panl` element');return};
