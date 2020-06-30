@@ -348,18 +348,21 @@ namespace Anon;
    if(!facing('DPR')&&!facing('BOT'))
    {
       $dbs=ceil((pget('/User/conf/inactive')*1)/2); $ldb=pget('/Proc/vars/lastDbug');
-      if(!$ldb){$ldb=0; pset('/Proc/vars/lastDbug',$ldb);}; $ldb=($ldb*1); $tmn=time();
+      if(!$ldb){$ldb=0;}; $ldb=($ldb*1); $tmn=time(); $tdf=($tmn-$ldb);
 
-      if(!$ldb||(($tmn-$ldb)>$dbs))
+          if(isset($_GET['upkeep'])&&($_GET['upkeep']==='init'))
+          {
+              die("test $tdf");
+          };
+
+      if($tdf>$dbs)
       {
-      if(isset($_GET['upkeep'])&&($_GET['upkeep']==='init'))
-      {
-         $tdf=($tmn-$ldb); die("test 1");
-      };
           require(path('/Proc/base/keep.php'));
           upkeep($dbs,$ldb,$tmn);
       };
-      unset($dbs,$ldb,$tmn);
+
+      pset('/Proc/vars/lastDbug',time());
+      unset($dbs,$ldb,$tmn,$tdf);
    }
 
    defn(['AUTOMAIL'=>pget('/Proc/conf/autoMail')]); // needed
