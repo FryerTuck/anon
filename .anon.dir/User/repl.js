@@ -97,7 +97,7 @@ extend(MAIN)
       {
           tick.after(110,()=>
           {
-              select("#AnonReplView").setStyle({height:(!focusObj.node.contains(this)?40:200)});
+              select("#AnonReplView").setStyle({height:(!focusObj.node.contains(select('#AnonReplFeed'))?40:200)});
               let pnl=select('#AnonReplPanl'); pnl.scrollTop=pnl.scrollHeight;
           });
       },
