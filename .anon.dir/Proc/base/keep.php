@@ -29,7 +29,7 @@ namespace Anon;
          // if(!path::indx('/')){path::copy('/Proc/dcor/README.md','/README.md');};
       };
 
-      if($ini==='init'))
+      if($ini==='init')
       {
           die("test 4");
       };
