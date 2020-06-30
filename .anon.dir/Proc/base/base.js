@@ -615,7 +615,7 @@
          if(x=='js')
          {
             let n=create('script'); n.purl=i;
-            let rf=`Failed to load \`${this.purl}\`\n-make sure it exists\n-make sure you belong to the right clans`;
+            let rf=`Failed to load \`${i}\`\n-make sure it exists\n-make sure you belong to the right clans`;
             n.listen('error',function(){slf.done[this.purl]=1; bzy.done++; fail(rf);});
             n.listen('ready',function(){slf.done[this.purl]=1; bzy.done++; cbpi(this.purl);});
             n.modify({src:i}); document.head.insert(n); return;
