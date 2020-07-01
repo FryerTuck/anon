@@ -98,7 +98,7 @@ extend(Anon)
 
       edit:function(nfo,hld, pth,tpe,twg,mim,app)
       {
-        pth=nfo.pth; tpe=nfo.type;
+        pth=nfo.path; tpe=nfo.type;
         if(hld){dump(`Site.edit ${tpe} ${pth}`); return}; // ctrl or shft
         if(tpe==`fold`){return}; // normal click on folder does nothing
 
