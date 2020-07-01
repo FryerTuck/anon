@@ -79,8 +79,10 @@ namespace Anon;
           $html=spuf("$host/$lpth?start=$from",null,"$host/");
           if(!$html){done(FAIL);}; $fixr='/free-css-templates';
           $list=expose($html,"<figure>","</figure>"); if(!$list){$list=[];};
+          $span=span($list);
+          signal::busy(['with'=>"/Site/importBrowse","done"=>1]);
 
-          foreach($list as $item)
+          foreach($list as $indx => $item)
           {
               $name=expose($item,'<span class="name">','</span>')[0];
               $href=expose($item,'<a href="','"')[0];
@@ -88,7 +90,9 @@ namespace Anon;
               $face=expose($item,'<img src="','"')[0]; $face=swap($face,'/assets',"$host/assets");
               $mime=mime($face); $face=spuf($face,null,"$host/",12,1); $face=durl($face,$mime);
               $resl->lyst[]=knob(['name'=>$name,'href'=>"$href/",'face'=>$face]);
+              signal::busy(['with'=>"/Site/importBrowse","done"=>floor(($indx/$span)*100)]);
           };
+          signal::busy(['with'=>"/Site/importBrowse","done"=>100]);
 
           ekko($resl);
       }

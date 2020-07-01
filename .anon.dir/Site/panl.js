@@ -209,7 +209,7 @@ extend(Anon)
                  bdy=select(`#SiteBrwsBody`);
                  ldd=bdy.select(`.tmplItem`); if(ldd){frm+=ldd.length};
 
-                 purl(`Site/importBrowse`,{from:frm,fltr:flt},(rsp)=>
+                 purl(`/Site/importBrowse`,{from:frm,fltr:flt},(rsp)=>
                  {
                      rsp=decode.jso(rsp.body);
                      if((frm==0)&&(flt=='*')){Anon.Site.tool.import.filter=rsp.cats.sort()};
