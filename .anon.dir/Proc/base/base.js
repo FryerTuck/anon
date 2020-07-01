@@ -1883,8 +1883,8 @@
                   {
                      let vs=stub(el.value,'+'); if(!vs||(!vs[2].trim())||isVoid(gr)){gr=0; so=1}; //if(isNaN(gs)){gs=1};
                      this.style.opacity=1; this.root=mb; rc=50;
-                     degr=this.select('#AnonColrDialDegr'); di=rectOf(this); dw=di.width; dh=di.height; hw=(dw/2); hh=(dh/2);
-                     rota=this.select('#AnonColrDegrRota'); scal=this.select('#AnonColrDialScal');
+                     degr=select('#AnonColrDialDegr'); di=rectOf(this); dw=di.width; dh=di.height; hw=(dw/2); hh=(dh/2);
+                     rota=select('#AnonColrDegrRota'); scal=select('#AnonColrDialScal');
                      if(so){rota.style.opacity=0;}else{rota.style.opacity=1;}; if(this.rotaInited){return}; this.rotaInited=1;
                      rota.setAttribute(`transform`,`rotate(${gr} ${rc} ${rc})`);
                      scal.setAttribute(`transform`,`rotate(${gr} ${rc} ${rc}) matrix(${gs},0,0,${gs},${rc-gs*rc},${rc-gs*rc})`);
