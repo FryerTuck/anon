@@ -149,6 +149,8 @@ extend(Anon)
                }}]});
             });
 
+            if(len<1){Busy.edit(pth,100);};
+
             requires(fnt,()=>
             {
                let lib=[]; Busy.edit(pth,100); fnt.forEach((p)=>
