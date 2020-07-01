@@ -1885,19 +1885,14 @@
                      this.style.opacity=1; this.root=mb; rc=50;
                      degr=this.select('#AnonColrDialDegr'); di=rectOf(this); dw=di.width; dh=di.height; hw=(dw/2); hh=(dh/2);
                      rota=this.select('#AnonColrDegrRota'); scal=this.select('#AnonColrDialScal');
-                     if(rota)
-                     {
-                         rota.style.opacity=(so?0:1);
-                         rota.setAttribute(`transform`,`rotate(${gr} ${rc} ${rc})`);
-                     };
-                     if(this.rotaInited){return}; this.rotaInited=1;
+                     if(so){rota.style.opacity=0;}else{rota.style.opacity=1;}; if(this.rotaInited){return}; this.rotaInited=1;
+                     rota.setAttribute(`transform`,`rotate(${gr} ${rc} ${rc})`);
                      scal.setAttribute(`transform`,`rotate(${gr} ${rc} ${rc}) matrix(${gs},0,0,${gs},${rc-gs*rc},${rc-gs*rc})`);
                      degr.listen('mousemove',(e)=>
                      {
                         if(!cursor.grab){return}; let c,x,y,r,d,q,s; c=e.coords; x=(c[0]-di.x); x=((x<hw)?(0-(hw-x)):((x>hw)?(x-hw):0));
                         y=(c[1]-di.y); y=((y<hh)?(0-(hh-y)):((y>hh)?(y-hh):0)); r=Math.atan2(y,x); d=(r*(180/Math.PI)); c=50; s=1;
-                        d+=180; d=round(d,3); if(d>359.999){d=0};
-                        if(rota){rota.setAttribute(`transform`,`rotate(${d} ${c} ${c})`);};
+                        d+=180; d=round(d,3); if(d>359.999){d=0}; rota.setAttribute(`transform`,`rotate(${d} ${c} ${c})`);
                         q=(scal.getAttribute(`transform`)||'');
                         q=RotScaTra.knob(addIfMissing(q,{rotate:`rotate(0 ${c} ${c})`, matrix:` matrix(${gs},0,0,${gs},${c-s*c},${c-s*c})`}));
                         q.rotate=[d,c,c]; scal.setAttribute(`transform`,RotScaTra.text(q)); this.root.signal('change',{angl:d});
