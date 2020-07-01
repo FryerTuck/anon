@@ -104,7 +104,7 @@ extend(Anon)
 
         twg=twig(pth); mim=(mimeType(pth)||"");
         app=(mim.startsWith("image")?"Draw":"Code");
-        if(!!Anon[app]){AnonMenu.init(app); Anon[app].open(nfo); return};
+        // if(!!Anon[app]){AnonMenu.init(app); Anon[app].open(nfo); return};
 
         repl.exec(`cd ${twg}`); wait.until(()=>{return isin(repl.PWD,twg)},()=>
         {
