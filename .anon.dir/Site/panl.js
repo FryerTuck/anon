@@ -75,7 +75,7 @@ extend(Anon)
            {
               let ctrl=evnt.ctrlKey; let shft=evnt.shiftKey;
               if(ctrl||shft){evnt.stopImmediatePropagation(); evnt.preventDefault(); evnt.stopPropagation();};
-              Anon.Site.edit(this.info.path,this.info.type,(ctrl?'ctrl':(shft?'shft':VOID)));
+              Anon.Site.edit(this.info,(ctrl?'ctrl':(shft?'shft':VOID)));
            },
 
            'mouseover,mouseout':function(evnt)
@@ -96,14 +96,15 @@ extend(Anon)
       },
 
 
-      edit:function(pth,tpe,hld, twg,mim,app)
+      edit:function(nfo,hld, pth,tpe,twg,mim,app)
       {
+        pth=nfo.pth; tpe=nfo.type;
         if(hld){dump(`Site.edit ${tpe} ${pth}`); return}; // ctrl or shft
         if(tpe==`fold`){return}; // normal click on folder does nothing
 
         twg=twig(pth); mim=(mimeType(pth)||"");
         app=(mim.startsWith("image")?"Draw":"Code");
-        if(!!Anon[app]){AnonMenu.init(app); Anon[app].open(pth); return};
+        if(!!Anon[app]){AnonMenu.init(app); Anon[app].open(nfo); return};
 
         repl.exec(`cd ${twg}`); wait.until(()=>{return isin(repl.PWD,twg)},()=>
         {
@@ -112,7 +113,7 @@ extend(Anon)
                 listen(`${app}AppReady`,()=>
                 {
                     // dump(pth);
-                    Anon[app].open(pth);
+                    Anon[app].open(nfo);
                 });
             });
         });
