@@ -130,9 +130,9 @@ extend(Anon)
 
 
 
-      scan:function(nfo, pth,clr,cbf, pnl,dne,fnt,len)
+      scan:function(pth,clr,cbf, pnl,dne,fnt,len)
       {
-         pth=nfo.path; pnl=select('#DrawScanPanl'); Busy.edit(pth,0); dne=0; if(clr){pnl.innerHTML=""};
+         pnl=select('#DrawScanPanl'); Busy.edit(pth,0); dne=0; if(clr){pnl.innerHTML=""};
          purl("/Draw/scanFold",{path:pth},(rsl)=>
          {
             rsl=decode.jso(rsl.body); fnt=[]; len=rsl.length;
@@ -148,7 +148,7 @@ extend(Anon)
                   dblclick:function(){Anon.Draw.feed(this.toDataURL(),this.src.split('/').pop())},
                }}]});
             });
-dump("test "+len);
+
             if(len<1){Busy.edit(pth,100);};
 
             requires(fnt,()=>
@@ -194,7 +194,7 @@ dump("test "+len);
             {
                if(!isin(['fold','plug'],this.info.type)){Anon.Draw.open(this.info);return};
                let s=evnt.signal; let c=isin(s,'Control'); if(!c&&!isin(s,'Shift')){return};
-               Anon.Draw.scan(this.info,c);
+               Anon.Draw.scan(this.info.path,c);
             },
          }});
 
@@ -221,7 +221,7 @@ dump("test "+len);
          select('#DrawTreePanl').select('treeview')[0].listen('loaded',ONCE,function()
          {
             select('#DrawPropView').reclan('show:hide');
-            requires('/Draw/tool/',()=>{Anon.Draw.scan(this.info,1,()=>
+            requires('/Draw/tool/',()=>{Anon.Draw.scan(this.info.path,1,()=>
             {
                select('#DrawScanPanl').reclan('show:hide');
                select('#DrawScanPanl').setStyle({opacity:1});
