@@ -1896,7 +1896,8 @@
                      {
                         if(!cursor.grab){return}; let c,x,y,r,d,q,s; c=e.coords; x=(c[0]-di.x); x=((x<hw)?(0-(hw-x)):((x>hw)?(x-hw):0));
                         y=(c[1]-di.y); y=((y<hh)?(0-(hh-y)):((y>hh)?(y-hh):0)); r=Math.atan2(y,x); d=(r*(180/Math.PI)); c=50; s=1;
-                        d+=180; d=round(d,3); if(d>359.999){d=0}; rota.setAttribute(`transform`,`rotate(${d} ${c} ${c})`);
+                        d+=180; d=round(d,3); if(d>359.999){d=0};
+                        if(rota){rota.setAttribute(`transform`,`rotate(${d} ${c} ${c})`);};
                         q=(scal.getAttribute(`transform`)||'');
                         q=RotScaTra.knob(addIfMissing(q,{rotate:`rotate(0 ${c} ${c})`, matrix:` matrix(${gs},0,0,${gs},${c-s*c},${c-s*c})`}));
                         q.rotate=[d,c,c]; scal.setAttribute(`transform`,RotScaTra.text(q)); this.root.signal('change',{angl:d});
