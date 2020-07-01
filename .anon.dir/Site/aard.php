@@ -92,7 +92,6 @@ namespace Anon;
               $resl->lyst[]=knob(['name'=>$name,'href'=>"$href/",'face'=>$face]);
               signal::busy(['with'=>"/Site/importBrowse","done"=>floor(($indx/$span)*100)]);
           };
-          signal::busy(['with'=>"/Site/importBrowse","done"=>100]);
 
           ekko($resl);
       }

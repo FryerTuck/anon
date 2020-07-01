@@ -209,6 +209,7 @@ extend(Anon)
                  bdy=select(`#SiteBrwsBody`);
                  ldd=bdy.select(`.tmplItem`); if(ldd){frm+=ldd.length};
 
+                 Busy.edit(`/Site/importBrowse`,0);
                  purl(`/Site/importBrowse`,{from:frm,fltr:flt},(rsp)=>
                  {
                      rsp=decode.jso(rsp.body);
@@ -228,6 +229,8 @@ extend(Anon)
                              }
                          ]});
                      });
+
+                     Busy.edit(`/Site/importBrowse`,100);
                  });
              },
 
