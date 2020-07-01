@@ -190,7 +190,7 @@ extend(Anon)
 
             'LeftClick':function(evnt)
             {
-               if(!isin(['fold','plug'],this.info.type)){Anon.Draw.open(this.info.path);return};
+               if(!isin(['fold','plug'],this.info.type)){Anon.Draw.open(this.info);return};
                let s=evnt.signal; let c=isin(s,'Control'); if(!c&&!isin(s,'Shift')){return};
                Anon.Draw.scan(this.info,c);
             },
@@ -262,9 +262,9 @@ extend(Anon)
 
 
 
-      open:function(pth, xst,drv,tab,ttl,tgt,slf,mim,lay)
+      open:function(nfo, pth,xst,drv,tab,ttl,tgt,slf,mim,lay)
       {
-         Busy.edit(pth,0);
+         pth=nfo.path; Busy.edit(pth,0);
          slf=this; drv=select('#DrawTabber').driver; ttl=(pth+''); tab=drv.select(ttl);
          if(!!tab){return}; this.load(pth,(img,nic)=>
          {
