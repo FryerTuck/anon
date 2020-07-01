@@ -148,7 +148,7 @@ extend(Anon)
                   dblclick:function(){Anon.Draw.feed(this.toDataURL(),this.src.split('/').pop())},
                }}]});
             });
-
+dump("test "+len);
             if(len<1){Busy.edit(pth,100);};
 
             requires(fnt,()=>
