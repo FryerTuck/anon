@@ -264,8 +264,8 @@ namespace Anon;
          // step :: 1 : setup - check if SSE process is still viable and define some variables needed in this loop
          // -----------------------------------------------------------------------------------------------------------------------------------
             if((connection_status()!==CONNECTION_NORMAL)||connection_aborted()){break;}; // halt if connection is unstable
-            $tnow=time(); $ping=0; if(($tnow-$lpng)>=15){$ping=1; $lpng=$tnow;}; // time-now, ping-bool, last-ping
-            if(($tnow-$tbgn)>=59){self::emit('gone'); wait($wait); break;}; // process needs to be refreshed .. dies here if true
+            $tnow=time(); $ping=0; if(($tnow-$lpng)>=$fade){$ping=1; $lpng=$tnow;}; // time-now, ping-bool, last-ping
+            if(($tnow-$tbgn)>=($rtmx-1)){self::emit('gone'); wait($wait); break;}; // process needs to be refreshed .. dies here if true
             unset($huks); $huks=knob(); // we need this empty here, to be filled with event-names that may have listeners
          // -----------------------------------------------------------------------------------------------------------------------------------
 
