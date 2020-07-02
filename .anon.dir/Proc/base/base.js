@@ -859,6 +859,18 @@
 
 
 
+// func :: furl : decode data-URL .. returns object with keys: mime & data
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const furl = function(d,f, p,d,m)
+   {
+      if(!isDurl(d)){fail("expecting data-URL");return};
+      p=stub(d,';base64,'); d=p[2]; m=stub(p[0],'data:')[2]; p=VOID;
+      return ({mime:m,data:decode.b64(d)});
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 // tool :: onFeed : drop-on event trap
 // --------------------------------------------------------------------------------------------------------------------------------------------
    extend(Element.prototype)
@@ -1878,7 +1890,7 @@
             {div:'.posAbs', style:{width:ew, height:ew, pointerEvents:'none'}, contents:
             [
                {svg:'#AnonPopColorDial', src:'/Proc/dcor/dial.svg',
-                  onready:function(){dump(this); return; this.initRota()},
+                  onready:function(){dump(this.innerHTML); return; this.initRota()},
                   initRota:function(degr,di,dw,dh,hw,hh,rc,rota,scal,so)
                   {
                      let vs=stub(el.value,'+'); if(!vs||(!vs[2].trim())||isVoid(gr)){gr=0; so=1}; //if(isNaN(gs)){gs=1};
