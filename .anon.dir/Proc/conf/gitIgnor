@@ -2,6 +2,8 @@
 
 /Bill/data/*
 /Bill/conf/*
+/Bill/tmpl/*
+!/Bill/tmpl/Anon/*
 
 /Data/link/*
 /Data/base/*
