@@ -1,8 +1,7 @@
 /README.md
 
 /Bill/data/*
-/Bill/conf/autoMail
-/Bill/conf/firmName
+/Bill/conf/*
 
 /Data/link/*
 /Data/base/*
