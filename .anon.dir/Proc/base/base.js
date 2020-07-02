@@ -861,7 +861,7 @@
 
 // func :: furl : decode data-URL .. returns object with keys: mime & data
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   const furl = function(d,f, p,d,m,r)
+   const xzurl = function(d,f, p,d,m,r)
    {
       if(!isDurl(d)){fail("expecting data-URL");return};
       p=stub(d,';base64,'); d=p[2]; m=stub(p[0],'data:')[2]; p=VOID;
