@@ -65,7 +65,9 @@ $export=function($a,$u,$d)
 
             if($ca==='+'){radd($tuc,$cn);}else{xpop($tuc,$cn);};
          };
-         $tuc=fuse($tuc,','); path::make("$h/clan",$tuc); ekko(OK);
+         $tuc=fuse($tuc,','); path::make("$h/clan",$tuc);
+         signal::ClientReboot("Your role has changed","#$u");
+         ekko(OK);
       };
 
       if($d->mail)
