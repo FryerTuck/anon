@@ -1878,7 +1878,7 @@
             {div:'.posAbs', style:{width:ew, height:ew, pointerEvents:'none'}, contents:
             [
                {svg:'#AnonPopColorDial', src:'/Proc/dcor/dial.svg',
-                  onready:function(){this.initRota()},
+                  onready:function(){dump(this); return; this.initRota()},
                   initRota:function(degr,di,dw,dh,hw,hh,rc,rota,scal,so)
                   {
                      let vs=stub(el.value,'+'); if(!vs||(!vs[2].trim())||isVoid(gr)){gr=0; so=1}; //if(isNaN(gs)){gs=1};
