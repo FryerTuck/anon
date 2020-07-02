@@ -2,6 +2,7 @@
 
 /Bill/data/*
 /Bill/conf/autoMail
+/Bill/conf/firmName
 
 /Data/link/*
 /Data/base/*
