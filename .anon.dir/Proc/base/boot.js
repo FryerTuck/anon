@@ -195,6 +195,7 @@
                 if(cn!=sesn("HASH")){cookie.delete(cn);return};
                 cookie.update(cn,"...");
             });
+            ev.returnValue='';
          });
 
 
