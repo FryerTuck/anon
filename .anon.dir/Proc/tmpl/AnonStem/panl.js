@@ -22,14 +22,14 @@ select("#AnonAppsView").insert
                   {row:[{col:".slabMenuBody", contents:[{panl:"#AnonStemTreeMenu"}]}]},
                ]}
             ]},
-            {col:".panlVertDlim", role:"gridFlex", axis:X, target:"<", contents:{vdiv:""}},
+            {col:".panlVertDlim", role:"gridFlex", axis:X, target:"<", contents:[{vdiv:""}]},
             {col:
             [
                {grid:
                [
                   {row:[{col:"#AnonStemHeadView .slabViewHead", contents:[{tabber:"#AnonStemTabber", theme:".dark", target:"#AnonStemBodyPanl"}]}]},
-                  {row:[{col:".panlHorzLine", contents:{hdiv:""}}]},
-                  {row:[{col:".slabViewBody", contents:{panl:"#AnonStemBodyPanl"}}]},
+                  {row:[{col:".panlHorzLine", contents:[{hdiv:""}]}]},
+                  {row:[{col:".slabViewBody", contents:[{panl:"#AnonStemBodyPanl"}]}]},
                ]}
             ]},
          ]}
@@ -48,9 +48,11 @@ extend(Anon)
       {
       },
 
+
       init:function()
       {
          Busy.edit("/AnonStem/panl.js",100);
+         signal("AnonStemAppReady");
       },
 
 
