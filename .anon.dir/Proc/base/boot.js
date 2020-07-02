@@ -76,8 +76,21 @@
 
 
 
+
 // load :: auto : control DOM mutation and boot any other front-end features
 // --------------------------------------------------------------------------------------------------------------------------------------------
+   const fixCookies = function(ns)
+   {
+        (cookie.select('*')||{}).each((cv,cn)=>
+        {
+            if(!test(cn,/^[a-z0-9]{40}$/)){return};
+            if(cn!=sesn("HASH")){cookie.delete(cn);return};
+            if(!ns){cookie.update(cn,"...");return};
+            cookie.delete(cn);
+        });
+   };
+
+
    (function(l)
    {
       Cookies.set(sesn('HASH'),'...');
@@ -175,6 +188,9 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
+
+
+// envi :: evnt : set up environment & events
 // --------------------------------------------------------------------------------------------------------------------------------------------
          extend(MAIN)({guiResizing:{tikr:null,busy:0}});
 
@@ -188,14 +204,7 @@
 
          listen("beforeunload",function(ev)
          {
-            ev.preventDefault();
-            (cookie.select('*')||{}).each((cv,cn)=>
-            {
-                if(!test(cn,/^[a-z0-9]{40}$/)){return};
-                if(cn!=sesn("HASH")){cookie.delete(cn);return};
-                cookie.update(cn,"...");
-            });
-            ev.returnValue='';
+            ev.preventDefault(); fixCookies(); ev.returnValue='';
          });
 
 
