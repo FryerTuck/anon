@@ -185,6 +185,19 @@
             MAIN.guiResizing.tikr=setTimeout(()=>{MAIN.guiResizing.busy=0; signal("resizeDone")},300);
          });
 
+
+         listen("beforeunload",function(ev)
+         {
+            ev.preventDefault();
+            (cookie.select('*')||{}).each((cv,cn)=>
+            {
+                if(!test(cn,/^[a-z0-9]{40}$/)){return};
+                if(cn!=sesn("HASH")){cookie.delete(cn);return};
+                cookie.update(cn,"...");
+            });
+         });
+
+
          extend(MAIN)
          ({
             focusObj:{hash:VOID,node:VOID},
@@ -193,6 +206,7 @@
                sysClock:decode.jso(`{:conf('Proc/sysClock'):}`).client,
             },
          });
+
 
          tick.every(ProcInfo.sysClock,function()
          {
