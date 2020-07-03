@@ -21,7 +21,10 @@ select("#AnonAppsView").insert
                   {row:[{col:".panlHorzLine", contents:[{hdiv:""}]}]},
                   {row:[{col:'.slabMenuBody', contents:[{grid:
                   [
-                     {row:[{col:'#BillToolView', contents:[{panl:'#BillToolPanl'}]}]},
+                     {row:[{col:'#BillToolView', contents:[{panl:'#BillToolPanl', contents:
+                     [
+                         {butn:'.longMenuButn', tool:"makeFirm", text:"Add Company", onclick:function(){Anon.Bill.tool[this.tool]()}},
+                     ]}]}]},
                      {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
                      {row:[{col:'#BillTreeView', contents:[{panl:'#BillTreePanl', contents:
                      [
@@ -60,6 +63,17 @@ extend(Anon)
 ({
    Bill:
    {
+      vars:
+      {
+          conf:`{:knob("$/Bill/conf"):}`,
+
+          // conf:
+          // {
+          //     addrStrt:`{:/Bill/conf/addr:}`;
+          // },
+      },
+
+
       anew:function(cbf)
       {
       },
@@ -69,6 +83,16 @@ extend(Anon)
       {
          Busy.edit("/Bill/panl.js",100);
          signal("BillAppReady");
+         dump(this.vars.conf);
+      },
+
+
+      tool:
+      {
+          makeFirm:function()
+          {
+
+          },
       },
 
 
