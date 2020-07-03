@@ -54,7 +54,12 @@ namespace Anon;
 
       static function checkUpdates()
       {
-          $d=Repo::differ(); if($d){signal::AnonUpdate($d); ekko($d); exit;};
+          $d=Repo::differ(); if($d)
+          {
+              $m=exec::{"git log -1 --pretty=%B"}("/");
+              $d="$m\n\n$d"; signal::AnonUpdate($d);
+              exit;
+          };
           ekko(OK);
       }
    }
