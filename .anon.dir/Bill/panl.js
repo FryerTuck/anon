@@ -84,7 +84,7 @@ extend(Anon)
          AnonMenu.init(`Proc`); listen(`ProcAppReady`,()=>
          {
             let tv=select('#ProcTreePanl').select('treeview')[0];
-            let ti=tv.locate("/Bill"); 
+            let ti=tv.locate("$/Bill"); dump(ti);
             tv.status.togl(ti);
          });
       },

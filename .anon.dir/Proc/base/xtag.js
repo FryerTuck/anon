@@ -331,7 +331,7 @@ extend(custom.domtag)
 
       n.locate=function(p, r)
       {
-          r=VOID; (n.select("treetwig")||[]).each((i)=>{dump(i.info.path);if(i.info.path==p){r=i; return STOP}});
+          r=VOID; (n.select("treetwig")||[]).each((i)=>{if(i.info.path==p){r=i; return STOP}});
           return r;
       },
 
