@@ -193,8 +193,7 @@
      listen("beforeunload",function(ev)
      {
         fixCookies(); // prevent 431 error
-        dump(sesn("CLAN"));
-        if(globVars("activity").idle||!userdoes("work,lead,sudo")){return}; // don't confirm "leave site"
+        if(globVars("activity").idle||!isin(sesn("CLAN"),["work","lead","sudo"])){return}; // don't confirm "leave site"
         ev.preventDefault(); ev.returnValue=''; // confirm "leave site"
      });
 
