@@ -54,13 +54,18 @@ namespace Anon;
 
       static function checkUpdates()
       {
-          $d=Repo::differ(); if($d)
-          {
-              $m=exec::{"git log -1 --pretty=%B fromAnon/master"}("/");
-              $d="$m\n\n$d"; signal::AnonUpdate($d);
-              exit;
-          };
-          ekko(OK);
+          $ln="checkUpdates"; $fg=isin(NAVIPATH,$ln); // lock-name .. from-GUI
+          if(lock::exists($ln)){if($fg){ekko(OK); exit;}; return OK;}; // somebody else is already checking
+          lock::awaits($ln); $rd=Repo::differ(); // create lock & get repo-diff .. does fetch
+          if(!$rd){lock::remove($ln); if($fg){ekko(OK); exit;}; return OK;}; // no diff .. remove lock & exit
+          $gl=exec::{"git log -1 --oneline --decorate fromAnon/master"}("/"); // git-log .. last line from fetch
+          $lp=stub($gl,"("); if(!$lp){lock::remove($ln); if($fg){ekko(OK); exit;}; return OK;};  // line-parts .. exit if none
+          $ch=trim($lp[0]); $lp=rstub($gl,"fromAnon/HEAD)"); // current-hash
+          if(!$lp){lock::remove($ln); if($fg){ekko(OK); exit;}; return OK;};  // not fromAnon .. nothing to do
+          $cm=trim($lp[2]); $lh=pget("$/Proc/vars/lastHash"); // commit-message & last-hash
+          if($lh===$ch){lock::remove($ln); if($fg){ekko(OK); exit;}; return OK;}; // hashes match, nothing to do
+          $rd="$cm\n\n$rd"; signal::AnonUpdate($rd); // signal AnonUpdate to current user
+          lock::remove($ln); if($fg){ekko(OK); exit;}; return OK; // done
       }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------

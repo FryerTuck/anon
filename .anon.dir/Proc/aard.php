@@ -433,6 +433,8 @@ namespace Anon;
          Repo::update('/','master','pull','fromAnon');
          exec::{'git stash apply'}('/');
          path::make($mp,$pw);
+         $gl=exec::{"git log -1 --oneline --decorate fromAnon/master"}("/"); // git-log .. last line from fetch
+         $lp=stub($gl,"("); if($lp){$ch=trim($lp[0]); path::make("$/Proc/vars/lastHash",$ch);};
          signal::ClientReboot("new system updates","*");
          return OK;
       }
