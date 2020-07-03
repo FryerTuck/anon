@@ -285,6 +285,8 @@
             evt.each((ef,en)=>{this.listen(en,ef)}); return this;
          };
 
+         if(isText(evt)&&isin(evt,",")){evt=evt.split(",")};
+
          if(isFunc(evt)){cbf=evt;evt=VOID}; if(isFunc(opt)){cbf=opt;opt=EVRY}else if(isKnob(opt)){fltr=opt; opt=EVRY};
          if(isFunc(hash)){cbf=hash;hash=VOID}; self=(this||MAIN); if(!isText(hash)){hash=Listen.hash(cbf)}else{cbf=Listen.jobs[hash]};
          if(!opt){opt=EVRY}else if(!isin([ONCE,EVRY],opt)){opt=EVRY}; expect.func(cbf); if(evt==VOID){evt=AUTO}; let ice;
