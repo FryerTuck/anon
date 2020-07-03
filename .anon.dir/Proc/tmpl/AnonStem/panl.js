@@ -21,9 +21,12 @@ select("#AnonAppsView").insert
                   {row:[{col:".panlHorzLine", contents:[{hdiv:""}]}]},
                   {row:[{col:'.slabMenuBody', contents:[{grid:
                   [
-                     {row:[{col:'#AnonStemToolView', contents:[{panl:'#AnonStemToolPanl'}]}]},
+                     {row:[{col:'#AnonStemToolView', contents:[{panl:'#AnonStemToolPanl .sideMenuToolPanl', contents:
+                     [
+
+                     ]}]}]},
                      {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
-                     {row:[{col:'#AnonStemTreeView', contents:[{panl:'#AnonStemTreePanl', contents:
+                     {row:[{col:'#AnonStemTreeView', contents:[{panl:'#AnonStemTreePanl .sideMenuTreePanl', contents:
                      [
                         {treeview:'', source:'/User/treeMenu', uproot:true, listen:
                         {

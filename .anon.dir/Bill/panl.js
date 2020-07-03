@@ -21,7 +21,7 @@ select("#AnonAppsView").insert
                   {row:[{col:".panlHorzLine", contents:[{hdiv:""}]}]},
                   {row:[{col:'.slabMenuBody', contents:[{grid:
                   [
-                     {row:[{col:'#BillToolView', contents:[{panl:'#BillToolPanl', contents:
+                     {row:[{col:'#BillToolView', contents:[{panl:'#BillToolPanl .sideMenuToolPanl', contents:
                      [
                          {butn:'.longMenuButn', tool:"makeFirm", text:"Add Company", onclick:function(){Anon.Bill.tool[this.tool]()}},
                      ]}]}]},
