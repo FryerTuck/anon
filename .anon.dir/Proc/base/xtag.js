@@ -424,6 +424,18 @@ extend(custom.domtag)
             ]}]},
          ]});
 
+          twg.listen('mouseover,mouseout',function(ev)
+          {
+             if(ev.type=='mouseout'){this.declan('treeItemCtrl'); this.declan('treeItemShft'); this.blur(); return};
+             this.focus(); if(ev.ctrlKey){this.enclan('treeItemCtrl')}else if(ev.shiftKey){this.enclan('treeItemShft')};
+          });
+
+          twg.listen('keydown,keyup',function(ev)
+          {
+             let k=ev.signal; if((k!='Control')&&(k!='Shift')){return}; k=((k=='Control')?'Ctrl':'Shft');
+             if(ev.type=='keydown'){this.enclan('treeItem'+k);return}; this.declan('treeItem'+k);
+          });
+
          twg.listen('click',function(ev){this.info.root.status.togl(this,ev.signal)});
          if(!!kds){twg.info.kids=true};
 

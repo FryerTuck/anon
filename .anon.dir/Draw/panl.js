@@ -178,18 +178,6 @@ extend(Anon)
       {
          select('#DrawTreePanl').insert({treeview:'', source:'/User/treeMenu', uproot:true, draggable:true, feedable:true, listen:
          {
-            'mouseover,mouseout':function(evnt)
-            {
-               if(evnt.type=='mouseout'){this.declan('treeItemCtrl'); this.declan('treeItemShft'); this.blur(); return};
-               this.focus(); if(evnt.ctrlKey){this.enclan('treeItemCtrl')}else if(evnt.shiftKey){this.enclan('treeItemShft')};
-            },
-
-            'keydown,keyup':function(evnt)
-            {
-               let k=evnt.signal; if((k!='Control')&&(k!='Shift')){return}; k=((k=='Control')?'Ctrl':'Shft');
-               if(evnt.type=='keydown'){this.enclan('treeItem'+k);return}; this.declan('treeItem'+k);
-            },
-
             'LeftClick':function(evnt)
             {
                if(!isin(['fold','plug'],this.info.type)){Anon.Draw.open(this.info);return};

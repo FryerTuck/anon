@@ -77,18 +77,6 @@ extend(Anon)
               if(ctrl||shft){evnt.stopImmediatePropagation(); evnt.preventDefault(); evnt.stopPropagation();};
               Anon.Site.edit(this.info,(ctrl?'ctrl':(shft?'shft':VOID)));
            },
-
-           'mouseover,mouseout':function(evnt)
-           {
-              if(evnt.type=='mouseout'){this.declan('treeItemCtrl'); this.declan('treeItemShft'); this.blur(); return};
-              this.focus(); if(evnt.ctrlKey){this.enclan('treeItemCtrl')}else if(evnt.shiftKey){this.enclan('treeItemShft')};
-           },
-
-           'keydown,keyup':function(evnt)
-           {
-              let k=evnt.signal; if((k!='Control')&&(k!='Shift')){return}; k=((k=='Control')?'Ctrl':'Shft');
-              if(evnt.type=='keydown'){this.enclan('treeItem'+k);return}; this.declan('treeItem'+k);
-           },
          }});
 
 
