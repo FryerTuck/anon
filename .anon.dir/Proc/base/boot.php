@@ -348,7 +348,7 @@ namespace Anon;
    if(!facing('DPR')&&!facing('BOT'))
    {
       clearstatcache(); clearstatcache(true);
-      $dbs=knob('$/Proc'); $ldb=pget('$/Proc/vars/lastDbug');
+      $dbs=knob('$/Proc/conf/sysClock')->upkeep; $ldb=pget('$/Proc/vars/lastDbug');
       if(!$ldb){$ldb='0'; pset('$/Proc/vars/lastDbug',time());}; $ldb=($ldb*1); $tdf=(time()-$ldb);
       $upk=0; if(isset($_GET['upkeep'])){$upk=$_GET['upkeep'];};
 
