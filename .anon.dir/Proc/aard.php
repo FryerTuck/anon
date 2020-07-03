@@ -90,7 +90,7 @@ namespace Anon;
          if(($p!=='/')&&!isin(keys($_GET),"init"))
          {
              $s=path::stem($p);
-             if(($p==="/$s/panl.js")&&!userdoes(knob("/$s/pack.inf")->forClans)){finish(403);};
+             if($p==="/$s/panl.js"){$fc=knob("/$s/pack.inf")->forClans; if(($fc!=='*')&&!userdoes($fc)){finish(403);exit;}};
              if(isWord($s)&&isee("$/$s")&&!isFold($p)){finish($p);};
          };
 
