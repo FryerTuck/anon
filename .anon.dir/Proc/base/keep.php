@@ -64,15 +64,6 @@ namespace Anon;
           };
       };
 
-      if(userDoes("sudo lead gang"))
-      {
-          $d=Repo::differ(); if($d)
-          {
-              $m=exec::{"git log -1 --pretty=%B"}("/");
-              $d="$m\n\n$d"; signal::AnonUpdate($d);
-          };
-      };
-
       $h=ROOTPATH; $l=conf('Proc/gitIgnor'); unset($i);
       foreach($l as $i)
       {

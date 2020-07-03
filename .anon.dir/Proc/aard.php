@@ -244,7 +244,7 @@ namespace Anon;
          $wait=self::$meta->wait; $rtmx=(ini_get('max_execution_time')*1); $utmx=conf('User/inactive'); $utxs=$utmx; $fade=12;
          $sesn=('/Proc/temp/sesn/'.sesn('HASH')); $epth="$sesn/emit"; $tbgn=time(); $tlst=$tbgn; $cntr=0; $mxrt=($rtmx-$fade);
          $sxed=encode::jso(['time'=>$fade]); $fapi=facing('API'); $wapi=0; $lost=0; $fint=$fade; $lstn=knob(); $lpng=0;
-         $emri=conf('Mail/checkSec'); if(!is_int($emri)||($emri<5)){$emri=5;}; $emlr=0; $work=userDoes('work');
+         $emri=conf('Mail/checkSec'); if(!is_int($emri)||($emri<5)){$emri=5;}; $emlr=0; $work=userDoes('work'); $lust=0;
 
          if(!isFold($epth)){path::make("$epth/");};
          $stms=fuse(pget('$'),pget('/'));
@@ -299,7 +299,7 @@ namespace Anon;
          // -----------------------------------------------------------------------------------------------------------------------------------
 
 
-         // step :: 3 : this happens every 1 second .. emit if it's time send mail, or if the user's session is about to expire
+         // step :: 4 : this happens every 1 second .. emit if it's time send mail, or if the user's session is about to expire
          // -----------------------------------------------------------------------------------------------------------------------------------
             if(($tnow-$tlst)>=1)
             {
@@ -311,7 +311,14 @@ namespace Anon;
          // -----------------------------------------------------------------------------------------------------------------------------------
 
 
-         // step :: 4 : control the open stream .. send ping to make sure it stays open for process max exec time while in SSE-mode
+         // step :: 5 : happens at least once per session-time .. check for updates .. lust = "last update signal time"
+         // -----------------------------------------------------------------------------------------------------------------------------------
+            if((($tnow-$lust)>($utmx/2))&&userDoes("sudo lead gang"))
+            {Anon::checkUpdates(); $lust=time();};
+         // -----------------------------------------------------------------------------------------------------------------------------------
+
+
+         // step :: 5 : control the open stream .. send ping to make sure it stays open for process max exec time while in SSE-mode
          // -----------------------------------------------------------------------------------------------------------------------------------
             if(!$fapi){if($ping){self::emit('ping');}; wait($wait);continue;}; // no API-check .. this is only SSE - continue listening
             break; // API for SSE-health-check - stop here
