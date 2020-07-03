@@ -202,12 +202,6 @@
          });
 
 
-         listen("beforeunload",function(ev)
-         {
-            ev.preventDefault(); fixCookies(); ev.returnValue='';
-         });
-
-
          extend(MAIN)
          ({
             focusObj:{hash:VOID,node:VOID},

@@ -190,6 +190,14 @@
       });
 
 
+     listen("beforeunload",function(ev)
+     {
+        fixCookies(); // prevent 431 error
+        if(globVars("activity").idle||!userdoes("work,lead,sudo")){return}; // don't confirm "leave site"
+        ev.preventDefault(); ev.returnValue=''; // confirm "leave site"
+     });
+
+
       listen("sesnFade",function(obj)
       {
          let tn=time(); if(obj.detail){obj=obj.detail}; if(isJson(obj)){obj=decode.jso(obj);};
