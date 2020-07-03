@@ -65,7 +65,7 @@ namespace Anon;
           $cm=trim($lp[2]); $lh=pget("$/Proc/vars/lastHash"); // commit-message & last-hash
           if($lh===$ch){lock::remove($ln); if($fg){ekko(OK); exit;}; return OK;}; // hashes match, nothing to do
           $rd="$cm\n\n$rd"; signal::AnonUpdate($rd); // signal AnonUpdate to current user
-          lock::remove($ln); if($fg){ekko(OK); exit;}; return OK; // done
+          lock::remove($ln); if($fg){ekko($rd); exit;}; return $rd; // done
       }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
