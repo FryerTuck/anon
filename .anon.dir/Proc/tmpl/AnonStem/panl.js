@@ -13,13 +13,29 @@ select("#AnonAppsView").insert
       [
          {row:
          [
-            {col:".treeMenuView", contents:
+            {col:".sideMenuView", contents:
             [
                {grid:
                [
                   {row:[{col:".slabMenuHead", contents:"AnonStem"}]},
                   {row:[{col:".panlHorzLine", contents:[{hdiv:""}]}]},
-                  {row:[{col:".slabMenuBody", contents:[{panl:"#AnonStemTreeMenu"}]}]},
+                  {row:[{col:'.slabMenuBody', contents:[{grid:
+                  [
+                     {row:[{col:'#AnonStemToolView', contents:[{panl:'#AnonStemToolPanl'}]}]},
+                     {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
+                     {row:[{col:'#AnonStemTreeView', contents:[{panl:'#AnonStemTreePanl', contents:
+                     [
+                        {treeview:'', source:'/User/treeMenu', uproot:true, listen:
+                        {
+                           'LeftClick':function(evnt)
+                           {
+                              let ctrl=evnt.ctrlKey; let shft=evnt.shiftKey;
+                              if(ctrl||shft){evnt.stopImmediatePropagation(); evnt.preventDefault(); evnt.stopPropagation();};
+                              Anon.AnonStem.open(this.info.path,this.info.type,(ctrl?'ctrl':(shft?'shft':VOID)));
+                           },
+                        }}
+                     ]}]}]},
+                  ]}]}]},
                ]}
             ]},
             {col:".panlVertDlim", role:"gridFlex", axis:X, target:"<", contents:[{vdiv:""}]},

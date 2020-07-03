@@ -13,7 +13,7 @@ select('#AnonAppsView').insert
       [
          {row:
          [
-            {col:'.treeMenuView', contents:
+            {col:'.sideMenuView', contents:
             [
                {grid:
                [
@@ -21,6 +21,8 @@ select('#AnonAppsView').insert
                   {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
                   {row:[{col:'.slabMenuBody', contents:[{grid:
                   [
+                     {row:[{col:'#NaviToolView', contents:[{panl:'#NaviToolPanl'}]}]},
+                     {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
                      {row:[{col:'#NaviTreeView', contents:[{panl:'#NaviTreePanl', contents:
                      [
                         {treeview:'', source:'/User/treeMenu', uproot:true, listen:
@@ -33,8 +35,6 @@ select('#AnonAppsView').insert
                            },
                         }}
                      ]}]}]},
-                     {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
-                     {row:[{col:'#NaviToolView', contents:[{panl:'#NaviToolPanl'}]}]},
                   ]}]}]},
                ]}
             ]},

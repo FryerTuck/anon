@@ -382,7 +382,7 @@
 
 /* clan :: treeMenu
 /* ----------------------------------------------------------------------------------------------------------------------------------------- */
-   .treeMenuView
+   .sideMenuView
    {
       width:200px;
       min-width:200px !important;
@@ -390,12 +390,12 @@
       line-height:18px !important;
    }
 
-   .treeMenuView treetwig:focus
+   .sideMenuView treetwig:focus
    {
       background:hsla(0,0%,100%,0.05);
    }
 
-   .treeMenuView .treeTwigText input
+   .sideMenuView .treeTwigText input
    {
       color:hsla(0,0%,85%,1);
    }

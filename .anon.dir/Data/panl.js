@@ -14,7 +14,7 @@ select('#AnonAppsView').insert
       [
          {row:
          [
-            {col:'.treeMenuView', contents:
+            {col:'.sideMenuView', contents:
             [
                {grid:
                [
