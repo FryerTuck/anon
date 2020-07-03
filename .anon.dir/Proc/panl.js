@@ -76,6 +76,7 @@ extend(Anon)
          select('#ProcTreePanl').select('treeview')[0].listen('loaded',ONCE,()=>
          {
             Busy.edit('/Proc/panl.js',100);
+            signal("ProcAppReady");
          });
       },
 

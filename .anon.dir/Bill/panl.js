@@ -65,12 +65,7 @@ extend(Anon)
    {
       vars:
       {
-          conf:`{:knob("$/Bill/conf"):}`,
-
-          // conf:
-          // {
-          //     addrStrt:`{:/Bill/conf/addr:}`;
-          // },
+          conf:decode.jso(`{:knob("$/Bill/conf"):}`),
       },
 
 
@@ -81,9 +76,22 @@ extend(Anon)
 
       init:function()
       {
-         Busy.edit("/Bill/panl.js",100);
-         signal("BillAppReady");
-         dump(this.vars.conf);
+         Busy.edit("/Bill/panl.js",100); signal("BillAppReady");
+         let nu=0; this.vars.conf.each((v,k)=>{if(isin(v,"Anon")){nu++}});
+         if(!nu){return}; // all is well
+
+         popAlert(`Missing Configuration : Billing can't work unless your company details are set.`);
+         AnonMenu.init(`Proc`); listen(`ProcAppReady`,()=>
+         {
+            let tv=select('#ProcTreePanl').select('treeview')[0];
+            let ti=tv.locate("/Bill"); tv.status.togl(ti);
+         });
+      },
+
+
+      conf:
+      {
+
       },
 
 

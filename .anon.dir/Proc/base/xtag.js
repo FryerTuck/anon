@@ -329,6 +329,13 @@ extend(custom.domtag)
       });
 
 
+      n.locate=function(p, r)
+      {
+          r=VOID; (n.select("treetwig")||[]).each((i)=>{if(i.info.path==p){r=i; return STOP}});
+          return r;
+      },
+
+
       n.status= // object
       {
          fold:{},
