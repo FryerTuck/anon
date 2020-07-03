@@ -56,7 +56,7 @@ namespace Anon;
       {
           $d=Repo::differ(); if($d)
           {
-              $m=exec::{"git log -1 --pretty=%B"}("/");
+              $m=exec::{"git log -1 --pretty=%B fromAnon/master"}("/");
               $d="$m\n\n$d"; signal::AnonUpdate($d);
               exit;
           };
