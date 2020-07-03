@@ -544,7 +544,7 @@ namespace Anon;
 
             if(facing('SSE'))
             {
-               if(!is_method('Proc::emit')){require_once(path('/Proc/aard.php'));};
+               if(!is_method('Proc::emit')){require_once(path('$/Proc/aard.php'));};
                Proc::emit('status',"$a - $m"); if($nx){return;}; done();
             };
 
@@ -552,7 +552,7 @@ namespace Anon;
 
             if(!facing('BOT'))
             {
-               $v=conf('/Proc/corsFrom'); header("Access-Control-Allow-Origin: $v");
+               $v=conf('Proc/corsFrom'); header("Access-Control-Allow-Origin: $v");
                header("Access-Control-Allow-Credentials: true");
                // header("Access-Control-Expose-Headers: Lokomotionz");
                header("Access-Control-Allow-Headers: x-requested-with, accept, authorization");
@@ -634,7 +634,7 @@ namespace Anon;
        flog::{"$lp"}(func_get_args());
    }
 
-   flog::$path=('/Proc/temp/logs/'.date("Y-m-d"));
+   flog::$path=('$/Proc/temp/logs/'.date("Y-m-d"));
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 

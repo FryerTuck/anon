@@ -17,7 +17,7 @@ namespace Anon;
    {
       $p='/Proc/temp/file/robots.txt'; $a=aged($p); if(!$a){$a=10;}; if($a<10){return pget($p);}; $w="\nDisallow: ";
 
-      $b=(pget('/Proc/conf/crawlers').$w.conf('Proc/badRobot')->lure); $l=scan('$',FOLD); foreach($l as $i){$b.="$w/$i/*";};
+      $b=(pget('$/Proc/conf/crawlers').$w.conf('Proc/badRobot')->lure); $l=scan('$',FOLD); foreach($l as $i){$b.="$w/$i/*";};
       if(isee('/robots.txt')){$c=pget('/robots.txt'); if($c){$b.="\n\n$c";};} // typical/classic bot config
       else{$c=path::conf('/'); if($c){$c=pica("$c/crawlers","$c/robots.txt");}; if($c){$c=pget($c);}; if($c){$b.="\n\n$c";};}; // for if root is stem
 
@@ -82,7 +82,7 @@ namespace Anon;
       # ---------------------------------------------------------------------------------------------------------------------------------------
          if(tref(sha1(USERADDR.envi('USER_AGENT')))) // check if this is the bot that wanted the robots.txt a few seconds ago
          {
-            $b=pget('/Proc/temp/file/robots.txt'); $b.="\n"; $l=expose($b,'Disallow: ',"\n"); // get list of bot-forbidden paths
+            $b=pget('$/Proc/temp/file/robots.txt'); $b.="\n"; $l=expose($b,'Disallow: ',"\n"); // get list of bot-forbidden paths
             foreach($l as $i){if(akin(NAVIPATH,rtrim($i,'$'))){kbot();};}; // really? - eat this! banned for conf/kbanSecs
             unset($b,$l,$i);
          };

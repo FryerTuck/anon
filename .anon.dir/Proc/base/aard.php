@@ -357,9 +357,9 @@ namespace Anon;
    function kbot()
    {
       register_shutdown_function(function(){}); if(!headers_sent()){header_remove();}; while(ob_get_level()){ob_end_clean();};
-      $h=sha1(envi('USERADDR').envi('USER_AGENT')); $d=path('/Proc/temp/kban'); $p="$d/$h"; $k=pget('/Proc/conf/kbanSecs');
+      $h=sha1(envi('USERADDR').envi('USER_AGENT')); $d=path('$/Proc/temp/kban'); $p="$d/$h"; $k=pget('$/Proc/conf/kbanSecs');
       if(!$k){$k=900;}; if(!is_link($p)&&is_writable($d)){symlink("$k",$p);}; // shoo away this visitor for any URL they visit for $k seconds
-      $f=pget('/Proc/conf/badRobot'); $h='HTTP/1.1 503 Service Unavailable'; if(!$f){header($h); die();}; $f="$f\n";
+      $f=pget('$/Proc/conf/badRobot'); $h='HTTP/1.1 503 Service Unavailable'; if(!$f){header($h); die();}; $f="$f\n";
       if(strpos($f,'trap: ')===false){header($h); die();}; $f=explode('trap: ',$f); $f=$f[1]; $f=explode("\n",$f); $f=$f[0]; $f=trim($f);
       if(!$f){header($h); die();}; // no trap, just serve blank: 503 - Service Unavailable
       $p=path($f); if($p&&!isee($p)){header($h); die();}; if($p&&is_dir($p)){header($h); die();}; // bad config, but serve 503 anyway
@@ -414,7 +414,7 @@ namespace Anon;
       if(!is_string($u)||(strlen($u)<1)){harakiri('invalid username');}; // YOU HAVE DIED
       $k=sha1(random(9).microtime(true).envi('USERADDR').getmypid().random(9)); // if this is not unique then bite me
       if(!isee("/User/data/$u")){harakiri("user `$u` is undefined");}; // YOU HAVE DIED
-      pset("/Proc/temp/sesn/$k/USER",$u); return $k; // all is well
+      pset("$/Proc/temp/sesn/$k/USER",$u); return $k; // all is well
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -432,7 +432,7 @@ namespace Anon;
       $r=kuki('APIKEY'); if(!$r){$r=post('APIKEY');}; if(!$r){$r=envi('APIKEY');}; if(!$r){return;}; // no key
       if(!test($r,$t)){harakiri(wack());}; // invalid session key .. YOU HAVE DIED
       if(is_dir("$h/$r")){return $r;}; // session is live
-      $u=pget("/Proc/keys/$r"); if(!$u&&(envi('INTRFACE')==='GUI')){return;}; // key may have expired
+      $u=pget("$/Proc/keys/$r"); if(!$u&&(envi('INTRFACE')==='GUI')){return;}; // key may have expired
       if($u){$n=mksesn($u); return $n;}; // if all went well, we are still alive .. all is well
       $r=envi('REFERER'); $h=envi('HOST'); $s=(strpos($r,"https://$h")===0);
       if($s){return;}; // key may have expired
@@ -504,13 +504,13 @@ namespace Anon;
 
       header("HTTP/1.1 $c $t"); if(!$g){print_r($z); flush(); exit;}; if(!$p){die("FAIL :: $c : $m");}; $h=skey();
 
-      if(!isee('/Proc/temp')){pset('/Proc/temp/');};
-      if(!isee('/Proc/temp/sesn')){pset('/Proc/temp/sesn/');};
-      if(!is_writable(isee('/Proc/temp/sesn'))){$c=417; $m='Expectation Failed - writable temp.sesn'; $f=__FILE__; $l=__LINE__;}
+      if(!isee('$/Proc/temp')){pset('$/Proc/temp/');};
+      if(!isee('$/Proc/temp/sesn')){pset('$/Proc/temp/sesn/');};
+      if(!is_writable(isee('$/Proc/temp/sesn'))){$c=417; $m='Expectation Failed - writable temp.sesn'; $f=__FILE__; $l=__LINE__;}
       else
       {
          if(!$h){$h=mksesn($u); kuki($h,'...');}
-         else{$u=pget("/Proc/temp/sesn/$h/USER");}; if(isee("/User/data/$u/clan")){$k=pget("/User/data/$u/clan");};
+         else{$u=pget("$/Proc/temp/sesn/$h/USER");}; if(isee("/User/data/$u/clan")){$k=pget("/User/data/$u/clan");};
       };
 
       $s=stak(); if(!$f||!$l){$f=$s[0]->file; $l=$s[0]->line;};
@@ -555,7 +555,7 @@ namespace Anon;
 
    function wack()
    {
-      $l=pget('/Proc/info/hack.inf'); if(!$l){$l="and stay out!\nyou broke it, bravo!";}; $l=explode("\n",$l);
+      $l=pget('$/Proc/info/hack.inf'); if(!$l){$l="and stay out!\nyou broke it, bravo!";}; $l=explode("\n",$l);
       $i=array_rand($l); $m=$l[$i]; return $m;
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -569,9 +569,9 @@ namespace Anon;
       $s=envi('USER_AGENT'); if(!$s){if($k){kbot();}};
       $x=str_replace(str_split(' *.-_?!#&~:,|^'),'',$s); $x=trim($x); if(strlen($x)<3){if($k){kbot();}};  // suspects
       $x=strpos(envi('ACCEPT'),'/'); if(!$x){if($k){kbot();}};
-      $b=envi('BOTMATCH'); if($b&&test($s,"/$b/i")){$b=true;}else{$b=false;}; $p=envi('URL'); $f=pget('/Proc/conf/badRobot');
+      $b=envi('BOTMATCH'); if($b&&test($s,"/$b/i")){$b=true;}else{$b=false;}; $p=envi('URL'); $f=pget('$/Proc/conf/badRobot');
       $f="$f\n"; if($p&&(strpos($f,"lure: $p\n")!==false)){if($k){kbot();};}; if($b){return $b;};
-      $h=sha1(envi('USERADDR').$s); if(is_link(path("/Proc/temp/bots/$h"))){$b=true;}; return $b;
+      $h=sha1(envi('USERADDR').$s); if(is_link(path("$/Proc/temp/bots/$h"))){$b=true;}; return $b;
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -614,7 +614,7 @@ namespace Anon;
    defn('NOFAIL NOINIT NOMAKE NOEXIT DOEXIT NATIVE REMOTE ORIGIN FORGET');
    defn('ANY ALL ASC DSC API BOT DPI GUI SSE');
 
-   $h=pget('/Proc/conf/hostName'); if(!$h){$h=envi('SERVER_NAME'); if(!$h){$h=envi('HOST');}};
+   $h=pget('$/Proc/conf/hostName'); if(!$h){$h=envi('SERVER_NAME'); if(!$h){$h=envi('HOST');}};
    $p=envi('URL'); $b=envi('BASEPATH'); if($b!=='/'){$p=lshave($p,$b);}; if(!$p){$p='/';};
    defn
    ([
@@ -657,7 +657,7 @@ namespace Anon;
    if($s){$s="$c/Proc/temp/sesn/$s/USER"; if(file_exists($s)){$u=file_get_contents($s);}};
    if(!$u){$u='anonymous';}; $_SERVER['USERNAME']=$u; $_SERVER['USERPATH']="$c/User/data/$u/home";
 
-   $z=pget('/Proc/conf/timeZone'); if(is_string($z)&&(strpos($z,'/'))){date_default_timezone_set("$z");}; unset($z); // set server time zone
+   $z=pget('$/Proc/conf/timeZone'); if(is_string($z)&&(strpos($z,'/'))){date_default_timezone_set("$z");}; unset($z); // set server time zone
    $_SERVER['oblevl']=0; $_SERVER['obfail']=''; $_SERVER['cbfail']=null; // for deFail & enFail
    $_SERVER['SESNHASH']=null; $_SERVER['SESNUSER']=null; $_SERVER['SESNCLAN']=null; // for security .. bite me
 
@@ -668,7 +668,7 @@ namespace Anon;
    if((strlen($q)>8)&&((substr($q,-7,7)==='.js.map')||(substr($q,-8,8)==='.css.map'))){die('');}; unset($q); // hands off!!
    $b=cbot(true); // check for bad robot .. if facing bad-robot then bot is "served" and the process exits here ... rinse and repeat
 
-   $h=sha1(envi('USERADDR').envi('USER_AGENT')); $p=path("/Proc/temp/kban/$h"); if(is_link($p))
+   $h=sha1(envi('USERADDR').envi('USER_AGENT')); $p=path("$/Proc/temp/kban/$h"); if(is_link($p))
    {
       $h=(readlink($p)*1); $n=time(); $t=lstat($p); if(isset($t['ctime'])){$t=$t['ctime'];}elseif(isset($t['mtime'])){$t=$t['mtime'];};
       if($t){$d=($n-$t); if($d>=$h){unlink($p);}else{harakiri(wack());}}; // kill-ban .. lift or hold
@@ -676,7 +676,7 @@ namespace Anon;
 
    if($b){$_SERVER['INTRFACE']='BOT';}; // facing BOT .. it's behaving for now so all seems OK this far
 
-   $m=pget('/Proc/conf/autoMail'); if(!$m){$m=envi('SERVER_ADMIN');}else
+   $m=pget('$/Proc/conf/autoMail'); if(!$m){$m=envi('SERVER_ADMIN');}else
    {$m=explode('@',$m); $d=$m[1]; $u=explode('//',$m[0]); $u=explode(':',$u[1]); $u=$u[0]; $m="$u@$d";}; $_SERVER['TECHMAIL']=$m;
 
    unset($d,$x,$c,$s,$b,$h,$p,$n,$t,$m,$u); // clean up
@@ -720,9 +720,9 @@ namespace Anon;
 
 # dbug :: path : required for expected functionality
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   if(!isee('/Proc/temp/sesn/')){pset('/Proc/temp/sesn/');}; // create if not exist
-   if(!is_writable(isee('/Proc/temp/sesn'))){halt(417,'Expectation Failed - writable temp.sesn');};   // YOU HAVE DIED
-   if(!isee('/Proc/base/boot.php')){halt(424,'Failed Dependency - boot');}; // YOU HAVE DIED
+   if(!isee('$/Proc/temp/sesn/')){pset('$/Proc/temp/sesn/');}; // create if not exist
+   if(!is_writable(isee('$/Proc/temp/sesn'))){halt(417,'Expectation Failed - writable temp.sesn');};   // YOU HAVE DIED
+   if(!isee('$/Proc/base/boot.php')){halt(424,'Failed Dependency - boot');}; // YOU HAVE DIED
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -769,7 +769,7 @@ namespace Anon;
 
    if($i==='SYS')
    {
-      $sk=pget('/Proc/info/host.key'); if(!$sk){harakiri('invalid hostkey');}; // YOU HAVE DIED
+      $sk=pget('$/Proc/info/host.key'); if(!$sk){harakiri('invalid hostkey');}; // YOU HAVE DIED
       $ck=explode(' :: ',$a); $ck=explode(' : ',$ck[1]); $ck=$ck[0];
       if($sk!==$ck){harakiri(wack());}; // else .. YOU HAVE DIED
       unset($sk,$ck);

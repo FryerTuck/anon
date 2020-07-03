@@ -55,8 +55,8 @@ namespace Anon;
          {
             guiStrap();
             //ekko::head(['Referrer-Policy'=>'origin','cache'=>false,'cookies'=>true]); // send bootStrap headers
-            $v=['botHoney'=>conf('Proc/badRobot')->lure,'busyGear'=>base64_encode(pget('/Proc/base/busy.htm'))];
-            $r=import('/Proc/base/aard.htm',$v);
+            $v=['botHoney'=>conf('Proc/badRobot')->lure,'busyGear'=>base64_encode(pget('$/Proc/base/busy.htm'))];
+            $r=import('$/Proc/base/aard.htm',$v);
             echo($r); done(); // send BootStrap GUI keeping headers intact
          };
 
@@ -72,7 +72,7 @@ namespace Anon;
 
             $v=knob(['bootList'=>tval($r)]); unset($d); $d=[]; $x=pget('$/Proc/info/pass.inf');
             $c=pget('/User/data/master/pass'); if(!$c){wack();}; if(password_verify($x,$c)){$d[]='editRootPass';};
-            $c=pget('/Proc/conf/autoMail'); if(!isin($c,'mail://')||!isin($c,'@')||!isin($c,'.')){$d[]='confAutoMail';}; // debug automail
+            $c=pget('$/Proc/conf/autoMail'); if(!isin($c,'mail://')||!isin($c,'@')||!isin($c,'.')){$d[]='confAutoMail';}; // debug automail
             $v->badCfg=base64_encode(tval($d));
 
             finish(NAVIPATH,$v,FORGET);
@@ -203,7 +203,7 @@ namespace Anon;
       {
          permit::fubu();
          $fc=0; if(!$e){$v=vars('client'); $e=$v->emit; $p=$v->purl;}; if(!is_funnic($e)){fail::hooker('invalid event name');};
-         if(!path($p)){fail::hooker('invalid path');}; $s=sesn('HASH'); path::void("/Proc/temp/sesn/$s/hook/$e");
+         if(!path($p)){fail::hooker('invalid path');}; $s=sesn('HASH'); path::void("$/Proc/temp/sesn/$s/hook/$e");
          if($fc){ekko(OK);};
       }
 
@@ -242,7 +242,7 @@ namespace Anon;
          requires::stem('Mail');
 
          $wait=self::$meta->wait; $rtmx=(ini_get('max_execution_time')*1); $utmx=conf('User/inactive'); $utxs=$utmx; $fade=12;
-         $sesn=('/Proc/temp/sesn/'.sesn('HASH')); $epth="$sesn/emit"; $tbgn=time(); $tlst=$tbgn; $cntr=0; $mxrt=($rtmx-$fade);
+         $sesn=('$/Proc/temp/sesn/'.sesn('HASH')); $epth="$sesn/emit"; $tbgn=time(); $tlst=$tbgn; $cntr=0; $mxrt=($rtmx-$fade);
          $sxed=encode::jso(['time'=>$fade]); $fapi=facing('API'); $wapi=0; $lost=0; $fint=$fade; $lstn=knob(); $lpng=0;
          $emri=conf('Mail/checkSec'); if(!is_int($emri)||($emri<5)){$emri=5;}; $emlr=0; $work=userDoes('work'); $lust=0;
 
@@ -359,7 +359,7 @@ namespace Anon;
       static function toolMenu()
       {
          permit::fubu();
-         $r=pget('/Proc/tool'); ekko($r);
+         $r=pget('$/Proc/tool'); ekko($r);
       }
 
 
@@ -367,7 +367,7 @@ namespace Anon;
       static function userTool($t,$f)
       {
          permit::fubu();
-         $o=import("/Proc/tool/$t"); $r=$o->$f(); ekko($r);
+         $o=import("$/Proc/tool/$t"); $r=$o->$f(); ekko($r);
       }
 
 

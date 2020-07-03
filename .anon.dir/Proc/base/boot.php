@@ -197,7 +197,7 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function tref($h,$x=null)
    {
-      if(!test($h,'/^[a-z0-9]{40,64}$/')){return;}; $p=path("/Proc/temp/refs/$h"); $e=null; if(is_link($p)){$e=(readlink($p)*1);};
+      if(!test($h,'/^[a-z0-9]{40,64}$/')){return;}; $p=path("$/Proc/temp/refs/$h"); $e=null; if(is_link($p)){$e=(readlink($p)*1);};
       if($e){$a=aged($p); if($a>=$e){unlink($p);return;}; return ($e-$a);}; if(!$x||($x<1)){return;};
       lock::create($p); $m=umask(); umask(0); symlink("$x",$p); umask($m); lock::remove($p); return true;
    };
@@ -215,7 +215,7 @@ namespace Anon;
 
       static function init()
       {
-         self::$max=((ini_get('max_execution_time')*1)-5); $p=path('/Proc/temp/lock'); self::$dir=$p;
+         self::$max=((ini_get('max_execution_time')*1)-5); $p=path('$/Proc/temp/lock'); self::$dir=$p;
       }
 
 
@@ -302,7 +302,7 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function guiStrap($u=null,$sc=1)
    {
-      $h=sesn('HASH'); $v=knob(['WACKMESG'=>base64_encode(pget('/Proc/info/hack.inf'))]); $p='/Proc/base/aard.js'; $d=[];
+      $h=sesn('HASH'); $v=knob(['WACKMESG'=>base64_encode(pget('$/Proc/info/hack.inf'))]); $p='/Proc/base/aard.js'; $d=[];
       if(!$u){$u=sesn('USER');}; $v->SESNUSER=$u; $v->SESNCLAN=pget("/User/data/$u/clan"); $v->SESNMAIL=user('mail');
       $v->denyDomainSpoofs=tval(conf("Proc/antiHack")->denyDomainSpoofs);
       foreach($_COOKIE as $cn => $cv){if(test($cn,'/^[a-z0-9]{40}$/')&&($cn!==$h)){kuki($cn,VOID);}};
@@ -333,11 +333,11 @@ namespace Anon;
 # need :: tools : load dependencies
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    depend('F:/Proc/base/dbug.php');      // check if dbug exists .. with fail if not
-   require(path('/Proc/base/dbug.php')); // this will take care of any further issues with the framework and any subsequent runtime errors
-   require(path('/Proc/base/abec.php')); // basic tools for heavy lifting .. if anything goes wrong in here, dbug will handle it .. awesomeness
-   require(path('/Proc/base/base.php')); // ABEC is full .. extend any other essential functions in here
-   require(path('/Proc/base/fwal.php')); // essential security .. right of passage through "the pass"
-   require(path('/Proc/aard.php'));      // initialize Proc class
+   require(path('$/Proc/base/dbug.php')); // this will take care of any further issues with the framework and any subsequent runtime errors
+   require(path('$/Proc/base/abec.php')); // basic tools for heavy lifting .. if anything goes wrong in here, dbug will handle it .. awesomeness
+   require(path('$/Proc/base/base.php')); // ABEC is full .. extend any other essential functions in here
+   require(path('$/Proc/base/fwal.php')); // essential security .. right of passage through "the pass"
+   require(path('$/Proc/aard.php'));      // initialize Proc class
    require(path('/Repo/aard.php'));      // initialize Repo class
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -348,23 +348,23 @@ namespace Anon;
    if(!facing('DPR')&&!facing('BOT'))
    {
       clearstatcache(); clearstatcache(true);
-      $dbs=ceil((pget('/User/conf/inactive')*1)/2); $ldb=pget('/Proc/vars/lastDbug');
-      if(!$ldb){$ldb='0'; pset('/Proc/vars/lastDbug',time());}; $ldb=($ldb*1); $tdf=(time()-$ldb);
+      $dbs=knob('$/Proc'); $ldb=pget('$/Proc/vars/lastDbug');
+      if(!$ldb){$ldb='0'; pset('$/Proc/vars/lastDbug',time());}; $ldb=($ldb*1); $tdf=(time()-$ldb);
       $upk=0; if(isset($_GET['upkeep'])){$upk=$_GET['upkeep'];};
 
       if(!$ldb||($tdf>$dbs)||$upk)
       {
-          require(path('/Proc/base/keep.php'));
+          require(path('$/Proc/base/keep.php'));
           upkeep($dbs,$ldb,time(),$upk);
       }
-      elseif(!isFold("/Proc/temp/sesn"))
+      elseif(!isFold("$/Proc/temp/sesn"))
       {
           halt(500,"The server cache is causing issues");
       };
       unset($dbs,$ldb,$tmn,$tdf);
    }
 
-   defn(['AUTOMAIL'=>pget('/Proc/conf/autoMail')]); // needed
+   defn(['AUTOMAIL'=>pget('$/Proc/conf/autoMail')]); // needed
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 

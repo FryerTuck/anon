@@ -129,9 +129,9 @@ namespace Anon;
       {
          $l=array_keys($_COOKIE); if(count($l)<1){done(OK);}; $t='/^[a-z0-9]{40}$/'; $h=sesn('HASH');
          Time::logEvent(user('name'),user('clan'),'API');
-         foreach($l as $i){if(!test($i,$t)||($i===$h)){continue;}; kuki($i,null); unset($_COOKIE[$i]); void("/Proc/temp/sesn/$i");};
+         foreach($l as $i){if(!test($i,$t)||($i===$h)){continue;}; kuki($i,null); unset($_COOKIE[$i]); void("$/Proc/temp/sesn/$i");};
          $u='anonymous'; $_SERVER['SESNUSER']=$u; $_SERVER['SESNCLAN']='surf';
-         path::make("/Proc/temp/sesn/$h/USER",$u); done(OK);
+         path::make("$/Proc/temp/sesn/$h/USER",$u); done(OK);
       }
 
 

@@ -361,7 +361,7 @@ namespace Anon;
 
 function getMailPart($L,$m,$n,$o,$dc=true)
 {
-   $r=knob(['type'=>strtolower(isset($o->subtype)?$o->subtype:'undefined')]); $r->mime=conf('/Proc/mimeType')->{$r->type};
+   $r=knob(['type'=>strtolower(isset($o->subtype)?$o->subtype:'undefined')]); $r->mime=conf('Proc/mimeType')->{$r->type};
    $p=['dparameters','parameters']; $a=['filename','name']; foreach($p as $pn){$ip=isin($o,$pn); if(!$ip||($ip&&!$o->$pn)){continue;};
    foreach($o->$pn as $po){$an=strtolower($po->attribute);if(isin($a,$an)){$an=$po->value;if($an){$r->name=$an;}}}}; if(!$dc){return $r;};
    $d=imap_fetchbody($L,$m,$n); $e=$o->encoding; if($e===3){$m=mime("/$r->name"); $d="data:$m;base64,$d";}

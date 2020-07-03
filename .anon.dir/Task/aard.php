@@ -112,7 +112,7 @@ namespace Anon;
          {
             $mv=path::move($dp,"/Task/arch"); if(!$mv){ekko(FAIL);};
             proc::signal('docketFinish',$dr,'.work'); ekko(OK);
-            // $zl=requires::path('/Proc/libs/zip'); $zl->start("$tp/$dt");
+            // $zl=requires::path('$/Proc/libs/zip'); $zl->start("$tp/$dt");
          };
 
          $dd=self::dispense([$dr]); proc::signal('docketUpdate',$dd,'.work');

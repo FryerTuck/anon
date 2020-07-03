@@ -9,7 +9,7 @@ $export=function($td,$un,$pw)
    if($td==='login')
    {
       $r=password_verify($pw,pget("$h/pass")); if(!$r){ekko('invalid password');}; // RTFC
-      $k=sesn('HASH'); path::make("/Proc/temp/sesn/$k/USER",$un); // update session server side
+      $k=sesn('HASH'); path::make("$/Proc/temp/sesn/$k/USER",$un); // update session server side
       $c=pget("/User/data/$un/clan"); $_SERVER['SESNUSER']=$un; $_SERVER['SESNCLAN']=$c;
       Time::logEvent($un,$c,'API');
 // done('testing host');

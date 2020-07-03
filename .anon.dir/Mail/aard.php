@@ -122,7 +122,7 @@ namespace Anon;
             if(!isText($ref)){$ref='';};
             $sfx=(random(2).swap(substr(BOOTTIME,6),'.','').random(2));
             $box="{$ref}{$sfx}@$dom";
-            $ssn=sesn('HASH'); path::make("/Proc/temp/sesn/$ssn/mbox",$box);
+            $ssn=sesn('HASH'); path::make("$/Proc/temp/sesn/$ssn/mbox",$box);
             $rsl=['box'=>$box, 'ref'=>$ssn]; ekko($rsl);
          };
 
@@ -159,7 +159,7 @@ namespace Anon;
       if(!isKnob($o->varsUsed)){$o->varsUsed=knob($o->varsUsed);}; $mb=trim(import($p,$o->varsUsed)); $bh=stub($mb,"\n");
       if($bh){$bh=stub($bh[0],'# ');}; if($bh){$mh=trim($bh[2]);}; if(!$mh){fail("expecting `$p` as markdown file with a heading");};
       $mb=stub($mb,"\n"); $mb=trim($mb[2]); $tb=$mb; if(!isMail($o->destAddy)){fail('expecting `destAddy` as email address');}; requires::path($rp);
-      $x=(new \Parsedown()); $x->setBreaksEnabled(true); $hb=$x->text($mb); $hb=import('/Proc/libs/marked/page.htm',['parsed'=>$hb]);
+      $x=(new \Parsedown()); $x->setBreaksEnabled(true); $hb=$x->text($mb); $hb=import('$/Proc/libs/marked/page.htm',['parsed'=>$hb]);
       $da=$o->destAddy; if(!$da){$da=$o->destAddr;}; $dn=$o->destName; $fa=$o->fromAddy; if(!$fa){$fa=$o->fromAddr;}; $fn=$o->fromName;
       $c=conf('Proc/autoMail'); if(!$c){$c=pget("/Mail/link/$fa");};
       if(!isin($c,['mail://','imap://'])){fail('invalid plug specification .. make sure the `fromAddr` (autoMail -or plug) is valid'); exit;};

@@ -12,7 +12,7 @@ namespace Anon;
 
 # dbug :: path : expected files
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   if(!isee('/Proc/vars/lastDbug')){pset('/Proc/vars/lastDbug','0');};
+   if(!isee('$/Proc/vars/lastDbug')){pset('$/Proc/vars/lastDbug','0');};
    depend('F:/Proc/base/dbug.htm','WF:/Proc/vars/lastDbug','WF:/User/conf/inactive','F:/Proc/base/abec.php','F:/Proc/base/base.php');
    if(NAVIPATH===DBUGPATH){$r=pget(DBUGPATH); $r=str_replace('{:(TECHMAIL):}',TECHMAIL,$r); print_r($r); flush(); die();}; // must fail nicely
 # ---------------------------------------------------------------------------------------------------------------------------------------------

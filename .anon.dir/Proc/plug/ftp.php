@@ -2,7 +2,7 @@
 namespace Anon;
 
 
-// require_once(path('/Proc/libs/ftp/ftp.php'));
+// require_once(path('$/Proc/libs/ftp/ftp.php'));
 
 
 # tool :: ftp_plug : embedded database abstraction

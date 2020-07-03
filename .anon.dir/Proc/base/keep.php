@@ -27,8 +27,8 @@ namespace Anon;
 
       if(facing('GUI'))
       {
-         if(!isee('/Proc/conf/hostName')){pset('/Proc/conf/hostName',HOSTNAME);};
-         // if(!path::indx('/')){path::copy('/Proc/dcor/README.md','/README.md');};
+         if(!isee('$/Proc/conf/hostName')){pset('$/Proc/conf/hostName',HOSTNAME);};
+         // if(!path::indx('/')){path::copy('$/Proc/dcor/README.md','/README.md');};
       };
 
       if($upk==='init')
