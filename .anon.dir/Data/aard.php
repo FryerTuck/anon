@@ -16,7 +16,7 @@ class Data
       {
          $rsl=path::ogle([using=>$lnk,fetch=>'name,path,mime,type',limit=>['levl'=>0]]);
          foreach($rsl as $idx => $obj)
-         {$p=$obj->path; if(isFold($p)||(fext($p)==="sdb")){$rsl[$idx]->data=self::dataTree($p,$flt,0);}};
+         {$p=$obj->path; if(isFold($p)||(fext($p)==="sdb")){$rsl[$idx]->data=lyst(self::dataTree($p,$flt,0));}};
          return $rsl;
       };
 
