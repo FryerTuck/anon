@@ -391,7 +391,7 @@ extend(custom.domtag)
 
       n.sprout = function(into,levl,drgs,eats,fork)
       {
-         if(isNode(into)){return}; if(!into.type){into.type="file"}; if(!into.mime){into.mime="auto/undefined"};
+         if(isNode(into)||!isKnob(into)){return}; if(!into.type){into.type="file"}; if(!into.mime){into.mime="auto/undefined"};
          let slf = this; let pth=into.path; let lib=slf.status.mime; levl+=1; let ext = into.mime.split('/')[0];
          let val=into.name; let tpe=into.type; let kds=((tpe=='fold')?into.data:(isin(['plug','dbase','table'],tpe)?[]:VOID));
 
