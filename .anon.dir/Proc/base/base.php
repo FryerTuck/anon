@@ -290,10 +290,15 @@ namespace Anon;
 
       static function firmByMail($a)
       {
-         if(!isText($a,1)){return;}; $r=pget("/Bill/data/contacts/.index/$a"); if($r){return $r;}; $r='Unknown Company Name';
-         $u=self::userByMail($a); $c=pget("/User/data/$u/clan");
-         if(isin($c,['work','lead','sudo'])){$r=conf('Bill/autoConf')->firmName;};
-         path::make("/Bill/data/contacts/.index/$a",$r); return $r;
+         if(!isText($a,1)){return;};
+         $r=plug("sqlite::$/Bill/data/contacts/")->select
+         ([
+             using => "mailFirm",
+             fetch => "firm",
+             where => "mail = $a",
+         ]);
+
+         if(span($r)>0){return $r[0]->firm;}; return 'Unknown Company Name';
       }
 
       static function firmByTask($a)
