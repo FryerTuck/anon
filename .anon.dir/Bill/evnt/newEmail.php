@@ -28,6 +28,7 @@ $export=function($v)
        ]);
    };
 
+   $pl->pacify();
 
    $ba=conf("Bill/$am"); if(!$ba){$ba=conf("Proc/$am");}; // autoMail
    $da=$v->destAddy; $i=path::info($ba); $ba="$i->user@$i->host"; // billing address
