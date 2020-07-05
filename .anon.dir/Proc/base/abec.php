@@ -884,7 +884,7 @@ namespace Anon;
       }
 
 
-      static function tree($h)
+      static function tree($h,$l=0)
       {
          expect::fold($h); $i=info($h); if(!isKnob($i)){fail("expect failed on `$h`"); return;};
          $h=crop($h); $r=(isRepo($h)?Repo::status($h):null); if($r){unset($r->body);}; $n=self::leaf($h); $s=self::size($h);
@@ -896,6 +896,7 @@ namespace Anon;
             fetch => self::cols(),
             limit => 'data:fold',
          ]);
+
          return $z;
       }
 
