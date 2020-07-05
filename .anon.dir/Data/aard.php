@@ -16,12 +16,16 @@ class Data
       {
          $rsl=listOf(path::ogle([using=>$lnk,fetch=>'name,path,mime,type',limit=>['levl'=>0]]));
          foreach($rsl as $idx => $obj)
-         {$p=$obj->path; if(isFold($p)||(fext($p)==="sdb")){$rsl[$idx]->data=listOf(self::dataTree($p,$flt,0));}};
+         {
+            $p=$obj->path; $x=fext($p);
+            if(isFold($p)||($x==="sdb")){$rsl[$idx]->data=listOf(self::dataTree($p,$flt,0));};
+            if($x==="sdb"){$rsl[$idx]->type="dbase";};
+         };
          return $rsl;
       };
 
       $obj=crud($lnk); if(!$lvl&&!$sdb){$lvl=$obj->mean->levl;}; $inf=$obj->info; if(!$inf){$inf=knob();};
-      $mxl=$inf->maxLevel; if($mxl===null){$mxl=($lvl+1);}; $lvt=$inf->levlType; $tpe=($lvt?$lvt[$lvl]:'none');
+      $mxl=$inf->maxLevel; if($mxl===null){$mxl=($lvl+1);}; $lvt=$inf->levlType; $tpe=($sdb?"dbase":($lvt?$lvt[$lvl]:'none'));
       $lst=$obj->select('*'); if(!isNuma($lst)){return $lst;}; $prl=$obj->mean->purl; $pth=$obj->mean->path; $rsl=[];
 
       foreach($lst as $itm)
