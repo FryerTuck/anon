@@ -342,6 +342,7 @@ extend(custom.domtag)
 
          togl:function(itm,sig)
          {
+dump(itm.info);
             if(!itm.info.kids){return}; if(isin(sig,['Control','Shift'])){return};
             var p,s,i,d,e,f,k,l,r; p=itm.info.path; s=this.fold[p];
             s=((s=='shut')?'open':'shut'); i=((s=='open')?'down':'right');
