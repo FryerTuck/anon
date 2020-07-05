@@ -21,10 +21,9 @@ namespace Anon;
               path::copy("$/Bill/tmpl/dcor/$t","$/Bill/data/template/");
           };
 
-          if(!isee("$/Bill/contacts/base.sdb"))
+          if(!isee("$/Bill/data/contacts/base.sdb"))
           {
-              $pl=plug("sqlite::$/Bill/contacts/base.sdb")->vivify();
-              $pl->pacify();
+              $pl=plug("sqlite::$/Bill/data/contacts/base.sdb")->create();
           };
       }
 
