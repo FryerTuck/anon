@@ -52,7 +52,8 @@ class Data
       $sl=array_merge($al,$ul); $rl=[]; foreach($sl as $so)
       {
          $dp="$so->path/data"; if(!isee($dp)){continue;};
-         $sd=path::tree($dp); if(span($sd)>0){$so->data=path::tree($dp);};
+         // $sd=path::tree($dp); if(span($sd)>0){$so->data=path::tree($dp);};
+         $so->data=path::tree($dp);
          $rl[]=$so;
       };
 
