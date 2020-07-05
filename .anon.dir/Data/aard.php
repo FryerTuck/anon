@@ -77,11 +77,11 @@ class Data
    static function openItem()
    {
       $vrs=knob($_POST); $tpe=$vrs->type;
-      $prl=(($tpe==="file")?"sqlite::$vrs->path":xeno::showHyperConduit($vrs->path)); 
+      $prl=(($tpe==="file")?"sqlite::$vrs->path":xeno::showHyperConduit($vrs->path));
 
       $dbc=crud($prl); $lmt=50; $qry=null; $rsl=null;
 
-      if($tpe!=='field'){$rsl=$dbc->select([fetch=>'*',limit=>$lmt]); done($rsl);};
+      if(isin("file,field",$tpe)){$rsl=$dbc->select([fetch=>'*',limit=>$lmt]); done($rsl);};
       $rsl=$dbc->descry('*'); done([$rsl]);
 
       // if($tpe==='dbase')
