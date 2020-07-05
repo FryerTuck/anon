@@ -73,7 +73,7 @@ extend(Anon)
                'LeftClick':function(evnt)
                {
                   let ctrl=evnt.ctrlKey; let meta=evnt.shiftKey;
-                  if((this.info.kids&&!ctrl&&!meta)||(this.info.levl<1)){return};
+                  if((this.info.kids&&!ctrl&&!meta)){return};
                   if(ctrl||meta){evnt.stopImmediatePropagation(); evnt.preventDefault(); evnt.stopPropagation();};
                   Anon.Data.open(this.info.path,this.info.type,ctrl);
                },
@@ -90,7 +90,6 @@ extend(Anon)
 
       open:function(prl,tpe,alt)
       {
-dump(prl);
          this.repl.init(prl,tpe);
 
          if(isin(['sproc','funct'],tpe))
