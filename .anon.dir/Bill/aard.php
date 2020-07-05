@@ -10,17 +10,20 @@ namespace Anon;
       static $meta;
 
 
-      static function treeMenu()
+      static function __init()
       {
-         Proc::signal('bark',['data'=>'woof!']); wait(250);
-         // $r=path::tree('/'); ekko($r);
-         ekko(OK);
+          if(!isee("$/Bill/data/template/")){path::make("$/Bill/data/template/");};
+
+          $c=pget("$/Bill/conf/template");
+          if(!isee("$/Bill/data/template/$c"))
+          {
+              path::copy("$/Bill/tmpl/dcor/$c/","$/Bill/data/tmpl/");
+          };
       }
 
 
-      static function validate($m)
+      static function makeFirm()
       {
-         return find::firmByMail($m);
       }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------

@@ -1,40 +1,39 @@
 /README.md
 
+/Bill/conf/autoConf
 /Bill/data/*
-/Bill/conf/*
-/Bill/tmpl/*
-!/Bill/tmpl/Anon/*
 
-/Data/link/*
 /Data/base/*
+/Data/link/*
 
 /Help/conf/autoMail
 
-/Mail/link/*
-/Mail/data/*
 /Mail/conf/autoMail
+/Mail/data/*
+/Mail/link/*
 /Mail/vars/lastRead
 
-/Proc/temp/*
 /Proc/conf/antiHack
 /Proc/conf/autoMail
 /Proc/conf/hostName
+/Proc/temp/*
 /Proc/vars/lastDbug
 
 /Site/tmpl/*
 !/Site/tmpl/Anon
 
+/Task/conf/autoMail
 /Task/data/*
 /Task/vars/*
-/Task/conf/autoMail
+
 /Time/data/*
 !/Time/data/defn.php
 
+/User/conf/autoMail
 /User/data/*
-/User/vote/*
 !/User/data/anonymous/*
 !/User/data/master/*
 /User/data/master/pass
-/User/conf/autoMail
+/User/vote/*
 
 /Repo/data/*

@@ -1062,7 +1062,7 @@ namespace Anon;
       if(is_dir($p)){$i=path::indx($p); if($i){$p="$p/$i";}else{return;}}; $x=fext($p); if(!$x){return;}; unset($i);
 
       if(!in_array($x,['php','htm','js','md','css','txt','html','json'])){return;};
-      if(!defn('CTRLKEYS')){$y=conf('/User/viewConf'); defn(['CTRLKEYS'=>$y->toggleUserPanl]);};
+      if(!defn('CTRLKEYS')){$y=conf('User/viewConf'); defn(['CTRLKEYS'=>$y->toggleUserPanl]);};
       if($x!=='php') // htm js md txt json
       {
          $z=pget($p); $z=impose($z,'<!--[',']--->',$v); $z=impose($z,'/*{:',':}*/',$v,1); $z=impose($z,'{:',':}',$v,1);

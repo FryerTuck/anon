@@ -65,8 +65,8 @@ extend(Anon)
    {
       vars:
       {
-          conf:decode.jso(`{:knob("$/Bill/conf"):}`),
-          tmpl:decode.jso(`{:knob("$/Bill/tmpl/firm"):}`),
+          conf:decode.jso(`{:conf("Bill/autoConf"):}`),
+          anon:decode.jso(`{:knob("$/Bill/tmpl/conf"):}`),
       },
 
 
@@ -78,7 +78,7 @@ extend(Anon)
       init:function()
       {
          Busy.edit("/Bill/panl.js",100); signal("BillAppReady");
-         let nu=[]; this.vars.conf.each((v,k)=>{if(v==this.vars.tmpl[k]){radd(nu,k)}});
+         let nu=[]; this.vars.conf.each((v,k)=>{if(v==this.vars.anon[k]){radd(nu,k)}});
          if(nu.length<1){return}; nu=nu.join(", "); // all is well
 
          popAlert(`Missing Configuration : Billing can't work unless all your company details are set.\n\n>Missing: ${nu}`);

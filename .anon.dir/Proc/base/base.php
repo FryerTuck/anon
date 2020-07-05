@@ -291,13 +291,14 @@ namespace Anon;
       static function firmByMail($a)
       {
          if(!isText($a,1)){return;}; $r=pget("/Bill/data/contacts/.index/$a"); if($r){return $r;}; $r='Unknown Company Name';
-         $u=self::userByMail($a); $c=pget("/User/data/$u/clan"); if(isin($c,['work','lead','sudo'])){$r=conf('Bill/firmName');};
+         $u=self::userByMail($a); $c=pget("/User/data/$u/clan");
+         if(isin($c,['work','lead','sudo'])){$r=conf('Bill/autoConf')->firmName;};
          path::make("/Bill/data/contacts/.index/$a",$r); return $r;
       }
 
       static function firmByTask($a)
       {
-         if(!isText($a,1)){return;}; $r=pget("/Task/data/$a/business"); if(!$r){$r=conf('Bill/firmName');};
+         if(!isText($a,1)){return;}; $r=pget("/Task/data/$a/business"); if(!$r){$r=cconf('Bill/autoConf')->firmName;};
          return $r;
       }
 
