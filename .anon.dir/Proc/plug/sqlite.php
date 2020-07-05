@@ -55,7 +55,7 @@ namespace Anon;
          $i=$this->mean; $p=path($i->path); if(isee($p)&&(path::size($p)>0)){return;};
          $l=(new \SQLite3($p, SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE)); $h=$i->twig;
          if(!$d&&isee("$h/defn.php")){$d=import("$h/defn.php");}; if(isAssa($d)){$d=knob($d);};
-signal::dump("sdb before");
+signal::dump($d);
          if(!isKnob($d,1)){$l->close(); wait(50); return true;}; $this->link=$l;
 signal::dump("sdb after");
 
