@@ -17,9 +17,9 @@ class Data
          {$p=$obj->path; if(isFold($p)||(fext($p)==="sdb")){$rsl[$idx]->data=self::dataTree($p,$flt,0);}};
       };
 
-      if(isFile($lnk)&&(fext($lnk)==="sdb")){$lnk="sqlite::$lnk";};
+      $sdb=(isFile($lnk)&&arg($lnk)->endsWith(".sdb")?1:0); if($sdb){$lnk="sqlite::$lnk";};
 
-      $obj=crud($lnk); if(!$lvl){$lvl=$obj->mean->levl;}; $inf=$obj->info; if(!$inf){$inf=knob();};
+      $obj=crud($lnk); if(!$lvl&&!$sdb){$lvl=$obj->mean->levl;}; $inf=$obj->info; if(!$inf){$inf=knob();};
       $mxl=$inf->maxLevel; if($mxl===null){$mxl=($lvl+1);}; $lvt=$inf->levlType; $tpe=($lvt?$lvt[$lvl]:'none');
       $lst=$obj->select('*'); if(!isNuma($lst)){return $lst;}; $prl=$obj->mean->purl; $pth=$obj->mean->path; $rsl=[];
 
