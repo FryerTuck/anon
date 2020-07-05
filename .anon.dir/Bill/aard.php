@@ -14,10 +14,10 @@ namespace Anon;
       {
           if(!isee("$/Bill/data/template/")){path::make("$/Bill/data/template/");};
 
-          $c=pget("$/Bill/conf/template");
-          if(!isee("$/Bill/data/template/$c"))
+          $t=conf("Bill/autoConf")->template;
+          if(!isee("$/Bill/data/template/$t"))
           {
-              path::copy("$/Bill/tmpl/dcor/$c/","$/Bill/data/tmpl/");
+              path::copy("$/Bill/tmpl/dcor/$t","$/Bill/data/template/");
           };
       }
 
