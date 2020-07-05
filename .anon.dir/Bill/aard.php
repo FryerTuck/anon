@@ -20,6 +20,12 @@ namespace Anon;
               if(!isee("$/Bill/tmpl/dcor/$t")){fail::template("Bill template `$t` is undefined"); exit;};
               path::copy("$/Bill/tmpl/dcor/$t","$/Bill/data/template/");
           };
+
+          if(!isee("$/Bill/contacts/base.sdb"))
+          {
+              $pl=plug("sqlite::$/Bill/contacts/base.sdb")->vivify();
+              $pl->pacify();
+          };
       }
 
 
