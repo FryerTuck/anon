@@ -90,6 +90,7 @@ extend(Anon)
 
       open:function(prl,tpe,alt)
       {
+dump(prl);
          this.repl.init(prl,tpe);
 
          if(isin(['sproc','funct'],tpe))
@@ -130,7 +131,6 @@ extend(Anon)
 
       show:function(pth,vrs, drv,tpe,ttl,tab,tgt,slf)
       {
-dump(pth);
          slf=this; vrs=(vrs||{}); drv=select('#DataTabber').driver; tpe=vrs.type; ttl=(tpe+' '+this.repl.vars.path);
          tab=drv.select(ttl); if(!!tab){return};
 
