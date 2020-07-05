@@ -68,7 +68,7 @@ extend(Anon)
       {
          select('#DataTreePanl').insert
          ([
-            {treeview:'', source:'/Data/treeMenu', uproot:true, draggable:true, listen:
+            {treeview:'', source:'/Data/treeMenu', draggable:true, listen:
             {
                'LeftClick':function(evnt)
                {
