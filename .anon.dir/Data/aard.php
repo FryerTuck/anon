@@ -52,7 +52,7 @@ class Data
       $sl=array_merge($al,$ul); $rl=[]; foreach($sl as $so)
       {
          $dp="$so->path/data"; if(!isee($dp)){continue;};
-         $rl[]=path::tree($dp);
+         $so->data=path::tree($dp); $rl[]=$so;
       };
 
       ekko($rl);
