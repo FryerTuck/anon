@@ -6,6 +6,7 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    class sqlite_plug
    {
+      public $info=null;
       public $mean=null;
       private $link=null;
 
@@ -13,7 +14,9 @@ namespace Anon;
       function __construct($x)
       {
          $p=$x->path; $t=path::type($p); if($t==='none'){$x->path="$p.sdb";}elseif($t==='fold'){$x->path="$p/base.sdb";}; $p=$x->path;
-         $this->mean=$x; $this->mean->mime='application/sql';
+         $this->mean=$x; $this->mean->mime='application/sql'; $q=['dbase','table','field'];
+         $this->info=knob(['maxLevel'=>3,'levlType'=>$q]);
+
          // if(!isee($p)||(path::size($p)<1)){$this->create();};
          // $td="$h/cols.php"; expect::path($td,[R,F]); $this->{':defn:'}=import($td);
          // $td=expect("$h/cols.php")->as(['path'=>[R,F]]); $this->{':defn:'}=import($td);
