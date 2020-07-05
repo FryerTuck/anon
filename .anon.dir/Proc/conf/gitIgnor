@@ -2,7 +2,8 @@
 
 /Bill/conf/autoConf
 /Bill/data/*
-!/Bill/data/defn.php
+!/Bill/data/contacts/defn.php
+!/Bill/data/document/defn.php
 
 /Data/base/*
 /Data/link/*
