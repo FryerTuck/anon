@@ -14,7 +14,7 @@ class Data
 
       if(!$sdb&&isFold($lnk))
       {
-         $rsl=path::ogle([using=>$lnk,fetch=>'name,path,mime,type',limit=>['levl'=>0]]);
+         $rsl=listOf(path::ogle([using=>$lnk,fetch=>'name,path,mime,type',limit=>['levl'=>0]]));
          foreach($rsl as $idx => $obj)
          {$p=$obj->path; if(isFold($p)||(fext($p)==="sdb")){$rsl[$idx]->data=listOf(self::dataTree($p,$flt,0));}};
          return $rsl;
