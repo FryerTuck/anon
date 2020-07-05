@@ -298,7 +298,7 @@ namespace Anon;
 
       static function firmByTask($a)
       {
-         if(!isText($a,1)){return;}; $r=pget("/Task/data/$a/business"); if(!$r){$r=cconf('Bill/autoConf')->firmName;};
+         if(!isText($a,1)){return;}; $r=pget("/Task/data/$a/business"); if(!$r){$r=conf('Bill/autoConf')->firmName;};
          return $r;
       }
 
