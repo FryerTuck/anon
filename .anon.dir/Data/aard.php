@@ -11,6 +11,15 @@ class Data
 
    private static function dataTree($lnk,$flt=null,$lvl=0)
    {
+      if(isFold($lnk))
+      {
+         $rsl=path::ogle([using=>$lnk,fetch=>'name,path,mime,type',limit=>['levl'=>0]]);
+         foreach($rsl as $idx $obj)
+         {$p=$obj->path; if(isFold($p)||(fext($p)==="sdb")){$rsl[$idx]->data=self::dataTree($p,$flt,0);}};
+      };
+
+      if(isFile($lnk)&&(fext($lnk)==="sdb")){$lnk="sqlite::$lnk";};
+
       $obj=crud($lnk); if(!$lvl){$lvl=$obj->mean->levl;}; $inf=$obj->info; if(!$inf){$inf=knob();};
       $mxl=$inf->maxLevel; if($mxl===null){$mxl=($lvl+1);}; $lvt=$inf->levlType; $tpe=($lvt?$lvt[$lvl]:'none');
       $lst=$obj->select('*'); if(!isNuma($lst)){return $lst;}; $prl=$obj->mean->purl; $pth=$obj->mean->path; $rsl=[];
@@ -53,7 +62,7 @@ class Data
       {
          $sp="$so->path/data"; if(!isFold($sp)){continue;};
          // $hd=path::ogle([using=>$sp,fetch=>$cn,where=>['type = fold']]);
-         $so->data=path::tree($sp)->data;
+         $so->data=self::dataTree($sp);
          $rl[]=$so;
       };
 
@@ -81,7 +90,7 @@ class Data
 
       $dbc=crud($prl); $lmt=50; $qry=null; $rsl=null;
 
-      if(isin("file,field",$tpe)){$rsl=$dbc->select([fetch=>'*',limit=>$lmt]); done($rsl);};
+      if(!isin("field",$tpe)){$rsl=$dbc->select([fetch=>'*',limit=>$lmt]); done($rsl);};
       $rsl=$dbc->descry('*'); done([$rsl]);
 
       // if($tpe==='dbase')
