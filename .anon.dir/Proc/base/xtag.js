@@ -503,7 +503,7 @@ extend(custom.domtag)
             self.repo=r.repo; r.root=self; delete r.repo; self.info={path:(r.path),type:r.type,mime:r.mime,time:r.time,repo:self.repo};
             if(isList(r)){self.uproot=1; r={name:'void',path:'/',mime:'inode/directory',type:'fold',data:r}};
             let rsl=self.sprout(r,(self.uproot?-2:-1),drgs,eats,fork);
-            if(self.uproot){rsl=listOf(rsl.select('treefork')[0].childNodes);};
+            if(self.uproot&&!!rsl.select('treefork')){rsl=listOf(rsl.select('treefork')[0].childNodes);};
 
             self.innerHTML=''; self.insert(rsl); tick.after(60,()=>
             {
