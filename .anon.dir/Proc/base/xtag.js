@@ -476,7 +476,8 @@ extend(custom.domtag)
 
          let frk = VOID; if(kds)
          {
-            frk=[]; kds.each((v)=>{v.root=slf; if(!!v.repo){v.repo.fork=fork}; frk.push(slf.sprout(v,levl,drgs,eats,fork))});
+            frk=[]; kds.each((v)=>
+            {if(!v){return}; v.root=slf; if(!!v.repo){v.repo.fork=fork}; frk.push(slf.sprout(v,levl,drgs,eats,fork))});
             frk=create({treefork:frk}); if(aro=='chevron-down'){frk.style.display='block'};
          };
 
