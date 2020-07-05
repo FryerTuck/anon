@@ -86,7 +86,7 @@ extend(Anon)
          {
             let tv=select('#ProcTreePanl').select('treeview')[0];
             let ti=tv.locate("$/Bill"); tv.status.togl(ti);
-            Anon.Proc.open("$/Bill/autoConf");
+            Anon.Proc.open("$/Bill/conf/autoConf");
          });
       },
 
