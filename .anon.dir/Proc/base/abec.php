@@ -195,9 +195,9 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
-# func :: lyst : returns numeric-key array of given argument -only if it's not already
+# func :: listOf : returns numeric-key array of given argument -only if it's not already
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   function lyst($a)
+   function listOf($a)
    {
       return (isNuma($a)?$a:[$a]);
    }
