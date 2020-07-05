@@ -130,6 +130,7 @@ extend(Anon)
 
       show:function(pth,vrs, drv,tpe,ttl,tab,tgt,slf)
       {
+dump(pth);
          slf=this; vrs=(vrs||{}); drv=select('#DataTabber').driver; tpe=vrs.type; ttl=(tpe+' '+this.repl.vars.path);
          tab=drv.select(ttl); if(!!tab){return};
 
