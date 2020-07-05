@@ -143,6 +143,7 @@ namespace Anon;
          $s=stub($p[0],"# "); if(!$s){fail('invalid `mesg` subject, expecting valid markdown with heading');}; // validate subject
          $b=trim($p[2]); if(!$b){fail('invalid message body');}; $t=time(); // validate body & make reference
          $r=($o->dref?$o->dref:gudref('/Task/data',12)); $un=find::userByMail($o->mail); if(!$un){$un=$o->user;};
+         $bn=find::firmByMail($o->mail);
 
          if(isee("/Task/data/$r")){return OK;};
 
@@ -150,7 +151,7 @@ namespace Anon;
          $q=knob
          ([
             'docketID'=>$r,
-            'business'=>$o->firm,
+            'business'=>$bn,
             'workPath'=>($o->path?$o->path:''),
             'workflow'=>"$t\t$un\t$o->mail\n",
             'editLogs'=>"$t\tcreated by $o->nick\n",
@@ -228,9 +229,17 @@ namespace Anon;
       static function saveConf($c=null)
       {
          $o=($c?$c:knob($_POST)); $dr=$o->dref; if(!$dr){return 'dref is undefined';}; $h="/Task/data/$dr"; unset($o->dref);
-         foreach($o as $k => $v){if(!isee("$h/$k")){continue;}; path::make("$h/$k",$v);};
+         foreach($o as $k => $v){if(!isee("$h/$k")){continue;}; path::make("$h/$k",$v);}; $m=pget("$h/fromAddy");
+         plug("sqlite::$/Bill/data/contacts/")->update
+         ([
+           using => "mailFirm",
+           where => "mail = $m",
+           write =>
+           [
+               "firm" => $fn,
+           ],
+         ]);
          $dd=self::dispense([$dr]); proc::signal('docketUpdate',$dd,'.work');
-         if($o->business===null){return OK;}; $m=pget("$h/fromAddy"); path::make("/Bill/data/contacts/.index/$m",$o->business);
          return OK;
       }
    # ------------------------------------------------------------------------------------------------------------------------------------------

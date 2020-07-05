@@ -21,7 +21,8 @@ $export=function($v)
            using => "mailFirm",
            write =>
            [
-               "mail" => $fn,
+               "mail" => $um,
+               "firm" => $fn,
            ],
        ]);
    };
