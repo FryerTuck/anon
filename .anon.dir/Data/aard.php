@@ -54,11 +54,6 @@ class Data
          $sp="$so->path/data"; if(!isFold($sp)){continue;};
          // $hd=path::ogle([using=>$sp,fetch=>$cn,where=>['type = fold']]);
          $so->data=path::tree($sp)->data;
-         // foreach($so->data->data as $dk => $dv)
-         // {
-         //    signal::dump($dv);
-         //    // if(isFold($dv->path)){$so->data[$dk]->data=path::tree($dv->path);};
-         // };
          $rl[]=$so;
       };
 
