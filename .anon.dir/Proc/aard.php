@@ -431,7 +431,7 @@ namespace Anon;
          $pw=pget($mp); path::make($mp,pget('$/Proc/info/pass.inf'));
          exec::{'git stash'}('/');
          Repo::update('/','master','pull','fromAnon');
-         exec::{'git stash apply'}('/');
+         try{exec::{'git stash apply'}('/');}catch(\Exception $e){};
          path::make($mp,$pw);
          $gl=exec::{"git log -1 --oneline --decorate fromAnon/master"}("/"); // git-log .. last line from fetch
          $lp=stub($gl,"("); if($lp){$ch=trim($lp[0]); path::make("$/Proc/vars/lastHash",$ch);};
