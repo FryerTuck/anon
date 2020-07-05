@@ -51,8 +51,9 @@ class Data
 
       $sl=array_merge($al,$ul); $rl=[]; foreach($sl as $so)
       {
-         $sp="$so->path/data"; if(!isee($sp)){continue;};
-         $so->data=path::ogle([using=>$sp,fetch=>$cn]);
+         $sp="$so->path/data"; if(!isFold($sp)){continue;};
+         // $hd=path::ogle([using=>$sp,fetch=>$cn,where=>['type = fold']]);
+         $so->data=path::tree($sp);
          $rl[]=$so;
       };
 
