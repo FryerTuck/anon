@@ -45,7 +45,17 @@ class Data
 
    static function treeMenu()
    {
-      $r=path::tree('/Data/link'); ekko($r);
+      permit::fubu("clan:mind,sudo");
+      $cn='name,path,mime,type'; $al=path::ogle([using=>'$',fetch=>$cn,limit=>['type'=>'fold','levl'=>0]]);
+      $ul=path::ogle([using=>'/',fetch=>$cn,limit=>['type'=>'fold','levl'=>0]]);
+
+      $sl=array_merge($al,$ul); $rl=[]; foreach($sl as $so)
+      {
+         $dp="$so->path/data"; if(!isee($dp)){continue;};
+         $rl[]=path::tree($dp);
+      };
+
+      ekko($rl);
 
       // Proc::signal('busy',['with'=>"repo",'done'=>11]); wait(150); $v=knob($_POST);
       // if($v->purl){$r=self::dataTree($v->purl,$v->fltr); Proc::signal('busy',['with'=>"repo",'done'=>100]); dump(['data'=>$r]);};
