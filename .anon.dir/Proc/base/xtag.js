@@ -342,7 +342,6 @@ extend(custom.domtag)
 
          togl:function(itm,sig)
          {
-dump(itm.info);
             if(!itm.info.kids){return}; if(isin(sig,['Control','Shift'])){return};
             var p,s,i,d,e,f,k,l,r; p=itm.info.path; s=this.fold[p];
             s=((s=='shut')?'open':'shut'); i=((s=='open')?'down':'right');
@@ -394,7 +393,7 @@ dump(itm.info);
       {
          if(isNode(into)||!isKnob(into)){return}; if(!into.type){into.type="file"}; if(!into.mime){into.mime="auto/undefined"};
          let slf = this; let pth=into.path; let lib=slf.status.mime; levl+=1; let ext = into.mime.split('/')[0];
-         let val=into.name; let tpe=into.type; let kds=((tpe=='fold')?into.data:(isin(['plug','dbase','table'],tpe)?[]:VOID));
+         let val=into.name; let tpe=into.type; let kds=(isin('fold,dbase,table',tpe)?into.data:(isin('plug',tpe)?[]:VOID));
 
          if(tpe=='fold'){delete into.data}; if(!!kds&&!slf.status.fold[pth]){slf.status.fold[pth]='shut'};
 
