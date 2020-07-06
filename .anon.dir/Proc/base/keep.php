@@ -40,7 +40,7 @@ namespace Anon;
 
          $nh=NAVIHOST; $mp=password_hash(pget("$/Proc/info/pass.inf"),PASSWORD_DEFAULT);
          pset("$/User/data/master/pass",$mp);
-         echo "<meta http-equiv=\"refresh\" content=\"1; url=$nh\">"; flush();
+         echo "<meta http-equiv=\"refresh\" content=\"1; url=$nh\">"; ob_end_flush(); flush();
          $_SERVER['HALT']=1; void($rp); exit;
      };
 
