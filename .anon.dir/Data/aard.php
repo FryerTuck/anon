@@ -30,25 +30,25 @@ class Data
 
       foreach($lst as $itm)
       {
-         $pts=stub($itm,'::'); $tpe=$pts[0]; $itm=$pts[2]; if($flt&&!isin($flt,$tpe)){continue;};
-         $dat=knob
-         ([
-            "repo"=>null,
-            "purl"=>"$prl/$itm",
-            "path"=>swap("$pth/$itm",'//','/'),
-            "levl"=>($lvl+1),
-            "name"=>$itm,
-            "mime"=>null,
-            "type"=>$tpe,
-            "size"=>0,
-            "time"=>0,
-            "data"=>null,
-         ]);
-
-         $kds=isin(['dbase','table'],$tpe);
-         if($kds){$kds=self::dataTree("$lnk/$itm",$flt,($lvl+1)); $dat->size=span($kds); $dat->data=$kds;};
-
-         $rsl[]=$dat;
+         // $pts=stub($itm,'::'); $tpe=$pts[0]; $itm=$pts[2]; if($flt&&!isin($flt,$tpe)){continue;};
+         // $dat=knob
+         // ([
+         //    "repo"=>null,
+         //    "purl"=>"$prl/$itm",
+         //    "path"=>swap("$pth/$itm",'//','/'),
+         //    "levl"=>($lvl+1),
+         //    "name"=>$itm,
+         //    "mime"=>null,
+         //    "type"=>$tpe,
+         //    "size"=>0,
+         //    "time"=>0,
+         //    "data"=>null,
+         // ]);
+         //
+         // $kds=isin(['dbase','table'],$tpe);
+         // if($kds){$kds=self::dataTree("$lnk/$itm",$flt,($lvl+1)); $dat->size=span($kds); $dat->data=$kds;};
+         //
+         // $rsl[]=$dat;
       };
 
       return $rsl;
