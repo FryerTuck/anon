@@ -614,14 +614,13 @@ namespace Anon;
          if(!isText($d,1)){fail('expecting non-empty text');}; $n=null; $h=HOSTNAME;
          if(path($d)){$p=crop($d); if(frst($p)!=='/'){$p="/$p";}; $d="file://{$h}{$p}";};
          if(isin($d,'::')){$s=stub($d,'::'); $p=crop($s[2]); if(frst($p)!=='/'){$p="/$p";}; $d="{$s[0]}://{$h}{$p}";};
-         $i=knob(parse_url($d)); $p=$i->path; $q=$i->query; $m=self::meta($p);
+         $i=knob(parse_url($d)); $p=$i->path; $q=$i->query;
          if(!$i->scheme||!$i->host){if(!$fail){return;}; fail('expecting valid path-string -or URL-string');}; $x=stub($d,['#','&','?','@',':']);
          if(isin($d,'@')){$x=stub($d,'@')[0]; if(isin($x,['#','&','?'])){fail('invalid URL');}};
          $r=knob(['plug'=>$n,'user'=>$n,'pass'=>$n,'host'=>$n,'port'=>$n,'path'=>$n,'levl'=>0,'stem'=>$n,'twig'=>$n,'leaf'=>$n,'type'=>$n,'vars'=>$n]);
          $r->plug=$i->scheme; $r->user=$i->user; $r->pass=$i->pass; $r->host=$i->host; $r->port=$i->port; $r->path=$p; $r->frag=$n; $s='/';
-         if($p){$r->stem=self::stem($p); $r->twig=self::twig($p); $r->leaf=self::leaf($p); $r->type=self::type($p);};
+         if($p){$r->meta=self::meta($p); $r->levl=self::levl($p); $r->stem=self::stem($p); $r->twig=self::twig($p); $r->leaf=self::leaf($p); $r->type=self::type($p);};
          if($q){parse_str($q,$v); $r->vars=knob($v);}; if($i->fragment){$r->frag=$i->fragment;}; $r->purl=$d;
-         $r->meta=$m; $r->levl=($m?self::levl($m->fork):($p?self::levl($p):null));
          return $r;
       }
 
@@ -630,8 +629,8 @@ namespace Anon;
       {
          if(!isText($d,3)){return;}; $d=rshave(shaved($d),'/'); if(!isText($d,3)){return;};
          if(isee($d)){return knob(['path'=>$d,'fork'=>null]);}; if(!isin($d,'/')){return;};
-         $l=frag($d,'/'); $f=['']; $y=0; do{ladd($f,rpop($l)); if(isee(fuse($l),'/')){$y=1;break;};}while(count($l));
-         if(!$y){return;}; return knob(['path'=>fuse($l,'/'),'fork'=>fuse($f,'/')]);
+         $l=frag($d,'/'); $f=[]; $y=0; do{ladd($f,rpop($l)); if(isee(fuse($l),'/')){$y=1;break;};}while(count($l));
+         if(!$y){return;}; return knob(['base'=>fuse($l,'/'),'path'=>fuse($f,'/'),'levl'=>count($f)]);
       }
 
       static function size($d,$o=null)
