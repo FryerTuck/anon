@@ -185,7 +185,7 @@ namespace Anon;
    function void($p)
    {
       $p=isee($p); if(!$p){return;}; $c=COREPATH; $r=ROOTPATH; if(($p===$c)||($p===$r)||($p===("$c/Proc"))||($p===("$c/User"))){return;};
-      $h=twig($p); $l=explode('/',$p); $l=array_pop($l); exec::{"chmod -R +w ./$l && rm -rf ./$l"}($h);
+      $h=twig($p); $l=explode('/',$p); $l=array_pop($l); try{exec::{"chmod -R +w ./$l && rm -rf ./$l"}($h);}catch(\Exception $e){};
       return (!isee($p));
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
