@@ -612,7 +612,7 @@ namespace Anon;
       static function info($d, $fail=true)
       {
          if(!isText($d,1)){fail('expecting non-empty text');}; $n=null; $h=HOSTNAME;
-         if(path($d)){$p=crop($d); if(frst($p)!=='/'){$p="/$p";}; $d="file://{$h}{$p}";};
+         if(path($d)){$p=crop($d); if(frst($p)==='$'){$p=substr($p,1);}; $d="file://{$h}{$p}";};
          if(isin($d,'::')){$s=stub($d,'::'); $p=crop($s[2]); if(frst($p)!=='/'){$p="/$p";}; $d="{$s[0]}://{$h}{$p}";};
          $i=knob(parse_url($d)); $p=$i->path; $q=$i->query;
          if(!$i->scheme||!$i->host){if(!$fail){return;}; fail('expecting valid path-string -or URL-string');}; $x=stub($d,['#','&','?','@',':']);
