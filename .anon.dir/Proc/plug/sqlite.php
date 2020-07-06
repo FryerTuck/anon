@@ -14,15 +14,15 @@ namespace Anon;
       function __construct($x)
       {
          $p=$x->path; $t=path::type($p); if($t==='none'){$p="$p.sdb";}elseif($t==='fold'){$p="$p/base.sdb";};
-         $this->mean=$x; $this->mean->mime='application/sql'; $q=['dbase','table','field'];
-signal::dump($this->mean);
-         $this->info=knob(['maxLevel'=>3,'levlType'=>$q]);
-         if($this->mean->levl>$this->info->maxLevel){fail('path-depth unreachable');};
+         $this->mean=$x; $this->mean->mime='application/sql';
+         $p=frag(shaved($x->path,'/'),'/'); if(!$p){$p=[];}; $r=knob(); $x=['dbase','table','field']; $r=knob();
+         $q=['dbase','table','field']; $this->info=knob(['maxLevel'=>3,'levlType'=>$x]);
+         if($this->mean->levl>$this->info->maxLevel){fail('path-depth unreachable');exit;};
+         foreach($p as $k => $v){$r->{$x[$k]}=$v; $r->basis=$x[$k];}; $lvl=$this->mean->levl; $this->mean->refs=$r; if($lvl<2){return;};
 
-
-         // if(!isee($p)||(path::size($p)<1)){$this->create();};
-         // $td="$h/cols.php"; expect::path($td,[R,F]); $this->{':defn:'}=import($td);
-         // $td=expect("$h/cols.php")->as(['path'=>[R,F]]); $this->{':defn:'}=import($td);
+         // $b=$r->dbase; $t="$r->table"; $q="STATUS where Db = '$b' AND Name = '$t'"; $sp=$this->adjure("SHOW PROCEDURE $q");
+         // if(span($sp<1)){$sp=0;}; $fn=$this->adjure("SHOW FUNCTION $q"); if(span($fn<1)){$fn=0;}; if(!$sp&&!$fn){return;};
+         // $z=($sp?'sproc':'funct'); unset($r->table); $r->$z=$t; $r->basis=$z; $this->mean->refs=$r; $this->mean->mime='application/sql';
       }
 
 
