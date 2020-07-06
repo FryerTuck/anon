@@ -611,7 +611,7 @@ namespace Anon;
    {
       static function info($d, $fail=true)
       {
-         if(!isText($d,1)){fail('expecting non-empty text');}; $n=null; $h=HOSTNAME; if(frst($p)!=='/'){$p="/$p";};
+         if(!isText($d,1)){fail('expecting non-empty text');}; $n=null; $h=HOSTNAME; if(frst($d)!=='/'){$d="/$d";};
          if(path($d)){$d=crop($d); $d="file://{$h}{$d}";};
          if(isin($d,'::')){$s=stub($d,'::'); $p=crop($s[2]); $d="{$s[0]}://{$h}{$p}";}; $s=stub($d,'://');
          if(!$s){if($fail){fail::purl("invalid path-url");exit;}else{return;}};
@@ -622,7 +622,7 @@ namespace Anon;
          $r->plug=$i->scheme; $r->user=$i->user; $r->pass=$i->pass; $r->host=$i->host; $r->port=$i->port; $r->path=$p; $r->frag=$n; $s='/';
          if($p){$r->stem=self::stem($p); $r->twig=self::twig($p); $r->leaf=self::leaf($p); $r->type=self::type($p);};
          if($q){parse_str($q,$v); $r->vars=knob($v);}; if($i->fragment){$r->frag=$i->fragment;}; $r->purl=$d;
-         if($m&&$m->meta){$r->levl=count(explode('/',shaved($m->meta,'/')));}elseif($p){$r->levl=count(explode('/',shaved($p,'/')));}; 
+         if($m&&$m->meta){$r->levl=count(explode('/',shaved($m->meta,'/')));}elseif($p){$r->levl=count(explode('/',shaved($p,'/')));};
          return $r;
       }
 
