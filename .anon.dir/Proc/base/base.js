@@ -167,8 +167,7 @@
       cb=o.listen.loadend; delete o.listen.loadend; o.listen.loadend=function() // event done
       {
          let h=dval(this.getAllResponseHeaders());
-         if((h!=null)&&h.Cookies){h.Cookies=decode.jso(decode.b64(h.Cookies))};
-         h.each((v,k)=>{h[k]=trim(v)});
+         if((h!=null)&&h.Cookies){h.Cookies=decode.jso(decode.b64(h.Cookies)); h.each((v,k)=>{h[k]=trim(v)});};
          let r={path:this.purl,head:h,body:this.response}; this.done=100;  let s=this.status;
          if(s==200){pe(100,this.purl);if(this.busy&&!!select("#busyPane")){Busy.edit(this.purl,100)};};
          if(x.silent){tick.after(250,()=>{delete server.silent[this.purl]})};
