@@ -36,7 +36,6 @@ namespace Anon;
          if(!isset($_GET['rf'])||!isset($_GET['rk'])){wack(); exit;}; // security
          $rf=$_GET['rf']; $rp="/$rf"; $rk=$_GET['rk']; $fc=pget($rp,0); $rh=sha1($fc);
          if(!isin($fc,'$ck = \'{:ck:}\'')||($rh!==$rk)){wack(); exit;}; // security
-die("test4");
          $mp=password_hash(pget("$/Proc/info/pass.inf"),PASSWORD_DEFAULT);
          pset("$/User/data/master/pass",$mp); $nh=NAVIHOST; void($rp); wait(500);
          header("Location: $nh"); exit;
