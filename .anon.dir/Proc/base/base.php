@@ -80,7 +80,7 @@ namespace Anon;
       if(!isText($v,5)){return;}; $v=crop($v); $s=stub($v,['::','://']);
       if($s)
       {
-         $o=$s[0]; $p=$s[2]; $x=path::part($p); if(!$x){return;}; $c="$o::$x->path"; $p=$x->fork;
+         $o=$s[0]; $p=$s[2]; $x=path::meta($p); if(!$x){return;}; $c="$o::$x->path"; $p=$x->meta;
          if(!isPath($p)){$p=null;}; $r=knob(['plug'=>$c,'path'=>$p]); return ($w?$r:(!$p?$c:($c.$p)));
       };
       if(!isPath($v)){return;}; if((substr($v,-4,4)!=='.url')&&!strpos($v,'.url/')){return;};
@@ -695,19 +695,19 @@ namespace Anon;
 
 # func :: crud/plug : standard interface for many URL schemas
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   function crud($d)
+   function plug($d)
    {
       $x=path::info($d); if(!isKnob($x)){fail('expecting path, or URL');}; $o=$x->plug; $p=$x->path;
       if((($x->type==='git')&&($o==='http'))||(($o==='file')&&($x->type==='fold')&&isee("$p/.git"))){$o='git';}
       elseif($o==='https'){$o='http';}elseif($o==='imap'){$o='mail';}; $c="Anon\\{$o}_plug";
-      if(!is_class($c)){$p="/Proc/plug/$o.php"; requires::path($p); if(!is_class($c)){$p=crop($p); fail("expecting class `$c` in: `$p`");}};
+      if(!is_class($c)){$p="/Proc/plug/$o.php"; requires::path($p); if(!is_class($c)){fail("expecting class `$c` in: `$p`");}};
       $i=(new $c($x)); return $i;
    }
 
-   function plug($d)
+   function crud($d)
    {
       $p=(isFile($d)?pget($d):(isFile("$d.url")?pget("$d.url"):$d));
-      return crud($p);
+      return plug($p);
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 

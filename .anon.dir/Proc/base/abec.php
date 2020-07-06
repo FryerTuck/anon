@@ -611,16 +611,30 @@ namespace Anon;
    {
       static function info($d, $fail=true)
       {
-         if(!isText($d,1)){fail('expecting non-empty text');}; $n=null; $h=HOSTNAME; if(path($d)){$d=crop($d); $d="file://{$h}{$d}";};
-         if(isin($d,'::')){$s=stub($d,'::'); $d="{$s[0]}://{$h}{$s[2]}";}; $i=knob(parse_url($d)); $p=$i->path; $q=$i->query;
+         if(!isText($d,1)){fail('expecting non-empty text');}; $n=null; $h=HOSTNAME; if(frst($p)!=='/'){$p="/$p";};
+         if(path($d)){$d=crop($d); $d="file://{$h}{$d}";};
+         if(isin($d,'::')){$s=stub($d,'::'); $p=crop($s[2]); $d="{$s[0]}://{$h}{$p}";}; $s=stub($d,'://');
+         if(!$s){if($fail){fail::purl("invalid path-url");exit;}else{return;}};
+         $m=self::meta($s[2]); $i=knob(parse_url($d)); $p=$i->path; $q=$i->query;
          if(!$i->scheme||!$i->host){if(!$fail){return;}; fail('expecting valid path-string -or URL-string');}; $x=stub($d,['#','&','?','@',':']);
          if(isin($d,'@')){$x=stub($d,'@')[0]; if(isin($x,['#','&','?'])){fail('invalid URL');}};
          $r=knob(['plug'=>$n,'user'=>$n,'pass'=>$n,'host'=>$n,'port'=>$n,'path'=>$n,'levl'=>0,'stem'=>$n,'twig'=>$n,'leaf'=>$n,'type'=>$n,'vars'=>$n]);
-         $r->plug=$i->scheme; $r->user=$i->user; $r->pass=$i->pass; $r->host=$i->host; $r->port=$i->port; $r->path=$p; $r->frag=$n; $s='/'; if($p)
-         {$r->levl=span(trim($p,$s),$s); $r->stem=self::stem($p); $r->twig=self::twig($p); $r->leaf=self::leaf($p); $r->type=self::type($p);};
+         $r->plug=$i->scheme; $r->user=$i->user; $r->pass=$i->pass; $r->host=$i->host; $r->port=$i->port; $r->path=$p; $r->frag=$n; $s='/';
+         if($p){$r->stem=self::stem($p); $r->twig=self::twig($p); $r->leaf=self::leaf($p); $r->type=self::type($p);};
          if($q){parse_str($q,$v); $r->vars=knob($v);}; if($i->fragment){$r->frag=$i->fragment;}; $r->purl=$d;
-         if($p){$r->levl=count(explode('/',trim($p,'/')));}; return $r;
+         if($m&&$m->meta){$r->levl=count(explode('/',shaved($m->meta,'/')));}elseif($p){$r->levl=count(explode('/',shaved($p,'/')));}; 
+         return $r;
       }
+
+
+      static function meta($d)
+      {
+         if(!isText($d,1)){return;}; $d=rshave(shaved($d),'/'); if(!isText($d,1)){return;};
+         if(isee($d)){return knob(['path'=>$d,'fork'=>null]);}; if(!isin($d,'/')){return;};
+         $l=frag($d,'/'); $f=['']; $y=0; do{ladd($f,rpop($l)); if(isee(fuse($l),'/')){$y=1;break;};}while(count($l));
+         if(!$y){return;}; return knob(['path'=>fuse($l,'/'),'meta'=>fuse($f,'/')]);
+      }
+
 
       static function size($d,$o=null)
       {
@@ -917,15 +931,6 @@ namespace Anon;
          if($o->host){$r.="@$o->host";}; if($o->path){$r.="$o->path";};
          if($o->vars){$v=[]; foreach($o->vars as $k => $v){$v[]="$k=$v";}; $v=fuse($v,'&'); $r.="?$v";};
          if($o->frag){$r.="#$o->frag";}; return $r;
-      }
-
-
-      static function part($d)
-      {
-         if(!isText($d,1)){return;}; $d=rshave(shaved($d),'/'); if(!isText($d,1)){return;};
-         if(isee($d)){return knob(['path'=>$d,'fork'=>null]);}; if(!isin($d,'/')){return;};
-         $l=frag($d,'/'); $f=['']; $y=0; do{ladd($f,rpop($l)); if(isee(fuse($l),'/')){$y=1;break;};}while(count($l));
-         if(!$y){return;}; return knob(['path'=>fuse($l,'/'),'fork'=>fuse($f,'/')]);
       }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------

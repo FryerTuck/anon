@@ -16,7 +16,7 @@ namespace Anon;
       {
          todo::{'Data mysql_plug'}('change API to use `PDO` instead of `mysqli` in order to standardize and use prepared statements');
          if(!$x->port){$x->port=3306;}; if(!$x->path){$x->path='/';}; $p=$x->path; $this->mean=$x;
-         $p=frag(trim($x->path,'/'),'/'); if(!$p){$p=[];}; $r=knob(); $x=['dbase','table','field'];
+         $p=frag(shaved($x->path,'/'),'/'); if(!$p){$p=[];}; $r=knob(); $x=['dbase','table','field'];
          $this->info=knob(['maxLevel'=>3,'levlType'=>$x]); if($this->mean->levl>$this->info->maxLevel){fail('path-depth unreachable');};
          foreach($p as $k => $v){$r->{$x[$k]}=$v; $r->basis=$x[$k];}; $lvl=$this->mean->levl; $this->mean->refs=$r; if($lvl<2){return;};
          $b=$r->dbase; $t="$r->table"; $q="STATUS where Db = '$b' AND Name = '$t'"; $sp=$this->adjure("SHOW PROCEDURE $q");
