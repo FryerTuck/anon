@@ -37,10 +37,13 @@ namespace Anon;
          $rf=$_GET['rf']; $rp="/$rf"; $rk=$_GET['rk']; $fc=pget($rp,0); $rh=sha1($fc);
          if(!isin($fc,'$ck = \'{:ck:}\'')||($rh!==$rk)){wack(); exit;}; // security
          $nh=NAVIHOST;
+         if(file_exists(ROOTPATH.$rp))
+         {
+            @unlink(ROOTPATH.$rp); sleep(1);
+         };
 
          if(isset($_GET['done']))
          {
-            @unlink(ROOTPATH.$rp); sleep(1);
             // header("Location: $nh");
             ekko("<meta http-equiv=\"refresh\" content=\"1;url=$nh/\" /><a href=\"$nh\">Success! Click here to visit: $nh</a>");
          }
