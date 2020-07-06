@@ -38,6 +38,7 @@ namespace Anon;
          if(!isin($fc,'$ck = \'{:ck:}\'')||($rh!==$rk)){wack(); exit;}; // security
          $mp=password_hash(pget("$/Proc/info/pass.inf"),PASSWORD_DEFAULT);
          pset("$/User/data/master/pass",$mp); $nh=NAVIHOST; void($rp); wait(500);
+die("done");
          header("Location: $nh"); exit;
      };
 

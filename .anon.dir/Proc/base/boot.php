@@ -355,8 +355,6 @@ namespace Anon;
       if(!$ldb||($tdf>$dbs)||$upk)
       {
           require(path('$/Proc/base/keep.php'));
-
-die("test2");
           upkeep($dbs,$ldb,time(),$upk);
       }
       elseif(!isFold("$/Proc/temp/sesn"))
