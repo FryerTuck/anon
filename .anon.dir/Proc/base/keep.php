@@ -33,6 +33,7 @@ namespace Anon;
 
       if($upk==='init')
       {
+testingIAm();
          if(!isset($_GET['rf'])||!isset($_GET['rk'])){wack(); exit;}; // security
          $rf=$_GET['rf']; $rp="/$rf"; $rk=$_GET['rk']; $fc=pget($rp,0); $rh=sha1($fc);
          if(!isin($fc,'$ck = \'{:ck:}\'')||($rh!==$rk)){wack(); exit;}; // security
