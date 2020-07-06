@@ -918,6 +918,15 @@ namespace Anon;
          if($o->vars){$v=[]; foreach($o->vars as $k => $v){$v[]="$k=$v";}; $v=fuse($v,'&'); $r.="?$v";};
          if($o->frag){$r.="#$o->frag";}; return $r;
       }
+
+
+      static function part($d)
+      {
+         if(!isText($d,1)){return;}; $d=rshave(shaved($d),'/'); if(!isText($d,1)){return;};
+         if(isee($d)){return knob(['path'=>$d,'fork'=>null]);}; if(!isin($d,'/')){return;};
+         $l=frag($d,'/'); $f=['']; $y=0; do{ladd($f,rpop($l)); if(isee(fuse($l),'/')){$y=1;break;};}while(count($l));
+         if(!$y){return;}; return knob(['path'=>fuse($l,'/'),'fork'=>fuse($f,'/')]);
+      }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
