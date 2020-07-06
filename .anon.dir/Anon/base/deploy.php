@@ -78,6 +78,12 @@
         $z=trim(proc_close($r)); if($z){$z=(($e&&$o)?"$e ..\n$o":($e?$e:$o));}; if(!$z){return $o;};
         if(strpos($z,"cnf $y")){$c=bail("system host can't run: $y");}; bail($z);
     }
+
+
+   class DeleteOnExit
+   {
+      function __destruct(){unlink(__FILE__);}
+   }
 # -----------------------------------------------------------------------------------------------------------------------------
 
 
@@ -151,11 +157,15 @@
 # cond :: (test) : check if installation works, if not then replace .htaccess contents with alternative
 # -----------------------------------------------------------------------------------------------------------------------------
     $rk=sha1(file_get_contents(__FILE__));
-    $tl="https://$hn/?upkeep=init&rf=$fn&rk=$rk";
+    $tl="https://$hn/";
     $rs=spuf($tl);
 
     if(strpos($rs,'500 Internal Server Error')||strpos($rs,'503 Service Unavailable')||strpos($rs,'<title>Index of /</title>'))
     {$rs=bash("rm -f ./.htaccess && cp ./.anon.dir/Anon/base/access.cfg ./.htaccess"); sleep(1);};
+
+    $mp=password_hash(file_get_contents("$bp/.anon.dir/Proc/info/pass.inf"),PASSWORD_DEFAULT);
+    file_put_contents("$bp/.anon.dir/User/data/master/pass",$mp);
+    $gone=(new DeleteOnExit());
 
     header("Location: $tl");
 
