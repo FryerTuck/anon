@@ -186,7 +186,7 @@ namespace Anon;
    {
       $p=isee($p); if(!$p){return;}; $c=COREPATH; $r=ROOTPATH;
       if(($p===$c)||($p===$r)||($p===("$c/Proc"))||($p===("$c/User"))){return;};
-      if(!is_dir($p)){die("test 5 :: $p"); $r=unlink($p); return $r;}; $h=twig($p); exec::{"rm -rf ./$l"}($h);
+      if(!is_dir($p)){$r=unlink($p); return $r;}; $h=twig($p); exec::{"rm -rf ./$l"}($h);
       return (!is_dir($p));
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
