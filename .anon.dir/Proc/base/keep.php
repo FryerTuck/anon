@@ -41,7 +41,8 @@ namespace Anon;
          if(isset($_GET['done']))
          {
             @unlink(ROOTPATH.$rp);
-            header("Location: $nh");
+            // header("Location: $nh");
+            ekko("<meta http-equiv=\"refresh\" content=\"1;url=$nh/\" /><a href=\"$nh\">Success! Click here to visit: $nh</a>");
          }
          else
          {
