@@ -201,7 +201,7 @@ namespace Anon;
 
       static function plugMenu()
       {
-         $v=knob($_POST); $l=xeno::showHyperConduit($v->path,parts); $p=$l->plug;
+         $v=knob($_POST); $l=xeno::showHyperConduit($v->path,parts); signal::dump($l); $p=$l->plug;
          if($l->path){$p=($p.$l->path);}; $i=path::info($l->plug); $D=crud($p); $r=$D->select('*');
 
          if(isin(['ftp','ftps'],$i->plug))
