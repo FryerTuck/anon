@@ -340,7 +340,7 @@ namespace Anon;
    require(path('$/Proc/aard.php'));      // initialize Proc class
    require(path('/Repo/aard.php'));      // initialize Repo class
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-die("test1");
+
 
 
 # dbug :: keep : housekeeping .. run regularly - but only if appropriate .. and at least once per user session time
@@ -355,6 +355,8 @@ die("test1");
       if(!$ldb||($tdf>$dbs)||$upk)
       {
           require(path('$/Proc/base/keep.php'));
+
+die("test2");
           upkeep($dbs,$ldb,time(),$upk);
       }
       elseif(!isFold("$/Proc/temp/sesn"))
