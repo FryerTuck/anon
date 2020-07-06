@@ -77,13 +77,13 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    xeno::learns('showHyperConduit',function($v,$w=null)
    {
-      if(!isPath($v)){return;}; $v=crop($v); if(strlen($v)<5){return;}; $s=stub($v,['::','://']);
+      if(!isText($v)<5){return;}; $v=crop($v); $s=stub($v,['::','://']);
       if($s)
       {
          $o=$s[0]; $p=$s[2]; $x=path::part($p); if(!$x){return;}; $c="$o::$x->path"; $p=$x->fork;
          if(!isPath($p)){$p=null;}; $r=knob(['plug'=>$c,'path'=>$p]); return ($w?$r:(!$p?$c:($c.$p)));
       };
-      if((substr($v,-4,4)!=='.url')&&!strpos($v,'.url/')){return;};
+      if(!isPath($v)){return;}; if((substr($v,-4,4)!=='.url')&&!strpos($v,'.url/')){return;};
       $s=stub($v,'.url'); $c="$s[0].url"; $p=$s[2]; if(!isee($c)){return;}; $c=rshave(pget($c),'/'); if(!isPurl($c)){return;};
       if(!isPath($p)){$p=null;}; $r=knob(['plug'=>$c,'path'=>$p]); return ($w?$r:(!$p?$c:($c.$p)));
    });
