@@ -26,29 +26,29 @@ class Data
 
       $obj=crud($lnk); if(!$lvl&&!$sdb){$lvl=$obj->mean->levl;}; $inf=$obj->info; if(!$inf){$inf=knob();};
       $mxl=$inf->maxLevel; if($mxl===null){$mxl=($lvl+1);}; $lvt=$inf->levlType; $tpe=($sdb?"dbase":($lvt?$lvt[$lvl]:'none'));
-      $lst=$obj->select('*'); if(!isNuma($lst)){return $lst;}; $prl=$obj->mean->purl; $pth=$obj->mean->path; $rsl=[];
+      $lst=$obj->select('*'); if(!isNuma($lst)){$lst=[$lst];}; $prl=$obj->mean->purl; $pth=$obj->mean->path; $rsl=[];
 
       foreach($lst as $itm)
       {
-         // $pts=stub($itm,'::'); $tpe=$pts[0]; $itm=$pts[2]; if($flt&&!isin($flt,$tpe)){continue;};
-         // $dat=knob
-         // ([
-         //    "repo"=>null,
-         //    "purl"=>"$prl/$itm",
-         //    "path"=>swap("$pth/$itm",'//','/'),
-         //    "levl"=>($lvl+1),
-         //    "name"=>$itm,
-         //    "mime"=>null,
-         //    "type"=>$tpe,
-         //    "size"=>0,
-         //    "time"=>0,
-         //    "data"=>null,
-         // ]);
-         //
-         // $kds=isin(['dbase','table'],$tpe);
-         // if($kds){$kds=self::dataTree("$lnk/$itm",$flt,($lvl+1)); $dat->size=span($kds); $dat->data=$kds;};
-         //
-         // $rsl[]=$dat;
+         $pts=stub($itm,'::'); $tpe=$pts[0]; $itm=$pts[2]; if($flt&&!isin($flt,$tpe)){continue;};
+         $dat=knob
+         ([
+            "repo"=>null,
+            "purl"=>"$prl/$itm",
+            "path"=>swap("$pth/$itm",'//','/'),
+            "levl"=>($lvl+1),
+            "name"=>$itm,
+            "mime"=>null,
+            "type"=>$tpe,
+            "size"=>0,
+            "time"=>0,
+            "data"=>null,
+         ]);
+
+         $kds=isin(['dbase','table'],$tpe);
+         if($kds){$kds=self::dataTree("$lnk/$itm",$flt,($lvl+1)); $dat->size=span($kds); $dat->data=$kds;};
+
+         $rsl[]=$dat;
       };
 
       return $rsl;
