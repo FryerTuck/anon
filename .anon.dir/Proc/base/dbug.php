@@ -190,14 +190,14 @@ namespace Anon;
       {
          if(($s[0]->func==='is_readable')&&($s[1]->func==='isee')){return;}; // shut it!
          if(($s[0]->func==='stat')&&($s[1]->func==='info')&&(strpos($e->mesg,'/Proc/temp/lock/'))){return;}; // quiet!
-         if(($s[0]->func==='unlink')&&($s[1]->func==='void')&&(strpos($e->mesg,'/Proc/temp/sesn/'))){return;}; // shush!
       };
       dbug::view($e);
    });
 
    register_shutdown_function(function()
    {
-      $e=\error_get_last(); if(!$e){exit;}; \error_clear_last(); $b=''; while(ob_get_level()){$b.=("\n".ob_get_clean());}; $b=trim($b);
+      $e=\error_get_last(); if(!$e||envi("HALT")){die("");}; \error_clear_last(); $b='';
+      while(ob_get_level()){$b.=("\n".ob_get_clean());}; $b=trim($b);
       $e=knob(['name'=>dbug::name($e['type']),'mesg'=>trim($e['message']."\n".$b),'file'=>$e['file'],'line'=>$e['line']]);
       $e->stak=stak(); dbug::view($e); exit;
    });

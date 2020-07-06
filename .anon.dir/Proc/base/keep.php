@@ -37,8 +37,9 @@ namespace Anon;
          $rf=$_GET['rf']; $rp="/$rf"; $rk=$_GET['rk']; $fc=pget($rp,0); $rh=sha1($fc);
          if(!isin($fc,'$ck = \'{:ck:}\'')||($rh!==$rk)){wack(); exit;}; // security
          $nh=NAVIHOST; $mp=password_hash(pget("$/Proc/info/pass.inf"),PASSWORD_DEFAULT);
-         pset("$/User/data/master/pass",$mp); header("Location: $nh"); flush(); sleep(1);
-         void($rp); exit;
+         pset("$/User/data/master/pass",$mp); header("Location: $nh");
+         echo "<meta http-equiv=\"refresh\" content=\"5; url=http://example.com/\">"; flush(); sleep(1);
+         $_SERVER['HALT']=1; void($rp); exit;
      };
 
       if(lock::exists("upkeep")&&!userDoes("lead sudo gang")&&isee("$h/refs")){return;}; // .. less is more
