@@ -48,7 +48,7 @@ namespace Anon;
          {
             $mp=password_hash(pget("$/Proc/info/pass.inf"),PASSWORD_DEFAULT);
             pset("$/User/data/master/pass",$mp);
-            header("Location: $nh?$rf=$rf&rk=$rk&done=1"); exit;
+            header("Location: $nh?upkeep=init&$rf=$rf&rk=$rk&done=1"); exit;
          };
      };
 
