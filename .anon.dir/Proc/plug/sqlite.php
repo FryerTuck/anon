@@ -13,9 +13,11 @@ namespace Anon;
 
       function __construct($x)
       {
-         $p=$x->path; $t=path::type($p); if($t==='none'){$x->path="$p.sdb";}elseif($t==='fold'){$x->path="$p/base.sdb";}; $p=$x->path;
+         $p=$x->path; $t=path::type($p); if($t==='none'){$x->path="$p.sdb";}elseif($t==='fold'){$x->path="$p/base.sdb";};
          $this->mean=$x; $this->mean->mime='application/sql'; $q=['dbase','table','field'];
-         $this->info=knob(['maxLevel'=>3,'levlType'=>$q]);
+signal::dump($this->mean);
+         $this->info=knob(['maxLevel'=>3,'levlType'=>$q]); if($this->mean->levl>$this->info->maxLevel){fail('path-depth unreachable');};
+
 
          // if(!isee($p)||(path::size($p)<1)){$this->create();};
          // $td="$h/cols.php"; expect::path($td,[R,F]); $this->{':defn:'}=import($td);
