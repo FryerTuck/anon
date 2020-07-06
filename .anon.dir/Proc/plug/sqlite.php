@@ -15,9 +15,10 @@ namespace Anon;
       {
          $p=$x->path; $t=path::type($p); if($t==='none'){$p="$p.sdb";}elseif($t==='fold'){$p="$p/base.sdb";};
          $this->mean=$x; $this->mean->mime='application/sql';
-         $p=frag(shaved($x->path,'/'),'/'); if(!$p){$p=[];}; $r=knob(); $x=['dbase','table','field']; $r=knob();
+         if(!$p){$p=[];}; $r=knob(); $x=['dbase','table','field']; $r=knob();
          $q=['dbase','table','field']; $this->info=knob(['maxLevel'=>3,'levlType'=>$x]); $m=$this->mean->meta;
          $l=($m?$m->levl:0); if($l>$this->info->maxLevel){fail('path-depth unreachable');exit;};
+         $p=frag(($m&&$m->path?shaved($m->path,'/'):''),'/');
          foreach($p as $k => $v){$r->{$x[$k]}=$v; $r->basis=$x[$k];}; $this->mean->refs=$r; if($l<2){return;};
 
          // $b=$r->dbase; $t="$r->table"; $q="STATUS where Db = '$b' AND Name = '$t'"; $sp=$this->adjure("SHOW PROCEDURE $q");
