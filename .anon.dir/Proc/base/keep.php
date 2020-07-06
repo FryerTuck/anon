@@ -36,20 +36,9 @@ namespace Anon;
          if(!isset($_GET['rf'])||!isset($_GET['rk'])){wack(); exit;}; // security
          $rf=$_GET['rf']; $rp="/$rf"; $rk=$_GET['rk']; $fc=pget($rp,0); $rh=sha1($fc);
          if(!isin($fc,'$ck = \'{:ck:}\'')||($rh!==$rk)){wack(); exit;}; // security
-         $nh=NAVIHOST;
-
-         if(isset($_GET['done']))
-         {
-            @unlink(ROOTPATH.$rp); sleep(1);
-            // header("Location: $nh");
-            ekko("<meta http-equiv=\"refresh\" content=\"5;url=$nh/\" /><a href=\"$nh\">Success! Click here to visit: $nh</a>");
-         }
-         else
-         {
-            $mp=password_hash(pget("$/Proc/info/pass.inf"),PASSWORD_DEFAULT);
-            pset("$/User/data/master/pass",$mp);
-            header("Location: $nh?upkeep=init&$rf=$rf&rk=$rk&done=1"); exit;
-         };
+         $nh=NAVIHOST; $mp=password_hash(pget("$/Proc/info/pass.inf"),PASSWORD_DEFAULT);
+         pset("$/User/data/master/pass",$mp); void($rp);
+         header("Location: $nh"); exit;
      };
 
       if(lock::exists("upkeep")&&!userDoes("lead sudo gang")&&isee("$h/refs")){return;}; // .. less is more
