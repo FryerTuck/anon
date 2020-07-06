@@ -10,16 +10,14 @@ class Data
 
    private static function dataTree($lnk,$flt=null,$lvl=0)
    {
-      $sdb=(isFile($lnk)&&arg($lnk)->endsWith(".sdb")?1:0); if($sdb){$lnk="sqlite::$lnk";};
-
-      if(!$sdb&&isFold($lnk))
+      if(isFold($lnk))
       {
          $rsl=listOf(path::ogle([using=>$lnk,fetch=>'name,path,mime,type',limit=>['levl'=>0]]));
          foreach($rsl as $idx => $obj)
          {
             $p=$obj->path; $x=fext($p);
-            if(isFold($p)||($x==="sdb")){$rsl[$idx]->data=listOf(self::dataTree($p,$flt,0));};
-            if($x==="sdb"){$rsl[$idx]->type="plug";};
+            if(isFold($p)){$rsl[$idx]->data=listOf(self::dataTree($p,$flt,0));continue;};
+            if($x!=="sdb"){continue;}; $rsl[$idx]->type="plug"; $rsl[$idx]->path="sqlite::$p";
          };
          return $rsl;
       };
