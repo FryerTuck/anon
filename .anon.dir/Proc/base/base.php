@@ -78,10 +78,10 @@ namespace Anon;
    xeno::learns('showHyperConduit',function($v,$w=null)
    {
       if(!isPath($v)){return;}; $v=crop($v); if(strlen($v)<5){return;}; $s=stub($v,['::','://']);
-      if($s){$i=path::info($v); $r=knob(['plug'=>"$i->plug::$i->host",'path'=>$i->path]); return $r;};
+      if($s){$i=path::info($v); $c="$i->plug::$i->host"; $p=$i->path; return ($w?knob(['plug'=>$c,'path'=>$p]):(!$p?$c:($c.$p)));};
       if((substr($v,-4,4)!=='.url')&&!strpos($v,'.url/')){return;};
       $s=stub($v,'.url'); $c="$s[0].url"; $p=$s[2]; if(!isee($c)){return;}; $c=rshave(pget($c),'/'); if(!isPurl($c)){return;};
-      if(!isPath($p)){$p=null;}; $r=knob(['plug'=>$c,'path'=>$p]); if($w){return $r;}; if(!$p){return $c;}; return ($c.$p);
+      if(!isPath($p)){$p=null;}; $r=knob(['plug'=>$c,'path'=>$p]); return ($w?$r:(!$p?$c:($c.$p)));
    });
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
