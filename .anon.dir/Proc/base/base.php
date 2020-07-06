@@ -77,6 +77,7 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    xeno::learns('showHyperConduit',function($v,$w=null)
    {
+signal::dump($v);
       if(!isText($v)<5){return;}; $v=crop($v); $s=stub($v,['::','://']);
       if($s)
       {
