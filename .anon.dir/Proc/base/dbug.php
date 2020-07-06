@@ -186,12 +186,12 @@ namespace Anon;
       $b=''; while(ob_get_level()){$b.=("\n".ob_get_clean());}; $b=trim($b); $e=func_get_args();
       $e=knob(['name'=>dbug::name($e[0]),'mesg'=>trim($e[1]."\n".$b),'file'=>$e[2],'line'=>$e[3]]); $e->stak=stak(); $s=$e->stak;
       // if(isset($s[0])&&($s[0]->func==='imap_open')&&($e->name==='Warning')){return;}; // shut it!
-      if(($e->name==='Warning')&&isset($s[1])) // let's see if this warning is necessary
-      {
-         if(($s[0]->func==='is_readable')&&($s[1]->func==='isee')){return;}; // shut it!
-         if(($s[0]->func==='stat')&&($s[1]->func==='info')&&(strpos($e->mesg,'/Proc/temp/lock/'))){return;}; // quiet!
-         if(($s[0]->func==='unlink')&&($s[1]->func==='void')&&(strpos($e->mesg,'/Proc/temp/sesn/'))){return;}; // shush!
-      };
+      // if(($e->name==='Warning')&&isset($s[1])) // let's see if this warning is necessary
+      // {
+      //    if(($s[0]->func==='is_readable')&&($s[1]->func==='isee')){return;}; // shut it!
+      //    if(($s[0]->func==='stat')&&($s[1]->func==='info')&&(strpos($e->mesg,'/Proc/temp/lock/'))){return;}; // quiet!
+      //    if(($s[0]->func==='unlink')&&($s[1]->func==='void')&&(strpos($e->mesg,'/Proc/temp/sesn/'))){return;}; // shush!
+      // };
       dbug::view($e);
    });
 
