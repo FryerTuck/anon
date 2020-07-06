@@ -230,13 +230,13 @@ namespace Anon;
 
 
 
-      function select($arg='*')
+      function select($arg='*',$tre=null)
       {
          $inf=$this->mean; $lvl=$inf->levl; $rfs=$inf->refs; $tpe=$rfs->basis; if(isAsso($arg)){$arg=knob($arg,1);}; // prep
          if(($arg!=='*')&&!isKnob($arg)){fail('invalid argument, expecting object');};
 
 
-         if($arg==='*')
+         if(($arg==='*')&&($tre===TREE))
          {
             if($lvl<1)
             {

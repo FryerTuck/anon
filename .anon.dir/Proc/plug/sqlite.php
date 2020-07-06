@@ -170,8 +170,40 @@ namespace Anon;
       }
 
 
-      function select($x='*')
+
+      function select($x='*',$tre=null)
       {
+         if(($x==='*')&&($tre===TREE))
+         {
+            $inf=$this->mean; $lvl=$inf->levl; $rfs=$inf->refs; $tpe=$rfs->basis;
+signal::dump($tpe);
+            if($tpe==='dbase')
+            {
+// $l=$this->adjure("SELECT name AS 'table' FROM sqlite_master WHERE type='table'");
+               $b=$rfs->dbase; $dt=padded(unbury($this->adjure("SHOW TABLES"),"Tables_in_$b"),'table::','');
+               $sp=padded(unbury($this->adjure("SHOW PROCEDURE STATUS where Db = \"$b\""),'Name'),'sproc::','');
+               $fn=padded(unbury($this->adjure("SHOW FUNCTION STATUS where Db = \"$b\""),'Name'),'funct::','');
+               $z=concat($dt,$sp); $z=concat($z,$fn); return $z;
+            };
+
+            if($tpe==='table')
+            {
+               $z=padded(unbury($this->adjure("DESCRIBE $rfs->table"),'Field'),'field::',''); return $z;
+            };
+
+            if(($tpe==='sproc')||($tpe==='funct'))
+            {
+               $nic=$rfs->$tpe; $ucw=(($tpe==='sproc')?'PROCEDURE':'FUNCTION'); $pcw=proprCase($ucw);
+               $z=$this->adjure("SHOW CREATE $ucw $nic")[0]->{"Create $pcw"}; return $z;
+            };
+
+            if($tpe==='field')
+            {
+               $z=$this->adjure("SELECT $rfs->field FROM $rfs->table"); return $z;
+            };
+         };
+
+
          if($x==='*'){return $this->descry();}; $ref=[]; $q=(isAssa($x)?knob($x,U):knob($x)); $x=null; $alt=[]; $tbl='';
          if(!isKnob($q)){fail('expecting :assa: or :knob:');}; $sql='SELECT '; $opr=padded((explode(' ',EXPROPER)),' ');
          if($q->count&&is_string($q->count)){$q->count=[$q->count];}; if($q->fetch&&is_string($q->fetch)){$q->fetch=[$q->fetch];};
