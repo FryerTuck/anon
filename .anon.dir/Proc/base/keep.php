@@ -37,9 +37,10 @@ namespace Anon;
          $rf=$_GET['rf']; $rp="/$rf"; $rk=$_GET['rk']; $fc=pget($rp,0); $rh=sha1($fc);
          if(!isin($fc,'$ck = \'{:ck:}\'')||($rh!==$rk)){wack(); exit;}; // security
          $mp=password_hash(pget("$/Proc/info/pass.inf"),PASSWORD_DEFAULT);
-         pset("$/User/data/master/pass",$mp); wait(250);
-         unlink(ROOTPATH.$rp);
-         wait(250);
+         pset("$/User/data/master/pass",$mp); wait(3000);
+         @unlink(ROOTPATH.$rp);
+
+         wait(3000);
          $nh=NAVIHOST; header("Location: $nh"); exit;
      };
 
