@@ -80,6 +80,7 @@ namespace Anon;
       if(!isText($v)<5){return;}; $v=crop($v); $s=stub($v,['::','://']);
       if($s)
       {
+         signal::dump("wtf?");
          $o=$s[0]; $p=$s[2]; $x=path::part($p); signal::dump($p); if(!$x){return;}; $c="$o::$x->path"; $p=$x->fork;
          if(!isPath($p)){$p=null;}; $r=knob(['plug'=>$c,'path'=>$p]); return ($w?$r:(!$p?$c:($c.$p)));
       };
