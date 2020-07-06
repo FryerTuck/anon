@@ -611,8 +611,10 @@ namespace Anon;
    {
       static function info($d, $fail=true)
       {
-         if(!isText($d,1)){fail('expecting non-empty text');}; $n=null; $h=HOSTNAME; if(path($d)){$d=crop($d); $d="file://{$h}{$d}";};
-         if(isin($d,'::')){$s=stub($d,'::'); $d="{$s[0]}://{$h}{$s[2]}";}; $i=knob(parse_url($d)); $p=$i->path; $q=$i->query;
+         if(!isText($d,1)){fail('expecting non-empty text');}; $n=null; $h=HOSTNAME;
+         if(path($d)){$p=crop($d); if(frst($p)!=='/'){$p="/$p";}; $d="file://{$h}{$p}";};
+         if(isin($d,'::')){$s=stub($d,'::'); $p=crop($s[2]); if(frst($p)!=='/'){$p="/$p";}; $d="{$s[0]}://{$h}{$p}";};
+         $i=knob(parse_url($d)); $p=$i->path; $q=$i->query;
          if(!$i->scheme||!$i->host){if(!$fail){return;}; fail('expecting valid path-string -or URL-string');}; $x=stub($d,['#','&','?','@',':']);
          if(isin($d,'@')){$x=stub($d,'@')[0]; if(isin($x,['#','&','?'])){fail('invalid URL');}};
          $r=knob(['plug'=>$n,'user'=>$n,'pass'=>$n,'host'=>$n,'port'=>$n,'path'=>$n,'levl'=>0,'stem'=>$n,'twig'=>$n,'leaf'=>$n,'type'=>$n,'vars'=>$n]);
