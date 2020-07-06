@@ -17,7 +17,8 @@ class Data
          $rsl=listOf(path::ogle([using=>$lnk,fetch=>'name,path,mime,type',limit=>['levl'=>0]]));
          foreach($rsl as $idx => $obj)
          {
-            $p=$obj->path; $x=fext($p); if(isFold($p)||($x==="sdb")){$rsl[$idx]->data=[];};
+            $p=$obj->path; $x=fext($p);
+            if(isFold($p)||($x==="sdb")){$rsl[$idx]->data=listOf(self::dataTree($p,$flt,0));};
             if($x==="sdb"){$rsl[$idx]->type="plug";};
          };
          return $rsl;
