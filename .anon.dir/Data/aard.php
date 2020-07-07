@@ -22,7 +22,7 @@ class Data
          return $rsl;
       };
 
-      $obj=crud($lnk); if(!$lvl&&!$sdb){$lvl=$obj->mean->levl;}; $inf=$obj->info; if(!$inf){$inf=knob();};
+      $obj=plug($lnk); if(!$lvl&&!$sdb){$lvl=$obj->mean->levl;}; $inf=$obj->info; if(!$inf){$inf=knob();};
       $mxl=$inf->maxLevel; if($mxl===null){$mxl=($lvl+1);}; $lvt=$inf->levlType; $tpe=($sdb?"plug":($lvt?$lvt[$lvl]:'none'));
       $lst=$obj->select('*'); if(!isNuma($lst)){$lst=[$lst];}; $prl=$obj->mean->purl; $pth=$obj->mean->path; $rsl=[];
 
@@ -90,7 +90,7 @@ class Data
       $vrs=knob($_POST); $tpe=$vrs->type;
       $prl=(($tpe==="file")?"sqlite::$vrs->path":xeno::showHyperConduit($vrs->path));
 
-      $dbc=crud($prl); $lmt=50; $qry=null; $rsl=null;
+      $dbc=plug($prl); $lmt=50; $qry=null; $rsl=null;
 
       if(!isin("field",$tpe)){$rsl=$dbc->select([fetch=>'*',limit=>$lmt]); done($rsl);};
       $rsl=$dbc->descry('*'); done([$rsl]);
@@ -116,7 +116,7 @@ class Data
    static function saveItem()
    {
       $vrs=knob($_POST); $prl=xeno::showHyperConduit($vrs->path); $tpe=$vrs->type; $dta=decode::b64($vrs->data);
-      $dbc=crud($prl); $rfs=$dbc->mean->refs; $nic=$dbc->mean->leaf;
+      $dbc=plug($prl); $rfs=$dbc->mean->refs; $nic=$dbc->mean->leaf;
 
       if(isin(['sproc','funct'],$tpe))
       {
@@ -154,12 +154,12 @@ class Data
       {
          $arg=null; if(span($tmp,' ')>1){$pts=rstub($tmp,' '); $arg=$pts[2]; $tmp=$pts[0];}; $inf=path::info($prl); $lvl=$inf->levl;
          if(isin($tmp,'fields')&&($lvl<2)){ekko('fields of which table?');}; if(isin($tmp,'tables')&&($lvl<1)){ekko('tables of which dbase?');};
-         $tmp=swap($tmp,'data','d'); $dbc=crud($prl); $rfs=$dbc->mean->refs; if($tmp==='show dbases'){$rsl=$dbc->descry('*',0,$rfs);}
+         $tmp=swap($tmp,'data','d'); $dbc=plug($prl); $rfs=$dbc->mean->refs; if($tmp==='show dbases'){$rsl=$dbc->descry('*',0,$rfs);}
          elseif($tmp==='show tables'){$rsl=$dbc->descry('*',1,$rfs);}else{$rsl=$dbc->descry('*');};
          ekko($rsl);
       };
-
-      $rsl=crud($prl)->adjure($sql); ekko($rsl);
+signal::dump($prl);
+      $rsl=plug($prl)->adjure($sql); ekko($rsl);
    }
 
 
@@ -167,6 +167,6 @@ class Data
    static function exists()
    {
       $vrs=knob($_POST); $prl=$vrs->purl;
-      try{$rsl=crud($prl)->descry(); ekko(OK);}catch(\Exception $e){$e=$e->getMessage(); ekko("FAIL .. $e");};
+      try{$rsl=plug($prl)->descry(); ekko(OK);}catch(\Exception $e){$e=$e->getMessage(); ekko("FAIL .. $e");};
    }
 }
