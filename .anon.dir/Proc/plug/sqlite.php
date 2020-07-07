@@ -184,6 +184,8 @@ namespace Anon;
             if($tpe==='dbase')
             {
                $qt="SELECT name AS 'table' FROM sqlite_master WHERE type='table'";
+$rs=$this->adjure($qt);
+signal::dump($rs);
                $dt=padded(unbury($this->adjure($qt),"table"),'table::','');
                return $dt;
             };
