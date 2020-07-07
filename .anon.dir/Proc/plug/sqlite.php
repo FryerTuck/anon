@@ -84,6 +84,7 @@ namespace Anon;
          if(is_string($q)){$q=trim($q); $q=trim($q,';'); $q.=';';}; if(!isText($q,10)){fail('invalid SQL');}; $a=strtoupper(stub($q,' ')[0]);
          $l=(!$this->link?0:1); $c=$this->vivify();
 
+signal::dump($q);
          if(isin(['SELECT','INSERT','UPDATE','DELETE','PRAGMA'],$a))
          {
             try{$x=$c->prepare($q);}catch(\Exception $f)
@@ -105,7 +106,7 @@ namespace Anon;
             if($a==='SELECT')
             {
                $n=$r->numColumns(); if($n<1){$this->pacify(); signal::dump("no cols in result"); return [];};
-               $p=null; $z=[]; while($i=$r->fetchArray(SQLITE3_ASSOC)){signal::dump($q); $z[]=knob($i);};
+               $p=null; $z=[]; while($i=$r->fetchArray(SQLITE3_ASSOC)){$z[]=knob($i);};
                if(!$l){$this->pacify();}; return $z;
             };
 
