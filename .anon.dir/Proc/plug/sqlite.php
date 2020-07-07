@@ -89,20 +89,26 @@ namespace Anon;
             try{$x=$c->prepare($q);}catch(\Exception $f)
             {
                $m=$f->getMessage(); if(isin($m,'Unable to prepare statement: 5, database is locked'))
-               {$p=$this->mean->path; $m="database `$p` is locked";}; fail::sharing("$m\n\nQUERY:\n$q");
+               {$p=$this->mean->path; $m="database `$p` is locked";}; fail::database("$m\n\nQUERY:\n$q");
             };
 
-            foreach($b as $k => $v){$x->bindValue($k,$v);}; do
+            foreach($b as $k => $v){$x->bindValue($k,$v);};
+            $er=''; $mn=$this->mean; do
             {
-               $r=$x->execute(); $f=($c->lastErrorCode()?lowerCase($c->lastErrorMsg()):null); if($f){if(isin($f,'lock')){wait(1);}else
-               {$p=$this->mean->path;$b=$this->mean->base;$t=$this->mean->tabl; fail("$f ..\nPATH: `$p`\nBASE: `$b`\nEXEC: `$q`"); $f=null;};};
+               $r=$x->execute(); $f=($c->lastErrorCode()?lowerCase($c->lastErrorMsg()):null);
+               if($f){if(isin($f,'lock')){wait(50);}else
+               {$er="$f ..\nPATH: `$mn->path`\nBASE: `$mn->base`\nEXEC: `$q`"; $f=null;}};
             }while($f);
+
+            if($er){fail::database($er);exit;};
 
             if($a==='SELECT')
             {
-               $n=$r->numColumns(); if($n<1){$this->pacify(); return [];}; $p=null;
-               $z=[]; while($i=$r->fetchArray(SQLITE3_ASSOC)){$z[]=knob($i,$p);}; if(!$l){$this->pacify();}; return $z;
+               $n=$r->numColumns(); if($n<1){$this->pacify(); signal::dump("no cols"); return [];}; $p=null; $z=[];
+               while($i=$r->fetchArray(SQLITE3_ASSOC)){$z[]=knob($i,$p);}; if(!$l){$this->pacify();};
+               return $z;
             };
+
             if($a==='INSERT'){$z=knob(['deed'=>$a,'done'=>$c->changes(),'last'=>$c->lastInsertRowID()]);if(!$l){$this->pacify();}; return $z;};
             if(($a==='UPDATE')||($a==='DELETE')){$z=knob(['deed'=>$a,'done'=>$c->changes()]); if(!$l){$this->pacify();}; return $z;};
             if($a==='PRAGMA'){$z=[]; while($i=$r->fetchArray(SQLITE3_ASSOC)){$z[]=knob($i,V);}; if(!$l){$this->pacify();}; return $z;};
