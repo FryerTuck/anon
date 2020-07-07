@@ -203,12 +203,13 @@ extend(Anon)
             this.vars.path=pth; this.vars.prom=pth;
 
             repl.runsql=Anon.Data.repl.exec;
-            repl.ENV.target='runsql'; this.prom();
+            this.prom();
          },
 
 
          prom:function(a, prl)
          {
+            repl.ENV.target='runsql';
             repl.reprom((a||this.vars.prom));
          },
 
