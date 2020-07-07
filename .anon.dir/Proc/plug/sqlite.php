@@ -18,7 +18,6 @@ namespace Anon;
          if(!$p){$p=[];}; $r=knob(); $x=['dbase','table','field']; $r=knob();
          $q=['dbase','table','field']; $this->info=knob(['maxLevel'=>3,'levlType'=>$x]); $m=$this->mean->meta;
          $l=($m?$m->levl:0); if($l>$this->info->maxLevel){fail('path-depth unreachable');exit;};
-signal::dump($m);
          $this->mean->levl=$l; $p=frag(($m&&$m->path?shaved($m->path,'/'):''),'/');
          foreach($p as $k => $v){$r->{$x[$k]}=$v; $r->basis=$x[$k];}; $this->mean->refs=$r; if($l<2){return;};
 
@@ -181,11 +180,12 @@ signal::dump($m);
          if(($x==='*')&&($tre===TREE))
          {
             $inf=$this->mean; $lvl=$inf->levl; $rfs=$inf->refs; $tpe=$rfs->basis;
-signal::dump($tpe);
+
             if($tpe==='dbase')
             {
 // $l=$this->adjure("SELECT name AS 'table' FROM sqlite_master WHERE type='table'");
-               $b=$rfs->dbase; $dt=padded(unbury($this->adjure("SHOW TABLES"),"Tables_in_$b"),'table::','');
+               $b=$rfs->dbase;
+               $dt=padded(unbury($this->adjure("SELECT name AS 'table' FROM sqlite_master WHERE type='table'"),"table"),'table::','');
                $sp=padded(unbury($this->adjure("SHOW PROCEDURE STATUS where Db = \"$b\""),'Name'),'sproc::','');
                $fn=padded(unbury($this->adjure("SHOW FUNCTION STATUS where Db = \"$b\""),'Name'),'funct::','');
                $z=concat($dt,$sp); $z=concat($z,$fn); return $z;
