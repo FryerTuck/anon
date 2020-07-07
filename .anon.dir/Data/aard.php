@@ -158,7 +158,7 @@ class Data
          elseif($tmp==='show tables'){$rsl=$dbc->descry('*',1,$rfs);}else{$rsl=$dbc->descry('*');};
          ekko($rsl);
       };
-signal::dump($prl);
+
       $rsl=plug($prl)->adjure($sql); ekko($rsl);
    }
 
