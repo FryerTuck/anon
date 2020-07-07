@@ -627,10 +627,11 @@ namespace Anon;
 
       static function meta($d)
       {
-         if(!isText($d,3)){return;}; $d=rshave(shaved($d),'/'); if(!isText($d,3)){return;};
-         if(isee($d)){return knob(['base'=>$d,'path'=>'','levl'=>0]);}; if(!isin($d,'/')){return;};
+         $r=knob(['base'=>$d,'path'=>'','levl'=>0]); if(!isText($d,3)){return $r;};
+         $d=rshave(shaved($d),'/'); if(!isText($d,3)){return $r;};
+         if(isee($d)){return $r;}; if(!isin($d,'/')){return $r;};
          $l=frag($d,'/'); $f=[]; $y=0; do{ladd($f,rpop($l)); if(isee(fuse($l),'/')){$y=1;break;};}while(count($l));
-         if(!$y){return;}; return knob(['base'=>fuse($l,'/'),'path'=>('/'.fuse($f,'/')),'levl'=>count($f)]);
+         if(!$y){return $r;}; $r->path=('/'.fuse($f,'/')); $r->levl=count($f); return $r;
       }
 
       static function size($d,$o=null)
