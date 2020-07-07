@@ -688,38 +688,37 @@ extend(custom.domtag)
 
       if(!c.live){purl(c.from,c.vars,(rsp,dta)=>
       {
-         rsp=(isJson(rsp.body)?decode.jso(rsp.body):VOID); dump(rsp);
-         rs=span(rsp); rd=0; pd=0; if(!rsp||(rs<1)){return};
-         if(isList(rsp))
+         rsp=(isJson(rsp.body)?decode.jso(rsp.body):VOID);
+         rs=span(rsp); rd=0; pd=0; if(!rsp||(rs<1)||!isList(rsp)){return};
+         if(!isKnob(rsp[0])){fail('expecting list of objects for datagrid');return};
+
+         if(rs>10){Busy.edit('dataRender',0)};
+         rh={row:'', contents:[]}; rk=keys(rsp[0]); rk.forEach((rc)=>
          {
-            if(!isKnob(rsp[0])){fail('expecting list of objects for datagrid');return}; if(rs>10){Busy.edit('dataRender',0)};
-            rh={row:'', contents:[]}; rk=keys(rsp[0]); rk.forEach((rc)=>
+            let xw=((span(rc)*6)+8); if(xw>120){xw=120};
+            rh.contents.radd({col:('.head'),contents:
+            [{input:'', field:rc, style:('min-width:'+xw+'px'), readonly:true, contents:rc, listen:
             {
-               let xw=((span(rc)*6)+8); if(xw>120){xw=120};
-               rh.contents.radd({col:('.head'),contents:
-               [{input:'', field:rc, style:('min-width:'+xw+'px'), readonly:true, contents:rc, listen:
+               mouseover:function(){this.focus()}, mouseout:function(){this.blur()},
+            }}]})
+         });
+         n.insert(rh);
+
+         tick.until(()=>{return (pd==100)},()=>
+         {
+            let ri=rsp.shift(); let rb={row:'', canFocus:true, contents:[]}; let rx=VOID; ri.each((rv,rc)=>
+            {
+               let xw=((span(rv)*7)+8); if(xw>120){xw=120}; if(!rx){rx=(rc+':'+rv);};
+               rb.contents.radd({col:('.body'),contents:
+               [{input:'', field:rc, style:('min-width:'+xw+'px'), readonly:true, contents:rv, listen:
                {
                   mouseover:function(){this.focus()}, mouseout:function(){this.blur()},
-               }}]})
+               }}]});
             });
-            n.insert(rh);
+            rb.rowid=rx; n.insert(rb); rd++; pd=Math.floor((rd/rs)*100); Busy.edit('dataRender',pd);
+         });
 
-            tick.while(()=>{return (pd<100)},()=>
-            {
-               let ri=rsp.shift(); let rb={row:'', canFocus:true, contents:[]}; let rx=VOID; ri.each((rv,rc)=>
-               {
-                  let xw=((span(rv)*7)+8); if(xw>120){xw=120}; if(!rx){rx=(rc+':'+rv);};
-                  rb.contents.radd({col:('.body'),contents:
-                  [{input:'', field:rc, style:('min-width:'+xw+'px'), readonly:true, contents:rv, listen:
-                  {
-                     mouseover:function(){this.focus()}, mouseout:function(){this.blur()},
-                  }}]});
-               });
-               rb.rowid=rx; n.insert(rb); rd++; pd=Math.floor((rd/rs)*100); Busy.edit('dataRender',pd);
-            });
-
-            return;
-         };
+         return;
       })};
 
       return DONE;
