@@ -105,7 +105,7 @@ namespace Anon;
             if($a==='SELECT')
             {
                $n=$r->numColumns(); if($n<1){$this->pacify(); signal::dump("no cols in result"); return [];};
-               $p=null; $z=[]; while($i=$r->fetchArray(SQLITE3_ASSOC)){signal::dump($i); $z[]=knob($i);};
+               $p=null; $z=[]; while($i=$r->fetchArray(SQLITE3_ASSOC)){signal::dump($q); $z[]=knob($i);};
                if(!$l){$this->pacify();}; return $z;
             };
 
