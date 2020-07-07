@@ -688,7 +688,8 @@ extend(custom.domtag)
 
       if(!c.live){purl(c.from,c.vars,(rsp,dta)=>
       {
-         rsp=(isJson(rsp.body)?decode.jso(rsp.body):VOID); rs=span(rsp); rd=0; pd=0; if(!rsp||(rs<1)){return};
+         rsp=(isJson(rsp.body)?decode.jso(rsp.body):VOID); dump(rsp.body);
+         rs=span(rsp); rd=0; pd=0; if(!rsp||(rs<1)){return};
          if(isList(rsp))
          {
             if(!isKnob(rsp[0])){fail('expecting list of objects for datagrid');return}; if(rs>10){Busy.edit('dataRender',0)};

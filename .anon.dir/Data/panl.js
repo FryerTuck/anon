@@ -132,43 +132,43 @@ extend(Anon)
       {
          slf=this; vrs=(vrs||{}); drv=select('#DataTabber').driver; tpe=vrs.type; ttl=(tpe+' '+this.repl.vars.path);
          tab=drv.select(ttl); if(!!tab){return};
-         //
-         // drv.create({title:ttl, contents:[{panl:'.DataViewPanl', contents:
-         // [
-         //    {datagrid:'.darkSide', contents:{live:false,from:pth,vars:vrs}, listen:
-         //    {
-         //       client:
-         //       {
-         //          'keydown,keyup,click,mouseout':function(evnt)
-         //          {
-         //             var sig,tgt,row,col,val,edt,inf; sig=evnt.signal; tgt=evnt.target; inf=this.info;
-         //             if(nodeName(tgt)=='col')
-         //             {
-         //                row=tgt.parentNode.rowid;
-         //             }
-         //             else if(nodeName(tgt)=='input')
-         //             {
-         //                row=tgt.parentNode.parentNode.rowid; col=tgt.field; val=tgt.value; edt=(!tgt.readonly);
-         //                if((sig=='Control')&&(evnt.type=='keydown')){tgt.enclan('ctrlWarn')};
-         //                if((sig=='Control')&&(evnt.type=='keyup')&&!edt){tgt.declan('ctrlWarn')};
-         //                if((evnt.type=='mouseout')&&!edt){tgt.declan('ctrlWarn')}
-         //                if(sig=='Control LeftClick'){tgt.readonly=false; tgt.removeAttribute('readonly'); tgt.oval=val;};
-         //                if((sig=='Enter')&&(evnt.type=='keyup')&&edt)
-         //                {
-         //                   tgt.readonly=true; tgt.setAttribute('readonly','true');
-         //                   Anon.Data.edit({path:inf.path, type:inf.type, data:val, row:row, col:col},(rsp)=>
-         //                   {
-         //                      if(rsp==OK){tgt.declan('ctrlWarn'); tgt.enclan('ctrlGood'); return};
-         //                      tgt.value=tgt.oval;
-         //                   });
-         //                };
-         //             };
-         //          },
-         //       },
-         //       server:{},
-         //    }}
-         // ]}]});
-         // tab=drv.select(ttl);
+
+         drv.create({title:ttl, contents:[{panl:'.DataViewPanl', contents:
+         [
+            {datagrid:'.darkSide', contents:{live:false,from:pth,vars:vrs}, listen:
+            {
+               client:
+               {
+                  'keydown,keyup,click,mouseout':function(evnt)
+                  {
+                     var sig,tgt,row,col,val,edt,inf; sig=evnt.signal; tgt=evnt.target; inf=this.info;
+                     if(nodeName(tgt)=='col')
+                     {
+                        row=tgt.parentNode.rowid;
+                     }
+                     else if(nodeName(tgt)=='input')
+                     {
+                        row=tgt.parentNode.parentNode.rowid; col=tgt.field; val=tgt.value; edt=(!tgt.readonly);
+                        if((sig=='Control')&&(evnt.type=='keydown')){tgt.enclan('ctrlWarn')};
+                        if((sig=='Control')&&(evnt.type=='keyup')&&!edt){tgt.declan('ctrlWarn')};
+                        if((evnt.type=='mouseout')&&!edt){tgt.declan('ctrlWarn')}
+                        if(sig=='Control LeftClick'){tgt.readonly=false; tgt.removeAttribute('readonly'); tgt.oval=val;};
+                        if((sig=='Enter')&&(evnt.type=='keyup')&&edt)
+                        {
+                           tgt.readonly=true; tgt.setAttribute('readonly','true');
+                           Anon.Data.edit({path:inf.path, type:inf.type, data:val, row:row, col:col},(rsp)=>
+                           {
+                              if(rsp==OK){tgt.declan('ctrlWarn'); tgt.enclan('ctrlGood'); return};
+                              tgt.value=tgt.oval;
+                           });
+                        };
+                     };
+                  },
+               },
+               server:{},
+            }}
+         ]}]});
+         tab=drv.select(ttl);
       },
 
 
