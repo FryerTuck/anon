@@ -84,7 +84,6 @@ namespace Anon;
          if(is_string($q)){$q=trim($q); $q=trim($q,';'); $q.=';';}; if(!isText($q,10)){fail('invalid SQL');}; $a=strtoupper(stub($q,' ')[0]);
          $l=(!$this->link?0:1); $c=$this->vivify();
 
-signal::dump($q);
          if(isin(['SELECT','INSERT','UPDATE','DELETE','PRAGMA'],$a))
          {
             try{$x=$c->prepare($q);}catch(\Exception $f)
@@ -100,6 +99,7 @@ signal::dump($q);
                if($f){if(isin($f,'lock')){wait(50);}else
                {$er="$f ..\nPATH: `$mn->path`\nBASE: `$mn->base`\nEXEC: `$q`"; $f=null;}};
             }while($f);
+signal::dump($q);
 
             if($er){fail::database($er);exit;};
 
