@@ -230,7 +230,7 @@ extend(Anon)
             if(!isin(['SELECT','SHOW','DESCRIBE'],upperCase(cmd)))
             {Anon.Data.exec((slf.vars.plug+slf.vars.path),a,(r)=>{repl.mumble(' '+r)})};
             if(!slf.vars.custom){slf.vars.custom=0}; slf.vars.custom++;
-            Anon.Data.show('/Data/runQuery',{purl:(slf.vars.plug+slf.vars.path),cmnd:btoa(a),type:('qry'+slf.vars.custom+' in ')});
+            Anon.Data.show('/Data/runQuery',{purl:((slf.vars.plug||'')+slf.vars.path),cmnd:btoa(a),type:('qry'+slf.vars.custom+' in ')});
          },
 
 
