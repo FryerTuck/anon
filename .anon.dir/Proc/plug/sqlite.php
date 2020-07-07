@@ -105,7 +105,7 @@ namespace Anon;
             if($a==='SELECT')
             {
                $n=$r->numColumns(); if($n<1){$this->pacify(); signal::dump("no cols in result"); return [];};
-               $p=null; $z=[]; while($i=$r->fetchArray(SQLITE3_ASSOC)){$z[]=knob($i);};
+               $p=null; $z=[]; while($i=$r->fetchArray(SQLITE3_ASSOC)){signal::dump($i); $z[]=knob($i);};
                if(!$l){$this->pacify();}; return $z;
             };
 
@@ -189,7 +189,6 @@ namespace Anon;
             if($tpe==='dbase')
             {
                $r=$this->adjure("SELECT name AS 'table' FROM sqlite_master WHERE type='table'");
-signal::dump($r);
                $z=padded(unbury($r,"table"),'table::','');
                return $z;
             };
