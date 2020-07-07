@@ -106,10 +106,8 @@ namespace Anon;
             {
                $n=$r->numColumns(); if($n<1){$this->pacify(); signal::dump("no cols in result"); return [];};
 signal::dump(">>> $q\n$n");
-               $z=[]; while($i=$r->fetchArray(SQLITE3_ASSOC)){$z[]=knob($i);};
-               if(!$l){$this->pacify();};
-signal::dump($z);
-               return $z;
+               $z=[]; while($i=$r->fetchArray(SQLITE3_ASSOC)){signal::dump($i); $z[]=knob($i);};
+               if(!$l){$this->pacify();}; return $z;
             };
 
             if($a==='INSERT'){$z=knob(['deed'=>$a,'done'=>$c->changes(),'last'=>$c->lastInsertRowID()]);if(!$l){$this->pacify();}; return $z;};
