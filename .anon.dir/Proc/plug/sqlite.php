@@ -190,7 +190,7 @@ signal::dump(">>> $q\n$n");
             if($tpe==='dbase')
             {
                $r=$this->adjure("SELECT name AS 'table_name' FROM sqlite_master WHERE type = 'table'");
-               $z=padded(unbury($r,"table"),'table::','');
+               $z=padded(unbury($r,"table_name"),'table::','');
                return $z;
             };
 
