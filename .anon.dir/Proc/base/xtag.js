@@ -688,7 +688,7 @@ extend(custom.domtag)
 
       if(!c.live){purl(c.from,c.vars,(rsp,dta)=>
       {
-         rsp=(isJson(rsp.body)?decode.jso(rsp.body):VOID); dump(rsp.body);
+         rsp=(isJson(rsp.body)?decode.jso(rsp.body):VOID); dump(rsp);
          rs=span(rsp); rd=0; pd=0; if(!rsp||(rs<1)){return};
          if(isList(rsp))
          {
