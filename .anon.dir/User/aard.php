@@ -202,7 +202,9 @@ namespace Anon;
       static function plugMenu()
       {
          $v=knob($_POST); $l=xeno::showHyperConduit($v->path,parts); $p=$l->plug;
-         if($l->path){$p=($p.$l->path);}; $i=path::info($l->plug); $D=plug($p); $r=$D->select('*',TREE);
+         if($l->path){$p=($p.$l->path);}; $i=path::info($l->plug);
+         // $D=plug($p); $r=$D->select('*',TREE);
+         $r=plug($p)->adjure("SELECT name AS 'table' FROM sqlite_master WHERE type = 'table'");
 
          if(isin(['ftp','ftps'],$i->plug))
          {
