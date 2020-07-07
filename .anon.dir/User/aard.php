@@ -203,7 +203,7 @@ namespace Anon;
       {
          $v=knob($_POST); $l=xeno::showHyperConduit($v->path,parts); $p=$l->plug;
          if($l->path){$p=($p.$l->path);}; $i=path::info($l->plug); $D=crud($p); $r=$D->select('*',TREE);
-
+signal::dump($r);
          if(isin(['ftp','ftps'],$i->plug))
          {
             ekko($r);
