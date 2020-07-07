@@ -99,12 +99,12 @@ namespace Anon;
                if($f){if(isin($f,'lock')){wait(50);}else
                {$er="$f ..\nPATH: `$mn->path`\nBASE: `$mn->base`\nEXEC: `$q`"; $f=null;}};
             }while($f);
-signal::dump($q);
 
             if($er){fail::database($er);exit;};
 
             if($a==='SELECT')
             {
+signal::dump(">>> $q");
                $n=$r->numColumns(); if($n<1){$this->pacify(); signal::dump("no cols in result"); return [];};
                $p=null; $z=[]; while($i=$r->fetchArray(SQLITE3_ASSOC)){$z[]=knob($i);};
                if(!$l){$this->pacify();}; return $z;
