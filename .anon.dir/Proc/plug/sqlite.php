@@ -106,7 +106,7 @@ namespace Anon;
             {
                $n=$r->numColumns(); if($n<1){$this->pacify(); signal::dump("no cols in result"); return [];};
 signal::dump(">>> $q\n$n");
-               $z=[]; while($i=$r->fetchArray(SQLITE3_ASSOC)){signal::dump($i); $z[]=knob($i);};
+               $z=[]; while($i=$r->fetchArray(SQLITE3_ASSOC)){signal::dump(tval($i)."\n\n"); $z[]=knob($i);};
                if(!$l){$this->pacify();}; return $z;
             };
 
