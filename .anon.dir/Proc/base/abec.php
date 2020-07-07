@@ -628,9 +628,9 @@ namespace Anon;
       static function meta($d)
       {
          if(!isText($d,3)){return;}; $d=rshave(shaved($d),'/'); if(!isText($d,3)){return;};
-         if(isee($d)){return knob(['path'=>$d,'fork'=>null]);}; if(!isin($d,'/')){return;};
+         if(isee($d)){return knob(['base'=>$d,'path'=>'','levl'=>0]);}; if(!isin($d,'/')){return;};
          $l=frag($d,'/'); $f=[]; $y=0; do{ladd($f,rpop($l)); if(isee(fuse($l),'/')){$y=1;break;};}while(count($l));
-         if(!$y){return;}; return knob(['base'=>fuse($l,'/'),'path'=>fuse($f,'/'),'levl'=>count($f)]);
+         if(!$y){return;}; return knob(['base'=>fuse($l,'/'),'path'=>('/'.fuse($f,'/')),'levl'=>count($f)]);
       }
 
       static function size($d,$o=null)
