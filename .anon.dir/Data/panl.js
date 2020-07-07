@@ -228,10 +228,10 @@ extend(Anon)
             if(cmd&&isFunc(this[cmd])){this[cmd].apply(this,[arg]);return};
             if(cmd){this.echo(this[cmd]);return}; cmd=stub(a,' '); if(!cmd){return}; cmd=cmd[0];
             if(!isin(['SELECT','SHOW','DESCRIBE'],upperCase(cmd)))
-            {Anon.Data.exec((slf.vars.plug+slf.vars.path),a,(r)=>{repl.mumble(' '+r); this.prom()})};
+            {Anon.Data.exec((slf.vars.plug+slf.vars.path),a,(r)=>{repl.mumble(' '+r); slf.prom()})};
             if(!slf.vars.custom){slf.vars.custom=0}; slf.vars.custom++;
             Anon.Data.show('/Data/runQuery',{purl:((slf.vars.plug||'')+slf.vars.path),cmnd:btoa(a),type:('qry'+slf.vars.custom+' in ')});
-            this.prom();
+            slf.prom();
          },
 
 
