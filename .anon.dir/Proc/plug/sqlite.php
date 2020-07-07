@@ -189,8 +189,8 @@ signal::dump(">>> $q\n$n");
             $inf=$this->mean; $lvl=$inf->levl; $rfs=$inf->refs; $tpe=$rfs->basis; $ref=$rfs->$tpe;
             if($tpe==='dbase')
             {
-               $r=$this->adjure("SELECT name AS 'table_name' FROM sqlite_master WHERE type = 'table'");
-               $z=padded(unbury($r,"table_name"),'table::','');
+               $r=$this->adjure("SELECT name AS 'table' FROM sqlite_master WHERE type = 'table'");
+               $z=padded(unbury($r,"table"),'table::','');
                return $z;
             };
 
