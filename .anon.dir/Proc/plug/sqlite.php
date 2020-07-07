@@ -186,12 +186,11 @@ namespace Anon;
          if(($x==='*')&&($tre===TREE))
          {
             $inf=$this->mean; $lvl=$inf->levl; $rfs=$inf->refs; $tpe=$rfs->basis; $ref=$rfs->$tpe;
+signal::dump($tpe);
 
             if($tpe==='dbase')
             {
                $qt="SELECT name AS 'table' FROM sqlite_master WHERE type='table'";
-$rs=$this->adjure($qt);
-signal::dump($rs);
                $dt=padded(unbury($this->adjure($qt),"table"),'table::','');
                return $dt;
             };
