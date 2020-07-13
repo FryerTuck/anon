@@ -64,6 +64,7 @@ extend(Anon)
          panl.insert
          ([
             {butn:`.longMenuButn`, text:`browse templates`, onclick:function(){Anon.Site.open(`import`,`browse`)}},
+            {butn:`.longMenuButn`, text:`modify website`, onclick:function(){Anon.Site.open(`modify`,`open`)}},
             {butn:`.longMenuButn`, text:`import from URL`, onclick:function(){Anon.Site.open(`import`,`fromURL`)}},
             {butn:`.longMenuButn`, text:`template config`, onclick:function(){Anon.Site.open(`config`,`template`)}},
             // {butn:`.longMenuButn`, text:`create template`, onclick:function(){Anon.Site.open(`create`,`brandNew`)}},

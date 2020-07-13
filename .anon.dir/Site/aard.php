@@ -308,8 +308,9 @@ namespace Anon;
 
       static function treeMenu()
       {
-          permit::fubu("clan:work"); $c=conf("Site/autoConf"); $h="$/Site/tmpl/$c->template";
-          $r=path::tree($h); ekko($r);
+          permit::fubu("clan:work"); $up="~/root/www";
+          if(!isee($up)){path::copy("/www/",$up);};
+          $r=path::tree($up); ekko($r);
       }
 
 
