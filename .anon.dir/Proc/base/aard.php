@@ -264,11 +264,17 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function isee($d)
    {
-      $z=envi('ROOTPATH'); if(($d==='/')||($d===$z)){return $z;}; if($d==='$'){return envi('COREPATH');}; if($d==='~'){return envi('USERPATH');};
-      if(is_string($d)){$d=trim($d); if(strlen($d)<1){return;}; $d=str_replace(' ',',',$d); if(strpos($d,',')){$d=explode(',',$d);}};
+      $z=envi('ROOTPATH'); if(($d==='/')||($d===$z)){return $z;};
+      if($d==='$'){return envi('COREPATH');}; if($d==='~'){return envi('USERPATH');};
+      if(is_string($d))
+      {$d=trim($d); if(strlen($d)<1){return;}; $d=str_replace(' ',',',$d); if(strpos($d,',')){$d=explode(',',$d);}};
 
       clearstatcache(); if(is_array($d))
-      {$s=count($d); $f=array(); do{$i=array_shift($d); $i=isee($i); if($i){$f[]=$i;}}while(count($d)); $r=(count($f)/$s); return $r;};
+      {
+          $s=count($d); if(!$s){$s=1;}; $f=array();
+          do{$i=array_shift($d); $i=isee($i); if($i){$f[]=$i;}}while(count($d)); 
+          $r=(count($f)/$s); return $r;
+      };
 
       if(!is_string($d)){return;}; $d=str_replace('Anon\\','',trim($d)); $v=test($d,'/^([a-zA-Z])([a-zA-Z0-9_]){2,36}$/');
 
