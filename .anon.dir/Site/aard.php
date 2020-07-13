@@ -296,11 +296,14 @@ namespace Anon;
 
       static function configPick()
       {
-          permit::fubu("clan:work"); $vars=knob($_POST); $bufr=[];
-          $conf=conf("Site/autoConf"); $conf->template=$vars->data;
+          permit::fubu("clan:work"); $vars=knob($_POST); $tmpl=$vars->data; $bufr=[];
+          $conf=conf("Site/autoConf"); $conf->template=$tmpl;
           foreach($conf as $k =>$v){$bufr[]="$k: $v";};
           $bufr=fuse($bufr,"\n");
           path::make("$/Site/conf/autoConf",$bufr);
+
+          path::copy("$/Site/tmpl/$tmpl/","/www/");
+
           ekko(OK);
       }
 
