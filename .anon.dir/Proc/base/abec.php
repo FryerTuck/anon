@@ -791,9 +791,9 @@ namespace Anon;
 
       static function copy($pf,$pt)
       {
-         $pf=path($pf); $pt=path($pt); if(!$pf||!$pt){fail('expecting 2 paths');}; if(!isee($pf)){fail("`$pf` is undefined");};
-         $tx=isee($pt); if(!$tx){$np=(isFold($pf)?$pt:self::twig($pt)); pset("$np/");};
-         lock::awaits($pt); exec::{"cp -R $pf $pt"}(); lock::remove($pt); return true; // will fail if not OK
+         $of=path($of); $ot=path($ot); if(!$of||!$ot){fail('expecting 2 paths');}; if(!isee($of)){fail("`$of` is undefined");};
+         $tx=isee($ot); if(!$tx){$np=(isFold($of)?$ot:self::twig($ot)); pset("$np/");}; if(last($pf)==="/"){$of.="/.";};
+         lock::awaits($ot); exec::{"cp -R $of $ot"}(); lock::remove($ot); return true; // will fail if not OK
       }
 
 
