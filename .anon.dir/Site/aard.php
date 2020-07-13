@@ -19,20 +19,17 @@ namespace Anon;
 
       static function handle($p)
       {
-        $sc=conf("Site/autoConf"); $tn=$sc->template; $ap="/Site/tmpl/Anon"; $np="$p";
-        $tp="/Site/tmpl/$tn"; if(!isee($tp)){fail::template("missing path: `$tp`"); exit;};
-        if(isFold($np)){$ix=path::indx($np,'aard.php'); if($ix){$np=(rshave($np,'/')."/$ix");}}; // check for index-file
-        $tc=knob("/Site/tmpl/$tn/conf"); $rp=test::{$np}($tc->redirect);
-        if(is_int($rp)){finish($rp,['tmpl'=>"$tp/page/stat.htm"]); exit;}; // EXIT :: graceful status
-        if(isText($rp,1)&&(isPath($rp)||isPath("/$rp"))){$np=(arg($rp)->startsWith("/")?$rp:"$tp/$rp");}; // got redirected path
+        $np="$p"; if(isFold($np)){$ix=path::indx($np,'aard.php'); if($ix){$np=(rshave($np,'/')."/$ix");}}; // get index-file
+        $ap="/Site/tmpl/Anon"; $tp="/www"; $tc=knob("$tp/conf"); $rp=test::{$np}($tc->redirect);
+        if(is_int($rp)){finish($rp,['tmpl'=>"$tp/base/stat.htm"]); exit;}; // EXIT :: graceful status
+        if(isText($rp,1)&&(isPath($rp)||isPath("/$rp"))){$np=(arg($rp)->startsWith("/")?$rp:"$tp/$rp");}; // redirected path
         $fx=fext($np); if(isFold($np)&&!conf('Proc/viewDirs')){finish(403);}; // configured to deny viewing folders
 
 
         if(facing("DPR")||($fx==="php"))
         {
-            if(isee($np)){finish($np);}; // assests NOT in template
-            if(isee("$tp/$np")){finish("$tp/$np");}; // assests in template
-            if(isee("$ap/$np")){finish("$ap/$np");}; // assests in Anon template
+            if(isee("$tp/$np")){finish("$tp/$np"); exit;}; // assests in template
+            if(isee($np)){finish($np); exit;}; // assests NOT in template
             finish($np); // 404 or 403
         };
 
@@ -42,7 +39,7 @@ namespace Anon;
 
         if($rp&&(is_int($rp)||isPath($rp)||isPath("/$rp")))
         {
-            if(is_int($rp)){finish($rp,['tmpl'=>"$tp/page/stat.htm"]); exit;};
+            if(is_int($rp)){finish($rp,['tmpl'=>"$tp/base/stat.htm"]); exit;};
             $rp=(arg($rp)->startsWith("/")?$rp:"$tp/$rp"); if(!isee($rp)){fail::config("file not found: `$rp`");};
             $np="$rp";
         }
@@ -54,7 +51,7 @@ namespace Anon;
         };
 
         if(!isin(keys($_GET),"init")){finish($np);}; // serve without template
-        $pt=null; $tl=["$tp/base/$rc.$fx","$ap/base/aard.$fx","$ap/base/$rc.$fx","$ap/base/aard.$fx"];
+        $pt=null; $tl=["$tp/base/$rc.$fx","$ap/base/$rc.$fx","$ap/base/aard.$fx"];
         if(!arg($np)->startsWith("$tp/base/")){foreach($tl as $xt){if(isee($xt)){$pt="$xt"; break;}}};
         if(!$pt){finish($np); exit;}; // without template
         finish($pt,['contents'=>$np]); exit; // with template
