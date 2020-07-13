@@ -302,7 +302,7 @@ namespace Anon;
           $bufr=fuse($bufr,"\n");
           path::make("$/Site/conf/autoConf",$bufr);
 
-          path::copy("$/Site/tmpl/$tmpl/","/www/");
+          path::copy("$/Site/tmpl/$tmpl/","/www");
 
           ekko(OK);
       }
