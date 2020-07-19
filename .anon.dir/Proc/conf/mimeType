@@ -40,6 +40,7 @@ otf : application/x-font-otf
 pdf : application/pdf
 png : image/png
 php : application/x-httpd-php
+sdb : application/database
 snd : audio/ogg
 sql : application/sql
 svg : image/svg+xml

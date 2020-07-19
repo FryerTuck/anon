@@ -382,6 +382,7 @@ extend(custom.domtag)
             linkFold:'file-symlink-directory',
             linkFile:'file-symlink-file',
             plug:'plug',
+            database:'database',
             dbase:'database',
             table:'table',
             sproc:'cog',
