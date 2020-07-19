@@ -205,7 +205,7 @@ namespace Anon;
          $v=knob($_POST); $l=xeno::showHyperConduit($v->path,parts); $p=$l->plug;
          if($l->path){$p=($p.$l->path);};
          $i=path::info($l->plug);
-signal::dump($p);
+signal::dump($l);
          $D=plug($p); $r=$D->select('*',TREE);
 signal::dump($r);
 
