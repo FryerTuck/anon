@@ -222,7 +222,7 @@ namespace Anon;
             ([
                "repo"=>null,
                "path"=>$itm,
-               "levl"=>($lvl+1),
+               "levl"=>($lvl+0),
                "name"=>$itm,
                "mime"=>$D->mean->mime,
                "type"=>$tpe,
