@@ -423,6 +423,7 @@ extend(custom.domtag)
             if(into.type!=it){return};
          });
          if(fbc){return};
+if(into.name=="logs"){dump(">>>>>>>>>>>>",into,"<<<<<<<<<<<<")};
          if(txt.value.endsWith('.url')){txt.value=rtrim(txt.value,`.url`);}
          else if(isin(slf.hideFext,fxt)){txt.value=rtrim(txt.value,`.${fxt}`);};
          if(isKnob(slf.fextIcon)&&!!slf.fextIcon[fxt]){ico=slf.fextIcon[fxt]};
@@ -488,7 +489,6 @@ extend(custom.domtag)
             {if(!v){return}; v.root=slf; if(!!v.repo){v.repo.fork=fork}; frk.push(slf.sprout(v,levl,drgs,eats,fork))});
             frk=create({treefork:frk}); if(aro=='chevron-down'){frk.style.display='block'};
          };
-if(into.name=="logs"){dump(">>>>>>>>>>>>",into,"<<<<<<<<<<<<")};
 
          let itm = create({treeface:[twg,frk]});
          return itm;
