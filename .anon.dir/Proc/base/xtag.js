@@ -144,7 +144,7 @@ extend(custom.domtag)
             {div:'.panlHorzDlim', contents:[{hdiv:[]}]},
             {item:'$spinner9', text:'refresh', onclick:function()
             {
-                dump(this.context);
+                dump(this.context.info.root);
             }},
             {item:'$plus', text:'create folder', onclick:function(){this.context.info.root.adjure('create','fold',this.context)}},
             {item:'$plus', text:'create file', onclick:function(){this.context.info.root.adjure('create','file',this.context)}},
