@@ -203,19 +203,17 @@ namespace Anon;
       {
          permit::fubu("clan:work");
          $v=knob($_POST); $l=xeno::showHyperConduit($v->path,parts);
-         $p=$l->plug;
-         if($l->path){$p=($p.$l->path);};
-         $i=path::info($l->plug);
-signal::dump($v->path);
-         $D=plug($p); $r=$D->select('*',TREE);
-signal::dump($r);
+         $p=$l->plug; if($l->path){$p=($p.$l->path);};
+         $i=path::info($l->plug); $D=plug($p); $r=$D->select('*',TREE);
 
          if(isin(['ftp','ftps'],$i->plug))
          {
             ekko($r);
          };
 
-         $rsl=[]; $prl=$p; $i=path::info($p); $pth=$i->path; if(!$pth){$pth='/';}; $lvl=$i->levl;
+         $rsl=[]; $prl=$p; $i=path::info($p);
+         $pth=$l->path; if(!$pth){$pth='/';}; $pth=rshave($pth,"/");
+         $lvl=$i->levl;
 
          foreach($r as $itm)
          {
@@ -223,7 +221,7 @@ signal::dump($r);
             $dat=knob
             ([
                "repo"=>null,
-               "path"=>$itm,
+               "path"=>"$pth/$itm",
                "levl"=>($lvl+1),
                "name"=>$itm,
                "mime"=>$D->mean->mime,
