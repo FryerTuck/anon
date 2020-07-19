@@ -424,6 +424,7 @@ if(into.name=="logs"){dump(into)};
             let fp=stub(fn,'_'); if(!fp){return};  let it=fp[0]; fn=fp[2]; if(into[fn]==VOID){return};
             if(into.type!=it){return};
          });
+if(into.name=="logs"){dump(">>>>>>>>>>>>",into,"<<<<<<<<<<<<<")};
          if(fbc){return};
          if(txt.value.endsWith('.url')){txt.value=rtrim(txt.value,`.url`);}
          else if(isin(slf.hideFext,fxt)){txt.value=rtrim(txt.value,`.${fxt}`);};
