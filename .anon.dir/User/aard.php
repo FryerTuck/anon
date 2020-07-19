@@ -202,10 +202,11 @@ namespace Anon;
       static function plugMenu()
       {
          permit::fubu("clan:work");
-         $v=knob($_POST); $l=xeno::showHyperConduit($v->path,parts); $p=$l->plug;
+         $v=knob($_POST); $l=xeno::showHyperConduit($v->path,parts);
+         $p=$l->plug;
          if($l->path){$p=($p.$l->path);};
          $i=path::info($l->plug);
-signal::dump($l);
+signal::dump($v->path);
          $D=plug($p); $r=$D->select('*',TREE);
 signal::dump($r);
 
