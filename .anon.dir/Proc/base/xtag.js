@@ -142,6 +142,10 @@ extend(custom.domtag)
          [
             {h1:[{icon:x.info.root.status.mime[m]},{div:(w+' options')}]},
             {div:'.panlHorzDlim', contents:[{hdiv:[]}]},
+            {item:'$spinner9', text:'refresh', onclick:function()
+            {
+                dump(this.context);
+            },
             {item:'$plus', text:'create folder', onclick:function(){this.context.info.root.adjure('create','fold',this.context)}},
             {item:'$plus', text:'create file', onclick:function(){this.context.info.root.adjure('create','file',this.context)}},
             {item:'$plus', text:'create plug', onclick:function(){this.context.info.root.adjure('create','plug',this.context)}},
