@@ -415,10 +415,10 @@ extend(custom.domtag)
          if(!fork&&!!rpo&&!!rpo.head){fork=rpo.head.fork;}; if(fork&&into.repo){into.repo.fork=fork};
          let flt=(slf.filter||{}); let fxt=fext(into.name); into.fext=((into.type=='fold')?'dir':(fxt||'none'));
 
-if(into.name=="logs"){dump(">>>>>>>>>>>>",into,"<<<<<<<<<<<<")};
          let fbc=0; flt.each((fv,fn)=>
          {
             if((fn=='type')&&!isin(fv,into.type)){fbc=1; return};
+if(into.name=="logs"){dump(">>>>>>>>>>>>",into,"<<<<<<<<<<<<")};
             if((fn=='fext')&&(into.type!="fold")&&!isin(fv,into.fext)){fbc=1; return};
             if(isin(fv,'*')){fv.split(",").forEach((fi)=>{if(!akin(into[fn],fi)){fbc=1}}); return};
             let fp=stub(fn,'_'); if(!fp){return};  let it=fp[0]; fn=fp[2]; if(into[fn]==VOID){return};
