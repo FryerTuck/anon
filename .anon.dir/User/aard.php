@@ -212,7 +212,7 @@ namespace Anon;
          };
 
          $rsl=[]; $prl=$p; $i=path::info($p);
-         $pth=$l->path; if(!$pth){$pth='/';}; $pth=rshave($pth,"/");
+         $pth=$l->path; if(!$pth){$pth='/';};
          $lvl=$i->levl;
 
          foreach($r as $itm)
@@ -221,7 +221,7 @@ namespace Anon;
             $dat=knob
             ([
                "repo"=>null,
-               "path"=>"$pth/$itm",
+               "path"=>$itm,
                "levl"=>($lvl+1),
                "name"=>$itm,
                "mime"=>$D->mean->mime,
