@@ -414,6 +414,8 @@ extend(custom.domtag)
          if(!tid){fail('treeview item info-data is invalid');return}; tid=('#Path'+sha1(tid));
          if(!fork&&!!rpo&&!!rpo.head){fork=rpo.head.fork;}; if(fork&&into.repo){into.repo.fork=fork};
          let flt=(slf.filter||{}); let fxt=fext(into.name); into.fext=((into.type=='fold')?'dir':(fxt||'none'));
+
+if(into.name=="logs"){dump(">>>>>>>>>>>>",into,"<<<<<<<<<<<<")};
          let fbc=0; flt.each((fv,fn)=>
          {
             if((fn=='type')&&!isin(fv,into.type)){fbc=1; return};
@@ -423,7 +425,6 @@ extend(custom.domtag)
             if(into.type!=it){return};
          });
          if(fbc){return};
-if(into.name=="logs"){dump(">>>>>>>>>>>>",into,"<<<<<<<<<<<<")};
          if(txt.value.endsWith('.url')){txt.value=rtrim(txt.value,`.url`);}
          else if(isin(slf.hideFext,fxt)){txt.value=rtrim(txt.value,`.${fxt}`);};
          if(isKnob(slf.fextIcon)&&!!slf.fextIcon[fxt]){ico=slf.fextIcon[fxt]};
