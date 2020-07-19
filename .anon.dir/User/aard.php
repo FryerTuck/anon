@@ -211,9 +211,9 @@ namespace Anon;
             ekko($r);
          };
 
-         $rsl=[]; $prl=$p; $i=path::info($p);
+         $rsl=[]; $prl=$p;
          $pth=$l->path; if(!$pth){$pth='/';};
-         $lvl=$i->levl;
+         $lvl=path::meta($prl)->levl;
 
          foreach($r as $itm)
          {
@@ -222,7 +222,7 @@ namespace Anon;
             ([
                "repo"=>null,
                "path"=>$itm,
-               "levl"=>($lvl+0),
+               "levl"=>($lvl+1),
                "name"=>$itm,
                "mime"=>$D->mean->mime,
                "type"=>$tpe,
