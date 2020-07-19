@@ -396,8 +396,6 @@ extend(custom.domtag)
 
       n.sprout = function(into,levl,drgs,eats,fork)
       {
-if(into.name=="logs"){dump(into)};
-
          if(isNode(into)||!isKnob(into)){return}; if(!into.type){into.type="file"}; if(!into.mime){into.mime="auto/undefined"};
          let slf = this; let pth=into.path; let lib=slf.status.mime; levl+=1; let ext = into.mime.split('/')[0];
          let val=into.name; let tpe=into.type; let kds=((tpe=='fold')?into.data:(isin(['plug','dbase','table'],tpe)?[]:VOID));
@@ -424,7 +422,6 @@ if(into.name=="logs"){dump(into)};
             let fp=stub(fn,'_'); if(!fp){return};  let it=fp[0]; fn=fp[2]; if(into[fn]==VOID){return};
             if(into.type!=it){return};
          });
-if(into.name=="logs"){dump(">>>>>>>>>>>>",into,"<<<<<<<<<<<<<")};
          if(fbc){return};
          if(txt.value.endsWith('.url')){txt.value=rtrim(txt.value,`.url`);}
          else if(isin(slf.hideFext,fxt)){txt.value=rtrim(txt.value,`.${fxt}`);};
@@ -491,6 +488,7 @@ if(into.name=="logs"){dump(">>>>>>>>>>>>",into,"<<<<<<<<<<<<<")};
             {if(!v){return}; v.root=slf; if(!!v.repo){v.repo.fork=fork}; frk.push(slf.sprout(v,levl,drgs,eats,fork))});
             frk=create({treefork:frk}); if(aro=='chevron-down'){frk.style.display='block'};
          };
+if(into.name=="logs"){dump(">>>>>>>>>>>>",into,"<<<<<<<<<<<<")};
 
          let itm = create({treeface:[twg,frk]});
          return itm;
