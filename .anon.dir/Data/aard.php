@@ -17,7 +17,8 @@ class Data
          {
             $p=$obj->path; $x=fext($p);
             if(isFold($p)){$rsl[$idx]->data=listOf(self::dataTree($p,$flt,0));continue;};
-            if($x!=="sdb"){continue;}; $rsl[$idx]->type="plug"; $rsl[$idx]->path="sqlite::$p";
+            if($x!=="sdb"){continue;};
+            $rsl[$idx]->type="plug"; $rsl[$idx]->mime="plug/link"; $rsl[$idx]->path="sqlite::$p";
          };
          return $rsl;
       };
