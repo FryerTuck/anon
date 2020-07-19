@@ -454,14 +454,12 @@ extend(custom.domtag)
             e.dataTransfer.setData('text/plain',tp);
          })};
 
-         twg.update=function()
+         twg.update=function(lv)
          {
-             tick.after(250,()=>
-             {
-                 let pi=this.lookup("^",2).lookup("<");
-                 if(!pi||!pi.info){pi=this.lookup("^",1).lookup("<")}; if(!pi||!pi.info){return};
-                 pi.info.root.status.togl(pi);
-             });
+             if(!isInum(lv)){lv=2};
+             let pi=this.lookup("^",lv).lookup("<");
+             if(!pi||!pi.info){return}; pi.info.root.status.togl(pi);
+             tick.after(250,()=>{pi.info.root.status.togl(pi)});
          };
 
          if(eats)
