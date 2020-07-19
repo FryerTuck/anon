@@ -238,6 +238,7 @@ namespace Anon;
 
       static function upload()
       {
+         permit::fubu();
          $po=knob($_POST); $fp=$po->path; $ph=md5($fp); $sk=USERSKEY; $tp="/Proc/temp/sesn/$sk/$ph";
          $rp=path($tp); $br=file_put_contents($rp,$po->data,FILE_APPEND); if(!$br){ekko(FAIL);return;};
          $cs=filesize($rp); $ts=$po->size; if($cs<$ts){dump([$cs,$ts]);return;}; // in progress

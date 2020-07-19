@@ -51,6 +51,12 @@ namespace Anon;
 
          boot(); // boot all bootable stems
 
+         if(NAVIPATH==='/User/upload')
+         {
+            // skip past all the INIT stuff and run quickly, yet -with security
+            User::upload(); exit;
+         };
+
          if(facing('GUI'))
          {
             guiStrap();
