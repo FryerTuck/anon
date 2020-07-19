@@ -456,9 +456,11 @@ extend(custom.domtag)
 
          twg.update=function()
          {
-             let pi=this.lookup("^",2).lookup("<");
-             pi.info.root.status.togl(pi);
-             tick.after(250,()=>{pi.info.root.status.togl(pi)});
+             var pi; tick.until
+             (
+                 ()=>{pi=this.lookup("^",2).lookup("<"); return !!pi},
+                 ()=>{pi.info.root.status.togl(pi)}
+             );
          };
 
          if(eats)
