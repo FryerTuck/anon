@@ -456,10 +456,11 @@ extend(custom.domtag)
 
          twg.update=function()
          {
-             var tk=tick.every(50,()=>
+             tick.after(250,()=>
              {
-                 let pi=this.lookup("^",2).lookup("<"); if(!pi){return};
-                 clearInterval(tk); pi.info.root.status.togl(pi);
+                 let pi=this.lookup("^",2).lookup("<");
+                 if(!pi||!pi.info){pi=this.lookup("^",1).lookup("<")}; if(!pi||!pi.info){return};
+                 pi.info.root.status.togl(pi);
              });
          };
 
