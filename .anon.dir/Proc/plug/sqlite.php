@@ -15,13 +15,14 @@ namespace Anon;
       {
          $p=$x->path; $t=path::type($p); if($t==='none'){$p="$p.sdb";}elseif($t==='fold'){$p="$p/base.sdb";};
          $this->mean=$x; $this->mean->mime='application/sql';
-         if(!$p){$p=[];}; $r=knob(); $x=['table','field']; $r=knob();
+         if(!$p){$p=[];}; $x=['table','field'];
          $this->info=knob(['maxLevel'=>2,'levlType'=>$x]); $m=$this->mean->meta;
-signal::dump($m);
          $l=($m?$m->levl:0); if($l>$this->info->maxLevel){fail('path-depth unreachable');exit;};
-         $this->mean->levl=$l; $p=frag(($m&&$m->path?shaved($m->path,'/'):''),'/');
-signal::dump($p);
-         foreach($p as $k => $v){$r->{$x[$k]}=$v; $r->basis=$x[$k];}; $this->mean->refs=$r; if($l<2){return;};
+         $this->mean->levl=$l; $p=($m&&$m->path?shaved($m->path,'/'):''); $r=knob();
+         if(!$p){$r->basis="dbase"; $r->dbase=path::leaf($m->base);}
+         else{$p=frag($p,'/'); foreach($p as $k => $v){$r->{$x[$k]}=$v; $r->basis=$x[$k];}};
+
+         $this->mean->refs=$r; if($l<2){return;};
 
          // $b=$r->dbase; $t="$r->table"; $q="STATUS where Db = '$b' AND Name = '$t'"; $sp=$this->adjure("SHOW PROCEDURE $q");
          // if(span($sp<1)){$sp=0;}; $fn=$this->adjure("SHOW FUNCTION $q"); if(span($fn<1)){$fn=0;}; if(!$sp&&!$fn){return;};
