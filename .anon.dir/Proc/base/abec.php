@@ -630,7 +630,8 @@ namespace Anon;
          $r=knob(['base'=>$d,'path'=>'','levl'=>0]); if(!isText($d,3)){return $r;};
          $d=rshave(shaved($d),'/'); if(!isText($d,3)){return $r;};
          if(isee($d)){return $r;}; if(!isin($d,'/')){return $r;};
-         $l=frag($d,'/'); $f=[]; $y=0; do{ladd($f,rpop($l)); if(isee(fuse($l),'/')){$y=1;break;};}while(count($l));
+         $l=frag($d,'/'); $f=[]; $y=0;
+         do{$i=rpop($l); ladd($f,$i); if(isee(fuse($l),'/')){$y=1; radd($l,$i); break;}}while(count($l)&&($y<1));
          if(!$y){return $r;}; $p=('/'.fuse($f,'/')); $b=rshave($d,$p);
          $r->base=$b; $r->path=$p; $r->levl=count($f); return $r;
       }
