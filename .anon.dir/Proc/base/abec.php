@@ -633,7 +633,7 @@ namespace Anon;
          $l=frag($d,'/'); $f=[]; $y=0;
          do{$i=rpop($l); ladd($f,$i); if(isee(fuse($l),'/')){$y=1; radd($l,$i); break;}}while(count($l)&&($y<1));
          if(!$y){return $r;}; $p=('/'.fuse($f,'/')); $b=rshave($d,$p);
-         $r->base=$b; $r->path=$p; $r->levl=count($f); return $r;
+         $r->base=fuse($l,'/'); $r->path=$p; $r->levl=count($f); return $r;
       }
 
       static function size($d,$o=null)
