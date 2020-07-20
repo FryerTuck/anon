@@ -84,7 +84,7 @@ namespace Anon;
       function adjure($q,$b=[],$l=null)
       {
          if(is_string($q)){$q=trim($q); $q=trim($q,';'); $q.=';';};
-         if(!isText($q,10)){$q=tval($q); fail("invalid SQL, query used:\n\n```\n$q\n```\n\n"); exit;};
+         if(!isText($q,10)){$q=tval($q); fail("invalid SQL, query used:\n`$q`\n"); exit;};
          $a=strtoupper(stub($q,' ')[0]); $l=(!$this->link?0:1); $c=$this->vivify();
 
          if(isin(['SELECT','INSERT','UPDATE','DELETE','PRAGMA'],$a))
