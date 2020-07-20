@@ -203,6 +203,7 @@ namespace Anon;
       {
          permit::fubu("clan:work");
          $v=knob($_POST); $l=xeno::showHyperConduit($v->path,parts);
+signal::dump($l);
          $p=$l->plug; if($l->path){$p=($p.$l->path);};
          $i=path::info($l->plug); $D=plug($p); $r=$D->select('*',TREE);
 
