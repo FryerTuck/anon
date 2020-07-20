@@ -41,10 +41,12 @@ namespace Anon;
 
       function vivify()
       {
-         if($this->link){return $this->link;}; $p=path($this->mean->path); if(!isFile($p)||(path::size($p)<1)){$this->create();};
+         if($this->link){return $this->link;}; $p=$this->mean->meta->base;
+         if(!isFile($p)||(path::size($p)<1)){$this->create();};
          // $this->link=(new \SQLite3($p, SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE));
-         lock::awaits($this->mean->path);
-         $this->link=(new \SQLite3($p, SQLITE3_OPEN_READWRITE));
+         lock::awaits($p);
+         $this->link=(new \SQLite3(path($p), SQLITE3_OPEN_READWRITE));
+         lock::remove($p);
          $this->link->busyTimeout(6); $this->link->enableExceptions(true);
          return $this->link;
       }
@@ -59,8 +61,8 @@ namespace Anon;
 
       function create($d=null)
       {
-         $i=$this->mean; $p=path($i->path); if(isee($p)&&(path::size($p)>0)){return;};
-         $l=(new \SQLite3($p, SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE)); $h=$i->twig;
+         $i=$this->mean; $p=path($i->meta->base); if(isee($p)&&(path::size($p)>0)){return;};
+         $l=(new \SQLite3($p, SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE)); $h=path::twig($i->meta->base);
          if(!$d&&isee("$h/defn.php")){$d=import("$h/defn.php");}; if(isAssa($d)){$d=knob($d);};
          if(!isKnob($d,1)){$l->close(); wait(50); return true;}; $this->link=$l;
 
@@ -186,7 +188,7 @@ namespace Anon;
          if(($x==='*')&&($tre===TREE))
          {
             $inf=$this->mean; $lvl=$inf->levl; $rfs=$inf->refs; $tpe=$rfs->basis; $ref=$rfs->$tpe;
-signal::dump($tpe);
+
             if($tpe==='dbase')
             {
                $r=$this->adjure("SELECT name AS 'table' FROM sqlite_master WHERE type = 'table'");
