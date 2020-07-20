@@ -363,6 +363,7 @@ extend(custom.domtag)
                r=decode.jso(r.body,1); if(!r){return}; r.each((v)=>
                {
                   v.path=(itm.info.path+"/"+v.name); v.root=itm.info.root;
+dump([itm.info.levl,v.levl]);
                   f.insert(itm.info.root.sprout(v,(l+v.levl),d,e,r));
                });
                Busy.edit('/User/plugMenu',100);
