@@ -363,8 +363,7 @@ extend(custom.domtag)
                r=decode.jso(r.body,1); if(!r){return}; r.each((v)=>
                {
                   v.path=(itm.info.path+"/"+v.name); v.root=itm.info.root;
-dump([itm.info.levl,v.levl]);
-                  f.insert(itm.info.root.sprout(v,(l+v.levl),d,e,r));
+                  f.insert(itm.info.root.sprout(v,(l+1),d,e,r));
                });
                Busy.edit('/User/plugMenu',100);
             });
@@ -429,6 +428,8 @@ dump([itm.info.levl,v.levl]);
          if(txt.value.endsWith('.url')){txt.value=rtrim(txt.value,`.url`);}
          else if(isin(slf.hideFext,fxt)){txt.value=rtrim(txt.value,`.${fxt}`);};
          if(isKnob(slf.fextIcon)&&!!slf.fextIcon[fxt]){ico=slf.fextIcon[fxt]};
+
+         into.levl=levl;
 
          let twg = create({treetwig:(tid+isr), info:into, tabindex:-1, listen:slf.events, contents:
          [
