@@ -202,10 +202,7 @@ namespace Anon;
 
             if($tpe==='table')
             {
-signal::dump($rfs);
-               $z=$this->adjure("PRAGMA table_info('$ref')");
-signal::dump($z);
-               $z=padded(unbury($this->adjure("DESCRIBE $rfs->table"),'Field'),'field::',''); return $z;
+               $z=padded(unbury($this->adjure("PRAGMA table_info('$ref')"),'name'),'field::',''); return $z;
             };
 
             if(($tpe==='sproc')||($tpe==='funct'))
