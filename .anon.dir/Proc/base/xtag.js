@@ -419,7 +419,7 @@ extend(custom.domtag)
          let fbc=0; flt.each((fv,fn)=>
          {
             if((fn=='type')&&!isin(fv,into.type)){fbc=1; return};
-            if((fn=='fext')&&!isin("fold,plug,dbase,table",into.type)&&!isin(fv,into.fext)){fbc=1; return};
+            if((fn=='fext')&&!isin("fold,plug,dbase,table,field",into.type)&&!isin(fv,into.fext)){fbc=1; return};
             if(isin(fv,'*')){fv.split(",").forEach((fi)=>{if(!akin(into[fn],fi)){fbc=1}}); return};
             let fp=stub(fn,'_'); if(!fp){return};  let it=fp[0]; fn=fp[2]; if(into[fn]==VOID){return};
             if(into.type!=it){return};
