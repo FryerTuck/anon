@@ -351,7 +351,7 @@ extend(custom.domtag)
             s=((s=='shut')?'open':'shut'); i=((s=='open')?'down':'right');
             this.fold[p]=s; itm.select('.treeTwigArro i')[0].className=('icon-chevron-'+i);
             itm.select('>').style.display=((s=='open')?'block':'none');
-            if((itm.info.type!='plug')&&!itm.info.path.endsWith('.url')&&!isin(itm.info.path,'.url/')){return;};
+            if(!isin('plug,dbase,table',itm.info.type)){return;};
             if(s!='open'){return};
 
             l=itm.info.levl; d=(!!itm.draggable); e=(!!itm.info.root.feedable); r=itm.info.repo; if(r){r=r.fork};
@@ -407,7 +407,8 @@ extend(custom.domtag)
 
          let rpo = into.repo; if(rpo&&rpo.host){ext=((rpo.host.fork==rpo.head.fork)?'repoMain':'repoFork');};
          let flg=(rpo?rpo.flag:'XX');
-         let ico = (lib[ext]?lib[ext]:lib.auto); let isr=(isin(['repoMain','repoFork'],ext)?' .isRepo':'');
+         let ico = (lib[ext]||lib[tpe]||lib.auto);
+         let isr=(isin(['repoMain','repoFork'],ext)?' .isRepo':'');
          let txt = {input:'',type:'text',disabled:true,value:val,tabindex:null};
          let tid = (into.path||into.purl); if(!tid&&!!into.root&&!!into.root.initVars){tid=into.root.initVars.purl};
 
