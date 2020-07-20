@@ -15,11 +15,9 @@ namespace Anon;
       {
          $p=$x->path; $t=path::type($p); if($t==='none'){$p="$p.sdb";}elseif($t==='fold'){$p="$p/base.sdb";};
          $this->mean=$x; $this->mean->mime='application/sql';
-         if(!$p){$p=[];}; $r=knob(); $x=['dbase','table','field']; $r=knob();
-         $q=['dbase','table','field']; $this->info=knob(['maxLevel'=>3,'levlType'=>$x]); $m=$this->mean->meta;
+         if(!$p){$p=[];}; $r=knob(); $x=['table','field']; $r=knob();
+         $this->info=knob(['maxLevel'=>2,'levlType'=>$x]); $m=$this->mean->meta;
          $l=($m?$m->levl:0); if($l>$this->info->maxLevel){fail('path-depth unreachable');exit;};
-$q=$this->mean->purl;
-signal::dump("$q $l");
          $this->mean->levl=$l; $p=frag(($m&&$m->path?shaved($m->path,'/'):''),'/');
          foreach($p as $k => $v){$r->{$x[$k]}=$v; $r->basis=$x[$k];}; $this->mean->refs=$r; if($l<2){return;};
 
