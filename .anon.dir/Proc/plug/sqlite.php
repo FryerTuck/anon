@@ -229,6 +229,8 @@ namespace Anon;
 
          if($q->count){$x=$q->count; foreach($x as $k => $v){$x[$k]=swap($v,':',' AS ');}; $sql.=fuse($x,', '); unset($x,$k,$v);};
 
+signal::dump($q);
+
          if($q->alter)
          {
             $a=$q->alter; if(isText($a)){$a=[$a];}; if(!isNuma($a)){fail('expecting `alter` as :text: or :numa:');};
