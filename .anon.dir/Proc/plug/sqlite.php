@@ -18,6 +18,7 @@ namespace Anon;
          if(!$p){$p=[];}; $r=knob(); $x=['dbase','table','field']; $r=knob();
          $q=['dbase','table','field']; $this->info=knob(['maxLevel'=>3,'levlType'=>$x]); $m=$this->mean->meta;
          $l=($m?$m->levl:0); if($l>$this->info->maxLevel){fail('path-depth unreachable');exit;};
+signal::dump("$x->purl $l");
          $this->mean->levl=$l; $p=frag(($m&&$m->path?shaved($m->path,'/'):''),'/');
          foreach($p as $k => $v){$r->{$x[$k]}=$v; $r->basis=$x[$k];}; $this->mean->refs=$r; if($l<2){return;};
 
