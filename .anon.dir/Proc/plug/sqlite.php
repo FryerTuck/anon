@@ -196,7 +196,7 @@ namespace Anon;
                $z=padded(unbury($r,"table"),'table::','');
                return $z;
             };
-
+signal::dump($tpe);
             if($tpe==='table')
             {
                $z=$this->adjure("PRAGMA table_info('$ref')");
