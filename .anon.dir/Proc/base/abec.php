@@ -631,7 +631,8 @@ namespace Anon;
          $d=rshave(shaved($d),'/'); if(!isText($d,3)){return $r;};
          if(isee($d)){return $r;}; if(!isin($d,'/')){return $r;};
          $l=frag($d,'/'); $f=[]; $y=0; do{ladd($f,rpop($l)); if(isee(fuse($l),'/')){$y=1;break;};}while(count($l));
-         if(!$y){return $r;}; $r->path=('/'.fuse($f,'/')); $r->levl=count($f); return $r;
+         if(!$y){return $r;}; $p=('/'.fuse($f,'/')); $b=rshave($d,$p);
+         $r->base=$b; $r->path=$p; $r->levl=count($f); return $r;
       }
 
       static function size($d,$o=null)
