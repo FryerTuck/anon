@@ -35,7 +35,7 @@ class Data
             "repo"=>null,
             "purl"=>"$prl/$itm",
             "path"=>swap("$pth/$itm",'//','/'),
-            "levl"=>($lvl+1),
+            "levl"=>($lvl+0),
             "name"=>$itm,
             "mime"=>null,
             "type"=>$tpe,
