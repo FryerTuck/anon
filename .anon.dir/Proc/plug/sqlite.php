@@ -222,7 +222,7 @@ namespace Anon;
 
          if($x==='*'){return $this->descry();}; $ref=[]; $q=(isAssa($x)?knob($x,U):knob($x)); $x=null; $alt=[]; $tbl='';
          if(!isKnob($q)){fail('expecting :assa: or :knob:');}; $sql='SELECT '; $opr=padded((explode(' ',EXPROPER)),' ');
-         if(!$q->using&&($tpe==='table')){$q->using=$ref;}; 
+         if(!$q->using&&($tpe==='table')){$q->using=$ref;};
          if($q->using&&is_string($q->using)){$q->using=[$q->using];};
          if($q->count&&is_string($q->count)){$q->count=[$q->count];};
          if($q->fetch&&is_string($q->fetch)){$q->fetch=[$q->fetch];};
@@ -231,8 +231,6 @@ namespace Anon;
          if(isin($q,'parse')){if(!$q->parse){$this->parsed=false;}};
 
          if($q->count){$x=$q->count; foreach($x as $k => $v){$x[$k]=swap($v,':',' AS ');}; $sql.=fuse($x,', '); unset($x,$k,$v);};
-
-signal::dump($q);
 
          if($q->alter)
          {
