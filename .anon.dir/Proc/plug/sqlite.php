@@ -196,9 +196,10 @@ namespace Anon;
                $z=padded(unbury($r,"table"),'table::','');
                return $z;
             };
-signal::dump($tpe);
+
             if($tpe==='table')
             {
+signal::dump($rfs);
                $z=$this->adjure("PRAGMA table_info('$ref')");
 signal::dump($z);
                $z=padded(unbury($this->adjure("DESCRIBE $rfs->table"),'Field'),'field::',''); return $z;
