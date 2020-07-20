@@ -17,6 +17,7 @@ namespace Anon;
          $this->mean=$x; $this->mean->mime='application/sql';
          if(!$p){$p=[];}; $r=knob(); $x=['table','field']; $r=knob();
          $this->info=knob(['maxLevel'=>2,'levlType'=>$x]); $m=$this->mean->meta;
+signal::dump($m);
          $l=($m?$m->levl:0); if($l>$this->info->maxLevel){fail('path-depth unreachable');exit;};
          $this->mean->levl=$l; $p=frag(($m&&$m->path?shaved($m->path,'/'):''),'/');
 signal::dump($p);
