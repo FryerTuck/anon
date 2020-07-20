@@ -191,10 +191,10 @@ namespace Anon;
 
       function select($x='*',$tre=null)
       {
+         $inf=$this->mean; $lvl=$inf->levl; $rfs=$inf->refs; $tpe=$rfs->basis; $ref=$rfs->$tpe;
+
          if(($x==='*')&&($tre===TREE))
          {
-            $inf=$this->mean; $lvl=$inf->levl; $rfs=$inf->refs; $tpe=$rfs->basis; $ref=$rfs->$tpe;
-
             if($tpe==='dbase')
             {
                $r=$this->adjure("SELECT name AS 'table' FROM sqlite_master WHERE type = 'table'");
@@ -222,8 +222,11 @@ namespace Anon;
 
          if($x==='*'){return $this->descry();}; $ref=[]; $q=(isAssa($x)?knob($x,U):knob($x)); $x=null; $alt=[]; $tbl='';
          if(!isKnob($q)){fail('expecting :assa: or :knob:');}; $sql='SELECT '; $opr=padded((explode(' ',EXPROPER)),' ');
-         if($q->count&&is_string($q->count)){$q->count=[$q->count];}; if($q->fetch&&is_string($q->fetch)){$q->fetch=[$q->fetch];};
-         if($q->using&&is_string($q->using)){$q->using=[$q->using];}; if($q->where&&is_string($q->where)){$q->where=[$q->where];};
+         if(!$q->using&&($tpe==='table')){$q->using=$ref;}; 
+         if($q->using&&is_string($q->using)){$q->using=[$q->using];};
+         if($q->count&&is_string($q->count)){$q->count=[$q->count];};
+         if($q->fetch&&is_string($q->fetch)){$q->fetch=[$q->fetch];};
+         if($q->where&&is_string($q->where)){$q->where=[$q->where];};
 
          if(isin($q,'parse')){if(!$q->parse){$this->parsed=false;}};
 
