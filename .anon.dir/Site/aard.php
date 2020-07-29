@@ -24,7 +24,13 @@ namespace Anon;
         if(is_int($rp)){finish($rp,['tmpl'=>"$tp/base/stat.htm"]); exit;}; // EXIT :: graceful status
         if(isText($rp,1)&&(isPath($rp)||isPath("/$rp"))){$np=(arg($rp)->startsWith("/")?$rp:"$tp/$rp");}; // redirected path
         $fx=fext($np); if(isFold($np)&&!conf('Proc/viewDirs')){finish(403);}; // configured to deny viewing folders
+        $ini=isin(keys($_GET),"init");
 
+        if($ini&&($fx==="php"))
+        {
+            ekko::head(["Content-Type"=>"text/html"]);
+            die("<iframe src=\"$np\"></iframe>");
+        };
 
         if(facing("DPR")||($fx==="php"))
         {
@@ -50,7 +56,7 @@ namespace Anon;
             $rc=isin($uc,$cl); if(!$rc){fail::template("invalid user clan: `$uc`");};
         };
 
-        if(!isin(keys($_GET),"init")){finish($np);}; // serve without template
+        if(!$ini){finish($np);}; // serve without template
         $pt=null; $tl=["$tp/base/$rc.$fx","$ap/base/$rc.$fx","$ap/base/aard.$fx"];
         if(!arg($np)->startsWith("$tp/base/")){foreach($tl as $xt){if(isee($xt)){$pt="$xt"; break;}}};
         if(!$pt){finish($np); exit;}; // without template
