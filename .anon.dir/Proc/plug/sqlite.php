@@ -48,6 +48,7 @@ namespace Anon;
          if(!isFile($p)||(path::size($p)<1)){$this->create();};
          // $this->link=(new \SQLite3($p, SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE));
          lock::awaits($p);
+         signal::dump($p);
          $this->link=(new \SQLite3(path($p), SQLITE3_OPEN_READWRITE));
          lock::remove($p);
          $this->link->busyTimeout(6); $this->link->enableExceptions(true);

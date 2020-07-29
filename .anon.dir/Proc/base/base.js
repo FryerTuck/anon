@@ -1081,7 +1081,8 @@
          if(!trim(r.body)){f("");};
          parsed(r,t,(z)=>
          {
-            if(t=='markdown'){z=create({div:'.markdown-page',contents:[z]})}; f(z);
+            if(t=='markdown'){z=create({div:'.markdown-page',contents:[z]})};
+            f(z);
          });
       });
    }

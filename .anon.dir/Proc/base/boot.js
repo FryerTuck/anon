@@ -350,42 +350,8 @@
                             if(ms.tapTmo){clearTimeout(ms.tapTmo)};
                             if(ms.tapHit<4){ms.tapTmo=setTimeout(()=>{ms.tapHit=0;},350); return;};
                             initPanl();
-
                         });
                     };
-
-                    listOf(dm.body.getElementsByTagName("a")).forEach((n)=>
-                    {
-                        n.cntx=dm; let rf=(n.getAttribute("href")||"");
-
-                        if(rf.startsWith("#"))
-                        {
-                            rf=dm.getElementById(rf.slice(1)); let pt;
-                            if(rf){pt=(cStyle(rf,'padding-top')||0); rf.style.paddingTop=((pt+20)+"px");}
-                        };
-
-                        n.addEventListener("click",function(ev,hr)
-                        {
-                            ev.preventDefault(); ev.stopImmediatePropagation(); ev.stopPropagation();
-                            hr=(this.getAttribute("href")||"");
-                            if(hr.startsWith("#"))
-                            {
-                                let trgt=this.cntx.getElementById(hr.slice(1));
-                                if(trgt){trgt.scrollIntoView({behavior:"smooth", block:"start"})};
-                            };
-                        },false);
-                    });
-
-                    // se=dm.createElement("script");
-                    // se.onload=function()
-                    // {
-                    //    if(!globVars(`antiHack`).scriptWack){return};
-                    //    // hijack(globVars(`jack`).main,function(){});
-                    //    // hijack(globVars(`jack`).info,function(){});
-                    //
-                    // };
-                    // se.src="/Proc/base/abec.js";
-                    // dm.head.appendChild(se);
                 });
             };
 
