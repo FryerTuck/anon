@@ -14,9 +14,13 @@ namespace Anon;
       function __construct($x)
       {
          $p=$x->path; $t=path::type($p); if($t==='none'){$p="$p.sdb";}elseif($t==='fold'){$p="$p/base.sdb";};
-         $x->path=$p; $this->mean=$x; $this->mean->mime='application/sql';
+         $this->mean=$x; $this->mean->mime='application/sql'; $m=$this->mean->meta;
+         $this->info=knob(['maxLevel'=>2,'levlType'=>$x]);
+
+         if(isPath($m->base,[D,W])&&!isee($p)){$m->base=($m->base.$m->path); $m->path=''; $this->mean->meta=$m;};
+         // if(!isFold($p)||(path::size($p)<1)){$this->create();};
+
          if(!$p){$p=[];}; $x=['table','field'];
-         $this->info=knob(['maxLevel'=>2,'levlType'=>$x]); $m=$this->mean->meta;
          $l=($m?$m->levl:0); if($l>$this->info->maxLevel){fail('path-depth unreachable');exit;};
          $this->mean->levl=$l; $p=($m&&$m->path?shaved($m->path,'/'):''); $r=knob();
          if(!$p){$r->basis="dbase"; $r->dbase=path::leaf($m->base);}
@@ -44,11 +48,9 @@ namespace Anon;
 
       function vivify()
       {
-         if($this->link){return $this->link;};
-         $m=$this->mean;  $p=$m->meta->base; if(!isFile($p)){$p=$m->path;};
+         if($this->link){return $this->link;}; $p=$this->mean->meta->base;
          if(!isFile($p)||(path::size($p)<1)){$this->create();};
          // $this->link=(new \SQLite3($p, SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE));
-
          lock::awaits($p);
          $this->link=(new \SQLite3(path($p), SQLITE3_OPEN_READWRITE));
          lock::remove($p);
@@ -66,8 +68,7 @@ namespace Anon;
 
       function create($d=null)
       {
-         $i=$this->mean; $p=$i->meta->base; if(!isFile($p)){$p=$i->path;}; $p=isee($p);
-         if($p&&(path::size($p)>0)){return;};
+         $i=$this->mean; $p=path($i->meta->base); if(isee($p)&&(path::size($p)>0)){return;};
          try{$l=(new \SQLite3($p, SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE));}
          catch(\Exception $e){$m=$e->getMessage(); $p=$i->meta->base; fail::plug("$m .. `$p`"); exit;};
          $h=path::twig($i->meta->base);
