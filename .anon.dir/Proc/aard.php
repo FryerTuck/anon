@@ -66,7 +66,7 @@ namespace Anon;
             echo($r); done(); // send BootStrap GUI keeping headers intact
          };
 
-         if(facing('DPR')&&(NAVIPATH==='/Proc/base/boot.js'))
+         if(facing('DPR')&&(NAVIPATH==='$/Proc/base/boot.js'))
          {
             $a=scan('$'); $b=scan('/',FOLD); $l=concat($a,$b); $r=[]; foreach($l as $i)
             {
@@ -77,9 +77,11 @@ namespace Anon;
             };
 
             $v=knob(['bootList'=>tval($r)]); unset($d); $d=[]; $x=pget('$/Proc/info/pass.inf');
-            $c=pget('/User/data/master/pass'); if(!$c){wack();}; if(password_verify($x,$c)){$d[]='editRootPass';};
+            $c=pget('$/User/data/master/pass'); if(!$c){wack();}; if(password_verify($x,$c)){$d[]='editRootPass';};
             $c=pget('$/Proc/conf/autoMail'); if(!isin($c,'mail://')||!isin($c,'@')||!isin($c,'.')){$d[]='confAutoMail';}; // debug automail
             $v->badCfg=base64_encode(tval($d));
+
+            if(facing("APH")&&!kuki("INTRFACE")&&MADEFUBU){$v->INTRFACE="APH";};
 
             finish(NAVIPATH,$v,FORGET);
          }

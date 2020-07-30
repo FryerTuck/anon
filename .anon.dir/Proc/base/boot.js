@@ -328,10 +328,12 @@
    {
       let bl=decode.JSON(('{:bootList:}'||'[]'));
       extend(MAIN)({Anon:{}}); bz(50);
-      requires(bl,( np)=>
+      requires(bl,( np,ah)=>
       {
          bz(60);
          np=location.href; np+=((isin(np,"?")?"&":"?")+"init");
+         if("{:INTRFACE:}"=="APH"){cookie.set("INTRFACE","APH");};
+
          render(np,(r)=>
          {
             if(nodeName(r)=="iframe")

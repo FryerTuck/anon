@@ -525,9 +525,10 @@ namespace Anon;
 
          if(!$dne)
          {
+             if($x=="php"){$r=trim(tval(import($a,$vo))); $h['Content-Type']=((wrapOf($r)==="<>")?"text/html":"text/plain")};
              ekko::head($h);
-             $r=import($a,$vo); if($r){print_r($r); if($nx!==NOEXIT){die();}};
-             if($t){echo(durl($p));}else{readfile($p);};
+             if($x=="php"){print_r($r); if($nx!==NOEXIT){die();}};
+             if($t){ekko(durl($p));}else{readfile($p);};
              if($nx!==NOEXIT){die();};
          };
       };

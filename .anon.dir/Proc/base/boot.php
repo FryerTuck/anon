@@ -369,9 +369,9 @@ namespace Anon;
 
 
 
-# cond :: proc : domain .. if an "Alternative Process Handler" (framework) is running here, decide what to do next
+# cond :: proc : domain .. if an "Alternative Process Handler" (framework) is installed and Anon GUI started, then hand over the process
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-    if(facing("APH"))
+    if(facing("APH")&&(kuki("INTRFACE")=="APH")&&MADEFUBU)
     {
         $np=NAVIPATH; $ix=null; if(isee($np)){finish($np); exit;};
         if(isFold($np)){$ix=path::indx($np); finish(($ix?"$np/$ix":403)); exit;};
