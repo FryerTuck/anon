@@ -14,6 +14,7 @@ namespace Anon;
       function __construct($x)
       {
          $p=$x->path; $t=path::type($p); if($t==='none'){$p="$p.sdb";}elseif($t==='fold'){$p="$p/base.sdb";};
+signal::dump($t);
          $this->mean=$x; $this->mean->mime='application/sql';
          if(!$p){$p=[];}; $x=['table','field'];
          $this->info=knob(['maxLevel'=>2,'levlType'=>$x]); $m=$this->mean->meta;
@@ -45,6 +46,7 @@ namespace Anon;
       function vivify()
       {
          if($this->link){return $this->link;}; $p=$this->mean->meta->base;
+         if(!isFile($p)&&isFile($this->mean->path)){$p=$this->mean->path;}
          if(!isFile($p)||(path::size($p)<1)){$this->create();};
          // $this->link=(new \SQLite3($p, SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE));
          lock::awaits($p);
