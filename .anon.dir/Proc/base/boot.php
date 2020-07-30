@@ -331,13 +331,14 @@ namespace Anon;
 
 # need :: tools : load dependencies
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   depend('F:/Proc/base/dbug.php');      // check if dbug exists .. with fail if not
+   depend('F:/Proc/base/dbug.php');       // check if dbug exists .. with fail if not
    require(path('$/Proc/base/dbug.php')); // this will take care of any further issues with the framework and any subsequent runtime errors
    require(path('$/Proc/base/abec.php')); // basic tools for heavy lifting .. if anything goes wrong in here, dbug will handle it .. awesomeness
    require(path('$/Proc/base/base.php')); // ABEC is full .. extend any other essential functions in here
    require(path('$/Proc/base/fwal.php')); // essential security .. right of passage through "the pass"
    require(path('$/Proc/aard.php'));      // initialize Proc class
-   require(path('/Repo/aard.php'));      // initialize Repo class
+   require(path('/Repo/aard.php'));       // initialize Repo class
+   Proc::__init();                        // this happens when a php-file goes through `import()` .. but here we do it manually
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -364,6 +365,19 @@ namespace Anon;
    }
 
    defn(['AUTOMAIL'=>pget('$/Proc/conf/autoMail')]); // needed
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+# cond :: proc : domain .. if an "Alternative Process Handler" (framework) is running here, decide what to do next
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+    if(facing("APH"))
+    {
+        $np=NAVIPATH; $ix=null; if(isee($np)){finish($np); exit;};
+        if(isFold($np)){$ix=path::indx($np); finish(($ix?"$np/$ix":403)); exit;};
+        if(isee("/index.php")){finish("/index.php");};
+        finish($np);
+    };
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 

@@ -272,7 +272,7 @@ namespace Anon;
       clearstatcache(); if(is_array($d))
       {
           $s=count($d); if(!$s){$s=1;}; $f=array();
-          do{$i=array_shift($d); $i=isee($i); if($i){$f[]=$i;}}while(count($d)); 
+          do{$i=array_shift($d); $i=isee($i); if($i){$f[]=$i;}}while(count($d));
           $r=(count($f)/$s); return $r;
       };
 
@@ -773,7 +773,8 @@ namespace Anon;
    if(($i==='BOT')&&!in_array(envi('USERDEED'),array('descry','select'))){harakiri('Method Not Allowed');}; // silly bot .. YOU HAVE DIED
    if(($p===envi('DBUGPATH'))&&($i!=='BOT')){$i='DPR';};
 
-   if($i==='SYS')
+   if(($i!=='APH')&&isee("/index.php")){$i='APH';} // Alternative Process Handler
+   elseif($i==='SYS')
    {
       $sk=pget('$/Proc/info/host.key'); if(!$sk){harakiri('invalid hostkey');}; // YOU HAVE DIED
       $ck=explode(' :: ',$a); $ck=explode(' : ',$ck[1]); $ck=$ck[0];
@@ -789,7 +790,10 @@ namespace Anon;
       if(isset($_GET['k'])&&($_GET['k']===$k)){$i='DPR';};
    };
 
-   $_SERVER['INTRFACE']=$i; defn(['USERSKEY'=>$k]); unset($a,$h,$p,$x,$r,$b,$s,$k,$i);
+
+   $_SERVER['INTRFACE']=$i; defn(['USERSKEY'=>$k]);
+
+   $vl=get_defined_vars(); foreach($vl as $vn){unset($$vn);}; unset($vl,$vn);
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 

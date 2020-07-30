@@ -26,12 +26,6 @@ namespace Anon;
         $fx=fext($np); if(isFold($np)&&!conf('Proc/viewDirs')){finish(403);}; // configured to deny viewing folders
         $ini=isin(keys($_GET),"init");
 
-        if($ini&&($fx==="php"))
-        {
-            ekko::head(["Content-Type"=>"text/html"]);
-            die("<iframe src=\"$np\"></iframe>");
-        };
-
         if(facing("DPR")||($fx==="php"))
         {
             if(isee("$tp/$np")){finish("$tp/$np"); exit;}; // assests in template
