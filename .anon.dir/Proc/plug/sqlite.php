@@ -14,7 +14,6 @@ namespace Anon;
       function __construct($x)
       {
          $p=$x->path; $t=path::type($p); if($t==='none'){$p="$p.sdb";}elseif($t==='fold'){$p="$p/base.sdb";};
-signal::dump($t);
          $this->mean=$x; $this->mean->mime='application/sql';
          if(!$p){$p=[];}; $x=['table','field'];
          $this->info=knob(['maxLevel'=>2,'levlType'=>$x]); $m=$this->mean->meta;
