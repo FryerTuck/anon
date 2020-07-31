@@ -371,13 +371,17 @@ namespace Anon;
 
 # cond :: proc : domain .. if an "Alternative Process Handler" (framework) is installed and Anon GUI started, then hand over the process
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-    if(facing("APH")&&(kuki("INTRFACE")=="APH")&&MADEFUBU)
-    {
-        $np=NAVIPATH; $ix=null; if(isee($np)){finish($np); exit;};
-        if(isFold($np)){$ix=path::indx($np); finish(($ix?"$np/$ix":403)); exit;};
-        if(isee("/index.php")){finish("/index.php");};
-        finish($np);
-    };
+if(NAVIPATH==='/Proc/base/base.js')
+{
+    die(envi("INTRFACE"));
+}
+    // if(facing("APH")&&(kuki("INTRFACE")=="APH")&&MADEFUBU)
+    // {
+    //     $np=NAVIPATH; $ix=null; if(isee($np)){finish($np); exit;};
+    //     if(isFold($np)){$ix=path::indx($np); finish(($ix?"$np/$ix":403)); exit;};
+    //     if(isee("/index.php")){finish("/index.php");};
+    //     finish($np);
+    // };
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 

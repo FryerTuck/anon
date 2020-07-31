@@ -773,8 +773,9 @@ namespace Anon;
    if(($i==='BOT')&&!in_array(envi('USERDEED'),array('descry','select'))){harakiri('Method Not Allowed');}; // silly bot .. YOU HAVE DIED
    if(($p===envi('DBUGPATH'))&&($i!=='BOT')){$i='DPR';};
 
-   if(($i!=='APH')&&isee("/index.php")){$i='APH';} // Alternative Process Handler
-   elseif($i==='SYS')
+   // if(($i!=='APH')&&isee("/index.php")){$i='APH';} // Alternative Process Handler
+   // elseif($i==='SYS')
+   if($i==='SYS')
    {
       $sk=pget('$/Proc/info/host.key'); if(!$sk){harakiri('invalid hostkey');}; // YOU HAVE DIED
       $ck=explode(' :: ',$a); $ck=explode(' : ',$ck[1]); $ck=$ck[0];
@@ -793,7 +794,8 @@ namespace Anon;
 
    $_SERVER['INTRFACE']=$i; defn(['USERSKEY'=>$k]);
 
-   $vl=get_defined_vars(); foreach($vl as $vn){unset($$vn);}; unset($vl,$vn);
+   $vl=array_keys(get_defined_vars());
+   foreach($vl as $vn){if(substr($vn,0,1)==="_"){continue;}; unset($$vn);}; unset($vl,$vn);
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 

@@ -66,7 +66,7 @@ namespace Anon;
             echo($r); done(); // send BootStrap GUI keeping headers intact
          };
 
-         if(facing('DPR')&&(NAVIPATH==='$/Proc/base/boot.js'))
+         if(facing('DPR')&&(NAVIPATH==='/Proc/base/boot.js'))
          {
             $a=scan('$'); $b=scan('/',FOLD); $l=concat($a,$b); $r=[]; foreach($l as $i)
             {
