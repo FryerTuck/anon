@@ -272,7 +272,7 @@
 
    #anonMainView
    {
-      overflow:auto !important;
+      overflow:auto;
    }
 /* ------------------------------------------------------------------------------------------------------------- */
 
@@ -564,7 +564,7 @@
    .nwline {position:relative !important; display:block !important;}
 
    .scrollAuto {overflow:auto !important;}
-   .scrollHide {overflow:none !important;}
+   .scrollHide {overflow:hidden !important;}
    .scrollShow {overflow:scroll !important;}
 
    .spanHorz00 {width:0.1rem !important;}

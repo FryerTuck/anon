@@ -499,8 +499,9 @@ namespace Anon;
             $r=json_encode(knob(['name'=>'feed', 'data'=>$r])); print_r($r); flush(); die();
          };
 
-         $t=(isin(envi('ACCEPT'),'text/plain')||isin(envi('CONTENT_TYPE'),'text/plain')||facing('API'));
-         $h=['Content-Type'=>$m]; if($nx===FORGET){$h['cache']=false;}; $dne=0;
+         // $t=(isin(envi('ACCEPT'),'text/plain')||isin(envi('CONTENT_TYPE'),'text/plain')||facing('API'));
+         $t=(isin(envi('ACCEPT'),'text/plain')||isin(envi('CONTENT_TYPE'),'text/plain'));
+         $h=['Content-Type'=>($t?"text/plain":$m)]; if($nx===FORGET){$h['cache']=false;}; $dne=0;
 
          if(isin($m,'image/')&&($x!=='ico')&&!userdoes("work,lead,sudo"))
          {
@@ -525,10 +526,18 @@ namespace Anon;
 
          if(!$dne)
          {
-             if($x=="php"){$r=trim(tval(import($a,$vo))); $h['Content-Type']=((wrapOf($r)==="<>")?"text/html":"text/plain");};
-             ekko::head($h);
-             if($x=="php"){print_r($r); if($nx!==NOEXIT){die();}};
-             if($t){ekko(durl($p));}else{readfile($p);};
+             if($t){ekko(durl($p)); exit;}
+             elseif(isin("php,htm,css,js,md",$x))
+             {
+                 $r=trim(tval(import($a,$vo)));
+                 if($x=="php"){$h['Content-Type']=((wrapOf($r)==="<>")?"text/html":"text/plain");};
+                 ekko::head($h); print_r($r);
+             }
+             else
+             {
+                 ekko::head($h);
+                 readfile($p);
+             };
              if($nx!==NOEXIT){die();};
          };
       };

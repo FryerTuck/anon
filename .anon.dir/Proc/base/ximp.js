@@ -49,6 +49,12 @@
       },
 
 
+      plain:function(d,f)
+      {
+         if(d&&d.body){d=d.body};
+         f(create({pre:".spanFull", $:d}));
+      },
+
 
       html:function(d,f)
       {

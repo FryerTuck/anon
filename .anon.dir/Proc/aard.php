@@ -81,7 +81,7 @@ namespace Anon;
             $c=pget('$/Proc/conf/autoMail'); if(!isin($c,'mail://')||!isin($c,'@')||!isin($c,'.')){$d[]='confAutoMail';}; // debug automail
             $v->badCfg=base64_encode(tval($d));
 
-            if(facing("APH")&&!kuki("INTRFACE")&&MADEFUBU){$v->INTRFACE="APH";};
+            if(!kuki("INTRFACE")&&MADEFUBU&&isee("/index.php")){$v->INTRFACE="APH";};
 
             finish(NAVIPATH,$v,FORGET);
          }

@@ -327,45 +327,50 @@
    listen("ready",function()
    {
       let bl=decode.JSON(('{:bootList:}'||'[]'));
+
       extend(MAIN)({Anon:{}}); bz(50);
-      requires(bl,( np,ah)=>
+      requires(bl,( np,ah,ab)=>
       {
-         bz(60);
-         np=location.href; np+=((isin(np,"?")?"&":"?")+"init");
-         if("{:INTRFACE:}"=="APH"){cookie.set("INTRFACE","APH");};
+         bz(60); np=location.href; np+=((isin(np,"?")?"&":"?")+"init");
+         ab=function(evnt,dm,db,se,pn)
+         {
+             pn=this.parentNode; pn.enclan("scrollHide"); pn.style.backgroundColor="#FFFFFF";
+             dm=this.contentDocument; db=dm.body;
+             dm.AnonSiteView=this;    db.tapHit=0;
+
+             if(!db.tapSeq)
+             {
+                 db.tapSeq=1;
+                 db.addEventListener("click",function(ev,ms)
+                 {
+                     ms=this; ms.tapHit+=1;
+                     if(ms.tapTmo){clearTimeout(ms.tapTmo)};
+                     if(ms.tapHit<4){ms.tapTmo=setTimeout(()=>{ms.tapHit=0;},350); return;};
+                     initPanl();
+                 });
+             };
+
+             bz(80);
+             tick.after(250,()=>
+             {
+                window.BOOTED=1;
+                signal("boot");
+                bz(100);
+                Busy.done();
+             });
+         };
+
+         if("{:INTRFACE:}"=="APH")
+         {
+             let r=create({iframe:"#anonMainView .spanFull", src:np}); r.listen("load",ab);
+             select('#anonMainView').insert(r);
+             return;
+         };
 
          render(np,(r)=>
          {
-            if(nodeName(r)=="iframe")
-            {
-                r.id="AnonSiteView"; r.listen("load",function(evnt,dm,db,se)
-                {
-                    dm=this.contentDocument; db=dm.body;
-                    dm.AnonSiteView=this;    db.tapHit=0;
-
-                    if(!db.tapSeq)
-                    {
-                        db.tapSeq=1;
-                        db.addEventListener("click",function(ev,ms)
-                        {
-                            ms=this; ms.tapHit+=1;
-                            if(ms.tapTmo){clearTimeout(ms.tapTmo)};
-                            if(ms.tapHit<4){ms.tapTmo=setTimeout(()=>{ms.tapHit=0;},350); return;};
-                            initPanl();
-                        });
-                    };
-                });
-            };
-
-            select('#anonMainView').insert(r);
-            bz(80);
-            tick.after(250,()=>
-            {
-               window.BOOTED=1;
-               signal("boot");
-               bz(100);
-               Busy.done();
-            });
+             if(nodeName(r)=="iframe"){r.id="AnonSiteView"; r.listen("load",ab);};
+             select('#anonMainView').insert(r);
          });
       });
    });

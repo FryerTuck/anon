@@ -193,7 +193,10 @@
      listen("beforeunload",function(ev)
      {
         fixCookies(); // prevent 431 error
-        if(globVars("activity").idle||!isin(sesn("CLAN"),["work","lead","sudo"])){return}; // don't confirm "leave site"
+        // cookie.delete("INTRFACE");
+        server.stream.close();
+        // if(globVars("activity").idle){return}; // don't confirm "leave site"
+        // if(!isin(sesn("CLAN"),["work","lead","sudo"])){return}; // don't confirm "leave site"
         ev.preventDefault(); ev.returnValue=''; // confirm "leave site"
      });
 
@@ -233,13 +236,6 @@ dump("sesnFade ignored");
 
 // evnt :: exit : destroy server session
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   window.onbeforeunload=function(e)
-   {
-      // Cookies.set(sesn('HASH'),'...'); navigator.sendBeacon('/User/doLogout','1');
-      server.stream.close();
-      // return true;
-   };
-
    // document.addEventListener('visibilitychange',function()
    // {
    //    if(document.visibilityState=='unloaded'){navigator.sendBeacon('/User/doLogout','1'); server.stream.close();};
