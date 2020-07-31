@@ -369,8 +369,9 @@
 
          render(np,(r)=>
          {
-             if(nodeName(r)=="iframe"){r.id="AnonSiteView"; r.listen("load",ab);};
+             let fr=(nodeName(r)=="iframe"); if(fr){r.id="AnonSiteView"; r.listen("load",ab);};
              select('#anonMainView').insert(r);
+             if(!fr){tick.after(250,()=>{window.BOOTED=1; signal("boot"); bz(100); Busy.done();});};
          });
       });
    });
