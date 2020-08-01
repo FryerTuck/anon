@@ -3,9 +3,9 @@
    ({
       image:function(d,f)
       {
-         let b=decode.BLOB({mime:d.head.ContentType,data:d.body});
-         let s=URL.createObjectURL(b);
-         f(create({img:"",src:s}));
+         // let b=decode.BLOB({mime:d.head.ContentType,data:d.body});
+         // let s=URL.createObjectURL(b);
+         f(create({img:"",src:d.body}));
       },
 
 
