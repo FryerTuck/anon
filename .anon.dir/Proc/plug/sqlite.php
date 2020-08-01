@@ -15,10 +15,10 @@ namespace Anon;
       {
          $p=$x->path; $t=path::type($p); if($t==='none'){$p="$p.sdb";}elseif($t==='fold'){$p="$p/base.sdb";};
          $this->mean=$x; $this->mean->mime='application/sql'; $m=$this->mean->meta;
-         $this->info=knob(['maxLevel'=>2,'levlType'=>$x]);
+         $this->info=knob(['maxLevel'=>2,'levlType'=>$x]); $bp=$m->base;
 
-         if(isPath($m->base,[D,W])&&!isee($p)){$m->base=($m->base.$m->path); $m->path=''; $this->mean->meta=$m;};
-         // if(!isFold($p)||(path::size($p)<1)){$this->create();};
+         if(isPath($m->base,[D,W])&&!isee($p)){$bp=($m->base.$m->path); $m->base=$bp; $m->path=''; $this->mean->meta=$m;};
+         if(!isFile($bp)||(path::size($bp)<1)){$this->create();};
 
          if(!$p){$p=[];}; $x=['table','field'];
          $l=($m?$m->levl:0); if($l>$this->info->maxLevel){fail('path-depth unreachable');exit;};
@@ -52,7 +52,9 @@ namespace Anon;
          if(!isFile($p)||(path::size($p)<1)){$this->create();};
          // $this->link=(new \SQLite3($p, SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE));
          lock::awaits($p);
-         $this->link=(new \SQLite3(path($p), SQLITE3_OPEN_READWRITE));
+         try{$this->link=(new \SQLite3(path($p), SQLITE3_OPEN_READWRITE));}
+         catch(\Exception $e)
+         {lock::remove($p); $f=$e->getMessage(); fail::database("$f\n\ntried to vivify: $p"); exit;};
          lock::remove($p);
          $this->link->busyTimeout(6); $this->link->enableExceptions(true);
          return $this->link;
