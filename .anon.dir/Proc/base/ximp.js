@@ -3,7 +3,9 @@
    ({
       image:function(d,f)
       {
-         durl({mime:d.head.ContentType,data:d.body},(r)=>{dump(r);f(create({img:"",src:r}))});
+         let b=decode.BLOB({mime:d.head.ContentType,data:d.body});
+         let s=URL.createObjectURL(b);
+         f(create({img:"",src:s}));
       },
 
 

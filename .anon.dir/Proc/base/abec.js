@@ -1110,10 +1110,21 @@
    ({
       encode:
       {
-         BLOB:function(data,type)
+         BLOB:function(arg1)
          {
-            var resl = (new Blob([data],{type:(type||'text/plain')}));
-            return resl;
+            if(isList(arg1)||isText(arg1))
+            {
+                var resl = (new Blob([arg1],{type:(type||'text/plain')}));
+                return resl;
+            };
+
+            if(isKnob(arg1)&&isText(arg1.mime))
+            {
+                let l,s,a,r; s=arg1.data.length; l=(new Array(s));
+                for(let i=0; i<s; i++){l[i]=arg1.data.charCodeAt(i)};
+                a=(new Uint8Array(l)); r=(new Blob([a],{type:trim(arg1.mime)}));
+                return r;
+            };
          },
 
          JSON:function(data)
@@ -1152,9 +1163,7 @@
 
             if(isKnob(d)&&isText(d.mime))
             {
-                let l,s,a,r; s=d.data.length; l=(new Array(s));
-                for(let i=0; i<s; i++){l[i]=d.data.charCodeAt(i)};
-                a=(new Uint8Array(l)); r=(new Blob([a],{type:trim(d.mime)}));
+                let r=encode.BLOB(d);
                 decode.BLOB(r,f); return;
             };
 
