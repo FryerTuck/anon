@@ -1154,7 +1154,7 @@
             {
                 let l,s,a,r; s=d.data.length; l=(new Array(s));
                 for(let i=0; i<s; i++){l[i]=d.data.charCodeAt(i)};
-                a=(new Uint8Array(l)); r=(new Blob([a],{type:d.mime}));
+                a=(new Uint8Array(l)); r=(new Blob([a],{type:trim(d.mime)}));
                 decode.BLOB(r,f); return;
             };
 

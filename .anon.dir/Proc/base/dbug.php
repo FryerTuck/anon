@@ -196,7 +196,8 @@ namespace Anon;
 
    register_shutdown_function(function()
    {
-      $e=\error_get_last(); if(!$e||envi("HALT")){die("");}; \error_clear_last(); $b='';
+      $e=\error_get_last(); if(!$e||envi("HALT")){exit;};
+      \error_clear_last(); $b='';
       while(ob_get_level()){$b.=("\n".ob_get_clean());}; $b=trim($b);
       $e=knob(['name'=>dbug::name($e['type']),'mesg'=>trim($e['message']."\n".$b),'file'=>$e['file'],'line'=>$e['line']]);
       $e->stak=stak(); dbug::view($e); exit;
