@@ -850,8 +850,8 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const durl = function(d,f, p,n,o)
    {
-      if(!!d&&isDurl(d)||isDurl(d.data)){f(!!d.data?d.data:d);return};
-      p=pathOf(d); if(!p){decode.BLOB(d,f); return};
+      if(!!d&&(isDurl(d)||isDurl(d.data))){f(!!d.data?d.data:d);return};
+      p=pathOf(d); if(!p){decode.BLOB(d,(r)=>{f(window.URL.createObjectURL(r))}); return};
       n=d.split('/').pop(); o=select(`img[src="${p}"]`);
       if(o){d=o[0].toDataURL(mimeType(n)); f(d,n);return};
       purl('/Proc/makeDurl',{purl:d},(r)=>{f(r.body,n)});
