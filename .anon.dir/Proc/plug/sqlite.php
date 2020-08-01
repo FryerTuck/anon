@@ -71,9 +71,10 @@ namespace Anon;
       function create($d=null)
       {
          $i=$this->mean; $p=$i->meta->base; if(isee($p)&&(path::size($p)>0)){return;};
+         $h=path::twig($p); if(!isFold($h)){path::make("$h/");};
          try{$l=(new \SQLite3(path($p), SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE));}
          catch(\Exception $e){$m=$e->getMessage(); fail::plug("$m .. `$p`"); exit;};
-         if(!isee($p)){fail::database("unable to create file: `$p`"); exit;}; $h=path::twig($p);
+         if(!isee($p)){fail::database("unable to create file: `$p`"); exit;};
          if(!$d&&isee("$h/defn.php")){$d=import("$h/defn.php");}; if(isAssa($d)){$d=knob($d);};
          if(!isKnob($d,1)){$l->close(); wait(50); return true;}; $this->link=$l;
 
