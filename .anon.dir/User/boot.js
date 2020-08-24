@@ -197,7 +197,8 @@
         server.stream.close();
         // if(globVars("activity").idle){return}; // don't confirm "leave site"
         // if(!isin(sesn("CLAN"),["work","lead","sudo"])){return}; // don't confirm "leave site"
-        ev.preventDefault(); ev.returnValue=''; // confirm "leave site"
+        ev.preventDefault(); if(MAIN.DONTASKFOREXIT){return};
+        ev.returnValue=''; // confirm "leave site"
      });
 
 
