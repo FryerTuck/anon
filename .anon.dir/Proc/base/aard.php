@@ -44,7 +44,7 @@ namespace Anon;
    function isUpperCase($d){return (strtoupper($d)===$d);}
    function isProprCase($d){return (ucwords($d)===$d);}
 
-   function is_number($d){return (is_int($d)||is_float($d)||is_real($d));};
+   function is_number($d){return (is_int($d)||is_float($d));};
    function is_funnic($d){if(!is_string($d)){return;}; return test(trim($d,'_'),'/^([a-zA-Z])([a-zA-Z0-9_]){1,48}$/');};
    function is_class($d){return (is_string($d)&&(class_exists($d,false)||class_exists("Anon\\$d",false)));};
 # ---------------------------------------------------------------------------------------------------------------------------------------------
