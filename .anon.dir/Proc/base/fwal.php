@@ -57,7 +57,7 @@ namespace Anon;
 
          $p=isee(NAVIPATH); $i=(is_dir($p)?path::indx(NAVIPATH):null); $l=padded(scan('$'),'/'); $x=indx(NAVIPATH,$l);
          if(facing('BOT')&&($x!==null)){finish(403);}; // hide framework core from web-crawlers whom identify as bots
-         // if(is_dir($p)&&($i===null)&&!conf('Proc/viewDirs')){finish(403);}; 
+         // if(is_dir($p)&&($i===null)&&!conf('Proc/viewDirs')){finish(403);};
          unset($s,$c,$p,$i,$l,$x); // deny folder browsing if so configured
       # ---------------------------------------------------------------------------------------------------------------------------------------
 

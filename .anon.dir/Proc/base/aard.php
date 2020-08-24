@@ -632,6 +632,7 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
+
 # vars :: (POSTed) : convert json to POST-vars
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    if((envi('METHOD')==='POST')&&facing('API')){$d=file_get_contents('php://input'); if(wrapOf($d)==='{}')
@@ -642,9 +643,9 @@ namespace Anon;
 
 # dbug :: vars : USERADDR - ip address .. if no ip then the request is bogus .. get rid of unsupported requests
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   $sd=explode('.',envi('HOST')); $sd=array_shift($sd); $bn=shaved(envi('BASE'),'/');
-   $bp=explode('/',shaved(envi('URI'),'/')); $rb=array_shift($bp); $bp=implode('/',$bp);
-   if(($sd===$bn)&&($bn===$rb)){halt(424,"Failed Dependency - RewriteRule above this subdomain must point to: $sd/.anon.php");};
+   // $sd=explode('.',envi('HOST')); $sd=array_shift($sd); $bn=shaved(envi('BASE'),'/');
+   // $bp=explode('/',shaved(envi('URI'),'/')); $rb=array_shift($bp); $bp=implode('/',$bp);
+   // if(($sd===$bn)&&($bn===$rb)){halt(424,"Failed Dependency - RewriteRule above this subdomain must point to: $sd/.anon.php");};
 
    unset($sd,$bn,$bp,$rb); $l=explode(' ','CLIENT_IP FORWARDED_FOR FORWARDED REMOTE_ADDR'); $y=0; $s=count($l); for($i=0; $i<$s; $i++)
    {$v=$l[$i]; $x="X_$v"; $z="$v"; if(envi($x)){$y=$x;}elseif(envi($z)){$y=$z;}elseif(envi($v)){$y=$v;}else{$y=0;}; if($y){break;};};
