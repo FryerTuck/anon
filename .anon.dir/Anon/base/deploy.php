@@ -107,8 +107,9 @@
         if(!isset($_GET['confirm']))
         {
             print_r("<h1>Anon Installation</h1>");
-            print_r("<p>You are about to delete everything in: $bp</p>");
-            print_r("<a href=\"https://$hn/$fn?confirm=1\"><button>confirm</button></a>");
+            print_r("<p>You are about to install Anon here: $bp<br>");
+            print_r("Backup any old Anon-related files and .htaccess if required</p>");
+            print_r("<a href=\"https://$hn/$fn?confirm=1\"><button>install</button></a>");
             die();
         };
     }
@@ -139,9 +140,9 @@
 # -----------------------------------------------------------------------------------------------------------------------------
 
 
-# exec :: (cleanup) : purge this Landing Zone
+# exec :: (cleanup) : remove all anon-related files
 # -----------------------------------------------------------------------------------------------------------------------------
-    $dr=base(); $ls=array_diff(scandir("$dr"),array('..','.'));
+    $dr=base(); $ls=[".anon.dir",".git",".anon.php",".htaccess","README.md"];
     foreach($ls as $li){ if($li!==$fn){bash("rm -rf ./$li");}; };
 # -----------------------------------------------------------------------------------------------------------------------------
 
