@@ -48,6 +48,7 @@
       // Busy.kill();
       c={ {:'/User/conf/viewConf':} }; c.each((v,k)=>{if(conf[k]){fail('`conf.'+k+'` is already defined');return}; conf[k]=v});
    }());
+   MAIN.CONFIRMLEAVE=1;
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -197,7 +198,7 @@
         server.stream.close();
         // if(globVars("activity").idle){return}; // don't confirm "leave site"
         // if(!isin(sesn("CLAN"),["work","lead","sudo"])){return}; // don't confirm "leave site"
-        ev.preventDefault(); if(MAIN.DONTASKFOREXIT){return};
+        ev.preventDefault(); if(MAIN.CONFIRMLEAVE){return};
         ev.returnValue=''; // confirm "leave site"
      });
 
