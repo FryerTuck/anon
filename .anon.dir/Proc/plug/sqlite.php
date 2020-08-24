@@ -50,6 +50,7 @@ namespace Anon;
       {
          if($this->link){return $this->link;}; $p=$this->mean->meta->base;
          if(!isFile($p)||(path::size($p)<1)){$this->create();};
+         if(isFold($p)&&isFile("$p/base.sdb")){$p="$p/base.sdb";};
          // $this->link=(new \SQLite3($p, SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE));
          lock::awaits($p);
          try{$this->link=(new \SQLite3(path($p), SQLITE3_OPEN_READWRITE));}
