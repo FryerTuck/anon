@@ -346,7 +346,7 @@
                      ms=this; ms.tapHit+=1;
                      if(ms.tapTmo){clearTimeout(ms.tapTmo)};
                      if(ms.tapHit<4){ms.tapTmo=setTimeout(()=>{ms.tapHit=0;},350); return;};
-                     initPanl();
+                     ms.tapHit=0; initPanl();
                  });
              };
 
