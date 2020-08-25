@@ -619,16 +619,6 @@ namespace Anon;
    defn('count fetch using alter write claim touch where group order limit parse shape apply erase purge debug dbase table field sproc funct after basis named param parts');
    defn('NOFAIL NOINIT NOMAKE NOEXIT DOEXIT NATIVE REMOTE ORIGIN FORGET');
    defn('ANY ALL ASC DSC API BOT DPI GUI SSE');
-
-   $h=pget('$/Proc/conf/hostName'); if(!$h){$h=envi('SERVER_NAME'); if(!$h){$h=envi('HOST');}};
-   $p=envi('URL'); $b=envi('BASEPATH'); if($b!=='/'){$p=lshave($p,$b);}; if(!$p){$p='/';};
-   defn
-   ([
-      'HOSTNAME' => $h,
-      'NAVIPATH' => $p,
-   ]);
-
-   unset($h,$p,$b);
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -660,6 +650,17 @@ namespace Anon;
    $d=envi('ROOTPATH'); $s=skey(); $u=''; $c=envi('COREPATH'); //$c=explode('/',envi('COREPATH')); $c=array_pop($c);
    $g=envi('DBUGPATH'); $b=rshave(str_replace($d,'',envi('BASE')),'/'); if(!$b){$b='/';}; $_SERVER['BASEPATH']=$b;
    $_SERVER['DBUGPATH']=lshave($g,'.anon.dir'); unset($b,$g);
+
+   $h=pget('$/Proc/conf/hostName'); if(!$h){$h=envi('SERVER_NAME'); if(!$h){$h=envi('HOST');}};
+   $p=envi('URL'); $b=envi('BASEPATH'); if($b!=='/'){$p=lshave($p,"/$b");}; if(!$p){$p='/';};
+   defn
+   ([
+      'HOSTNAME' => $h,
+      'NAVIPATH' => $p,
+   ]);
+
+   unset($h,$p,$b);
+
 
    if($s){$s="$c/Proc/temp/sesn/$s/USER"; if(file_exists($s)){$u=file_get_contents($s);}};
    if(!$u){$u='anonymous';}; $_SERVER['USERNAME']=$u; $_SERVER['USERPATH']="$c/User/data/$u/home";

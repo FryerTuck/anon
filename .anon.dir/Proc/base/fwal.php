@@ -53,7 +53,7 @@ namespace Anon;
 
          $c=COREPATH; $s=trim(NAVIPATH,'/'); if($s&&is_dir(path(COREPATH."/$s"))){finish(404);}; // deny core-stem-root access
          $s=explode('/',$s)[0]; if(($s==='~')&&!isin(user('clan'),'work')){finish(404);};
-         if($s&&($s!=='~')&&!isee("/$s")){finish(404);}; // stem not found .. no point in wasting any more resources
+         if($s&&($s!=='~')&&!isee("/$s")){die(NAVIPATH); finish(404);}; // stem not found .. no point in wasting any more resources
 
          $p=isee(NAVIPATH); $i=(is_dir($p)?path::indx(NAVIPATH):null); $l=padded(scan('$'),'/'); $x=indx(NAVIPATH,$l);
          if(facing('BOT')&&($x!==null)){finish(403);}; // hide framework core from web-crawlers whom identify as bots
