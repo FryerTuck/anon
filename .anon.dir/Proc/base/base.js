@@ -835,12 +835,13 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const newGui = function(p,v, t,b)
    {
-      server.stream.close(); if(isPath(p)){t=(location.protocol+'//'+location.host+p)}else{t=location.href};
+      server.stream.close(); MAIN.CONFIRMLEAVE=0;
+      if(isPath(p)){t=(location.protocol+'//'+location.host+p)}else{t=location.href};
       b=[{input:'#INTRFACE', type:'hidden', value:'GUI'}]; if(isKnob(p)){v=p};
       (cookie.select('*')||{}).each((cv,cn)=>{if(test(cn,/^[a-z0-9]{40}$/)){cookie.delete(cn)}});
       if(isKnob(v)){v.each((vd,vn)=>{radd(b,{input:`#${vn}`, type:'hidden', value:vd})})};
       document.body.insert([{form:'#anonReboot', action:t, method:'POST', style:'position:absolute;opacity:0', contents:b}]);
-      MAIN.CONFIRMLEAVE=0; tick.after(50,()=>{select('#anonReboot').submit()});
+      tick.after(50,()=>{select('#anonReboot').submit()});
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
