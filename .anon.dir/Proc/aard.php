@@ -32,6 +32,13 @@ namespace Anon;
 
       static function init()
       {
+         if((NAVIPATH==='/Proc/newGui')&&MADEFUBU)
+         {
+             $k=skey(); $p="$/Proc/temp/sesn/$k/HASGUI";
+             if(!isee($p)){ekko(OK); exit;}; path::void($p);
+             ekko(OK); exit;
+         };
+
          if((NAVIPATH==='/Proc/listen')&&MADEFUBU)
          {
              self::listen(); return;

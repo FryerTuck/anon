@@ -833,15 +833,16 @@
 
 // func :: newGui : reboots the gui .. if path given it does a relocate, else reload
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   const newGui = function(p,v, t,b)
+   const newGui = function(p,v, t,b,a)
    {
-      server.stream.close(); MAIN.CONFIRMLEAVE=0;
+      server.stream.close(); MAIN.CONFIRMLEAVE=0; if(isKnob(p)){v=p; p=VOID};
       if(isPath(p)){t=(location.protocol+'//'+location.host+p)}else{t=location.href};
-      b=[{input:'#INTRFACE', type:'hidden', value:'GUI'}]; if(isKnob(p)){v=p};
+      a=rstub(t,"#"); if(a){t=a[0]; a=a[2]}else{a=""}; t=((!isin(t,"?")?"?":"&")+"freshGui"+a);
+      b=[{input:'#INTRFACE', type:'hidden', value:'GUI'}];
       (cookie.select('*')||{}).each((cv,cn)=>{if(test(cn,/^[a-z0-9]{40}$/)){cookie.delete(cn)}});
       if(isKnob(v)){v.each((vd,vn)=>{radd(b,{input:`#${vn}`, type:'hidden', value:vd})})};
       document.body.insert([{form:'#anonReboot', action:t, method:'POST', style:'position:absolute;opacity:0', contents:b}]);
-      tick.after(50,()=>{select('#anonReboot').submit()});
+      purl(`/Proc/newGui`,()=>{select('#anonReboot').submit()});
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 

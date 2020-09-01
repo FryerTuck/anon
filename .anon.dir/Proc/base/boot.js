@@ -94,6 +94,14 @@
    (function(l)
    {
       Cookies.set(sesn('HASH'),'...');
+
+      let hr=location.href; let fg=stub(hr,["?freshGui","&freshGui"]);
+      if(fg)
+      {
+          hr=(fg[0]+(fg[0].startsWith("?")?"?":"")+(fg[2]||""));
+          window.history.replaceState({id:"100"},"freshGui",hr);
+      };
+
       wait.until(()=>{return (!!MAIN.Busy)},()=>
       {
          listen('mutation',function(e, l)

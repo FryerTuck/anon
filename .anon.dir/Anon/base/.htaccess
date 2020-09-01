@@ -57,7 +57,7 @@
 
 
 
-# cond :: subdomain & topdomain : FLOW - request is for Anon
+# cond :: subdomain & topdomain : FLOW - request is for Anon .. URL refers to existing Anon stem
 # -----------------------------------------------------------------------------------------------------------------------------
     RewriteCond %{HTTP_HOST}@@%{HTTP_REFERER} ^([^@]*)@@https?://\1/.*
     RewriteCond %{ENV:STEM} !^$
@@ -70,6 +70,21 @@
     RewriteCond %{DOCUMENT_ROOT}/%{ENV:BASE}/.anon.dir/%{ENV:STEM} -d
     RewriteCond %{DOCUMENT_ROOT}/.anon.php -f
     RewriteRule ^(.*)$ .anon.php [L,QSA]
+# -----------------------------------------------------------------------------------------------------------------------------
+
+
+
+# cond :: subdomain & topdomain : FLOW - request is for Anon .. request specifies newGui
+# -----------------------------------------------------------------------------------------------------------------------------
+    # RewriteCond %{REQUEST_METHOD} ^POST
+    # RewriteCond %{REQUEST_URI} freshGui
+    # RewriteCond %{DOCUMENT_ROOT}/%{ENV:BASE}/.anon.php -f
+    # RewriteRule ^(.*)$ %{ENV:BASE}/.anon.php [L,QSA]
+    #
+    # RewriteCond %{REQUEST_METHOD} ^POST
+    # RewriteCond %{REQUEST_URI} freshGui
+    # RewriteCond %{DOCUMENT_ROOT}/.anon.php -f
+    # RewriteRule ^(.*)$ .anon.php [L,QSA]
 # -----------------------------------------------------------------------------------------------------------------------------
 
 
