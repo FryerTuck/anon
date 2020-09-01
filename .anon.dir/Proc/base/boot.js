@@ -335,7 +335,7 @@
          ab=function(evnt,dm,db,se,pn)
          {
              pn=this.parentNode; pn.enclan("scrollHide"); pn.style.backgroundColor="#FFFFFF";
-             dm=this.contentDocument; db=dm.body;
+             dm=this.contentDocument; db=dm.body.parentNode;
              dm.AnonSiteView=this;    db.tapHit=0;
 
              if(!db.tapSeq)
@@ -360,7 +360,7 @@
              });
          };
 
-         if("{:INTRFACE:}"=="APH")
+         if("{:INTRFACE:}"=="ALT")
          {
              let r=create({iframe:"#anonMainView .spanFull", src:np}); r.listen("load",ab);
              select('#anonMainView').insert(r);

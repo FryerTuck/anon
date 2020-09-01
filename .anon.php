@@ -12,6 +12,8 @@
 # who knows what lurks in the shadows of a place where even ground beneath your feet is unsteady ..and the air carries the scent of uncertainty
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
+// $stem=(isset($_SERVER["REDIRECT_STEM"])?$_SERVER["REDIRECT_STEM"]:"?");
+// die($stem);
 
 
 # func :: harakiri : let be known that we died honorably .. commit suicide due to some unfortunate issue, without leaving a "body"

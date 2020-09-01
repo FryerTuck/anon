@@ -46,9 +46,10 @@ namespace Anon;
       {
       # cond :: init : protect the framework core and limit browsing freedom according to config
       # ---------------------------------------------------------------------------------------------------------------------------------------
+         // if(facing("GUI")&&sesn("HASGUI")&&!MADEFUBU){finish(403); exit;};
          self::$vars=knob(['faceList'=>['API','BOT','DPR','GUI','SSE']]);
          $s=test::{NAVIPATH}(conf('Proc/redirect')); // get redirect config for the current web URL
-         if(is_int($s)&&($s!==200)){finish($s);}; // explicitly configured to echo status
+         if(is_int($s)&&($s!==200)&&!envi("ALTHANDLER")){finish($s);}; // explicitly configured to echo status
          if($s&&!is_int($s)){finish($s);}; // explicitly configured to bypass any stem/module controllers
 
          $c=COREPATH; $s=trim(NAVIPATH,'/'); if($s&&is_dir(path(COREPATH."/$s"))){finish(404);}; // deny core-stem-root access

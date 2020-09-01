@@ -329,9 +329,25 @@ namespace Anon;
 
 
 
+# func :: althan : alternative handler
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+    function althan($np)
+    {
+         if(!isee($np)||($np==="/")){$np=envi("ALTHANDLER");}; $fx=fext($np);
+         $_SERVER["HALT"]=1; ini_set('display_errors',false); error_reporting(0);
+         if($fx==="php"){call_user_func_array(function($_ALTP){require "$_ALTP";},[path($np)]); exit;};
+         $mc=knob(dval(pget("$/Proc/conf/mimeType"))); $mt=$mc->$fx; if(!$mt){$mt=$mc->bin;};
+         header("Content-Type: $mt"); readfile(path($np)); exit;
+    };
+
+    $_SERVER["ALTHANDLER"]=(isee("/index.php")?"/index.php":"");
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 # need :: tools : load dependencies
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   depend('F:/Proc/base/dbug.php');       // check if dbug exists .. with fail if not
+   depend('F:/Proc/base/dbug.php');       // check if dbug exists .. will fail if not
    require(path('$/Proc/base/dbug.php')); // this will take care of any further issues with the framework and any subsequent runtime errors
    require(path('$/Proc/base/abec.php')); // basic tools for heavy lifting .. if anything goes wrong in here, dbug will handle it .. awesomeness
    require(path('$/Proc/base/base.php')); // ABEC is full .. extend any other essential functions in here
@@ -368,24 +384,47 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
+if(isin(NAVIPATH,"setup-config.php")){die("test 1");};
 
-# cond :: proc : domain .. if an "Alternative Process Handler" (framework) is installed and Anon GUI started, then hand over the process
+
+
+# cond :: boot : GUI .. boot view first
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-    // $np=NAVIPATH; $ix=null; $ps=path::stem($np); $af="/index.php"; $ah=isee($af);
-    // if($np==="/"){$np=$af;}elseif($ah&&isFold($np)){$ix=path::indx($np); if($ix){$np="$np/$ix";}};
-    // if($ah&&($ps!=="/")&&!isee("$/$ps"))
-    // {
-    //     if(isee($np)){finish($np); exit;};
-    //     if(isFold($np)){$ix=path::indx($np); finish(($ix?"$np/$ix":403)); exit;};
-    //     finish($af);
-    // };
-    // unset($np,$ix,$ps,$af,$ah);
+ if(facing('GUI'))
+ {
+    guiStrap();
+    //ekko::head(['Referrer-Policy'=>'origin','cache'=>false,'cookies'=>true]); // send bootStrap headers
+    $v=['botHoney'=>conf('Proc/badRobot')->lure,'busyGear'=>base64_encode(pget('$/Proc/base/busy.htm'))];
+    $r=import('$/Proc/base/aard.htm',$v);
+    echo($r); done(); // send BootStrap GUI keeping headers intact
+ };
+
+
+ if(facing('DPR')&&(NAVIPATH==='/Proc/base/boot.js'))
+ {
+    $a=scan('$'); $b=scan('/',FOLD); $l=concat($a,$b); $r=[]; foreach($l as $i)
+    {
+       $p=path::conf($i); if(!$p){continue;}; $d=dval(pget("$p/autoboot"));
+       if(!is_assoc_array($d)||!isset($d['client'])){continue;};
+       $d=$d['client']; if(!$d){continue;}; if(isText($d)){$d=[$d];}; if(!isNuma($d)){continue;};
+       foreach($d as $f){if(!isText($f)){fail("invalid `autoboot` config in: `$p/autoboot`");}; $r[]=$f;};
+    };
+
+    $v=knob(['bootList'=>tval($r)]); unset($d); $d=[]; $x=pget('$/Proc/info/pass.inf');
+    $c=pget('$/User/data/master/pass'); if(!$c){wack();}; if(password_verify($x,$c)){$d[]='editRootPass';};
+    $c=pget('$/Proc/conf/autoMail'); if(!isin($c,'mail://')||!isin($c,'@')||!isin($c,'.')){$d[]='confAutoMail';}; // debug automail
+    $v->badCfg=base64_encode(tval($d));
+
+    if(!kuki("INTRFACE")&&MADEFUBU&&envi("ALTHANDLER")){$v->INTRFACE="ALT";};
+    sesn(["HASGUI"=>"1"]);
+    finish(NAVIPATH,$v,FORGET);
+};
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
 # proc :: init : autoload classes from stems and initiate the Proc class
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   spl_autoload_register(function($n){$n=str_replace('Anon\\','',$n); import($n);}); // automatically load PHP file associated by class-name
+   spl_autoload_register(function($n){$n=str_replace('Anon\\','',$n); import($n);}); // auto-load class-assoc PHP file
    Proc::init(); // as we remember the trials faced through the mud, swamp, woods and pass behind us, we welcome the fresh air of "the haven"
 # ---------------------------------------------------------------------------------------------------------------------------------------------
