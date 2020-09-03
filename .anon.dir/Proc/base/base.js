@@ -1560,6 +1560,7 @@
          // let bxd=rectOf(box); box.declan('cenmid');
          // box.setStyle({position:'absolute',left:Math.floor(bxd.left),top:Math.floor(bxd.top)});
          if(tout){tick.after(60,()=>{rsl.gone(tout)})}; rsl.focus();
+         let il=rsl.select("input"); if(!il){il=rsl.select("textarea")};  if(!!il&&!!il[0]){il[0].focus()};
          return rsl;
       },
    });
