@@ -74,24 +74,32 @@
 
 
 
+# cond :: subdomain : FLOW - request is for subdomain index
+# -----------------------------------------------------------------------------------------------------------------------------
+    RewriteCond %{ENV:STEM} ^$
+    RewriteCond %{DOCUMENT_ROOT}/%{ENV:BASE}/index.php -f
+    RewriteRule ^(.*)$ %{ENV:BASE}/index.php [L,QSA]
+# -----------------------------------------------------------------------------------------------------------------------------
+
+
+
 # cond :: subdomain & topdomain : FLOW - request is for folder index
 # -----------------------------------------------------------------------------------------------------------------------------
     RewriteCond %{DOCUMENT_ROOT}/%{ENV:BASE}/%{REQUEST_URI} -d
     RewriteCond %{DOCUMENT_ROOT}/%{ENV:BASE}/%{REQUEST_URI}/index.php -f
     RewriteRule ^(.*)$ %{ENV:BASE}/%{REQUEST_URI}/index.php [L,QSA]
 
+    RewriteCond %{DOCUMENT_ROOT}/%{ENV:BASE}/%{REQUEST_URI} -d
+    RewriteCond %{DOCUMENT_ROOT}/%{ENV:BASE}/%{REQUEST_URI}/index.html -f
+    RewriteRule ^(.*)$ %{ENV:BASE}/%{REQUEST_URI}/index.html [L,QSA]
+
     RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_URI} -d
     RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_URI}/index.php -f
     RewriteRule ^(.*)$ %{REQUEST_URI}/index.php [L,QSA]
-# -----------------------------------------------------------------------------------------------------------------------------
 
-
-
-# cond :: subdomain : FLOW - request is for subdomain index
-# -----------------------------------------------------------------------------------------------------------------------------
-    RewriteCond %{ENV:STEM} ^$
-    RewriteCond %{DOCUMENT_ROOT}/%{ENV:BASE}/index.php -f
-    RewriteRule ^(.*)$ %{ENV:BASE}/index.php [L,QSA]
+    RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_URI} -d
+    RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_URI}/index.html -f
+    RewriteRule ^(.*)$ %{REQUEST_URI}/index.html [L,QSA]
 # -----------------------------------------------------------------------------------------------------------------------------
 
 
