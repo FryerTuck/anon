@@ -94,7 +94,7 @@ namespace Anon;
       }
 
 
-      function adjure($q,$b=[],$l=null)
+      function adjure($q,$b=[],$l=null,$rt=null)
       {
          if(is_string($q)){$q=trim($q); $q=trim($q,';'); $q.=';';};
          if(!isText($q,10)){$q=tval($q); fail("invalid SQL, query used:\n`$q`\n"); exit;};
@@ -110,7 +110,13 @@ namespace Anon;
                {$p=$this->mean->path; $m="database `$p` is locked";};
                fail::database("$m\n\nQUERY:\n$q"); exit;
             };
-            $et=enfail($eh,1); if($et){fail::database("$et\n\nQUERY:\n$q"); exit;};
+            $et=enfail($eh,1);
+            if($et)
+            {
+                if(!$rt&&isin($et,"not been correctly initialised"))
+                {$c->close(); $this->pacify(); wait(250); $z=$this->adjure($q,$b,null,1); return $z;};
+                fail::database("$et\n\nQUERY:\n$q"); exit;
+            };
 
             foreach($b as $k => $v){$x->bindValue($k,$v);};
             $er=''; $mn=$this->mean; do
