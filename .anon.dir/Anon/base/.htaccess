@@ -74,17 +74,15 @@
 
 
 
-# cond :: subdomain & topdomain : FLOW - request is for Anon .. request specifies newGui
+# cond :: subdomain & topdomain : FLOW - request is for folder index
 # -----------------------------------------------------------------------------------------------------------------------------
-    # RewriteCond %{REQUEST_METHOD} ^POST
-    # RewriteCond %{REQUEST_URI} freshGui
-    # RewriteCond %{DOCUMENT_ROOT}/%{ENV:BASE}/.anon.php -f
-    # RewriteRule ^(.*)$ %{ENV:BASE}/.anon.php [L,QSA]
-    #
-    # RewriteCond %{REQUEST_METHOD} ^POST
-    # RewriteCond %{REQUEST_URI} freshGui
-    # RewriteCond %{DOCUMENT_ROOT}/.anon.php -f
-    # RewriteRule ^(.*)$ .anon.php [L,QSA]
+    RewriteCond %{DOCUMENT_ROOT}/%{ENV:BASE}/%{REQUEST_URI} -d
+    RewriteCond %{DOCUMENT_ROOT}/%{ENV:BASE}/%{REQUEST_URI}/index.php -f
+    RewriteRule ^(.*)$ %{ENV:BASE}/%{REQUEST_URI}/index.php [L,QSA]
+
+    RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_URI} -d
+    RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_URI}/index.php -f
+    RewriteRule ^(.*)$ %{REQUEST_URI}/index.php [L,QSA]
 # -----------------------------------------------------------------------------------------------------------------------------
 
 
