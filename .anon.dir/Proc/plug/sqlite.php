@@ -192,7 +192,7 @@ namespace Anon;
             $z=knob(['done'=>0,'last'=>0]); if(span($w)<1){return $z;};
             if(isNuma($w)&&!isNuma($w[0])&&!isAssa($w[0])&&!isKnob($w[0])){$w=[$w];};
             if(!isNuma($w)){$w=[$w];}; $z=knob(['deed'=>'INSERT','done'=>0,'last'=>0]); $this->mean->tabl=$x->using;
-            foreach($w as $i){$r=$this->insert($i,$x->using); $z->done++; $z->last=$r->last;}; $this->pacify(); return $z;
+            foreach($w as $i){$r=$this->insert([using=>$t,write=>$i]); $z->done++; $z->last=$r->last;}; $this->pacify(); return $z;
          }
 
          if(isNuma($x))
