@@ -58,6 +58,7 @@ namespace Anon;
          {lock::remove($p); $f=$e->getMessage(); fail::database("$f\n\ntried to vivify: $p"); exit;};
          lock::remove($p);
          $this->link->busyTimeout(6); $this->link->enableExceptions(true);
+         wait(10);
          return $this->link;
       }
 
@@ -77,7 +78,7 @@ namespace Anon;
          catch(\Exception $e){$m=$e->getMessage(); fail::plug("$m .. `$p`"); exit;};
          if(!isee($p)){fail::database("unable to create file: `$p`"); exit;};
          if(!$d&&isee("$h/defn.php")){$d=import("$h/defn.php");}; if(isAssa($d)){$d=knob($d);};
-         if(!isKnob($d,1)){$l->close(); wait(250); return true;}; $this->link=$l;
+         if(!isKnob($d,1)){$l->close(); wait(3000); return true;}; $this->link=$l;
 
          foreach($d as $tn => $td)
          {
@@ -90,7 +91,7 @@ namespace Anon;
             // todo::{'sqlite plug'}("upon `create`, if `rows` are defined, insert them",FAIL);
          };
 
-         $l->close(); wait(250); return true;
+         $l->close(); wait(3000); return true;
       }
 
 
