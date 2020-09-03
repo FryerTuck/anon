@@ -73,6 +73,33 @@
                      if(!select('#busyPane')){return}; if(span(Busy.jobs)>0){Busy.tint('yellow');}; Busy.kill();
                   }); // but show that+why it was forced
 
+                  if(!userDoes('work,sudo,lead'))
+                  {
+                        popModal({size:`70x170`,skin:`dark`})
+                        ({
+                            head:`unlock-alt :: Login`,
+                            body:[{panl:
+                            [
+                                {input:`#anonSuUser`, type:`text`, demo:`username`, style:`margin-bottom:8px`},
+                                {input:`#anonSuPass`, type:`password`, demo:`password`},
+                            ]}],
+                            foot:
+                            [
+                                {butn:`Cancel`},
+                                {butn:`.cool`, text:`Login`, onclick:function()
+                                {
+                                    let un,pw,sh; un=select(`#anonSuUser`); pw=select(`#anonSuPass`);
+                                    purl(`/User/runRepel/login`,{args:["login",un.value,pw.value]},(rsp)=>
+                                    {
+                                        rsp=rsp.body; if(rsp!=OK){popAlert(rsp); return};
+                                        sh=sesn('HASH'); cookie.delete(sh); this.root.exit();
+                                        tick.after(150,()=>{newGui({APIKEY:sh})});
+                                    });
+                                }},
+                            ]
+                        });
+                  };
+
                   if(!userDoes('work,sudo,lead')){return}; // we want to do something (next) that requires privileges
                   userInfo(INIT); // populate user-info
                   let c=getBadConf(); if(!c){return}; // check for bad config, if none then all is good

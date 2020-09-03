@@ -77,7 +77,7 @@ namespace Anon;
          catch(\Exception $e){$m=$e->getMessage(); fail::plug("$m .. `$p`"); exit;};
          if(!isee($p)){fail::database("unable to create file: `$p`"); exit;};
          if(!$d&&isee("$h/defn.php")){$d=import("$h/defn.php");}; if(isAssa($d)){$d=knob($d);};
-         if(!isKnob($d,1)){$l->close(); wait(50); return true;}; $this->link=$l;
+         if(!isKnob($d,1)){$l->close(); wait(250); return true;}; $this->link=$l;
 
          foreach($d as $tn => $td)
          {
@@ -90,7 +90,7 @@ namespace Anon;
             // todo::{'sqlite plug'}("upon `create`, if `rows` are defined, insert them",FAIL);
          };
 
-         $l->close(); wait(50); return true;
+         $l->close(); wait(250); return true;
       }
 
 
@@ -104,8 +104,10 @@ namespace Anon;
          {
             try{$x=$c->prepare($q);}catch(\Exception $f)
             {
-               $m=$f->getMessage(); if(isin($m,'Unable to prepare statement: 5, database is locked'))
-               {$p=$this->mean->path; $m="database `$p` is locked";}; fail::database("$m\n\nQUERY:\n$q");
+               $m=$f->getMessage();
+               if(isin($m,'Unable to prepare statement: 5, database is locked'))
+               {$p=$this->mean->path; $m="database `$p` is locked";};
+               fail::database("$m\n\nQUERY:\n$q");
             };
 
             foreach($b as $k => $v){$x->bindValue($k,$v);};
