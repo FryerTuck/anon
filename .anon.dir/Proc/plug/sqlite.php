@@ -186,7 +186,7 @@ namespace Anon;
       {
          if(!$this->link||!$t)
          {
-            if(isAssa($x)){$x=knob($x,U);}; if(!isKnob($x)){fail('expecting :assa: or :knob:');};
+            if(isAssa($x)){$x=knob($x,U);}; if(!isKnob($x)){fail("expecting :assa: or :knob: but given: ".tval($x));};
             if(!isWord($x->using)){fail('expecting `using` as :word:');}; $t=$x->using; if(!$this->link){$this->vivify();};
             $d=$this->descry($t); if(!$d){fail("table `$t` is undefined");}; $l=keys($d->cols); $this->{":$t:"}=$l; $w=$x->write;
             $z=knob(['done'=>0,'last'=>0]); if(span($w)<1){return $z;};
