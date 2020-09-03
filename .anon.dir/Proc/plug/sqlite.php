@@ -184,7 +184,7 @@ namespace Anon;
 
       function insert($x,$t=null)
       {
-         if(!$this->link||!$t)
+         if(!$t)
          {
             if(isAssa($x)){$x=knob($x,U);}; if(!isKnob($x)){fail("expecting :assa: or :knob: but given: ".tval($x));};
             if(!isWord($x->using)){fail('expecting `using` as :word:');}; $t=$x->using; if(!$this->link){$this->vivify();};
@@ -192,7 +192,7 @@ namespace Anon;
             $z=knob(['done'=>0,'last'=>0]); if(span($w)<1){return $z;};
             if(isNuma($w)&&!isNuma($w[0])&&!isAssa($w[0])&&!isKnob($w[0])){$w=[$w];};
             if(!isNuma($w)){$w=[$w];}; $z=knob(['deed'=>'INSERT','done'=>0,'last'=>0]); $this->mean->tabl=$t;
-            foreach($w as $i){$r=$this->insert([using=>$t,write=>$i]); $z->done++; $z->last=$r->last;};
+            foreach($w as $i){$r=$this->insert($i,$t); $z->done++; $z->last=$r->last;};
             $this->pacify(); return $z;
          }
 
