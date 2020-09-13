@@ -92,7 +92,7 @@
                                     purl(`/User/runRepel/login`,{args:["login",un.value,pw.value]},(rsp)=>
                                     {
                                         rsp=rsp.body; if(rsp!=OK){popAlert(rsp); return};
-                                        sh=sesn('HASH'); cookie.delete(sh); this.root.exit();
+                                        sh=sesn('HASH'); this.root.exit();
                                         tick.after(150,()=>{newGui({APIKEY:sh})});
                                     });
                                 }},
