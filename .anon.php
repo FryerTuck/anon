@@ -12,8 +12,10 @@
 # who knows what lurks in the shadows of a place where even ground beneath your feet is unsteady ..and the air carries the scent of uncertainty
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
-// $stem=(isset($_SERVER["REDIRECT_STEM"])?$_SERVER["REDIRECT_STEM"]:"?");
-// die($stem);
+// print_r($_SERVER);
+// exit;
+// if(strpos($_SERVER["REQUEST_URI"],"?init")){print_r($_SERVER); exit;};
+// if(isset($_COOKIE["ALTHANDLER"])){print_r($_SERVER); exit;};
 
 
 # func :: harakiri : let be known that we died honorably .. commit suicide due to some unfortunate issue, without leaving a "body"

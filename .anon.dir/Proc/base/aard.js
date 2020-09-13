@@ -13,7 +13,7 @@ const wack = function(r)
    d.innerHTML=`<div style="height:100%; background:hsla(0,0%,0%,0.7);padding:10px">${m}</div>`;
    setTimeout(function(){d.style.backgroundImage=`url('/User/dcor/wal1.jpg')`;},Math.rand(900,3000));
 }
-.bind({line:atob('{:WACKMESG:}').split('\n'),done:0});
+.bind({line:atob(window.WACKMESG).split('\n'),done:0});
 
 const stak = function(x,a, e,s,r,h,o)
 {
@@ -39,10 +39,14 @@ const bz=function(p){Busy.edit('/anonBoot',p);};
    if({:denyDomainSpoofs:})
    {
       s=HOSTNAME.split('.'); c=location.host.split('.'); if((s.length<3)||(c.length<3)){wack();return};
-      s.shift(); s=s.join('.'); c.shift(); c=c.join('.');if((location.host!=s)&&(c!=s)){wack();return};
+      s.shift(); s=s.join('.'); c.shift(); c=c.join('.'); if(c!=s){wack();return};
    };
 
-   document.cookie=`{:SESNHASH:}=...;domain=${HOSTNAME};path=/`;
-   bz(10); script('/Proc/base/abec.js',()=>{bz(20); script('/Proc/base/base.js',()=>
-   {bz(30); script('/Proc/libs/opentype/opentype.min.js',()=>{bz(40); script('/Proc/base/boot.js')})})});
+   Object.keys(Cookies.get()).forEach((k)=>{if(k.length!=40){return}; Cookies.remove(k)});
+
+   setTimeout(()=>{Cookies.set("{:SESNHASH:}","..."); setTimeout(()=>
+   {
+       bz(10); script('/Proc/base/abec.js',()=>{bz(20); script('/Proc/base/base.js',()=>
+       {bz(30); script('/Proc/libs/opentype/opentype.min.js',()=>{bz(40); script('/Proc/base/boot.js')})})});
+   },60)},60);
 }());

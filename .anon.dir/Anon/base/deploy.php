@@ -64,7 +64,7 @@
 
     function base()
     {
-        $dr=envi('DOCUMENT_ROOT'); $bd=envi('BASE');
+        $dr=envi('DOCUMENT_ROOT'); $bd=envi('HREFBASE');
         if(strlen($bd)>0){$dr="$dr/$bd";};
         return $dr;
     }

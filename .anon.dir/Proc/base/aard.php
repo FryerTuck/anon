@@ -386,8 +386,9 @@ namespace Anon;
    {
       if(!is_string($k)){return;}; if(strlen($k)!==strlen(trim($k))){return;}; // validate cookie-name
       if($v==='<:(/*\):>'){if(!isset($_COOKIE[$k])){return;}; return $_COOKIE[$k];}; // get
-      if(($v==='')||($v===':VOID:')){$v=null;}; if($v===null){setcookie($k,$v,-1,$p,envi('HOST')); unset($_COOKIE[$k]); return;}; // delete
-      setrawcookie($k,$v,0,$p,envi('HOST')); $_COOKIE[$k]=$v; return true; // set
+      if(($v==='')||($v===':VOID:')){$v=null;}; $d=envi('HOST'); $d=".$d";
+      if($v===null){setcookie($k,$v,-1,$p,$d); unset($_COOKIE[$k]); return;}; // delete
+      setrawcookie($k,$v,0,$p,$d); $_COOKIE[$k]=$v; return true; // set
    };
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -633,10 +634,6 @@ namespace Anon;
 
 # dbug :: vars : USERADDR - ip address .. if no ip then the request is bogus .. get rid of unsupported requests
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   // $sd=explode('.',envi('HOST')); $sd=array_shift($sd); $bn=shaved(envi('BASE'),'/');
-   // $bp=explode('/',shaved(envi('URI'),'/')); $rb=array_shift($bp); $bp=implode('/',$bp);
-   // if(($sd===$bn)&&($bn===$rb)){halt(424,"Failed Dependency - RewriteRule above this subdomain must point to: $sd/.anon.php");};
-
    unset($sd,$bn,$bp,$rb); $l=explode(' ','CLIENT_IP FORWARDED_FOR FORWARDED REMOTE_ADDR'); $y=0; $s=count($l); for($i=0; $i<$s; $i++)
    {$v=$l[$i]; $x="X_$v"; $z="$v"; if(envi($x)){$y=$x;}elseif(envi($z)){$y=$z;}elseif(envi($v)){$y=$v;}else{$y=0;}; if($y){break;};};
    if(!$y){header("HTTP/1.1 400 Bad Request"); die();}; $_SERVER['USERADDR']=envi($y);  unset($l,$y,$s,$i,$v,$x,$z);
@@ -648,8 +645,8 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    if(envi('ROOTPATH DBUGPATH HOST SCHEME BOTMATCH')!==1){header("HTTP/1.1 424 Failed Dependency - server vars"); die();}; // bad vars
    $d=envi('ROOTPATH'); $s=skey(); $u=''; $c=envi('COREPATH'); //$c=explode('/',envi('COREPATH')); $c=array_pop($c);
-   $g=envi('DBUGPATH'); $b=rshave(str_replace($d,'',envi('BASE')),'/'); if(!$b){$b='/';}; $_SERVER['BASEPATH']=$b;
-   $_SERVER['DBUGPATH']=lshave($g,'.anon.dir'); unset($b,$g);
+   $g=envi('DBUGPATH'); $b=envi('HREFBASE'); $_SERVER['BASEPATH']=$b;
+   $_SERVER['DBUGPATH']=lshave($g,"$b/.anon.dir"); unset($b,$g);
 
    $h=pget('$/Proc/conf/hostName'); if(!$h){$h=envi('SERVER_NAME'); if(!$h){$h=envi('HOST');}};
    $p=envi('URL'); $b=envi('BASEPATH'); if($b!=='/'){$p=lshave($p,"/$b");}; if(!$p){$p='/';};
@@ -790,9 +787,10 @@ namespace Anon;
    }
    elseif($i==='GUI')
    {
-      if(isset($_GET['k'])&&($_GET['k']===$k)){$i='DPR';};
+      $s=envi("STEM");
+      if((envi("USERDEED")==="select")&&envi("MADEFUBU")&&(strpos(NAVIPATH,"/$s/")===0)){$i='DPR';}
+      elseif(isset($_GET['k'])&&($_GET['k']===$k)){$i='DPR';}
    };
-
 
    $_SERVER['INTRFACE']=$i; defn(['USERSKEY'=>$k]);
 

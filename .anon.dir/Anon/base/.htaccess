@@ -1,120 +1,67 @@
 
-# defn :: envi : prep vars
+# init :: flow : initialize rewrite engine and force subdomain as `www` .. this must be here 1st, at the top
 # -----------------------------------------------------------------------------------------------------------------------------
     RewriteEngine on
     RewriteBase /
 
     RewriteCond %{HTTP_HOST} ^[^.]+\.[^.]+$
-    RewriteRule ^ %{REQUEST_SCHEME}://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L,QSA]
+    RewriteRule ^ %{REQUEST_SCHEME}://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+# -----------------------------------------------------------------------------------------------------------------------------
+
+
+
+# prep :: vars : this does no redirection and does not exit, it only writes variables to be used further down
+# -----------------------------------------------------------------------------------------------------------------------------
+    RewriteCond %{THE_REQUEST} \s/+([^?]*?)/*[\s?]
+    RewriteRule ^ - [E=HREFPATH:%1]
+
+    RewriteCond %{ENV:HREFPATH} !^$
+    RewriteCond %{ENV:HREFPATH} ([a-zA-Z0-9-_\.]+)
+    RewriteRule ^(.*)$ - [E=PATHSTEM:%1]
+
+    RewriteRule ^(.*)$ - [E=ROOTPATH:%{DOCUMENT_ROOT}]
 
     RewriteCond %{HTTP_HOST} ([a-z0-9]+)\.
-    RewriteRule ^(.*)$ - [E=BASE:%1]
+    RewriteRule ^(.*)$ - [E=HREFBASE:%1]
+    RewriteCond %{ENV:ROOTPATH}/%{ENV:HREFBASE} !-d
+    RewriteRule ^(.*)$ - [E=HREFBASE:]
+    RewriteCond %{ENV:HREFBASE} ^$
+    RewriteCond %{ENV:ROOTPATH}/%{HTTP_HOST} -d
+    RewriteRule ^(.*)$ - [E=HREFBASE:%{HTTP_HOST}]
 
-    RewriteCond %{REQUEST_URI} ^/([a-zA-Z0-9-_]+).*$
-    RewriteRule ^(.*)$ - [E=STEM:%1]
+    RewriteRule ^(.*)$ - [E=ANONFOLD:.anon.dir]
+    RewriteCond %{ENV:ROOTPATH}/%{ENV:ANONFOLD} !-d
+    RewriteCond %{ENV:HREFBASE} !^$
+    RewriteRule ^(.*)$ - [E=ANONFOLD:%{ENV:HREFBASE}/%{ENV:ANONFOLD}]
+    RewriteCond %{ENV:ROOTPATH}/%{ENV:ANONFOLD} !-d
+    RewriteRule ^(.*)$ - [E=ANONFOLD:]
 
-    RewriteCond %{REQUEST_FILENAME} ([^\/]+$)
-    RewriteRule ^(.*)$ - [E=LEAF:%1]
+    RewriteRule ^(.*)$ - [E=ANONINDX:.anon.php]
+    RewriteCond %{ENV:ROOTPATH}/%{ENV:ANONINDX} !-f
+    RewriteCond %{ENV:HREFBASE} !^$
+    RewriteRule ^(.*)$ - [E=ANONINDX:%{ENV:HREFBASE}/%{ENV:ANONINDX}]
+    RewriteCond %{ENV:ROOTPATH}/%{ENV:ANONINDX} !-f
+    RewriteRule ^(.*)$ - [E=ANONINDX:]
 
-    RewriteCond %{HTTP_COOKIE} ([a-zA-Z0-9]{40,40}+)
-    RewriteRule ^(.*)$ - [E=SESN:%1]
-
-    RewriteCond %{DOCUMENT_ROOT}/%{ENV:BASE}/.anon.dir/Proc/base/dbug.htm -f
-    RewriteRule ^(.*)$ - [E=DBUGPATH:%{ENV:BASE}/.anon.dir/Proc/base/dbug.htm]
-    RewriteCond %{DOCUMENT_ROOT}/.anon.dir/Proc/base/dbug.htm -f
-    RewriteRule ^(.*)$ - [E=DBUGPATH:.anon.dir/Proc/base/dbug.htm]
-
+    RewriteCond %{ENV:ANONFOLD} !^$
+    RewriteRule ^(.*)$ - [E=DBUGPATH:%{ENV:ANONFOLD}/Proc/base/dbug.htm]
     RewriteRule ^(.*)$ - [E=BOTMATCH:bot|crawl|fetch|find|grab|scan|search|site|slurp|spider|wget|curl]
 # -----------------------------------------------------------------------------------------------------------------------------
 
 
 
-# cond :: subdomain & topdomain : INIT - if referer does not match host and Anon is available -then let Anon handle it now
+# cond :: Anon : for if Anon is installed AND: there is no Anon session, or request is for Anon directly
 # -----------------------------------------------------------------------------------------------------------------------------
-    RewriteCond %{HTTP_HOST}@@%{HTTP_REFERER} !^([^@]*)@@https?://\1/.*
-    RewriteCond %{DOCUMENT_ROOT}/%{ENV:BASE}/.anon.php -f
-    RewriteRule ^(.*)$ %{ENV:BASE}/.anon.php [L,QSA]
-
-    RewriteCond %{HTTP_HOST}@@%{HTTP_REFERER} !^([^@]*)@@https?://\1/.*
-    RewriteCond %{DOCUMENT_ROOT}/.anon.php -f
-    RewriteRule ^(.*)$ .anon.php [L,QSA]
+    RewriteCond %{ENV:ANONINDX} !^$
+    RewriteCond %{HTTP_COOKIE} !ALTHANDLER=yes [OR]
+    RewriteCond %{ENV:ROOTPATH}/%{ENV:ANONFOLD}/%{ENV:PATHSTEM} -d
+    RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
 # -----------------------------------------------------------------------------------------------------------------------------
 
 
 
-# cond :: subdomain & topdomain : INIT - rererer is Host but Anon-session is missing, so refer back to Anon handler
+# cond :: subdomain : if the request-path does not start with the existing-subdomain-folder-name then redirect it to be so
 # -----------------------------------------------------------------------------------------------------------------------------
-    RewriteCond %{HTTP_HOST}@@%{HTTP_REFERER} ^([^@]*)@@https?://\1/.*
-    RewriteCond %{DOCUMENT_ROOT}/%{ENV:BASE}/.anon.dir/Proc/temp/sesn/%{ENV:SESN}/HASGUI !-f
-    RewriteCond %{DOCUMENT_ROOT}/%{ENV:BASE}/.anon.php -f
-    RewriteRule ^(.*)$ %{ENV:BASE}/.anon.php [L,QSA]
-
-    RewriteCond %{HTTP_HOST}@@%{HTTP_REFERER} ^([^@]*)@@https?://\1/.*
-    RewriteCond %{DOCUMENT_ROOT}/.anon.dir/Proc/temp/sesn/%{ENV:SESN}/HASGUI !-f
-    RewriteCond %{DOCUMENT_ROOT}/.anon.php -f
-    RewriteRule ^(.*)$ .anon.php [L,QSA]
-# -----------------------------------------------------------------------------------------------------------------------------
-
-
-
-# cond :: subdomain & topdomain : FLOW - request is for Anon .. URL refers to existing Anon stem
-# -----------------------------------------------------------------------------------------------------------------------------
-    RewriteCond %{HTTP_HOST}@@%{HTTP_REFERER} ^([^@]*)@@https?://\1/.*
-    RewriteCond %{ENV:STEM} !^$
-    RewriteCond %{DOCUMENT_ROOT}/%{ENV:BASE}/.anon.dir/%{ENV:STEM} -d
-    RewriteCond %{DOCUMENT_ROOT}/%{ENV:BASE}/.anon.php -f
-    RewriteRule ^(.*)$ %{ENV:BASE}/.anon.php [L,QSA]
-
-    RewriteCond %{HTTP_HOST}@@%{HTTP_REFERER} ^([^@]*)@@https?://\1/.*
-    RewriteCond %{ENV:STEM} !^$
-    RewriteCond %{DOCUMENT_ROOT}/%{ENV:BASE}/.anon.dir/%{ENV:STEM} -d
-    RewriteCond %{DOCUMENT_ROOT}/.anon.php -f
-    RewriteRule ^(.*)$ .anon.php [L,QSA]
-# -----------------------------------------------------------------------------------------------------------------------------
-
-
-
-# cond :: subdomain : FLOW - request is for subdomain index
-# -----------------------------------------------------------------------------------------------------------------------------
-    RewriteCond %{ENV:STEM} ^$
-    RewriteCond %{DOCUMENT_ROOT}/%{ENV:BASE}/index.php -f
-    RewriteRule ^(.*)$ %{ENV:BASE}/index.php [L,QSA]
-# -----------------------------------------------------------------------------------------------------------------------------
-
-
-
-# cond :: subdomain & topdomain : FLOW - request is for folder index
-# -----------------------------------------------------------------------------------------------------------------------------
-    RewriteCond %{DOCUMENT_ROOT}/%{ENV:BASE}/%{REQUEST_URI} -d
-    RewriteCond %{DOCUMENT_ROOT}/%{ENV:BASE}/%{REQUEST_URI}/index.php -f
-    RewriteRule ^(.*)$ %{ENV:BASE}/%{REQUEST_URI}/index.php [L,QSA]
-
-    RewriteCond %{DOCUMENT_ROOT}/%{ENV:BASE}/%{REQUEST_URI} -d
-    RewriteCond %{DOCUMENT_ROOT}/%{ENV:BASE}/%{REQUEST_URI}/index.html -f
-    RewriteRule ^(.*)$ %{ENV:BASE}/%{REQUEST_URI}/index.html [L,QSA]
-
-    RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_URI} -d
-    RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_URI}/index.php -f
-    RewriteRule ^(.*)$ %{REQUEST_URI}/index.php [L,QSA]
-
-    RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_URI} -d
-    RewriteCond %{DOCUMENT_ROOT}/%{REQUEST_URI}/index.html -f
-    RewriteRule ^(.*)$ %{REQUEST_URI}/index.html [L,QSA]
-# -----------------------------------------------------------------------------------------------------------------------------
-
-
-
-# fail :: gracefully : try to debug without showing bots
-# -----------------------------------------------------------------------------------------------------------------------------
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{DOCUMENT_ROOT}/%{BASE}/index.php -f
-    RewriteRule ^(.*)$ %{BASE}/index.php [L,QSA]
-
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{HTTP_USER_AGENT} %{ENV:BOTMATCH} [NC]
-    RewriteRule ^ - [R=503,L]
-
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{DOCUMENT_ROOT}/%{ENV:DBUGPATH} -f
-    RewriteRule ^(.*)$ %{ENV:DBUGPATH} [L,QSA]
+    RewriteCond %{ENV:HREFBASE}#%{ENV:PATHSTEM} !^([^#]+)#\1$
+    RewriteRule ^ %{REQUEST_SCHEME}://%{HTTP_HOST}/%{ENV:HREFBASE}%{REQUEST_URI} [R=302,L,NE]
 # -----------------------------------------------------------------------------------------------------------------------------

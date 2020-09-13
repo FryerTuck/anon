@@ -81,19 +81,19 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const fixCookies = function(ns)
    {
-        (cookie.select('*')||{}).each((cv,cn)=>
-        {
-            if(!test(cn,/^[a-z0-9]{40}$/)){return};
-            if(cn!=sesn("HASH")){cookie.delete(cn);return};
-            if(!ns){cookie.update(cn,"...");return};
-            cookie.delete(cn);
-        });
+        // (cookie.select('*')||{}).each((cv,cn)=>
+        // {
+        //     if(!test(cn,/^[a-z0-9]{40}$/)){return};
+        //     if(cn!=sesn("HASH")){cookie.delete(cn);return};
+        //     if(!ns){cookie.update(cn,"...");return};
+        //     cookie.delete(cn);
+        // });
    };
 
 
    (function(l)
    {
-      Cookies.set(sesn('HASH'),'...');
+      // Cookies.set(sesn('HASH'),'...');
 
       let hr=location.href; let fg=stub(hr,["?freshGui","&freshGui"]);
       if(fg)
@@ -339,12 +339,12 @@
       extend(MAIN)({Anon:{}}); bz(50);
       requires(bl,( np,ah,ab)=>
       {
-         bz(60); np=location.href; np+=((isin(np,"?")?"&":"?")+"init");
+         bz(60);
          ab=function(evnt,dm,db,se,pn)
          {
              pn=this.parentNode; pn.enclan("scrollHide"); pn.style.backgroundColor="#FFFFFF";
-             dm=this.contentDocument; db=dm.body.parentNode;
-             dm.AnonSiteView=this;    db.tapHit=0;
+             dm=this.contentDocument; if(!dm){fail("iframe :: invalid DOM"); return};
+             db=dm.body.parentNode; dm.AnonSiteView=this; db.tapHit=0;
 
              if(!db.tapSeq)
              {
@@ -368,13 +368,17 @@
              });
          };
 
+         np=location.href;
+
          if("{:INTRFACE:}"=="ALT")
          {
-             let r=create({iframe:"#anonMainView .spanFull", src:np}); r.listen("load",ab);
+             let r=create({iframe:"#AnonSiteView .spanFull", src:np}); r.listen("load",ab);
              select('#anonMainView').insert(r);
+             signal("boot");
              return;
          };
 
+         np+=((isin(np,"?")?"&":"?")+"init");
          render(np,(r)=>
          {
              let fr=(nodeName(r)=="iframe"); if(fr){r.id="AnonSiteView"; r.listen("load",ab);};
