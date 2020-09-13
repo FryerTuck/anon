@@ -93,7 +93,7 @@
                                     {
                                         rsp=rsp.body; if(rsp!=OK){popAlert(rsp); return};
                                         sh=sesn('HASH'); this.root.exit();
-                                        tick.after(150,()=>{newGui({APIKEY:sh})});
+                                        tick.after(50,()=>{newGui({APIKEY:sh})});
                                     });
                                 }},
                             ]
