@@ -61,11 +61,15 @@
 # cond :: Anon : for if Anon is installed AND: there is no Anon session, or request is for Anon directly
 # -----------------------------------------------------------------------------------------------------------------------------
     RewriteCond %{ENV:ANONINDX} !^$
-    RewriteCond %{ENV:ROOTPATH}/%{ENV:ANONFOLD}/%{ENV:PATHSTEM} -d
+    RewriteCond %{HTTP_COOKIE} !ALTHANDLER=yes
     RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
 
     RewriteCond %{ENV:ANONINDX} !^$
-    RewriteCond %{HTTP_COOKIE} !ALTHANDLER=yes
+    RewriteCond %{HTTP_HOST}@@%{HTTP_REFERER} !^([^@]*)@@https?://\1/.*
+    RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
+
+    RewriteCond %{ENV:ANONINDX} !^$
+    RewriteCond %{ENV:ROOTPATH}/%{ENV:ANONFOLD}/%{ENV:PATHSTEM} -d
     RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
 
     RewriteCond %{ENV:ANONINDX} !^$
