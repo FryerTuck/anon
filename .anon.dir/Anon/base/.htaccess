@@ -43,6 +43,14 @@
     RewriteCond %{ENV:ROOTPATH}/%{ENV:ANONINDX} !-f
     RewriteRule ^(.*)$ - [E=ANONINDX:]
 
+    RewriteCond %{ENV:HREFBASE} !^$
+    RewriteCond %{ENV:ROOTPATH}/%{ENV:HREFBASE}/index.php -f
+    RewriteRule ^(.*)$ - [E=HOSTINDX:%{ENV:HREFBASE}/index.php]
+
+    RewriteCond %{ENV:HOSTINDX} ^$
+    RewriteCond %{ENV:ROOTPATH}/index.php -f
+    RewriteRule ^(.*)$ - [E=HOSTINDX:index.php]
+
     RewriteCond %{ENV:ANONFOLD} !^$
     RewriteRule ^(.*)$ - [E=DBUGPATH:%{ENV:ANONFOLD}/Proc/base/dbug.htm]
     RewriteRule ^(.*)$ - [E=BOTMATCH:bot|crawl|fetch|find|grab|scan|search|site|slurp|spider|wget|curl]
@@ -53,8 +61,15 @@
 # cond :: Anon : for if Anon is installed AND: there is no Anon session, or request is for Anon directly
 # -----------------------------------------------------------------------------------------------------------------------------
     RewriteCond %{ENV:ANONINDX} !^$
-    RewriteCond %{HTTP_COOKIE} !ALTHANDLER=yes [OR]
     RewriteCond %{ENV:ROOTPATH}/%{ENV:ANONFOLD}/%{ENV:PATHSTEM} -d
+    RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
+
+    RewriteCond %{ENV:ANONINDX} !^$
+    RewriteCond %{HTTP_COOKIE} !ALTHANDLER=yes
+    RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
+
+    RewriteCond %{ENV:ANONINDX} !^$
+    RewriteCond %{ENV:HOSTINDX} ^$
     RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
 # -----------------------------------------------------------------------------------------------------------------------------
 

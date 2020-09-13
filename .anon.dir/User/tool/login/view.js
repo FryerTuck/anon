@@ -14,13 +14,13 @@ extend(repl)
       repl.mumble('verifying ...');
       purl('/User/runRepel/login',{args:['login',s.un,s.pw]},(r,b)=>
       {
-         s.un=VOID; s.pw=VOID; b=r.body; if(b!=':OK:') // login check
+         s.un=VOID; s.pw=VOID; b=r.body; if(b!=OK) // login check
          {
             repl.mumble(b); repl.ENV.target='exec'; f.modify({type:'text'}); f.modify({value:''}); // notify & reset
             p.modify({innerHTML:('['+sesn('USER')+'&nbsp;'+repl.PWD+']')}); return;  // reset mechanism
          };
 
-         var sh=sesn('HASH'); cookie.delete(sh);
+         var sh=sesn('HASH'); //cookie.delete(sh);
          repl.noprom(); repl.mumble('access granted'); repl.mumble('refreshing ...'); // notify the user what's happening
          window.onbeforeunload=null; tick.after(150,()=> // wait for DOM to settle then reboot GUI
          {newGui({APIKEY:sh});});

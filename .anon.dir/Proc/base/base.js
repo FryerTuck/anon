@@ -50,11 +50,11 @@
    ({
       cookie:
       {
-         domain:Cookies.defaults.path,
+         config:{path:Cookies.defaults.path,domain:Cookies.defaults.domain},
          exists:function(b,v){v=Cookies.get(b); return isVoid(v);},
-         create:function(b,a,c,d){Cookies.set(b,btoa(JSON.stringify(a)),{expires:c||null,path:d||this.domain}); return true;},
-         update:function(b,a,c,d){Cookies.set(b,a,{expires:c||null,path:d||this.domain}); return true;},
-         delete:function(b,a){return Cookies.remove(b,{path:a||this.domain})},
+         create:function(b,a,c,d){Cookies.set(b,btoa(JSON.stringify(a)),{expires:c||null,path:d||this.config.path,domain:this.config.domain}); return true;},
+         update:function(b,a,c,d){Cookies.set(b,a,{expires:c||null,path:d||this.config.path,domain:this.config.domain}); return true;},
+         delete:function(b,a){return Cookies.remove(b,{path:a||this.config.path,domain:this.config.domain})},
          select:function(b, r,v,t)
          {
             if(b=='*'){b=VOID}; r=Cookies.get(b); if(isVoid(r)){return}; if((b==VOID)){try{v=JSON.parse(atob(r))}catch(e){v=r}; return v};
@@ -838,11 +838,10 @@
       server.stream.close(); MAIN.CONFIRMLEAVE=0; if(isKnob(p)){v=p; p=VOID};
       if(isPath(p)){t=(location.protocol+'//'+location.host+p)}else{t=location.href};
       a=rstub(t,"#"); if(a){t=a[0]; a=a[2]}else{a=""}; t=((!isin(t,"?")?"?":"&")+"freshGui"+a);
-      b=[{input:'#INTRFACE', type:'hidden', value:'GUI'}]; (cookie.select('*')||{}).each((cv,cn)=>
-      {if(test(cn,/^[a-z0-9]{40}$/)||(cn=="ALTHANDLER")){cookie.delete(cn)}});
+      b=[{input:'#INTRFACE', type:'hidden', value:'GUI'}]; cookie.delete("ALTHANDLER");
       if(isKnob(v)){v.each((vd,vn)=>{radd(b,{input:`#${vn}`, type:'hidden', value:vd})})};
       document.body.insert([{form:'#anonReboot', action:t, method:'POST', style:'position:absolute;opacity:0', contents:b}]);
-      purl(`/Proc/newGui`,()=>{select('#anonReboot').submit()});
+      tick.after(250,()=>{select('#anonReboot').submit()});
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
