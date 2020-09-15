@@ -285,10 +285,6 @@ namespace Anon;
       };
 
       $p=path($d); if(!$p){return;}; $r=is_readable($p); clearstatcache(true);  return ($r?$p:false);
-      // $r=envi('ROOTPATH'); $l=str_replace("$r/",'',$p); $l=lshave($l,'/'); $l=explode('/',$l);
-      // $q=''; $f=0; $fd=''; foreach($l as $x => $i){$q.="/$i"; if(isset($l[($x+1)])&&!is_dir($r.$q)){$f=1;$fd=($r.$q);break;}};
-      // if($f){return;}; $s=explode('/',$p); $f=array_pop($s); $t=implode('/',$s); unset($l,$s); $l=array_diff(scandir($t),['.','..']);
-      // $s=implode($l,"\n"); if(strpos("$s\n","\n$f")===false){return;}; $r=is_readable($p); clearstatcache(true);  return ($r?$p:false);
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -647,6 +643,8 @@ namespace Anon;
    $d=envi('ROOTPATH'); $s=skey(); $u=''; $c=envi('COREPATH'); //$c=explode('/',envi('COREPATH')); $c=array_pop($c);
    $g=envi('DBUGPATH'); $b=envi('HREFBASE'); $_SERVER['BASEPATH']=$b;
    $_SERVER['DBUGPATH']=lshave($g,"$b/.anon.dir"); unset($b,$g);
+   if($s){$s="$c/Proc/temp/sesn/$s/USER"; if(file_exists($s)){$u=file_get_contents($s);}};
+   if(!$u){$u='anonymous';}; $_SERVER['USERNAME']=$u; $_SERVER['USERPATH']="$c/User/data/$u/home";
 
    $h=pget('$/Proc/conf/hostName'); if(!$h){$h=envi('SERVER_NAME'); if(!$h){$h=envi('HOST');}};
    $p=envi('URL'); $b=envi('BASEPATH'); if($b!=='/'){$p=lshave($p,"/$b");}; if(!$p){$p='/';};
@@ -655,12 +653,7 @@ namespace Anon;
       'HOSTNAME' => $h,
       'NAVIPATH' => $p,
    ]);
-
    unset($h,$p,$b);
-
-
-   if($s){$s="$c/Proc/temp/sesn/$s/USER"; if(file_exists($s)){$u=file_get_contents($s);}};
-   if(!$u){$u='anonymous';}; $_SERVER['USERNAME']=$u; $_SERVER['USERPATH']="$c/User/data/$u/home";
 
    $z=pget('$/Proc/conf/timeZone'); if(is_string($z)&&(strpos($z,'/'))){date_default_timezone_set("$z");}; unset($z); // set server time zone
    $_SERVER['oblevl']=0; $_SERVER['obfail']=''; $_SERVER['cbfail']=null; // for deFail & enFail

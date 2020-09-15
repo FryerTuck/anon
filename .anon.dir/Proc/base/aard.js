@@ -38,8 +38,10 @@ const bz=function(p){Busy.edit('/anonBoot',p);};
 {
    if({:denyDomainSpoofs:})
    {
-      s=HOSTNAME.split('.'); c=location.host.split('.'); if((s.length<3)||(c.length<3)){wack();return};
-      s.shift(); s=s.join('.'); c.shift(); c=c.join('.'); if(c!=s){wack();return};
+      s=HOSTNAME.split('.'); c=location.host.split('.');
+      if((s.length<3)||(c.length<3)){console.error("invalid hostname");wack();return};
+      s.shift(); s=s.join('.'); c.shift(); c=c.join('.');
+      if(c!=s){console.error("hostname mismatch",s,c);wack();return};
    };
 
    Object.keys(Cookies.get()).forEach((k)=>{if(k.length!=40){return}; Cookies.remove(k)});

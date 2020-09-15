@@ -14,6 +14,7 @@
 /Mail/data/*
 /Mail/link/*
 /Mail/vars/lastRead
+/Mail/vars/tested
 
 /Proc/conf/antiHack
 /Proc/conf/autoMail

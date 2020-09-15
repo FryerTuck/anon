@@ -65,13 +65,6 @@ namespace Anon;
          Repo::ignore('/',write,($c.$p));
       };
 
-      if(!isee("/www"))
-      {
-          $t=conf("Site/autoConf"); if(!isKnob($t)){fail::tampering("`$/Site/conf/autoConf` is invalid"); exit;};
-          $t=$t->template; $p="$/Site/tmpl/$t"; if(!isFold($p)){fail::config("expecting `$p` as folder"); exit;};
-          path::copy("$/Site/tmpl/$t/","/www");
-      };
-
       lock::remove("upkeep");
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
