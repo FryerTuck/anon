@@ -153,7 +153,7 @@ namespace Anon;
 
       static function ratingOf($m)
       {
-         expect::mail($m,1); $p="/User/vote/$m"; $r=pget($p); if(span($r)<1){path::make($p,'0'); $r='0';};
+         expect::mail($m,1); $p="/User/vars/vote/$m"; $r=pget($p); if(span($r)<1){path::make($p,'0'); $r='0';};
          $r=($r*1); return $r;
       }
 
@@ -162,7 +162,7 @@ namespace Anon;
       static function voteMail($m=null,$v=null,$b=null)
       {
          if(!$m){$x=knob($_POST); $m=$x->mail; $v=$x->vote; $b=$x->bfor;}; $f=user('mail'); if($m===$f){return;};
-         $h='/User/vote'; if(!isee("$h/$m")){path::make("$h/$m",'0');}; if(!isee("$h/$f")){path::make("$h/$f",'0');};
+         $h='/User/vars/vote'; if(!isee("$h/$m")){path::make("$h/$m",'0');}; if(!isee("$h/$f")){path::make("$h/$f",'0');};
          $tn=(pget("$h/$m")*1); $fn=(pget("$h/$f")*1); if($v==='+'){$tn+=($b?1:3); $fn+=1;}else{$tn-=1; $fn-=1;};
          path::make("$h/$m",$tn); path::make("$h/$f",$fn); return OK;
       }

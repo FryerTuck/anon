@@ -36,13 +36,13 @@ namespace Anon;
 
       static function linkMenu()
       {
-         $h='/Mail/link'; $r=pget($h); dump($r);
+         $h='/Mail/vars/link'; $r=pget($h); dump($r);
       }
 
 
       static function openPlug($p=null)
       {
-         if(!$p){$v=knob($_POST); $p=pget("/Mail/link/$v->purl.url");}; $i=path::info($p); $u="$i->user@$i->host"; $h="/Mail/data/$u";
+         if(!$p){$v=knob($_POST); $p=pget("/Mail/vars/link/$v->purl.url");}; $i=path::info($p); $u="$i->user@$i->host"; $h="/Mail/data/$u";
          Proc::signal('busy',['with'=>"mail",'done'=>10]);
          $l=crud($p)->descry(); Proc::signal('busy',['with'=>"mail",'done'=>100]); $r=[];
          if(!isee("$h/")){path::make("$h/");}; foreach($l as $i){$b=self::mboxName($i); if(!isee("$h/$b")){path::make("$h/$b/");}; $r[]=$b;};
@@ -70,7 +70,7 @@ namespace Anon;
 // signal::dump($lst);
 
          // if(!$lst){$lst=[];};
-         if(!isee("/Mail/link/$usr")){path::make("/Mail/link/$usr",$prl);}; // do this here incase crud() fails; here we know it's ok
+         if(!isee("/Mail/vars/link/$usr")){path::make("/Mail/vars/link/$usr",$prl);}; // do this here incase crud() fails; here we know it's ok
          $box=self::mboxName($box); $hme="/Mail/data/$usr/$box"; if((span($lst)>0)&&!isee($hme)){path::make("$hme/");};
 
 
@@ -92,7 +92,7 @@ namespace Anon;
 
       static function readMbox()
       {
-         $v=knob($_POST); $usr=$v->purl; $prl=pget("/Mail/link/$usr.url"); $box=$v->mbox;
+         $v=knob($_POST); $usr=$v->purl; $prl=pget("/Mail/vars/link/$usr.url"); $box=$v->mbox;
          $box=self::mboxName($box); $hme="/Mail/data/$usr/$box";
 
          $rsl=path::ogle
@@ -161,7 +161,7 @@ namespace Anon;
       $mb=stub($mb,"\n"); $mb=trim($mb[2]); $tb=$mb; if(!isMail($o->destAddy)){fail('expecting `destAddy` as email address');}; requires::path($rp);
       $x=(new \Parsedown()); $x->setBreaksEnabled(true); $hb=$x->text($mb); $hb=import('$/Proc/libs/marked/page.htm',['parsed'=>$hb]);
       $da=$o->destAddy; if(!$da){$da=$o->destAddr;}; $dn=$o->destName; $fa=$o->fromAddy; if(!$fa){$fa=$o->fromAddr;}; $fn=$o->fromName;
-      $c=conf('Proc/autoMail'); if(!$c){$c=pget("/Mail/link/$fa");};
+      $c=conf('Proc/autoMail'); if(!$c){$c=pget("/Mail/vars/link/$fa");};
       if(!isin($c,['mail://','imap://'])){fail('invalid plug specification .. make sure the `fromAddr` (autoMail -or plug) is valid'); exit;};
       $mi=path::info($c); if(!$fa){$fa="$mi->user@$mi->host";};
       if(!online()){fail('`'.HOSTNAME.'` is offline'); exit;};
