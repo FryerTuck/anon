@@ -69,6 +69,7 @@
     RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
 
     RewriteCond %{ENV:ANONINDX} !^$
+    RewriteCond %{ENV:PATHSTEM} !^$
     RewriteCond %{ENV:ROOTPATH}/%{ENV:ANONFOLD}/%{ENV:PATHSTEM} -d
     RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
 
