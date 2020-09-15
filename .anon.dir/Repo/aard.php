@@ -197,7 +197,7 @@ namespace Anon;
       {
          expect::repo($h); $h=rshave($h,'/'); $p="$h/.git/info/exclude"; if(!$h){$h='/';}; expect::path($p,[W,F]);
          if(($a!==write)&&($a!==erase)){fail('expecting 2nd arg as either :write: or :erase:');};
-         expect::text($i,2); $r=pget($p); $q="\n$i";
+         expect::text($i,1); $r=pget($p); $q="\n$i";
          if((($a===write)&&isin($r,$q))||(($a===erase)&&!isin($r,$q))){return OK;}; // nothing to do
          if($a===write){$r.=$q;}else{$r=swap($r,$q,'');}; path::make($p,$r); // finish exclude
          $c=frst($i); $i=lshave($i,'!'); $x=((($a===write)&&($c!=='!'))?"git rm --cached":"git add");
