@@ -44,7 +44,7 @@ namespace Anon;
           $done = spuf($host); // confirm
           signal::busy(['with'=>'remoteDeploy','done'=>80]);
 
-          $chek = base64_encode(pget('$/Proc/base/busy.htm'));
+          $chek = base64_encode(pget('$/Site/base/busy.htm'));
           if(!isin($done,$chek)){fail::remoteDeploy("response test was unsuccesful"); exit;};
           signal::busy(['with'=>'remoteDeploy','done'=>100]);
           return $addr;

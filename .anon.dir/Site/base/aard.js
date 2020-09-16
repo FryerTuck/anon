@@ -48,7 +48,7 @@ const bz=function(p){Busy.edit('/anonBoot',p);};
 
    setTimeout(()=>{Cookies.set("{:SESNHASH:}","..."); setTimeout(()=>
    {
-       bz(10); script('/Proc/base/abec.js',()=>{bz(20); script('/Proc/base/base.js',()=>
-       {bz(30); script('/Proc/libs/opentype/opentype.min.js',()=>{bz(40); script('/Proc/base/boot.js')})})});
+       bz(10); script('/Site/base/abec.js',()=>{bz(20); script('/Site/base/base.js',()=>
+       {bz(30); script('/Proc/libs/opentype/opentype.min.js',()=>{bz(40); script('/Site/base/boot.js')})})});
    },60)},60);
 }());

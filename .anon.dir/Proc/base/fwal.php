@@ -92,7 +92,7 @@ namespace Anon;
 
       # cond :: sesn : change the value of the boot cookie
       # ---------------------------------------------------------------------------------------------------------------------------------------
-         if(facing('GUI')&&(NAVIPATH==='/Proc/base/base.js')&&(kuki(sesn('HASH'))!=='...'))
+         if(facing('GUI')&&(NAVIPATH==='/Site/base/base.js')&&(kuki(sesn('HASH'))!=='...'))
          {
             $v='...'; kuki(sesn('HASH'),$v); $r=import(NAVIPATH); $m=mime(NAVIPATH);
             while(ob_get_level()){ob_end_clean();}; header("Content-Type: $m");

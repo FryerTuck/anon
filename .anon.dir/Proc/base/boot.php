@@ -46,31 +46,22 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function dval($d)
    {
-      if(!is_string($d)){return $d;}; $d=trim($d); if(($d==='')||($d==='null')||($d==='VOID')){return;}; $v=json_decode($d,true);
-      if($v!==null){return $v;}; if($d==='*'){return $d;};
-      if(strlen($d)<2){return $d;}; if(($d[0]==='+')&&is_numeric(substr($d,1))){$v=dval(substr($d,1)); if($v!==null){return $v;}; return $d;};
+      if(!is_string($d)){return $d;}; $d=trim($d); if(($d==='')||($d==='null')||($d==='VOID')){return;};
+      $v=json_decode($d,true); if($v!==null){return $v;}; if($d==='*'){return $d;}; if(strlen($d)<2){return $d;};
       $w=wrapOf($d); if((($w==='``')||($w==='""')||($w==="''"))&&(substr_count($d,$w[0])<3)){$v=unwrap($d); return $v;};
-      $q=strpos($d,"'"); if($q===false){$q=strpos($d,'"');}; if($q===false){$q=strpos($d,'`');}; $p=strpos($d,':');
-      $url=strpos($d,'://'); $url=(!$url?0:(($p<$url)?0:1));
+      $n=strpos($d,"\n"); if(!$n&&($d[0]==='+')){$v=substr($d,1); if(is_numeric($v)){return ($v*1);}}; $b='{:'; $e=':}';
+      $u=strpos($d,'://'); $p=strpos($d,':'); $u=(!$u?0:(($p<$u)?0:1)); if($u&&!$n){return $d;}; // URL
+      $x=((strpos($d,$b)!==false)&&strpos($d,$e)); if($x&&!isee('impose')){fail::premature('`impose` is undefined';exit;};
+      if(!$n&&!$p&&!$x){$r=trim(str_replace(' ',',',$r),','); if(strpos($r,',')){$r=explode(',',$r); return $r;}; return $d;};
 
-      if(!strpos($d,"\n")&&(!$p||($p&&($url||($q&&($q<$p))))))
+      $a=explode($d,"\n"); $r=[]; foreach($a as $l)
       {
-         if(strpos($d,"'")!==false){return $d;}; if(strpos($d,'"')!==false){return $d;}; if(strpos($d,'`')!==false){return $d;};
-         if($url){return $d;}; if(!strpos($d,',')&&!strpos($d,' ')){return $d;};
-         $r=str_replace(', ',',',$d); $r=str_replace(' ',',',$r); $r=explode(',',$r); return $r;
+          $x=strpos($l,$b); $p=strpos($l,':'); $q=strpos($l,'`'); if(!$p||($p&&($q<$p))){$r[]=dval($l); continue;}; // simple
+          if(($x!==false)&&($x<$p)){$v=impose($l,$b,$e); $r[]=$v; continue;};
+          $p=stub($l,':'); $k=trim($p[0]); $v=trim($p[2]); $v=($x?impose($v,$b,$e):dval($v)); $r[]=$v; continue;
       };
 
-      $r=array(); $l=explode("\n",$d); foreach($l as $i)
-      {
-         $i=rtrim($i,','); $q=strpos($i,"'"); if($q===false){$q=strpos($i,'"');}; if($q===false){$q=strpos($i,'`');}; $p=strpos($i,':');
-         $cs=0; if(!$q){$i=str_replace(', ',',',$i); $sc=strpos($i,','); $ep=strrpos($i,':'); if($sc&&$p&&($p<$sc)&&($ep>$sc)){$cs=1;}};
-         if($cs&&($q===false)){$aa=[];$al=explode(',',$i);foreach($al as $ai){$ap=stub($ai,':');$aa[trim($ap[0])]=dval($ap[2]);};return $aa;};
-         if($p&&(($q===false)||($q>$p))){$p=stub($i,':'); $k=trim($p[0]); $v=dval($p[2]); $r[$k]=$v; continue;};
-         $r[]=dval($i);
-      };
-
-      if(is_assoc_array($r)&&array_key_exists('0',$r)&&($r['0']===null)&&(strpos($d,'0:')===false)){unset($r['0']);}; // bug fix
-      return $r;
+      if(empty($r)){return;}; if(is_assoc_array($r)){return $r;}; if(!$n){return $r[0];}; return $r;
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -288,7 +279,7 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function user($a=null)
    {
-      $u=sesn('USER'); $p="/User/data/$u";
+      $u=sesn('USER'); $p="$/User/data/$u";
       if(is_funnic($a)){$a=lowerCase($a); if(($a=='name')||($a=='nick')){return $u;}; $r=pget("$p/$a"); return $r;};
       $r=knob(); $l=pget($p); foreach($l as $i){if(is_file(path("$p/$i"))){$r->$i=pget("$p/$i"); if(is_numeric($r->$i)){$r->$i*=1;}}};
       return $r;
@@ -301,8 +292,8 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function guiStrap($u=null,$sc=1)
    {
-      $h=sesn('HASH'); $v=knob(); $p='/Proc/base/aard.js'; $d=[];
-      if(!$u){$u=sesn('USER');}; $v->SESNUSER=$u; $v->SESNCLAN=pget("/User/data/$u/clan"); $v->SESNMAIL=user('mail');
+      $h=sesn('HASH'); $v=knob(); $p='$/Site/base/aard.js'; $d=[];
+      if(!$u){$u=sesn('USER');}; $v->SESNUSER=$u; $v->SESNCLAN=pget("$/User/data/$u/clan"); $v->SESNMAIL=user('mail');
       $v->denyDomainSpoofs=tval(conf("Proc/antiHack")->denyDomainSpoofs);
       foreach($_COOKIE as $cn => $cv){if(test($cn,'/^[a-z0-9]{40}$/')&&($cn!==$h)){kuki($cn,VOID);}};
       $c=import($p,$v); $c=base64_encode(strrev($c)); $m=4000;
@@ -316,16 +307,15 @@ namespace Anon;
 
 
 
-# func :: boot : boot all non-intrinsic stems .. keeping scope clean
+# func :: allStemRun : run a php file found in all Anon-related stems on this system
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-    function boot()
+    function allStemRun($_XF)
     {
-       $_SL=pget('/'); $_RP=ROOTPATH; foreach($_SL as $_SD)
+       if(!is_string($p)){return;}; $_RP=ROOTPATH; $_SL=array_merge(pget(COREPATH),pget(ROOTPATH));
+       foreach($_SL as $_SD)
        {
-           if(is_dir("$_RP/$_SD")&&file_exists("$_RP/$_SD/boot.php"))
-           {
-               ob_start(); require_once("$_RP/$_SD/boot.php"); $OB=ob_get_clean();
-           };
+           if(is_dir("$_RP/$_SD")&&file_exists("$_RP/$_SD/$_XF"))
+           {ob_start(); require("$_RP/$_SD/$_XF"); $OB=ob_get_clean();};
        };
     };
 # ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -334,14 +324,29 @@ namespace Anon;
 
 # need :: tools : load dependencies
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   depend('F:/Proc/base/dbug.php');       // check if dbug exists .. will fail if not
+   depend('F:$/Proc/base/dbug.php');      // check if dbug exists .. will fail if not
    require(path('$/Proc/base/dbug.php')); // this will take care of any further issues with the framework and any subsequent runtime errors
    require(path('$/Proc/base/abec.php')); // basic tools for heavy lifting .. if anything goes wrong in here, dbug will handle it .. awesomeness
    require(path('$/Proc/base/base.php')); // ABEC is full .. extend any other essential functions in here
    require(path('$/Proc/base/fwal.php')); // essential security .. right of passage through "the pass"
    require(path('$/Proc/aard.php'));      // initialize Proc class
-   require(path('/Repo/aard.php'));       // initialize Repo class
-   Proc::__init();                        // this happens when a php-file goes through `import()` .. but here we do it manually
+   require(path('$/Repo/aard.php'));      // initialize Repo class
+
+   spl_autoload_register(function($n){$n=str_replace('Anon\\','',$n); import($n);}); // auto-load class-assoc PHP file
+   defn(['AUTOMAIL'=>pget('$/Proc/conf/autoMail')]); // needed
+   $_SERVER["ALTHANDLER"]=(kuki("ALTHANDLER")?"yes":(isee("/index.php")?"yes":null));
+
+   Proc::__init();
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+# cond :: proc : these need to run quickly - if requested directly, so skip the rest and handle it now
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+    if(isin("/Proc/listen /Proc/execPath /Proc/xenoCall /User/upload",NAVIPATH))
+    {
+        call(NAVIPATH); exit;
+    };
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -366,48 +371,12 @@ namespace Anon;
       };
       unset($dbs,$ldb,$tmn,$tdf);
    }
-
-   defn(['AUTOMAIL'=>pget('$/Proc/conf/autoMail')]); // needed
-   $_SERVER["ALTHANDLER"]=(kuki("ALTHANDLER")?"yes":(isee("/index.php")?"yes":null));
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
-# cond :: boot : GUI .. boot view first
+# proc :: init : boot
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-     if(facing('GUI'))
-     {
-        guiStrap();
-        //ekko::head(['Referrer-Policy'=>'origin','cache'=>false,'cookies'=>true]); // send bootStrap headers
-        $v=['botHoney'=>conf('Proc/badRobot')->lure,'busyGear'=>base64_encode(pget('$/Proc/base/busy.htm'))];
-        $v['WACKMESG']=base64_encode(pget('$/Proc/info/hack.inf')); $r=import('$/Proc/base/aard.htm',$v);
-        echo($r); done(); // send BootStrap GUI keeping headers intact
-     };
-
-     if(facing('DPR')&&(NAVIPATH==='/Proc/base/boot.js'))
-     {
-        $a=scan('$'); $b=scan('/',FOLD); $l=concat($a,$b); $r=[]; foreach($l as $i)
-        {
-           $p=path::conf($i); if(!$p){continue;}; $d=dval(pget("$p/autoboot"));
-           if(!is_assoc_array($d)||!isset($d['client'])){continue;};
-           $d=$d['client']; if(!$d){continue;}; if(isText($d)){$d=[$d];}; if(!isNuma($d)){continue;};
-           foreach($d as $f){if(!isText($f)){fail("invalid `autoboot` config in: `$p/autoboot`");}; $r[]=$f;};
-        };
-
-        $v=knob(['bootList'=>tval($r)]); unset($d); $d=[]; $x=pget('$/Proc/info/pass.inf');
-        $c=pget('$/User/data/master/pass'); if(!$c){wack();}; if(password_verify($x,$c)){$d[]='editRootPass';};
-        $c=pget('$/Proc/conf/autoMail'); if(!isin($c,'mail://')||!isin($c,'@')||!isin($c,'.')){$d[]='confAutoMail';}; // debug automail
-        $v->badCfg=base64_encode(tval($d));
-
-        if(!kuki("INTRFACE")&&MADEFUBU&&envi("ALTHANDLER")){$v->INTRFACE="ALT"; kuki("ALTHANDLER","yes");};
-        finish(NAVIPATH,$v,FORGET);
-    };
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-# proc :: init : autoload classes from stems and initiate the Proc class
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-   spl_autoload_register(function($n){$n=str_replace('Anon\\','',$n); import($n);}); // auto-load class-assoc PHP file
-   Proc::init(); // as we remember the trials faced through the mud, swamp, woods and pass behind us, we welcome the fresh air of "the haven"
+   allStemRun("boot.php"); // boot all bootable stems
+   Proc::init(); // initialize Proc
 # ---------------------------------------------------------------------------------------------------------------------------------------------

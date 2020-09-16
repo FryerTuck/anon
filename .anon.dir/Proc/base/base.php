@@ -477,7 +477,7 @@ namespace Anon;
       {
          ekko::head($a); if($nx){return;}; if(facing("BOT")){exit;};
          $c=conf('Proc/httpCode'); $m=$c->$a;
-         $t=$vo->tmpl; if(!isee($t)){$t='/Proc/base/stat.htm';};
+         $t=$vo->tmpl; if(!isee($t)){$t='/Site/base/stat.htm';};
          $r=import($t,['code'=>$a,'text'=>$m]); echo ($r); exit;
       };
 

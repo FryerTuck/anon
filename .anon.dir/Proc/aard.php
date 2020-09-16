@@ -32,32 +32,6 @@ namespace Anon;
 
       static function init()
       {
-         if((NAVIPATH==='/Proc/listen')&&MADEFUBU)
-         {
-             self::listen(); return;
-         };
-
-         if(NAVIPATH==='/Proc/execPath')
-         {
-            // skip past all the INIT stuff and run quickly, yet -with security
-            self::execPath(); exit;
-         };
-
-         if(NAVIPATH==='/Proc/xenoCall')
-         {
-            // skip past all the INIT stuff and run quickly, yet -with security
-            self::xenoCall(); exit;
-         };
-
-         boot(); // boot all bootable stems
-
-         if(NAVIPATH==='/User/upload')
-         {
-            // skip past all the INIT stuff and run quickly, yet -with security
-            User::upload(); exit;
-         };
-
-
          $p=NAVIPATH; Time::logEvent(); $q='~/.tmp/Site/';
          if(isin($p,($q.$q))){$p=swap($p,($q.$q),$q);}; // HACK !! TODO :: fix this elsewhere
 

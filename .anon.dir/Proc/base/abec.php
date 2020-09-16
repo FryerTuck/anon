@@ -329,7 +329,26 @@ namespace Anon;
       private static $meta=[];
       static function __callStatic($n,$a)
       {
-         $d=shaved($n,'/'); if(strlen($d)<1){return;}; $q=((isset($a[0])&&is_string($a[0]))?$a[0]:''); $s=rshave("$n/$q","/");
+         $d=shaved($n,'/'); if(strlen($d)<1){return;};
+
+         if(isset($a[0])&&(isAsso($a[0])||isKnob($a[0])))
+         {
+             $q=explode("/",$d); $s=$q[0]; $f=(isset($q[1])?$q[1]:""); $p="/$s/conf";
+             if(!isFold($p)){fail::reference("expecting `$p` as folder"); exit;};
+             $a=$a[0]; self::$meta[$d]=dupe($a); if($f){$a=knob([$f=>$a]);};
+             foreach($a as $k => $nd)
+             {
+                 $fp="/$p/$k"; $xd=dval(pget($fp)); if(is_assoc_array($xd)){$xd=knob($xd);};
+                 if(is_assoc_array($nd)){$nd=knob($nd);};
+                 if(isKnob($xd)&&isKnob($nd)){foreach($nd as $nk => $nv){$xd->$nk=$nv;}; $nd=$xd;};
+                 if(!isKnob($nd)){pset($fp,tval($nd)); continue;};
+                 $tv=[]; foreach($nd as $ck => $cv){$tv[]="$ck: ".tval($cv);};
+                 pset($fp,implode("\n",$tv));
+             };
+             return OK;
+         };
+
+         $q=((isset($a[0])&&is_string($a[0]))?$a[0]:''); $s=rshave("$n/$q","/");
          if(isset(self::$meta[$s])){return self::$meta[$s];}; if($q===SKIP){return;}; $r=conf($s); if($r===null){return;};
          self::$meta[$s]=$r; // cache the result .. comment out this line for debugging persistent config in SSE
          return $r;
@@ -978,6 +997,7 @@ namespace Anon;
    {
       if(!is_nokey_array($a)){$a=[$a];}; $ns='Anon\\'; if(is_string($x)&&(strpos($x,$ns)===false)){$x=($ns.$x);};
       if($z){ob_start(null,0,PHP_OUTPUT_HANDLER_STDFLAGS);};
+      if(isPath($x)){$x=swap(shaved($x,"/"),"/","::"); if(span($x,"::")!==1){fail::reference("invalid Class/func definition"); exit;}};
       if(is_string($x)&&isin($x,'::'))
       {
          $p=frag($x,'::');

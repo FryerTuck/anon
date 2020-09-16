@@ -53,7 +53,7 @@
     RewriteRule ^(.*)$ - [E=HOSTINDX:index.php]
 
     RewriteCond %{ENV:ANONFOLD} !^$
-    RewriteRule ^(.*)$ - [E=DBUGPATH:%{ENV:ANONFOLD}/Proc/base/dbug.htm]
+    RewriteRule ^(.*)$ - [E=DBUGPATH:%{ENV:ANONFOLD}/Site/base/dbug.htm]
     RewriteRule ^(.*)$ - [E=BOTMATCH:bot|crawl|fetch|find|grab|scan|search|site|slurp|spider|wget|curl]
 # -----------------------------------------------------------------------------------------------------------------------------
 

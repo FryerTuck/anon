@@ -692,7 +692,7 @@
 
 
 
-// func :: create : create DOM nodes from string, list, object .. custom nodes are defined in `/Proc/base/xtag.js`
+// func :: create : create DOM nodes from string, list, object .. custom nodes are defined in `/Site/base/xtag.js`
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const create = function(t,a,c, r,x,n,ca)
    {
@@ -729,7 +729,7 @@
 
 
 
-// func :: modify : define -or update exising DOM-node-attributes .. custom attributes are defined in `/Proc/base/xatr.js`
+// func :: modify : define -or update exising DOM-node-attributes .. custom attributes are defined in `/Site/base/xatr.js`
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const modify = function(n,a,c,o)
    {
@@ -1063,7 +1063,7 @@
 
    const parser = {};
 
-   {:'/Proc/base/ximp.js':}
+   {:'/Site/base/ximp.js':}
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -2025,7 +2025,7 @@
       }
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   globVars({activity:{idle:0,last:time()}},[`imHere /Proc/base/base.js`]);
+   globVars({activity:{idle:0,last:time()}},[`imHere /Site/base/base.js`]);
 
    const imHere = function(here)
    {

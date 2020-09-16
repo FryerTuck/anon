@@ -12,8 +12,6 @@ namespace Anon;
 
 # dbug :: path : expected files
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   if(!isee('$/Proc/vars/lastDbug')){pset('$/Proc/vars/lastDbug','0');};
-   depend('F:/Proc/base/dbug.htm','WF:/Proc/vars/lastDbug','WF:/User/conf/inactive','F:/Proc/base/abec.php','F:/Proc/base/base.php');
    if(NAVIPATH===DBUGPATH){$r=pget(DBUGPATH); $r=str_replace('{:(TECHMAIL):}',TECHMAIL,$r); print_r($r); flush(); die();}; // must fail nicely
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -39,6 +37,8 @@ namespace Anon;
 
       static function init()
       {
+         $_SERVER['LASTFAIL']=null; $_SERVER['nofail']=0;
+
          self::$meta=knob
          ([
             'listen'=>
@@ -202,17 +202,4 @@ namespace Anon;
       $e=knob(['name'=>dbug::name($e['type']),'mesg'=>trim($e['message']."\n".$b),'file'=>$e['file'],'line'=>$e['line']]);
       $e->stak=stak(); dbug::view($e); exit;
    });
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-# dbug :: stem : reference - check for ambiguous stem names
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-   $l=pget('/'); foreach($l as $i)
-   {
-      if(!file_exists(COREPATH."/$i")){continue;}; $a=strtolower($i);
-      fail::ambiguity("`/$i` (proprCase) in your web-root folder is reserved\n- try using `/$a` (lowerCase) instead");
-   };
-   unset($l,$i,$a);
-   $_SERVER['LASTFAIL']=null; $_SERVER['nofail']=0;
 # ---------------------------------------------------------------------------------------------------------------------------------------------

@@ -9,7 +9,17 @@ namespace Anon;
    {
       clearstatcache(); clearstatcache(true);
 
-      $h='/Proc/temp'; $x=['file','kban','lock','logs','refs','sesn'];
+      if(!isee('$/Proc/vars/lastDbug')){pset('$/Proc/vars/lastDbug','0');};
+      depend('F:$/Site/base/dbug.htm','WF:$/Proc/vars/lastDbug','WF:$/User/conf/inactive','F:$/Proc/base/abec.php','F:$/Proc/base/base.php');
+
+      $l=pget('$'); foreach($l as $i)
+      {
+         if(!file_exists(ROOTPATH."/$i")){continue;}; $a=strtolower($i);
+         fail::ambiguity("`/$i` (proprCase) in your web-root folder is reserved\n- try using `/$a` (lowerCase) instead");
+      };
+      unset($l,$i,$a);
+
+      $h='$/Proc/temp'; $x=['file','kban','lock','logs','refs','sesn'];
       $cln=sesn('CLAN'); $hsh=sesn('HASH'); $usr=sesn('USER');
 
       foreach($x as $d)
@@ -33,38 +43,7 @@ namespace Anon;
 
       if(lock::exists("upkeep")&&!userDoes("lead sudo gang")&&isee("$h/refs")){return;}; // .. less is more
       lock::create("upkeep"); // run upkeep only when another power-user is not running it already
-
-      if(!isRepo('/'))
-      {Repo::create('/'); wait(50);}
-      else
-      {
-          $fa=conf('Repo/fromAnon'); $lo=Repo::origin('/');
-          $lr=path("$/Repo/data/".HOSTNAME.".git");
-          if(!isee($lr)){Repo::create('/',BARE);};
-
-          if($lo===$fa)
-          {
-              exec::{"git remote rename origin fromAnon"}('/');
-              exec::{"git remote add origin $lr"}('/');
-          }
-          else
-          {
-              $ao=Repo::getURL('/','fromAnon');
-              if(!$ao){exec::{"git remote set-url fromAnon $fa"}('/');};
-          };
-      };
-
-      $h=ROOTPATH; $l=conf('Proc/gitIgnor'); unset($i);
-      foreach($l as $i)
-      {
-         if(strlen(trim($i))<1){continue;}; // empty line
-         if(substr($i,0,2)==='# '){continue;}; // commented out
-         $c=substr($i,0,1); if($c==='!'){$i=substr($i,1);}else{$c='';}; // negation
-         $a=''; if(last($i)==='*'){$a='*';}; $p=path(rshave($i,'*'));
-         $p=swap($p,"$h/",''); $p.=$a;
-         Repo::ignore('/',write,($c.$p));
-      };
-
+      allStemRun("keep.php");
       lock::remove("upkeep");
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
