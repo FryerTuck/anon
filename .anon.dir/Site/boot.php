@@ -39,10 +39,9 @@ namespace Anon;
      {
         $a=scan('$'); $b=scan('/',FOLD); $l=concat($a,$b); $r=[]; foreach($l as $i)
         {
-           $p=path::conf($i); if(!$p){continue;}; $d=dval(pget("$p/autoboot"));
-           if(!is_assoc_array($d)||!isset($d['client'])){continue;};
-           $d=$d['client']; if(!$d){continue;}; if(isText($d)){$d=[$d];}; if(!isNuma($d)){continue;};
-           foreach($d as $f){if(!isText($f)){fail("invalid `autoboot` config in: `$p/autoboot`");}; $r[]=$f;};
+           $p=path::conf($i); if(!$p){continue;}; $d=dval(pget("$p/siteBoot"));
+           if(!$d){continue;}; if(isText($d)){$d=[$d];}; if(!isNuma($d)){continue;};
+           foreach($d as $f){if(!isText($f)){fail("invalid config in: `$p/siteBoot`");}; $r[]=$f;};
         };
 
         $v=knob(['bootList'=>tval($r)]); unset($d); $d=[]; $x=pget('$/Proc/info/pass.inf');
