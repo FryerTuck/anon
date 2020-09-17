@@ -15,13 +15,13 @@
 
 // defn :: conf : front-end configuration
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   globVars({antiHack:decode.jso(`{:conf('Proc/antiHack'):}`)});
+   globVars({antiHack:deconf(`{:enconf('Proc/antiHack'):}`)});
 
    const timeVars = {e6:0};
 
    const badCfg='{:badCfg:}';
 
-   globVars({mime:decode.jso(`{:conf('Proc/mimeType'):}`)});
+   globVars({mime:deconf(`{:enconf('Proc/mimeType'):}`)});
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -215,7 +215,7 @@
             focusObj:{hash:VOID,node:VOID},
             ProcInfo:
             {
-               sysClock:decode.jso(`{:conf('Proc/sysClock'):}`).client,
+               sysClock:deconf(`{:enconf('Proc/sysClock'):}`).client,
             },
          });
 

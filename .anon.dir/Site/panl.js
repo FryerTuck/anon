@@ -19,7 +19,7 @@ extend(Anon)
    {
       vars:
       {
-          conf:decode.jso(`{:conf("Site/autoConf"):}`),
+          conf:deconf(`{:enconf("Site/autoConf"):}`),
       },
 
 

@@ -46,7 +46,7 @@
    (function(c,h,m)
    {
       // Busy.kill();
-      c=decode.jso(`{:conf("User/viewConf"):}`);
+      c=deconf(`{:enconf("User/viewConf"):}`);
       c.each((v,k)=>{if(conf[k]){fail('`conf.'+k+'` is already defined');return}; conf[k]=v});
    }());
    MAIN.CONFIRMLEAVE=1;
