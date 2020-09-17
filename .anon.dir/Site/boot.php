@@ -3,6 +3,25 @@ namespace Anon;
 
 
 
+# func :: guiStrap : make & send boot cookie
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   function guiStrap($u=null,$sc=1)
+   {
+      $h=sesn('HASH'); $v=knob(); $p='$/Site/base/aard.js'; $d=[];
+      if(!$u){$u=sesn('USER');}; $v->SESNUSER=$u; $v->SESNCLAN=pget("$/User/data/$u/clan"); $v->SESNMAIL=user('mail');
+      $v->denyDomainSpoofs=tval(conf("Proc/antiHack")->denyDomainSpoofs);
+      foreach($_COOKIE as $cn => $cv){if(test($cn,'/^[a-z0-9]{40}$/')&&($cn!==$h)){kuki($cn,VOID);}};
+      $c=import($p,$v); $c=base64_encode(strrev($c)); $m=4000;
+
+      $f="after encoding, `$p` exceeds maximum cookie size of $m bytes";
+      if(span($c)>$m){fail::boot($f);};
+
+      if($sc){kuki($h,$c);return true;}; return $c;
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 # cond :: boot : GUI .. boot view first
 # ---------------------------------------------------------------------------------------------------------------------------------------------
      if(facing('GUI'))

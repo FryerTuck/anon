@@ -46,7 +46,8 @@
    (function(c,h,m)
    {
       // Busy.kill();
-      c={ {:'/User/conf/viewConf':} }; c.each((v,k)=>{if(conf[k]){fail('`conf.'+k+'` is already defined');return}; conf[k]=v});
+      c=decode.jso(`{:conf("User/viewConf"):}`);
+      c.each((v,k)=>{if(conf[k]){fail('`conf.'+k+'` is already defined');return}; conf[k]=v});
    }());
    MAIN.CONFIRMLEAVE=1;
 // --------------------------------------------------------------------------------------------------------------------------------------------

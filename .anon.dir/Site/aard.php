@@ -20,11 +20,12 @@ namespace Anon;
       static function handle($p)
       {
         $np="$p"; if(isFold($np)){$ix=path::indx($np,'aard.php'); if($ix){$np=(rshave($np,'/')."/$ix");}}; // get index-file
-        $ap="/Site/tmpl/Anon"; $tp="/www"; $tc=knob("$tp/conf"); $rp=test::{$np}($tc->redirect);
+        $tn=conf("Site/autoConf")->template; if(!isWord($tn)||!isee("$/Site/tmpl/$tn")){$tn="Anon";};
+        $tp="$/Site/tmpl/$tn"; $tc=knob("$tp/conf"); $rp=test::{$np}($tc->redirect);
         if(is_int($rp)){finish($rp,['tmpl'=>"$tp/base/stat.htm"]); exit;}; // EXIT :: graceful status
         if(isText($rp,1)&&(isPath($rp)||isPath("/$rp"))){$np=(arg($rp)->startsWith("/")?$rp:"$tp/$rp");}; // redirected path
-        $fx=fext($np); if(isFold($np)&&!conf('Proc/viewDirs')){finish(403);}; // configured to deny viewing folders
-        $ini=isin(keys($_GET),"init");
+        if(isFold($np)&&!conf('Proc/viewDirs')){finish(403);}; // configured to deny viewing folders
+        $ini=isin(keys($_GET),"init"); $fx=fext($np);
 
         if(facing("DPR")||($fx==="php"))
         {

@@ -11,6 +11,7 @@ namespace Anon;
 
 
 
+
 # func :: botRules : robots.txt assembler .. caches the result for 10 seconds
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function botRules()
@@ -46,7 +47,10 @@ namespace Anon;
       {
       # cond :: init : protect the framework core and limit browsing freedom according to config
       # ---------------------------------------------------------------------------------------------------------------------------------------
+         if(pget('$/Proc/conf/hostName') !== envi('HOST'))
+         {fail::hostname("configured hostname does not match the request hostname"); exit;};
          self::$vars=knob(['faceList'=>['API','BOT','DPR','GUI','SSE']]);
+
          $s=test::{NAVIPATH}(conf('Proc/redirect')); // get redirect config for the current web URL
          if(is_int($s)&&($s!==200)){finish($s);}; // explicitly configured to echo status
          if($s&&!is_int($s)){finish($s);}; // explicitly configured to bypass any stem/module controllers
@@ -168,5 +172,7 @@ namespace Anon;
    # ------------------------------------------------------------------------------------------------------------------------------------------
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
 
    permit::init();

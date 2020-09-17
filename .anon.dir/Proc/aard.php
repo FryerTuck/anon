@@ -86,13 +86,16 @@ namespace Anon;
 
       static function treeMenu()
       {
-         permit::fubu('clan:work,lead,sudo'); $cn='name,path,mime,type';
+         permit::fubu('clan:work,lead,sudo');
+         $cn='name,path,mime,type'; $tn=conf('Site/autoConf')->template; if(!isText($tn,1)){$tn='Anon';};
+         $tp="$/Site/tmpl/$tn/conf/"; if(!isee($tp)){fail::tampering("expecting existing path: `$tp`"); return;};
          $al=path::ogle([using=>'$',fetch=>$cn,limit=>['type'=>'fold','levl'=>0]]);
          $ul=path::ogle([using=>'/',fetch=>$cn,limit=>['type'=>'fold','levl'=>0]]);
          $sl=array_merge($al,$ul); $rl=[]; foreach($sl as $so)
          {
             $sc=path::conf($so->path); if(!$sc){continue;};
             $so->data=path::ogle([using=>$sc,fetch=>"$cn,data"]);
+            if($so->path=='$/Site'){$so->data=array_merge($so->data,path::ogle([using=>$tp,fetch=>"$cn,data"]));};
             $rl[]=$so;
          };
          ekko($rl);

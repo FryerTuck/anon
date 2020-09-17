@@ -28,7 +28,7 @@ namespace Anon;
 # shiv :: tools : provide expected functionality
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function is_nokey_array($d){if(!is_array($d)){return false;}; return (empty($d)||(array_keys($d)===range(0,(count($d)-1))));} // numeric
-   function is_assoc_array($d){return (is_array($d)&&!empty($d)&&(count(array_filter(array_keys($d),'is_string'))>0));} // associative
+   function is_assoc_array($d){if(!is_array($d)){return false;}; return (array_keys($d) !== range(0,(count($d)-1)));} // associative
 
    function is_closure($d){if(is_object($d)){return (($d instanceof \Closure));}; return false;}; // function
    function facing($a){return (envi('INTRFACE')===$a);} // assert interface .. usage:  if(facing('BOT')){};
@@ -727,8 +727,9 @@ namespace Anon;
 
 # dbug :: vars : INTRFACE - identify the kind of interface .. verify REFERER from "self" .. deny bots any methods other than HEAD and GET
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   $m=envi('ACCEPT'); $a=envi('USER_AGENT'); $h=HOSTNAME; $p=envi('URL'); $x=fext($p); $k=skey(); $r=envi('REFERER'); $b=trim(envi('INTRFACE'));
-   $s=(strpos($r,"https://$h")===0); $f=envi('DBUGPATH'); if($s&&$k){$_SERVER['MADEFUBU']=true;}else{$_SERVER['MADEFUBU']=false;};
+   $m=envi('ACCEPT'); $a=envi('USER_AGENT'); $h=HOSTNAME; $p=envi('URL'); $x=fext($p); $k=skey();
+   $r=envi('REFERER'); $b=trim(envi('INTRFACE')); $s=(strpos($r,"https://$h")===0);
+   $f=envi('DBUGPATH'); $_SERVER['MADEFUBU']=(($s&&$k)?"yes":"");
 
    if($s&&!$k&&(($b&&($b!=='BOT'))||post('INTRFACE')||kuki('INTRFACE')))
    {
@@ -780,7 +781,7 @@ namespace Anon;
    }
    elseif($i==='GUI')
    {
-      $s=envi("STEM");
+      $s=envi("PATHSTEM");
       if((envi("USERDEED")==="select")&&envi("MADEFUBU")&&(strpos(NAVIPATH,"/$s/")===0)){$i='DPR';}
       elseif(isset($_GET['k'])&&($_GET['k']===$k)){$i='DPR';}
    };

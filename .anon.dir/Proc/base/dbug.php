@@ -114,7 +114,7 @@ namespace Anon;
       static function view($o)
       {
          $n=self::$meta->active; $f=self::$meta->listen->$n;
-         if((span($o->stak)<1)&&isNuma(dbug::$temp)&&isset(dbug::$temp[0])&&isKnob(dbug::$temp[0]))
+         if((count($o->stak)<1)&&is_nokey_array(dbug::$temp)&&isset(dbug::$temp[0])&&is_object(dbug::$temp[0]))
          {$o->stak=dupe(dbug::$temp); dbug::$temp=null;}; $r=$f($o);
       }
    }

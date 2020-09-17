@@ -1,2 +1,2 @@
-client: '/User/boot.js',
-server: VOID,
+client: /User/boot.js
+server: VOID

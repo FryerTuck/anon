@@ -38,27 +38,32 @@ namespace Anon;
    $s=trim(NAVIPATH,'/'); if(!$s){$s='/';}elseif(strpos($s,'/')){$s=explode('/',$s)[0];}; defn(['NAVISTEM'=>$s]); unset($s);
    defn(['EXPROPER'=>'!= !~ >= <= << >> /* */ // ## : = ~ < > & | ! ? + - * / % ^ @ . , ; # ( ) [ ] { } `']);
    defn(['SPECIALS'=>'_^~|.-*+=#$@$!%?:;&/']);
+
+   defn(['AUTOMAIL'=>pget('$/Proc/conf/autoMail')]); // needed
+   $_SERVER["ALTHANDLER"]=(kuki("ALTHANDLER")?"yes":(isee("/index.php")?"yes":null));
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
 # func :: dval : parse implied value from "neat" string .. assumes json at first and mitigates from there on
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   function dval($d)
+   function dval($d,$z=0)
    {
       if(!is_string($d)){return $d;}; $d=trim($d); if(($d==='')||($d==='null')||($d==='VOID')){return;};
-      $v=json_decode($d,true); if($v!==null){return $v;}; if($d==='*'){return $d;}; if(strlen($d)<2){return $d;};
-      $w=wrapOf($d); if((($w==='``')||($w==='""')||($w==="''"))&&(substr_count($d,$w[0])<3)){$v=unwrap($d); return $v;};
-      $n=strpos($d,"\n"); if(!$n&&($d[0]==='+')){$v=substr($d,1); if(is_numeric($v)){return ($v*1);}}; $b='{:'; $e=':}';
-      $u=strpos($d,'://'); $p=strpos($d,':'); $u=(!$u?0:(($p<$u)?0:1)); if($u&&!$n){return $d;}; // URL
-      $x=((strpos($d,$b)!==false)&&strpos($d,$e)); if($x&&!isee('impose')){fail::premature('`impose` is undefined';exit;};
-      if(!$n&&!$p&&!$x){$r=trim(str_replace(' ',',',$r),','); if(strpos($r,',')){$r=explode(',',$r); return $r;}; return $d;};
+      if($d==='*'){return $d;}; if(strlen($d)<2){return $d;}; $b='{:'; $e=':}'; $x=strpos($d,$b); $n=strpos($d,"\n"); 
+      if($x!==false){if(isee('impose')){$d=impose($d,$b,$e);}else{fail::premature('`impose` is undefined');}};
+      $v=json_decode($d,true); if($v!==null){return $v;}; // covers a lot
+      if(!$n&&($d[0]==='+')){$v=substr($d,1); if(is_numeric($v)){return ($v*1);}}; // positive number
+      $q=strpos($d,'`'); $p=strpos($d,': '); $c=strpos($d,',');
+      $w=wrapOf($d); if(($w==='``')&&(substr_count($d,$w[0])<3)){$v=unwrap($d); return $v;};
+      if($c&&!$n&&!$p&&!$q){$r=explode(',',$d); return $r;};
+      if(!$n&&$z){return $d;}; // no further parsing needed
 
-      $a=explode($d,"\n"); $r=[]; foreach($a as $l)
+      $a=explode("\n",$d); $r=[]; foreach($a as $l)
       {
-          $x=strpos($l,$b); $p=strpos($l,':'); $q=strpos($l,'`'); if(!$p||($p&&($q<$p))){$r[]=dval($l); continue;}; // simple
-          if(($x!==false)&&($x<$p)){$v=impose($l,$b,$e); $r[]=$v; continue;};
-          $p=stub($l,':'); $k=trim($p[0]); $v=trim($p[2]); $v=($x?impose($v,$b,$e):dval($v)); $r[]=$v; continue;
+          $l=trim($l); if($l===""){continue;}; $p=strpos($l,': '); $q=strpos($l,'`');
+          if(!$p||($p&&$q&&($q<$p))){$r[]=dval($l,1); continue;}; // simple
+          $p=stub($l,': '); $k=trim($p[0]); $v=dval($p[2],1); $r[$k]=$v; continue;
       };
 
       if(empty($r)){return;}; if(is_assoc_array($r)){return $r;}; if(!$n){return $r[0];}; return $r;
@@ -135,7 +140,7 @@ namespace Anon;
       if(facing('DPR')&&(fext(NAVIPATH)==='js'))
       {
          if(!headers_sent()){header('Content-Type: application/javascript'); flush();};
-         $r=str_replace("`","\`",$r); $r="dump(`$r`);";
+         $r=str_replace("`","\`",$r); $r="console.log(`$r`);";
       }
       else{if(!headers_sent()){header('Content-Type: text/plain');}};
 
@@ -288,34 +293,17 @@ namespace Anon;
 
 
 
-# func :: guiStrap : make & send boot cookie
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-   function guiStrap($u=null,$sc=1)
-   {
-      $h=sesn('HASH'); $v=knob(); $p='$/Site/base/aard.js'; $d=[];
-      if(!$u){$u=sesn('USER');}; $v->SESNUSER=$u; $v->SESNCLAN=pget("$/User/data/$u/clan"); $v->SESNMAIL=user('mail');
-      $v->denyDomainSpoofs=tval(conf("Proc/antiHack")->denyDomainSpoofs);
-      foreach($_COOKIE as $cn => $cv){if(test($cn,'/^[a-z0-9]{40}$/')&&($cn!==$h)){kuki($cn,VOID);}};
-      $c=import($p,$v); $c=base64_encode(strrev($c)); $m=4000;
-
-      $f="after encoding, `$p` exceeds maximum cookie size of $m bytes";
-      if(span($c)>$m){fail::boot($f);};
-
-      if($sc){kuki($h,$c);return true;}; return $c;
-   }
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
 # func :: allStemRun : run a php file found in all Anon-related stems on this system
 # ---------------------------------------------------------------------------------------------------------------------------------------------
     function allStemRun($_XF)
     {
-       if(!is_string($p)){return;}; $_RP=ROOTPATH; $_SL=array_merge(pget(COREPATH),pget(ROOTPATH));
+       if(!is_string($_XF)){return;}; $_CP=COREPATH; $_RP=ROOTPATH;
+       $_SL=array_merge(padded(pget($_CP),"$_CP/",""),padded(pget($_RP),"$_RP/",""));
+
        foreach($_SL as $_SD)
        {
-           if(is_dir("$_RP/$_SD")&&file_exists("$_RP/$_SD/$_XF"))
-           {ob_start(); require("$_RP/$_SD/$_XF"); $OB=ob_get_clean();};
+           if(is_dir($_SD)&&file_exists("$_SD/$_XF"))
+           {ob_start(); require("$_SD/$_XF"); $OB=ob_get_clean();};
        };
     };
 # ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -332,18 +320,15 @@ namespace Anon;
    require(path('$/Proc/aard.php'));      // initialize Proc class
    require(path('$/Repo/aard.php'));      // initialize Repo class
 
-   spl_autoload_register(function($n){$n=str_replace('Anon\\','',$n); import($n);}); // auto-load class-assoc PHP file
-   defn(['AUTOMAIL'=>pget('$/Proc/conf/autoMail')]); // needed
-   $_SERVER["ALTHANDLER"]=(kuki("ALTHANDLER")?"yes":(isee("/index.php")?"yes":null));
-
    Proc::__init();
+   spl_autoload_register(function($n){$n=str_replace('Anon\\','',$n); import($n);}); // auto-load class-assoc PHP file
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
 # cond :: proc : these need to run quickly - if requested directly, so skip the rest and handle it now
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-    if(isin("/Proc/listen /Proc/execPath /Proc/xenoCall /User/upload",NAVIPATH))
+    if(isin(["/Proc/listen","/Proc/execPath","/Proc/xenoCall","/User/upload"],NAVIPATH))
     {
         call(NAVIPATH); exit;
     };

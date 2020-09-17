@@ -195,6 +195,7 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
+
 # func :: listOf : returns numeric-key array of given argument -only if it's not already
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function listOf($a)
@@ -329,29 +330,30 @@ namespace Anon;
       private static $meta=[];
       static function __callStatic($n,$a)
       {
-         $d=shaved($n,'/'); if(strlen($d)<1){return;};
+         $n=trim($n); $n=shaved($n,"/"); if(strlen($n)<3){return;}; $a=(isset($a[0])?$a[0]:null); $q=explode("/",$n);
+         $s=$q[0]; $f=(isset($q[1])?$q[1]:((is_string($a)&&!isin($a,"/"))?$a:null)); if(is_assoc_array($a)){$a=knob($a);};
 
-         if(isset($a[0])&&(isAsso($a[0])||isKnob($a[0])))
+         if(!isKnob($a))
          {
-             $q=explode("/",$d); $s=$q[0]; $f=(isset($q[1])?$q[1]:""); $p="/$s/conf";
-             if(!isFold($p)){fail::reference("expecting `$p` as folder"); exit;};
-             $a=$a[0]; self::$meta[$d]=dupe($a); if($f){$a=knob([$f=>$a]);};
-             foreach($a as $k => $nd)
-             {
-                 $fp="/$p/$k"; $xd=dval(pget($fp)); if(is_assoc_array($xd)){$xd=knob($xd);};
-                 if(is_assoc_array($nd)){$nd=knob($nd);};
-                 if(isKnob($xd)&&isKnob($nd)){foreach($nd as $nk => $nv){$xd->$nk=$nv;}; $nd=$xd;};
-                 if(!isKnob($nd)){pset($fp,tval($nd)); continue;};
-                 $tv=[]; foreach($nd as $ck => $cv){$tv[]="$ck: ".tval($cv);};
-                 pset($fp,implode("\n",$tv));
-             };
-             return OK;
+             $p="/$s/conf"; if($f){$p="$p/$f";};
+             if(isset(self::$meta[$p])){return self::$meta[$p];}; $q=pget($p); if($q===null){return;};
+             if(is_string($q)){$r=dval($q); if(is_assoc_array($r)){$r=knob($r);}; self::$meta[$p]=dupe($r); return $r;};
+             if(!is_array($q)){return;}; $r=knob();
+             foreach($q as $i){$r->$i=dval(pget("$p/$i")); if(is_assoc_array($r->$i)){$r->$i=knob($r->$i);}};
+             self::$meta[$p]=dupe($r); return $r;
          };
 
-         $q=((isset($a[0])&&is_string($a[0]))?$a[0]:''); $s=rshave("$n/$q","/");
-         if(isset(self::$meta[$s])){return self::$meta[$s];}; if($q===SKIP){return;}; $r=conf($s); if($r===null){return;};
-         self::$meta[$s]=$r; // cache the result .. comment out this line for debugging persistent config in SSE
-         return $r;
+         if(!isFold("/$s/conf")){fail::reference("expecting `/$s/conf` as folder"); exit;};
+         self::$meta[$n]=dupe($a); if($f){$a=knob([$f=>$a]);};
+         foreach($a as $k => $nd)
+         {
+             $fp="/$s/conf/$f"; $xd=dval(pget($fp)); if(is_assoc_array($xd)){$xd=knob($xd);};
+             if(is_assoc_array($nd)){$nd=knob($nd);};
+             if(isKnob($xd)&&isKnob($nd)){foreach($nd as $nk => $nv){$xd->$nk=$nv;}; $nd=$xd;};
+             pset($fp,tval($nd));
+         };
+
+         return OK;
       }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -362,10 +364,12 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function conf($d)
    {
-      if(!is_string($d)){return;}; if(strlen($d)<1){return;}; $q=conf::{"$d"}(SKIP); if($q!==null){return $q;}; $d=shaved($d,'/'); // quicker
-      if(!strpos($d,'/')){$d="/$d/conf";}elseif(!strpos($d,'/conf/')){$p=stub($d,'/'); $d="/$p[0]/conf/$p[2]";}else{$d="/$d";}; $r=pget($d);
-      if(!$r){return;}; if(!is_array($r)){$r=dval($r); if(is_assoc_array($r)||(is_array($r)&&!is_nokey_array($r))){$r=knob($r);}; return $r;};
-      $z=knob(); foreach($r as $i){$z->$i=conf("$d/$i");}; return $z;
+       if(is_string($d)){return conf::{"$d"}();};
+   }
+
+   function enconf($d)
+   {
+       return encode::b64(tval(conf($d)));
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -436,7 +440,7 @@ namespace Anon;
 
 # func :: impose : replace strings between strings by reference
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   function impose($z,$b,$e,$v,$u=null)
+   function impose($z,$b,$e,$v=null,$u=null)
    {
       $l=expose($z,$b,$e); if(!$l){return $z;}; if(!isKnob($v)){$v=knob();}; foreach($l as $i)
       {
