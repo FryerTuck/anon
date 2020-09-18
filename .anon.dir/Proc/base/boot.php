@@ -88,7 +88,10 @@ namespace Anon;
    class knob
    {
       function __construct($d,$u=0)
-      {foreach($d as $k => $v){if(is_assoc_array($v)){$v=(new knob($v,$u));}; if($u){$k=unwrap($k);}; $this->$k=$v;}}
+      {
+          if(!is_array($d)&&!is_object($d)){fail::params("expecting 1st arg as array or object; even if empty");exit;};
+          foreach($d as $k => $v){if(is_assoc_array($v)){$v=(new knob($v,$u));}; if($u){$k=unwrap($k);}; $this->$k=$v;}
+      }
 
       function __get($k){if(property_exists($this,$k)){return $this->$k;};}
       function __call($k,$a){if(property_exists($this,$k)){return call_user_func_array($this->$k,$a);}; fail("undefined method `$k`");}
@@ -328,8 +331,9 @@ namespace Anon;
 
 # cond :: proc : these need to run quickly - if requested directly, so skip the rest and handle it now
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-    if(isin(["/Proc/listen","/Proc/execPath","/Proc/xenoCall","/User/upload"],NAVIPATH))
+    if(isin(["/Proc/listen","/User/upload","/Proc/execPath","/Proc/xenoCall","/Proc/makeTodo"],NAVIPATH))
     {
+        permit::fubu(); // security!!
         call(NAVIPATH); exit;
     };
 # ---------------------------------------------------------------------------------------------------------------------------------------------

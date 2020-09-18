@@ -38,7 +38,7 @@ namespace Anon;
       if(facing('GUI'))
       {
          $h=pget('$/Proc/conf/hostName'); if(!$h){pset('$/Proc/conf/hostName',HOSTNAME);};
-         // if(!path::indx('/')){path::copy('$/Proc/dcor/README.md','/README.md');};
+         // if(!path::indx('/')){path::copy('$/Site/dcor/README.md','/README.md');};
       };
 
       if(lock::exists("upkeep")&&!userDoes("lead sudo gang")&&isee("$h/refs")){return;}; // .. less is more
