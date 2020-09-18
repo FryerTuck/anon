@@ -2,7 +2,7 @@ AnonDokt:
 {
    open:function()
    {
-      requires(['/Proc/dcor/mrkd.js','/Proc/dcor/prsm.js','/Proc/dcor/mkdn.css','/Proc/dcor/prsm.css'],()=>
+      requires(['/Site/dcor/mrkd.js','/Site/dcor/prsm.js','/Site/dcor/mkdn.css','/Site/dcor/prsm.css'],()=>
       {
 
          let md='<a href="https://www.markdownguide.org/cheat-sheet/#basic-syntax" target="_blank">Markdown</a>';

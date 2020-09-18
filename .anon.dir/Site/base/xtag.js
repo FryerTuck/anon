@@ -47,7 +47,7 @@ extend(custom.domtag)
             let box=rectOf(this); let osz=this.size; let unt=(pick(osz,["px","rem","em"])||"px"); let nmr=(rtrim(osz,unt)*1);
             let cid=fash(); let rad=Math.ceil(nmr/2.2); let cxy=Math.ceil(rad/2); let cpx=0; let cpy=0; let mcl=[]; let itl=[];
             let bxw=box.width; let bxh=box.height; let ico=this.icon; let clp=this.clip; let par=n.parentNode; par.removeChild(n);
-            let sis=Math.ceil(nmr/2.8); let lst=styleSheet('/Proc/dcor/icon.woff'); let uni=lst[`.icon-${ico}::before`].content;
+            let sis=Math.ceil(nmr/2.8); let lst=styleSheet('/Site/dcor/icon.woff'); let uni=lst[`.icon-${ico}::before`].content;
             let tnt=cStyle(par,"color"); let crd={Tl:(0+cxy), Tr:(bxw-cxy)};
             dump(this.clip);
 

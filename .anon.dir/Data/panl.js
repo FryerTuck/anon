@@ -1,7 +1,7 @@
 "use strict";
 
 
-requires(["/Data/dcor/aard.css","/Proc/dcor/hack.woff"]);
+requires(["/Data/dcor/aard.css","/Site/dcor/hack.woff"]);
 
 
 

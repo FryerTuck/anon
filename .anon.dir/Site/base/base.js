@@ -1873,7 +1873,7 @@
             {div:'#AnonPopColorPanl .posAbs', style:{padding:18}},
             {div:'.posAbs', style:{width:ew, height:ew, pointerEvents:'none'}, contents:
             [
-               {svg:'#AnonPopColorDial', src:'/Proc/dcor/dial.svg',
+               {svg:'#AnonPopColorDial', src:'/Site/dcor/dial.svg',
                   onready:function(){this.initRota()},
                   initRota:function(degr,di,dw,dh,hw,hh,rc,rota,scal,so)
                   {

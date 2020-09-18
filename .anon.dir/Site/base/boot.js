@@ -65,7 +65,7 @@
       {view:'#anonHidnView .full', style:'overflow:hidden; opacity:0'},
       {view:'#anonMarkView .full', style:'overflow:hidden; opacity:0.1', contents:
       [
-         // {img:'.cenmid', src:'/Proc/dcor/mark.svg'}
+         // {img:'.cenmid', src:'/Site/dcor/mark.svg'}
       ]},
       {view:'#anonMainView .full'},
       {view:'#anonPanlView .hide'},

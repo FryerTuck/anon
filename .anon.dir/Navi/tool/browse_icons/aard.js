@@ -31,7 +31,7 @@ extend(Anon.Navi.tool)
          ]},
       ]);
 
-      select('#NaviIconFind input')[0].focus(); g=select('#NaviIconList'); let x=keys(styleSheet('/Proc/dcor/icon.woff'));
+      select('#NaviIconFind input')[0].focus(); g=select('#NaviIconList'); let x=keys(styleSheet('/Site/dcor/icon.woff'));
       g.iconList=[]; x.forEach((i)=>{if(i.startsWith('.icon-')){i=i.split('::')[0].slice(6); radd(g.iconList,i)}}); x=VOID;
 
       g.doSearch=function(w, l,k,s,t,i,d,p)
