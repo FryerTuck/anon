@@ -50,7 +50,7 @@ namespace Anon;
    function dval($d,$z=0)
    {
       if(!is_string($d)){return $d;}; $d=trim($d); if(($d==='')||($d==='null')||($d==='VOID')){return;};
-      if($d==='*'){return $d;}; if(strlen($d)<2){return $d;}; $b='{:'; $e=':}'; $x=strpos($d,$b); $n=strpos($d,"\n"); 
+      if($d==='*'){return $d;}; if(strlen($d)<2){return $d;}; $b='{:'; $e=':}'; $x=strpos($d,$b); $n=strpos($d,"\n");
       if($x!==false){if(isee('impose')){$d=impose($d,$b,$e);}else{fail::premature('`impose` is undefined');}};
       $v=json_decode($d,true); if($v!==null){return $v;}; // covers a lot
       if(!$n&&($d[0]==='+')){$v=substr($d,1); if(is_numeric($v)){return ($v*1);}}; // positive number

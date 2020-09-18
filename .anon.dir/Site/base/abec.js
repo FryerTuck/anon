@@ -304,6 +304,7 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const fail = function(m, a,n,f,l,s,p,o)
    {
+      if(!MAIN.BOOTED){console.error(`BOOT FAIL !!`); console.error(m);};
       if(MAIN.HALT){return}; MAIN.HALT=1; if(MAIN.Busy){Busy.tint('red')}; tick.after(2000,()=>{MAIN.HALT=0});
       if(isJson(m)&&(wrapOf(m)=="{}")){m=JSON.parse(m); dump([m.file,m.line]);};
       if(isText(m))
@@ -865,10 +866,14 @@
    {
       MAIN.addEventListener('error',function(event)
       {
-         var e,m,f,l,s,i,n,h,o; event.preventDefault(); event.stopPropagation(); if(MAIN.HALT){return}; MAIN.HALT=1; e=event.error;
+         var e,m,f,l,s,i,n,h,o; event.preventDefault(); event.stopPropagation(); e=event.error;
+         f=event.filename; l=event.lineno; if(!e||isText(e)||((e.stack+'').indexOf('\n')<0)){e=(new Error((e+'')))}; n=(e.name||'usage');
          f=event.filename; l=event.lineno; if(!e||isText(e)||((e.stack+'').indexOf('\n')<0)){e=(new Error((e+'')))}; n=(e.name||'usage');
          m=e.message; if(!f){f=fail.maybe;}; if(!l){l=0;}; s=stak(); h=`https://${HOSTNAME}`; f=ltrim(f,h); f=rtrim(f,'?n=script');
-         o={name:n, mesg:m, file:f, line:l, stak:s}; if(MAIN.Busy){Busy.tint('red')}; tick.after(2000,()=>{MAIN.HALT=0});
+         o={name:n, mesg:m, file:f, line:l, stak:s}; console.error(`BOOT FAIL !!`);
+         if(!MAIN.BOOTED){console.error(o);};
+         if(MAIN.Busy){Busy.tint('red')}; tick.after(2000,()=>{MAIN.HALT=0});
+         if(MAIN.HALT){return}; MAIN.HALT=1;
          if(seenFail(o)){return}; MAIN.dispatchEvent((new CustomEvent('procFail',{detail:o})));
       });
    }());

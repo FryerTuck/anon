@@ -320,6 +320,29 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    listen("boot",function()
    {
+
+
+   // tick.after(1500,function()
+   // {
+   //    server.listen('busy',function(d,w)
+   //    {
+   //        if(!isJson(d)){return}; d=decode.jso(d); w=d.with; d=d.done;
+   //        if(!isText(w,1)||!isInum(d)){return};
+   //        if(server.silent[w]){return};
+   //        Busy.edit(w,d);
+   //    });
+   //
+   //    server.listen('done',function(d){if(d!="!"){dump(`\nserver is done with:\n${d}`)}; Busy.done();});
+   //    server.listen('dump',function(d){dump(d)});
+   // });
+   //
+   // setInterval(()=>
+   // {
+   //    server.ostime+=1;
+   //    signal('clockSec');
+   // },1000);
+
+
       listen("tick",function()
       {
          if(MAIN.guiResizing.busy){return};

@@ -52,7 +52,7 @@ namespace Anon;
         };
 
         if(!$ini){finish($np);}; // serve without template
-        $pt=null; $tl=["$tp/base/$rc.$fx","$ap/base/$rc.$fx","$ap/base/aard.$fx"];
+        $pt=null; $tl=["$tp/base/$rc.$fx","$tp/base/aard.$fx"];
         if(!arg($np)->startsWith("$tp/base/")){foreach($tl as $xt){if(isee($xt)){$pt="$xt"; break;}}};
         if(!$pt){finish($np); exit;}; // without template
         finish($pt,['contents'=>$np]); exit; // with template

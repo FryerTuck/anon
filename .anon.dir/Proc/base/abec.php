@@ -999,9 +999,11 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function call($x,$a=[],$z=null)
    {
-      if(!is_nokey_array($a)){$a=[$a];}; $ns='Anon\\'; if(is_string($x)&&(strpos($x,$ns)===false)){$x=($ns.$x);};
+      if(!is_nokey_array($a)){$a=[$a];}; $ns='Anon\\';
+      if(isPath($x)){$x=swap(shaved($x,"/"),"/","::");};
+      if(is_string($x)&&(strpos($x,$ns)===false)){$x=($ns.$x);};
       if($z){ob_start(null,0,PHP_OUTPUT_HANDLER_STDFLAGS);};
-      if(isPath($x)){$x=swap(shaved($x,"/"),"/","::"); if(span($x,"::")!==1){fail::reference("invalid Class/func definition"); exit;}};
+
       if(is_string($x)&&isin($x,'::'))
       {
          $p=frag($x,'::');
@@ -1013,7 +1015,7 @@ namespace Anon;
       }
       elseif(!function_exists($x))
       {
-         $x=lshave($x,$ns); if(!function_exists($x)){fail("function `$x` is undefined");return;};
+         $a=lshave($x,$ns); if(!function_exists($a)){fail::reference("function `$a` -and `$x` is undefined");return;};
          $r=call_user_func_array($x,$a);
       }
       else
