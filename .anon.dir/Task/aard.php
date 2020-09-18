@@ -180,6 +180,7 @@ namespace Anon;
    # ------------------------------------------------------------------------------------------------------------------------------------------
       static function makeNote($o)
       {
+         if(isAsso($o)){$o=knob($o);};
          $r=$o->dref; $a=$o->atch; unset($o->dref,$o->clan,$o->firm,$o->atch);
          $h="/Task/data/$r/comments"; $x=($o->cref?$o->cref:gudref($h,16)); unset($o->cref); $h="$h/$x"; if(!isee($h)){path::make("$h/");};
          $o->time=time(); $o->rate=0; foreach($o as $k => $v){path::make("$h/$k",$v);}; // create text-data

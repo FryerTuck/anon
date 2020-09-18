@@ -425,6 +425,7 @@
          hashes:{},
          status:VOID,
          timing:setTimeout(function(){server.sensor.live=0},1),
+         events:{},
 
 
          vivify:function(f)
@@ -445,19 +446,18 @@
             });
             this.stream.listen('ping',function(evnt)
             {
-               server.sensor.live=1; clearTimeout(server.timing);
+               server.sensor.live=1; server.status="open"; clearTimeout(server.timing);
             });
 
             this.stream.listen('gone',function(evnt){server.status="gone"; server.sensor.live=0;});
             this.stream.listen('fail',function(evnt){fail(decode.jso(atob(evnt.data)))});
-            this.stream.listen('close',function(evnt){console.error("SSE closed");});
+            this.stream.listen('close',function(evnt){server.status="shut"; console.error("SSE closed");});
 
             this.stream.listen('error',function(evnt) // this happens on reconnect -or "connection fail", only the latter is an error
             {
                tick.after(6100,()=>
                {
-                  if(server.sensor.live){return};
-                  console.error("SSE stopped, checking health with XHR");
+                  if(server.sensor.live){server.status="open"; return};
                   // prevent reconnect flood for in case the server disconnects upon connect
                   // debug this issue by visiting the event emitter via API interface
                   purl
@@ -472,11 +472,12 @@
                         },
                         loadend:function(rsp, cde,dne,stb)
                         {
-                           if(server.sensor.live||(server.status=="gone")){return};
                            rsp=rsp.body; cde=this.status; dne=(!rsp&&((cde<1)||(cde==503)));
+                           if(server.sensor.live||(server.status=="gone")||(cde==200)){return}; // all is well
+                           if(cde!=200){server.stream.close(); console.error("SSE issue, checking health with XHR splilled this:\n"+rsp);}
                            if(dne){server.stream.close(); console.error('SSE stopped');};
                            if(!rsp&&(cde<1)){popAlert("link :: Connection : Unable to connect; refreshing now."); tick.after(6,()=>{repl.exit();}); return};
-                           if(!rsp&&(cde===503)){popAlert("link :: Session Expired : Refreshing now."); tick.after(6,()=>{repl.exit();}); return};
+                           if(!rsp&&(cde==503)){popAlert("link :: Session Expired : Refreshing now."); tick.after(6,()=>{repl.exit();}); return};
                            if(rsp.startsWith(": \nevent: init\ndata: IQ==")&&isin(rsp,"clean exit; no errors")){return};
                            if(!rsp){rsp="undefined"}; stb=stub(rsp,"event: fail\ndata: ");
                            if(stb){rsp=trim(stb[2]); console.log(rsp); rsp=decode.jso(atob(rsp)); fail(rsp); return};
@@ -488,7 +489,16 @@
                });
             });
 
-            if(isFunc(f)){f(this.stream);};
+            if(isFunc(f)){f(this.stream); return};
+
+            wait.until(()=>{return (server.status=="open")},()=>
+            {
+                dump(`SSE vivified`);
+                this.events.each((v,k)=>
+                {
+                    this.listen(k,v.func,v.hash);
+                });
+            });
          },
 
 
@@ -502,8 +512,18 @@
             if(!isWord(e)){fail('expecting 1st arg as :word:');return};
             if(!isFunc(f)){fail('expecting 2nd arg as :func:');return};
 
-            if(c&&!userDoes(c)){return}; // specify clan after event .. server.listen("DataReady: geek mind",()=>{});
+            if(c&&!userDoes(c)){dump(`listening on event "${e}" requires "${c}" privileges`);return};
+            // specify clan after event .. server.listen("DataReady: geek mind",()=>{});
 
+            if(server.status!="open")
+            {
+                if(!!server.events[e]){dump(`SSE event "${e}" is already queued`); return}; // ignored
+                server.events[e]={func:f,hash:h};
+                dump(`queued SSE event "${e}" to listen on when SSE is vivified`);
+                return;
+            };
+
+            dump(`listening on SSE event "${e}"`);
             this.vivify(()=>{server.stream.addEventListener(e,function(evnt)
             {
                if(this.au&&!userDoes(this.au)){return;}; // security
@@ -1420,7 +1440,7 @@
          if(isText(obj.head)){tv=stub(obj.head," :: "); if(tv){ti=tv[0];obj.head=tv[2]}; obj.head={span:obj.head}};
          if(!isList(obj.head)){obj.head=[obj.head]}; if(!(obj.head[0]||{}).icon){ladd(obj.head,{icon:ti})};
          let xash=sha1(encode.jso(obj.head));  let stop=0; (select('modal')||[]).each((mn)=>{if(mn.xash==xash){stop=1}});
-         if(stop){console.error("ignored attempt to open duplicate modal");return}; // already open
+         if(stop){dump("ignored attempt to open duplicate modal");return}; // already open
 
          let fiob,liob,pagr,clot,tout; clot=(thm?` .${thm}`:"");
          tout=atr.time; if(!isInum(tout)){tout=VOID};

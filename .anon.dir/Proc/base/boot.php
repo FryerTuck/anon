@@ -89,7 +89,6 @@ namespace Anon;
    {
       function __construct($d,$u=0)
       {
-          if(!is_array($d)&&!is_object($d)){fail::params("expecting 1st arg as array or object; even if empty");exit;};
           foreach($d as $k => $v){if(is_assoc_array($v)){$v=(new knob($v,$u));}; if($u){$k=unwrap($k);}; $this->$k=$v;}
       }
 
@@ -103,7 +102,7 @@ namespace Anon;
       if(is_string($d)){$d=trim($d); if(($d==='')||(!strpos($d,':')&&!isee($d))){return (new knob([]));}};
       if(is_object($d)&&($d instanceof knob)){return $d;};
       if(is_array($d)||is_object($d)){return (new knob($d,$unwrap));}; if(!is_string($d)){return (new knob([]));};
-      if(strpos($d,':')){$d=str_replace('; ',';',$d); $d=str_replace(';',"\n",$d); $d=dval($d); return (new knob($d));};
+      if(is_string($d)&&strpos($d,':')){$d=dval($d); if(is_assoc_array($d)){return (new knob($d));}};
       $p=isee($d); if(!$p){return (new knob([]));};$x=pget($d);if(is_string($x)){$x=dval($x); return (new knob((is_assoc_array($x)?$x:[])));};
       $r=(new knob([])); foreach($x as $i)
       {
@@ -329,30 +328,20 @@ namespace Anon;
 
 
 
-# cond :: proc : these need to run quickly - if requested directly, so skip the rest and handle it now
+# dbug :: keep : housekeeping .. run regularly
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-    if(isin(["/Proc/listen","/User/upload","/Proc/execPath","/Proc/xenoCall","/Proc/makeTodo"],NAVIPATH))
-    {
-        permit::fubu(); // security!!
-        call(NAVIPATH); exit;
-    };
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-# dbug :: keep : housekeeping .. run regularly - but only if appropriate .. and at least once per user session time
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-   if(!facing('DPR')&&!facing('BOT'))
+   if(!facing('DPR')&&!facing('BOT')&&!isin(["/User/upload","/Proc/execPath","/Proc/xenoCall","/Proc/makeTodo"],NAVIPATH))
    {
       clearstatcache(); clearstatcache(true);
       $dbs=knob('$/Proc/conf/sysClock')->upkeep; $ldb=pget('$/Proc/vars/lastDbug');
-      if(!$ldb){$ldb='0'; pset('$/Proc/vars/lastDbug',time());}; $ldb=($ldb*1); $tdf=(time()-$ldb);
+      if(!$ldb){$ldb=0;}; $ldb=($ldb*1); $tdf=(time()-$ldb);
       $upk=0; if(isset($_GET['upkeep'])){$upk=$_GET['upkeep'];};
 
       if(!$ldb||($tdf>$dbs)||$upk)
       {
           require(path('$/Proc/base/keep.php'));
           upkeep($dbs,$ldb,time(),$upk);
+          path::make('$/Proc/vars/lastDbug',(time().''));
       }
       elseif(!isFold("$/Proc/temp/sesn"))
       {
@@ -360,6 +349,17 @@ namespace Anon;
       };
       unset($dbs,$ldb,$tmn,$tdf);
    }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+# cond :: proc : these need to run quickly - if requested directly, so skip the rest and handle it now
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+    if(isin(["/Proc/listen","/User/upload","/Proc/execPath","/Proc/xenoCall","/Proc/makeTodo"],NAVIPATH))
+    {
+        permit::fubu(); // security!!
+        call(NAVIPATH); exit;
+    };
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 

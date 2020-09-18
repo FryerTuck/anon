@@ -184,8 +184,9 @@
                   fm="Failed to report bug :(\n\nPlease contact tech support:\n{:TECHMAIL:}";
                   try{purl("/Proc/makeTodo",{mesg:btoa(encode.jso(e.detail))},(r)=>
                   {
-                     if(r.body!=OK){console.error(r.body); alert(fm);return}; newGui({APIKEY:sesn('HASH')});
-                  });}catch(err){alert(fm);};
+                     if(r.body!=OK){console.error(r.body); this.root.exit(); popAlert(fm);return};
+                     newGui({APIKEY:sesn('HASH')});
+                  });}catch(err){this.root.exit(); popAlert(fm);};
                },
                'warn::refresh':function(){newGui({APIKEY:sesn('HASH')});},
                'harm::ignore':function(){this.root.exit();},
@@ -225,6 +226,12 @@
             signal("tick");
             let e=document.activeElement; if(!e){return}; if(!e.UniqueID){extend(e)({UniqueID:('NODE'+fash())})};
             if(focusObj.hash==e.UniqueID){return}; focusObj.hash=e.UniqueID; focusObj.node=e; signal('focuschange',e);
+         });
+
+         tick.every(1000,function()
+         {
+            server.ostime+=1;
+            signal('clockSec');
          });
 
          tick.after(250,()=>{signal("ready")});
@@ -320,29 +327,6 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    listen("boot",function()
    {
-
-
-   // tick.after(1500,function()
-   // {
-   //    server.listen('busy',function(d,w)
-   //    {
-   //        if(!isJson(d)){return}; d=decode.jso(d); w=d.with; d=d.done;
-   //        if(!isText(w,1)||!isInum(d)){return};
-   //        if(server.silent[w]){return};
-   //        Busy.edit(w,d);
-   //    });
-   //
-   //    server.listen('done',function(d){if(d!="!"){dump(`\nserver is done with:\n${d}`)}; Busy.done();});
-   //    server.listen('dump',function(d){dump(d)});
-   // });
-   //
-   // setInterval(()=>
-   // {
-   //    server.ostime+=1;
-   //    signal('clockSec');
-   // },1000);
-
-
       listen("tick",function()
       {
          if(MAIN.guiResizing.busy){return};
@@ -363,6 +347,19 @@
             n.reclan("posAbs:cenmid");
          });
       });
+
+
+      server.listen('busy',function(d,w)
+      {
+          if(!isJson(d)){return}; d=decode.jso(d); w=d.with; d=d.done;
+          if(!isText(w,1)||!isInum(d)){return};
+          if(server.silent[w]){return};
+          Busy.edit(w,d);
+      });
+
+
+      server.listen('done',function(d){if(d!="!"){dump(`\nserver is done with:\n${d}`)}; Busy.done();});
+      server.listen('dump',function(d, v){v=(isJson(d)?decode.jso(d):sval(d)); dump(v)});
 
 
       server.listen("AnonUpdate: sudo lead gang",function(d)
@@ -412,5 +409,8 @@
               "warn :: later":function(){this.root.exit()},
           });
       });
+
+
+      server.vivify();
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------

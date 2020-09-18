@@ -348,8 +348,9 @@ namespace Anon;
 
       static function makeTodo()
       {
-         permit::fubu('API');
-         $v=knob($_POST); $d=decode::jso(decode::b64($v->mesg));
+         permit::fubu('API'); $v=knob($_POST); $d=decode::jso(decode::b64($v->mesg));
+         $m=$d->mesg; $s=stub($m,"This spilled out:");
+         if($s){$m=trim($s[0]); $o=isJson(trim($s[2])); if(isKnob($o)&&$o->stak){$o->mesg="$m .. $o->mesg"; $d=$o;}};
          $r=todo::{"Bug reported"}($d->mesg,NOEXIT,$d); done($r);
       }
 

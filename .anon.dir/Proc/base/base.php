@@ -411,7 +411,7 @@ namespace Anon;
                $v->line=$l; path::make($tdp,encode::jso($v));
                $n=pget($v->note); $n=swap($n,"\nline: $y\n","\nline: $l\n"); path::make($v->note,$n);
             };
-            Task::makeNote($v->dref,['nick'=>$usr,'mail'=>$eml,'mesg'=>$msg,'clan'=>'geek','tags'=>'geekTodo']);
+            Task::makeNote(['dref'=>$v->dref,'nick'=>$usr,'mail'=>$eml,'mesg'=>$msg,'clan'=>'geek','tags'=>'geekTodo']);
             if($opt===NOEXIT){return OK;}; fail("TODO :: $v->mesg\n$msg"); return;
          };
 

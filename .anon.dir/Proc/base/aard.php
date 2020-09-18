@@ -390,9 +390,9 @@ namespace Anon;
 
 
 
-# func :: post : get posted variable-value by name .. returns value -or null if undefined
+# func :: posted : get posted variable-value by name .. returns value -or null if undefined
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   function post($n)
+   function posted($n)
    {
       if(!is_string($n)||(strlen($n)<1)){return;}; if(!isset($_POST[$n])){return;}; return $_POST[$n];
    };
@@ -432,7 +432,7 @@ namespace Anon;
       if($r){return $r;}; // session is cookie-based .. it exists as a live session-dir server-side .. all is well
       $s=envi('SCHEME'); $h=envi('HOST'); $p=envi('URI'); $z="Location: $s://{$h}{$p}";
       if($n){unset($_COOKIE[$n]); return;}; // session key expired
-      $r=kuki('APIKEY'); if(!$r){$r=post('APIKEY');}; if(!$r){$r=envi('APIKEY');}; if(!$r){return;}; // no key
+      $r=kuki('APIKEY'); if(!$r){$r=posted('APIKEY');}; if(!$r){$r=envi('APIKEY');}; if(!$r){return;}; // no key
       if(!test($r,$t)){harakiri(wack());}; // invalid session key .. YOU HAVE DIED
       if(is_dir("$h/$r")){return $r;}; // session is live
       $u=pget("$/Proc/keys/$r"); if(!$u&&(envi('INTRFACE')==='GUI')){return;}; // key may have expired
@@ -620,7 +620,7 @@ namespace Anon;
 
 
 
-# vars :: (POSTed) : convert json to POST-vars
+# vars :: (POSTed) : convert text-body json to POST-vars
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    if((envi('METHOD')==='POST')&&facing('API')){$d=file_get_contents('php://input'); if(wrapOf($d)==='{}')
    {$d=json_decode($d); foreach($d as $k => $v){$_POST[$k]=$v;}}; unset($d,$k,$v);};
@@ -675,7 +675,11 @@ namespace Anon;
    if($b){$_SERVER['INTRFACE']='BOT';}; // facing BOT .. it's behaving for now so all seems OK this far
 
    $m=pget('$/Proc/conf/autoMail'); if(!$m){$m=envi('SERVER_ADMIN');}else
-   {$m=explode('@',$m); $d=$m[1]; $u=explode('//',$m[0]); $u=explode(':',$u[1]); $u=$u[0]; $m="$u@$d";}; $_SERVER['TECHMAIL']=$m;
+   {
+       $m=explode('?',$m)[0]; $m=rshave($m,'/'); $m=explode('@',$m); $d=$m[1];
+       $u=explode('//',$m[0]); $u=explode(':',$u[1]); $u=$u[0]; $m="$u@$d";
+   };
+   $_SERVER['TECHMAIL']=$m;
 
    unset($d,$x,$c,$s,$b,$h,$p,$n,$t,$m,$u); // clean up
    $_SERVER['ALPHABET']='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';  // we need this
@@ -731,7 +735,7 @@ namespace Anon;
    $r=envi('REFERER'); $b=trim(envi('INTRFACE')); $s=(strpos($r,"https://$h")===0);
    $f=envi('DBUGPATH'); $_SERVER['MADEFUBU']=(($s&&$k)?"yes":"");
 
-   if($s&&!$k&&(($b&&($b!=='BOT'))||post('INTRFACE')||kuki('INTRFACE')))
+   if($s&&!$k&&(($b&&($b!=='BOT'))||posted('INTRFACE')||kuki('INTRFACE')))
    {
        $p=envi('URI'); header("Location: https://{$h}{$p}"); exit;
    };
@@ -748,10 +752,10 @@ namespace Anon;
       print_r($r); flush(); die(); // cookies disabled ? .. YOU HAVE DIED
    };
 
-   if(($b&&($b!=='BOT'))||post('INTRFACE')||kuki('INTRFACE'))
+   if(($b&&($b!=='BOT'))||posted('INTRFACE')||kuki('INTRFACE'))
    {
       if(!$k){harakiri('missing -or invalid session key');}; // YOU HAVE DIED
-      $fn=($b?$b:post('INTRFACE')); if(!$fn){$fn=kuki('INTRFACE');};
+      $fn=($b?$b:posted('INTRFACE')); if(!$fn){$fn=kuki('INTRFACE');};
       $_SERVER['INTRFACE']="$fn"; unset($fn);
    };
 
