@@ -55,14 +55,11 @@ namespace Anon;
          if(is_int($s)&&($s!==200)){finish($s);}; // explicitly configured to echo status
          if($s&&!is_int($s)){finish($s);}; // explicitly configured to bypass any stem/module controllers
 
-         $c=COREPATH; $s=trim(NAVIPATH,'/'); if($s&&is_dir(path(COREPATH."/$s"))){finish(404);}; // deny core-stem-root access
-         $s=explode('/',$s)[0]; if(($s==='~')&&!isin(user('clan'),'work')){finish(404);};
-         if($s&&($s!=='~')&&!isee("/$s")){die(NAVIPATH); finish(404);}; // stem not found .. no point in wasting any more resources
+         $c=COREPATH; $s=shaved(NAVIPATH,'/'); if($s&&is_dir(path(COREPATH."/$s"))){finish(404);}; // deny core-stem-root access
+         $s=explode('/',$s)[0]; if(($s==='~')&&!userDoes('work')){finish(404);};
+         // if(!facing("GUI")&&$s&&($s!=='~')&&!isee("/$s")){finish(404);}; // stem not found .. no point in wasting any more resources
 
-         $p=isee(NAVIPATH); $i=(is_dir($p)?path::indx(NAVIPATH):null); $l=padded(scan('$'),'/'); $x=indx(NAVIPATH,$l);
-         if(facing('BOT')&&($x!==null)){finish(403);}; // hide framework core from web-crawlers whom identify as bots
-         // if(is_dir($p)&&($i===null)&&!conf('Proc/viewDirs')){finish(403);};
-         unset($s,$c,$p,$i,$l,$x); // deny folder browsing if so configured
+         unset($s,$c,$p,$i,$l,$x);
       # ---------------------------------------------------------------------------------------------------------------------------------------
 
 

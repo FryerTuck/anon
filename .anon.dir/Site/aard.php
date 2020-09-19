@@ -19,43 +19,27 @@ namespace Anon;
 
       static function handle($p)
       {
-        $np="$p"; if(isFold($np)){$ix=path::indx($np,'aard.php'); if($ix){$np=(rshave($np,'/')."/$ix");}}; // get index-file
+        $np="$p"; $ps=path::stem($np); if(!isWord($ps)||!isFold("$/$ps")){$ps=null;};
+        if($ps&&($np==="/$ps/panl.js")){$fc=knob("$/$ps/pack.inf")->forClans; if(($fc!=='*')&&!userDoes($fc)){finish(403);exit;}};
+        if($ps&&facing("DPR")&&isee($np)){finish($np);}; // system request .. handle quick
+        if(isFold($np)){$ix=path::indx($np,'aard.php'); if($ix){$np=(rshave($np,'/')."/$ix");}}; // get index-file
         $tn=conf("Site/autoConf")->template; if(!isWord($tn)||!isee("$/Site/tmpl/$tn")){$tn="Anon";};
-        $tp="$/Site/tmpl/$tn"; $tc=knob("$tp/conf"); $rp=test::{$np}($tc->redirect);
-        if(is_int($rp)){finish($rp,['tmpl'=>"$tp/base/stat.htm"]); exit;}; // EXIT :: graceful status
-        if(isText($rp,1)&&(isPath($rp)||isPath("/$rp"))){$np=(arg($rp)->startsWith("/")?$rp:"$tp/$rp");}; // redirected path
-        if(isFold($np)&&!conf('Proc/viewDirs')){finish(403);}; // configured to deny viewing folders
-        $ini=isin(keys($_GET),"init"); $fx=fext($np);
-
-        if(facing("DPR")||($fx==="php"))
-        {
-            if(isee("$tp/$np")){finish("$tp/$np"); exit;}; // assests in template
-            if(isee($np)){finish($np); exit;}; // assests NOT in template
-            finish($np); // 404 or 403
-        };
-
-
-        $cv=$tc->clanView; $uc=sesn("CLAN"); $rc=null; if(isKnob($cv)){$rc=pick($uc,keys($cv));};
-        $rp=null; if($rc&&isKnob($cv)){$rp=$cv->$rc;};
+        $uc=sesn("CLAN"); $tp="$/Site/tmpl/$tn"; $tc=knob("$tp/conf"); $cv=$tc->clanView; $rc=null; $rp=null;
+        if(isKnob($cv)){$rc=pick($uc,keys($cv));}; if($rc&&isKnob($cv)){$rp=$cv->$rc;};
 
         if($rp&&(is_int($rp)||isPath($rp)||isPath("/$rp")))
         {
-            if(is_int($rp)){finish($rp,['tmpl'=>"$tp/base/stat.htm"]); exit;};
+            if(is_int($rp)){finish($rp); exit;};
             $rp=(arg($rp)->startsWith("/")?$rp:"$tp/$rp"); if(!isee($rp)){fail::config("file not found: `$rp`");};
-            $np="$rp";
+            finish($rp);
         }
 
-        if(!$rc)
-        {
-            $cl=["peek","surf","back","work","lead","sudo"];
-            $rc=isin($uc,$cl); if(!$rc){fail::template("invalid user clan: `$uc`");};
-        };
+        $rp=test::{$np}($tc->redirect);
+        if(is_int($rp)){finish($rp); exit;}; // EXIT :: graceful status
+        if(isText($rp,1)&&(isPath($rp)||isPath("/$rp"))){$np=(arg($rp)->startsWith("/")?$rp:"$tp/$rp");}; // redirected path
+        if(isFold($np)&&!conf('Proc/autoConf')->viewDirs){finish(403);}; // configured to deny viewing folders
 
-        if(!$ini){finish($np);}; // serve without template
-        $pt=null; $tl=["$tp/base/$rc.$fx","$tp/base/aard.$fx"];
-        if(!arg($np)->startsWith("$tp/base/")){foreach($tl as $xt){if(isee($xt)){$pt="$xt"; break;}}};
-        if(!$pt){finish($np); exit;}; // without template
-        finish($pt,['contents'=>$np]); exit; // with template
+        finish($np);
       }
 
 

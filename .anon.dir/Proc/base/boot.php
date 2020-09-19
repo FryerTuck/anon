@@ -56,7 +56,7 @@ namespace Anon;
       if(!$n&&($d[0]==='+')){$v=substr($d,1); if(is_numeric($v)){return ($v*1);}}; // positive number
       $q=strpos($d,'`'); $p=strpos($d,': '); $c=strpos($d,',');
       $w=wrapOf($d); if(($w==='``')&&(substr_count($d,$w[0])<3)){$v=unwrap($d); return $v;};
-      if($c&&!$n&&!$p&&!$q){$r=explode(',',$d); return $r;};
+      if($c&&!$n&&!$q){$r=explode(',',$d); $z=[]; foreach($r as $t){$z[]=dval($t);}; return $z;};
       if(!$n&&$z){return $d;}; // no further parsing needed
 
       $a=explode("\n",$d); $r=[]; foreach($a as $l)
@@ -120,34 +120,37 @@ namespace Anon;
    function dump()
    {
       if(!headers_sent()){header_remove();}; while(ob_get_level()){ob_end_clean();};
-      $r=''; $l=func_get_args(); foreach($l as $i){$r.=tval($i,DUMP);};
       if(facing('BOT')||facing('SYS')){if(!headers_sent()){header('HTTP/1.1 503 Service Unavailable');}; die();}; // crawler
 
       if(facing('SSE'))
       {
-          if(!envi('SSEREADY')){done("dump() called in SSE before Proc was ready.\n\n$r");return;};
-          defn(['HALT'=>1]); Proc::emit('dump',$r); exit;
+          $r=[]; $l=func_get_args(); foreach($l as $i){$r[]=tval($i,DUMP);};
+          if(!envi('SSEREADY')){$r=tval($r); done("BOOT FAIL!! :: dump() called in SSE before Proc was ready.\n\n$r");return;};
+          defn(['HALT'=>1]); Proc::emit('dump',$r); return;
       };
 
       if(!headers_sent()){header('HTTP/1.1 200 OK');};
-      if(facing('GUI')){sesn('USER');};
+      // if(facing('GUI')){sesn('USER');};
 
       if(envi('ACCEPT')==='application/json')
       {
+         $r=[]; $l=func_get_args(); foreach($l as $i){$r[]=tval($i,DUMP);};
          if(!headers_sent()){header('Content-Type: application/json');};
          if((strpos($r,'data:')!==0)&&(strpos($r,';base64,')!==false)){$r=base64_encode($r); $r="data:text/plain;base64,$r";};
-         $r=json_encode(knob(['name'=>'dump', 'data'=>$r])); print_r($r); flush(); die();
+         $r=json_encode(knob(['name'=>'dump','data'=>$r])); print_r(tval($r)); flush(); die();
       };
 
       if(facing('DPR')&&(fext(NAVIPATH)==='js'))
       {
+         $r=[]; $l=func_get_args();
+         foreach($l as $i){if(is_string($i)){$i=((strlen($i)<1)?`""`:("`".str_replace("`","\`",$i)."`"));}; $r[]=tval($i,DUMP);};
          if(!headers_sent()){header('Content-Type: application/javascript'); flush();};
-         $r=str_replace("`","\`",$r); $r="console.log(`$r`);";
-      }
-      else{if(!headers_sent()){header('Content-Type: text/plain');}};
+         $r=implode(',',$r); print_r("dump($r);");
+      };
 
       if(!headers_sent()){header('Content-Type: text/plain');};
-      print_r($r); flush(); die(); // DPR, GUI, API:text/plain
+      $r=[]; $l=func_get_args(); foreach($l as $i){$r[]=tval($i,DUMP);};
+      $r=implode($r,"\n------------\n"); print_r($r); flush(); die(); // DPR, GUI, API:text/plain
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -321,7 +324,6 @@ namespace Anon;
    require(path('$/Proc/base/fwal.php')); // essential security .. right of passage through "the pass"
    require(path('$/Proc/aard.php'));      // initialize Proc class
    require(path('$/Repo/aard.php'));      // initialize Repo class
-
    Proc::__init();
    spl_autoload_register(function($n){$n=str_replace('Anon\\','',$n); import($n);}); // auto-load class-assoc PHP file
 # ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -355,7 +357,7 @@ namespace Anon;
 
 # cond :: proc : these need to run quickly - if requested directly, so skip the rest and handle it now
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-    if(isin(["/Proc/listen","/User/upload","/Proc/execPath","/Proc/xenoCall","/Proc/makeTodo"],NAVIPATH))
+    if(isin(["/Proc/listen","/Proc/signal","/User/upload","/Proc/execPath","/Proc/xenoCall","/Proc/makeTodo"],NAVIPATH))
     {
         permit::fubu(); // security!!
         call(NAVIPATH); exit;

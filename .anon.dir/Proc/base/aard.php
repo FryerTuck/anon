@@ -294,12 +294,13 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function pget($p,$t=true)
    {
-      clearstatcache(); $p=isee($p); if(!$p){return;};
+      clearstatcache(); $p=isee($p); if(!$p){return (is_string($t)?$t:null);};
 
       if(!is_dir($p))
       {
           $r=file_get_contents($p);
-          if($t){$r=trim($r);}; return $r;
+          if($t||($t==='0')){$r=trim($r); if(is_string($t)&&(strlen($r)<1)){$r=$t;}};
+          return $r;
       };
 
       $r=array_diff(scandir($p),['.','..']); if(!$t){$r=array_values($r); $r=sort($r); return $r;};

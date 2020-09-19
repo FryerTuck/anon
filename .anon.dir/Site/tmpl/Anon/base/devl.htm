@@ -4,7 +4,6 @@
         {
             position:absolute;
             width:100%; height:100%;
-            min-height:360px;
         }
 
         #AnonDevlPage td
@@ -15,7 +14,7 @@
 
         .hzrdTape
         {
-            height:10%;
+            height:10%; min-height:40px;
             background:url("/Site/tmpl/Anon/bits/constape.jpg");
             background-size: auto 100%;
         }
@@ -23,12 +22,19 @@
         .pageBody
         {
             background:url("/Site/tmpl/Anon/bits/tarmac.jpg");
-            padding:20px;
+        }
+
+        .viewLayer
+        {
+            height:100%;
+            overflow:hidden;
         }
 
         .devlSign
         {
-            height:80%;
+            position:absolute;
+            height:100%;
+            left:50%; transform:translate(-50%,0%);
         }
 
         .liteFade
@@ -36,19 +42,18 @@
             position:absolute;
             width:100%; height:100%;
             background:url("/Site/tmpl/Anon/bits/litefade.png");
-            background-size:100% 100%;
+            background-size:cover;
         }
     </style>
 </head>
 <body>
-    <table id="AnonDevlPage">
-        <tr><td class="hzrdTape"></td></tr>
-        <tr>
-            <td class="pageBody">
-                <img class="devlSign" src="/Site/tmpl/Anon/bits/conslogo.png">
-            </td>
-        </tr>
-        <tr><td class="hzrdTape"></td></tr>
-    </table>
-    <div class="liteFade"></div>
+    <div class="viewLayer">
+        <table id="AnonDevlPage">
+            <tr><td class="hzrdTape"></td></tr>
+            <tr><td class="pageBody"></td></tr>
+            <tr><td class="hzrdTape"></td></tr>
+        </table>
+        <img class="devlSign" src="/Site/tmpl/Anon/bits/conslogo.png" />
+        <div class="liteFade"></div>
+    </div>
 </body>

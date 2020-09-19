@@ -22,6 +22,19 @@ namespace Anon;
 
 
 
+# evnt :: siteEvent : signal `siteEvent` only if so configured
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+    if(!facing('SSE')&&!facing('DPR')&&conf('Proc/autoConf')->eventSpy)
+    {
+        $d=['USERNAME'=>user('name'),'USERCLAN'=>user('clan'),'USERMAIL'=>user('mail'),'SESNHASH'=>sesn('HASH')];
+        $o='SSL_SERVER_CERT '; foreach($_SERVER as $k => $v)
+        {$x='REDIRECT_'; $a=str_replace($x,'',$k); if(!array_key_exists($a,$d)&&!isin($o,$a)){$d[$a]=$v;}};
+        signal::siteEvent($d,'.sudo');
+    };
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 # cond :: boot : GUI .. boot view first
 # ---------------------------------------------------------------------------------------------------------------------------------------------
      if(facing('GUI'))

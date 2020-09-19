@@ -394,6 +394,7 @@ namespace Anon;
          $ttl=trim($ttl); expect::text($ttl,2); expect::flat($arg,1); if(!isset($arg[1])){radd($arg,NOEXIT);};
          $msg=$arg[0]; $opt=$arg[1]; if(isset($arg[2])&&isKnob($arg[2])&&isPath($arg[2]->file)){$stk=$arg[2];};
          $f=crop($stk->file); $l=$stk->line; $hsh=sha1("$ttl:$f"); requires::stem('Task');
+         if(isKnob($stk)&&isNuma($stk->stak,1)){$stk=$stk->stak;}else{$stk=0;};
          $tdp="/Task/vars/geekTodo/$hsh"; $usr=sesn('USER'); $eml=pget("/User/data/$usr/mail");
 
 
@@ -417,8 +418,9 @@ namespace Anon;
 
 
          lock::awaits('todo'); $r=gudref('/Task/data',12); $c=gudref("/Task/data/$r/comments",16); $u=$usr;
-         $o=knob(['mesg'=>$msg,'file'=>$f,'line'=>$l,'note'=>"/Task/data/$r/comments/$c/mesg",'hits'=>1]); path::make($tdp,encode::jso($o));
-         unset($o); $m="# $ttl\n\n$msg\n\n```\nfile: $f\nline: $l\nhits: 1\n```"; $m=swap($m,"\n\n\n\n","\n\n"); // message to markdown
+         $o=knob(['mesg'=>$msg,'file'=>$f,'line'=>$l,'note'=>"/Task/data/$r/comments/$c/mesg",'hits'=>1]);
+         path::make($tdp,encode::jso($o)); unset($o); $m="# $ttl\n\n$msg\n\n```\nfile: $f\nline: $l\nhits: 1\n```";
+         if($stk){$s=fuse($stk,"\n"); $m.="\n\n```\n$s\n```\n"; }; $m=swap($m,"\n\n\n\n","\n\n"); // message to markdown
          $z=Task::makeDokt(['dref'=>$r,'cref'=>$c,'nick'=>$u,'mail'=>$eml,'mesg'=>$m,'clan'=>'geek','tags'=>'geekTodo']);
          lock::remove('todo'); if($opt===NOEXIT){return OK;}; fail("TODO :: $msg");
       }
@@ -476,9 +478,10 @@ namespace Anon;
       if(is_int($a))
       {
          ekko::head($a); if($nx){return;}; if(facing("BOT")){exit;};
-         $c=conf('Proc/httpCode'); $m=$c->$a;
-         $t=$vo->tmpl; if(!isee($t)){$t='/Site/base/stat.htm';};
-         $r=import($t,['code'=>$a,'text'=>$m]); echo ($r); exit;
+         $c=conf('Proc/httpCode'); $m=$c->$a; $t=$vo->tmpl; if(!$t){$t=conf("Site/autoConf")->template;};
+         if(!isWord($t)||!isee("$/Site/tmpl/$t")){$t="Anon";};
+         $r=import("$/Site/tmpl/$t/base/stat.htm",['code'=>$a,'text'=>$m]); 
+         echo ($r); exit;
       };
 
       if(path($a))

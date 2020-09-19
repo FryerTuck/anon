@@ -271,7 +271,7 @@
          bz(60);
          ab=function(evnt,dm,db,se,pn)
          {
-             pn=this.parentNode; pn.enclan("scrollHide"); pn.style.backgroundColor="#FFFFFF";
+             pn=this.parentNode; pn.enclan("scrollHide");
              dm=this.contentDocument; if(!dm){fail("iframe :: invalid DOM"); return};
              db=dm.body.parentNode; dm.AnonSiteView=this; db.tapHit=0;
 
@@ -289,7 +289,8 @@
 
              if(("{:INTRFACE:}"=="ALT"))
              {
-                 dump(window.location.href);
+                 // pn.style.backgroundColor="#FFFFFF";
+                 // dump(window.location.href);
              };
 
              bz(80); tick.after(250,()=>
@@ -408,6 +409,14 @@
               "good :: refresh now":function(){newGui({APIKEY:sesn('HASH')});},
               "warn :: later":function(){this.root.exit()},
           });
+      });
+
+
+      server.listen("siteEvent: sudo",function(d, v)
+      {
+          v=(isJson(d)?decode.jso(d):sval(d));
+          if(v.USERNAME==sesn("USER")){dump("otherSiteEvent - ignored for listener"); return;};
+          signal("otherSiteEvent: sudo",v);
       });
 
 

@@ -26,6 +26,7 @@ namespace Anon;
          self::$meta->hush = knob();
          self::$meta->hook = knob();
          self::$meta->wait = conf::Proc('sysClock')->server;
+         self::$meta->keep = conf::Proc('sysClock')->upkeep;
       }
 
 
@@ -34,20 +35,9 @@ namespace Anon;
       {
          $p=NAVIPATH; Time::logEvent(); $q='~/.tmp/Site/';
          if(isin($p,($q.$q))){$p=swap($p,($q.$q),$q);}; // HACK !! TODO :: fix this elsewhere
-
          if(strpos($p,'/~/')===0){$p=lshave($p,'/~/'); $u=user('name'); $p="/User/data/$u/home/$p";};
          $r=path::call($p,__FILE__); // run PHP controller found in path .. this should exit here - else we handle it below:
          if(($r!==null)&&($r!==true)&&!is_class($r)){if(defn('HALT')||envi('HALT')){done($r);}; ekko($r);}; // respond with controller response
-         if(is_class($r)){finish($r);}; // ?
-
-
-         if(($p!=='/')&&!isin(keys($_GET),"init"))
-         {
-             $s=path::stem($p);
-             if($p==="/$s/panl.js"){$fc=knob("/$s/pack.inf")->forClans; if(($fc!=='*')&&!userdoes($fc)){finish(403);exit;}};
-             if(isWord($s)&&isee("$/$s")&&!isFold($p)){finish($p);};
-         };
-
 
          Site::handle($p);
       }
@@ -168,8 +158,8 @@ namespace Anon;
       {
          permit::fubu(); // security
          if(!is_string($e)||!$e){$e='undefined';}; if(!is_string($d)){$d=tval($d);};
-         $d=base64_encode($d); $b=": \nevent: {$e}\ndata: {$d}\n\n";
-         while(strlen($b)<8400){$b.=' ';};
+         $k=sesn('HASH'); $d=base64_encode($d); $b=": \nevent: $e\ndata: $d\n\n";
+         while(strlen($b)<8400){$b.=' ';}; // padd event with whitespace .. if too short then the connection will restart
          if(facing('SSE')&&!headers_sent())
          {header_remove(); header("Content-Type: text/event-stream\n\n"); header('Cache-Control: no-cache, must-revalidate');};
          echo $b; return;
@@ -182,7 +172,7 @@ namespace Anon;
          permit::fubu();
          if(($evnt!==null)&&($cbfn!==null)){if(is_funnic($evnt)&&isFunc($cbfn))
          {
-            // set blojob in file
+            // TODO :: set blojob somewhere
             return;
          }
          else{fail('invalid args');}};
@@ -199,10 +189,10 @@ namespace Anon;
          $wait=self::$meta->wait; $rtmx=(ini_get('max_execution_time')*1); $utmx=conf('User/inactive'); $utxs=$utmx; $fade=12;
          $sesn=('$/Proc/temp/sesn/'.sesn('HASH')); $epth="$sesn/emit"; $tbgn=time(); $tlst=$tbgn; $cntr=0; $mxrt=($rtmx-$fade);
          $sxed=encode::jso(['time'=>$fade]); $fapi=facing('API'); $wapi=0; $lost=0; $fint=$fade; $lstn=knob(); $lpng=0;
-         $emri=conf('Mail/checkSec'); if(!is_int($emri)||($emri<5)){$emri=5;}; $emlr=0; $work=userDoes('work'); $lust=0;
+         $emri=conf('Mail/checkSec'); if(!is_int($emri)||($emri<5)){$emri=5;}; $emlr=0; $work=userDoes('work');
 
          if(!isFold($epth)){path::make("$epth/");};
-         $stms=fuse(pget('$'),pget('/'));
+         $stms=fuse(pget('$'),pget('/')); $keep=self::$meta->keep;
 
          foreach($stms as $stem){if(isFold("/$stem/evnt"))
          {
@@ -254,7 +244,7 @@ namespace Anon;
          // -----------------------------------------------------------------------------------------------------------------------------------
 
 
-         // step :: 4 : this happens every 1 second .. emit if it's time send mail, or if the user's session is about to expire
+         // step :: 4 : this happens every 1 second .. emit if it's mail-time, or if the user's session is about to expire
          // -----------------------------------------------------------------------------------------------------------------------------------
             if(($tnow-$tlst)>=1)
             {
@@ -262,14 +252,13 @@ namespace Anon;
                if((($tnow-$emlr)>=$emri)&&$work){$emlr=$tnow; $ping=0; xena::fetchNewAutoMail(); $lost=(time()-$tnow);}; // fetch mail
                $utla=pget("$sesn/TIME"); if(!$utla){$utla=0;}; $usfn=(($tnow-$utla)>=($utmx-($fade*2)-$lost)); // User-Session-Fades-Now (bool)
                if($usfn){$fint--;}; if($fint<1){$utxs=$utmx; $fint=$fade; if($work){$ping=0; self::emit('sesnFade',$sxed);}};
+
+               if(userDoes("sudo lead gang"))
+               {
+                   $updt=pget('$/Proc/vars/lastUpdt','0'); $updt*=1; if(($tnow-$updt)>$keep)
+                   {Anon::checkUpdates(); path::make('$/Proc/vars/lastUpdt',time());};
+               };
             };
-         // -----------------------------------------------------------------------------------------------------------------------------------
-
-
-         // step :: 5 : happens at least once per session-time .. check for updates .. lust = "last update signal time"
-         // -----------------------------------------------------------------------------------------------------------------------------------
-            if((($tnow-$lust)>($utmx/2))&&userDoes("sudo lead gang"))
-            {Anon::checkUpdates(); $lust=time();};
          // -----------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -287,26 +276,40 @@ namespace Anon;
 
 
 
-      static function signal($e=null,$d=null,$t=null)
+      static function signal($e=null,$d=null,$t=null,$omit=null)
       {
-         permit::fubu();
-         wait(1); // take a breather
-         $fc=0; if($e===null){$v=knob($_POST); if($v->evnt){$fc=1; $e=$v->evnt; $d=json_decode(base64_decode($v->data)); $t=$v->trgt;}};
-         if(!is_funnic($e)||self::$meta->hush->$e){return;}; // silence!!
-         if($d===null){$d='!';}elseif(isAssa($d)||isKnob($d)){$d=knob($d);};
-         if(($e==='busy')&&self::$meta->hush->{"$e.$d->with"}){return;}; // silence!! i keel yoo
-         $h='/Proc/temp/sesn'; if($t==='*'){$t=pget($h);}elseif($t===null){$t=[sesn('HASH')];}; $c=0; $f=0;
-         if(is_string($t)&&(strlen($t)>1)){$c=$t[0]; $f=substr($t,1);}; if(($c!=='#')&&($c!=='.')){$c=0;}; $w=self::$meta->wait;
-
-         if($c!==0){$l=pget($h); $t=[]; foreach($l as $i)
+         wait(1); $fc=0; if($e===null) // get event from client API post
          {
-            $u=pget("$h/$i/USER"); $g=(($c==='.')?pget("/User/data/$u/clan"):''); if(($c==='#')&&($u===$f)){$t[]=$i;break;};
-            if(($c==='.')&&isin($g,$f)){$t[]=$i;};
-         }};
+             $v=knob($_POST); if(!isWord($v->evnt)||!isin(keys($v),'data')){ekko("invalid event definition");};
+             $fc=1; $e=$v->evnt; $d=json_decode(base64_decode($v->data)); $t=$v->trgt;
+         };
 
-         if(!is_array($t)){return;}; if(count($t)<1){return;}; $d=encode::jso(['name'=>$e,'data'=>$d]); $s=0;
-         foreach($t as $x){$p="$h/$x/emit"; if(!isee($p)){path::make("$p/");}; $n=count(pget($p)); $n++; $p="$p/$n"; path::make($p,$d); $s++;};
-         if($fc){ekko(OK);}; wait(1); return $s;
+         if(!is_funnic($e)||self::$meta->hush->$e){return;}; // silence!!
+
+         if($d===null){$d='!';}elseif(isAssa($d)||isKnob($d)){$d=knob($d);}; // data reference uniformity
+         if(($e==='busy')&&self::$meta->hush->{"$e.$d->with"}){return;}; // silence!! i keel yoo
+         $h='/Proc/temp/sesn'; $c=0; $f=0; if(is_string($t)&&(strlen($t)>1)){$c=$t[0]; $f=substr($t,1);};
+
+         $w=self::$meta->wait; $l=pget($h); $t=[]; foreach($l as $i)
+         {
+            if(isin($omit,$i)){continue;}; // omitted for specified session id
+            $u=pget("$h/$i/USER"); if(($c==='@')&&($u===$f)){$t[]=$i;break;};       // target user specified
+            if(($t==='#')&&($i===$f)){$t[]=$i;break;};                              // target sesn specified
+            if(($c==='.')&&isin(pget("/User/data/$u/clan"),$f)){$t[]=$i;continue;}; // target clan specified
+            if($t==='*'){$t[]=$i;}; // everyone connected
+         };
+
+         if(!isNuma($t,1)){return;}; // nothing to do
+         $d=encode::jso(['name'=>$e,'data'=>$d]); $s=0;
+
+         foreach($t as $x)
+         {
+             $p="$h/$x/emit"; if(!isee($p)){path::make("$p/");}; // count items in existing "emit" folder for next name
+             $n=count(pget($p)); $n++; $p="$p/$n"; path::make($p,$d); $s++; // plain-text file now contains the event data
+         };
+
+         if($fc){ekko(OK);}; // was from client
+         wait(1); return $s;
       }
 
 
@@ -408,7 +411,7 @@ namespace Anon;
          $e=trim($n); if(!is_funnic($e)){fail::Reference("invalid event name: $n");return;};
          $d=null; $t=null; if(isset($a[0])){$d=$a[0];}; if(isset($a[1])){$t=$a[1];};
          $c=conf::Proc('sysClock')->server; if(!is_int($c)){$c=100;};
-         $r=Proc::signal($n,$d,$t); wait($c+10); return $r;
+         $r=Proc::signal($n,$d,$t); wait($c); return $r;
       }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------

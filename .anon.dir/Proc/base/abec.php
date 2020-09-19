@@ -930,7 +930,7 @@ namespace Anon;
       }
 
 
-      static function tree($h,$l=0)
+      static function tree($h,$l=1)
       {
          expect::fold($h); $i=info($h); if(!isKnob($i)){fail("expect failed on `$h`"); return;};
          $h=crop($h); $r=(isRepo($h)?Repo::status($h):null); if($r){unset($r->body);}; $n=self::leaf($h); $s=self::size($h);
@@ -940,7 +940,7 @@ namespace Anon;
          ([
             using => $h,
             fetch => self::cols(),
-            limit => 'data:fold',
+            limit => "data: fold",
          ]);
 
          return $z;
@@ -1015,7 +1015,8 @@ namespace Anon;
       }
       elseif(!function_exists($x))
       {
-         $a=lshave($x,$ns); if(!function_exists($a)){fail::reference("function `$a` -and `$x` is undefined");return;};
+         $y=lshave($x,$ns);
+         if(function_exists($y)){$x=$y;}else{fail::reference("function `$x` -and `$y` is undefined");exit;};
          $r=call_user_func_array($x,$a);
       }
       else

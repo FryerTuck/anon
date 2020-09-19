@@ -267,8 +267,10 @@
 
    extend(EventTarget.prototype)
    ({
-      signal:function(e,d,o, n,self,evnt)
+      signal:function(q,d,o, e,n,self,evnt,im,ec)
       {
+         if(!isin(q,":")){e=q}else{ec=stub(q,":"); e=trim(ec[0]); im=`event signal "${e}" reserved for clans: ${ec}`};
+         if(ec){ec=trim(ec[2]); if(!userDoes(ec)){dump(im);return;}};
          self=(this||MAIN); expect.word(e); n=('on'+e); if(isText(d)&&isin([ONCE,EVRY],d)){o=d;d=VOID};
          if(o!=EVRY){o=ONCE}; if((d!==VOID)&&!d.detail){d={detail:d}}; evnt=(d?(new CustomEvent(e,d)):(new Event(e)));
          if(self[n]&&isFunc(self[n])){self[n].apply(self,[evnt]);
@@ -426,6 +428,7 @@
          status:VOID,
          timing:setTimeout(function(){server.sensor.live=0},1),
          events:{},
+         opened:0,
 
 
          vivify:function(f)
@@ -441,7 +444,7 @@
             };
             this.stream.listen('open',function(evnt)
             {
-               server.sensor.live=1; server.status="open"; signal("SSE_open");
+               server.sensor.live=1; server.status="open"; if(!server.opened){server.opened=1; signal("SSEReady");};
                clearTimeout(server.timing); setTimeout(function(){server.sensor.live=0},6000);
             });
             this.stream.listen('ping',function(evnt)
@@ -491,22 +494,21 @@
 
             if(isFunc(f)){f(this.stream); return};
 
-            wait.until(()=>{return (server.status=="open")},()=>
+
+            wait.until(()=>{return (!!server.opened)},()=>
             {
                 dump(`SSE vivified`);
-                this.events.each((v,k)=>
-                {
-                    this.listen(k,v.func,v.hash);
-                });
+                this.events.each((l,e)=>
+                {l.forEach((o)=>{server.listen(e,o.func,o.hash,1)})});
             });
          },
 
 
-         listen:function(e,f,h, t,c)
+         listen:function(e,f,h,deja, t,c)
          {
             if(!stak(0)){wack();return}; // omg! securityyyyy!!
             if(isFunc(h)){t=f; f=h; h=t;}; // swapped args
-            if(isText(h,1)&&!!server.hashes[h]){return}; // already listening for this
+            if(isText(h,1)&&!!server.hashes[h]){return}; // i keel yoo
 
             if(isin(e,":")){c=stub(e,":"); e=trim(c[0]); c=trim(c[2]);};
             if(!isWord(e)){fail('expecting 1st arg as :word:');return};
@@ -515,13 +517,10 @@
             if(c&&!userDoes(c)){dump(`listening on event "${e}" requires "${c}" privileges`);return};
             // specify clan after event .. server.listen("DataReady: geek mind",()=>{});
 
-            if(server.status!="open")
-            {
-                if(!!server.events[e]){dump(`SSE event "${e}" is already queued`); return}; // ignored
-                server.events[e]={func:f,hash:h};
-                dump(`queued SSE event "${e}" to listen on when SSE is vivified`);
-                return;
-            };
+            if(!server.events[e]){server.events[e]=[];}; // array of events handlers per event
+            if(!deja){radd(server.events[e],{func:f,hash:h});};
+            if(!server.opened&&deja){fail(`server is not ready yet !!!!`); return;}; // ?
+            if(!server.opened){return;}; // added this to server events, will be called when vivified
 
             dump(`listening on SSE event "${e}"`);
             this.vivify(()=>{server.stream.addEventListener(e,function(evnt)

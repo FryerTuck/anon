@@ -20,8 +20,10 @@
 
       <script>
          window.WACKMESG="{:WACKMESG:}";
+         window.dump=function(){console.log.apply(console,([].slice.call(arguments)));};
+         window.fail=function(a){console.error(a);};
          window.onerror=function(m,f,l)
-         {if(window.BOOTED){return}; console.error("Unhandled boot error!\n"+m+"\n"+f+"  "+l);};
+         {if(window.BOOTED){return}; console.error("Unhandled BOOT ERROR!\n"+m+"\n"+f+"  "+l);};
       </script>
 
       <script>
