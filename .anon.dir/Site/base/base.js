@@ -141,6 +141,16 @@
 
 
 
+// func :: imsafe : quick security check for sensitive functions
+// --------------------------------------------------------------------------------------------------------------------------------------------
+    const imsafe = function()
+    {
+        if(!!stak(0)){return true;}; wack(); return false;
+    };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 // func :: purl : process/path-URL
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const purl = function(p,d,f, o,x,e,cb,pe,ee)
@@ -177,15 +187,47 @@
          ee.apply(this,[eo]);
       };
 
+
       if(o.silent){server.silent[o.target]=1};
       if(!o.method){o.method='POST'}; if(!o.expect){o.expect='text'}; if(!isKnob(o.header)){o.header={}}; // method, responseType, headerOBJ
       if(!o.header.INTRFACE){o.header.INTRFACE='API'}; x=(new XMLHttpRequest()); x.open(o.method,o.target); x.responseType=o.expect; x.done=0;
-      // x.withCredentials=true;
+
+      let hk=this.hook(o.target);
+      if(!!hk&&isKnob(hk.listen)){hk.listen.each((v,k)=>{x.addEventListener(k,v)})};
+      if(!!hk&&isKnob(hk.convey)){o.convey=copy(o.convey).fuse(copy(hk.convey))};
+
       if(!o.silent){x.wait=function(){if(this.done<100){Busy.edit(this.purl,this.done)}}; tick.after(1250,()=>{x.wait()})};
       x.purl=o.target; o.listen.each((v,k)=>{x.addEventListener(k,v)}); o.header.each((v,k)=>{x.setRequestHeader(k,v)}); // events, headers
       x.silent=o.silent; tick.after(750,()=>{if(x.done&&(x.done>99)){return}; x.busy=(x.silent?0:1)}); // show busy if true
+
       x.send((isKnob(o.convey)?encode.JSON(o.convey):VOID)); // dispatch request
    };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// xtnd :: purl.hook : hook in a callback to use on purl events associated with path
+// --------------------------------------------------------------------------------------------------------------------------------------------
+    extend(purl)
+    ({
+        hook:function(p,v)
+        {
+            if(!imsafe()){return}; expect.text(p,1); // security !! .. let the evil gears in you head enlighten us both .. contribute!
+
+            if(!v&&!f) // return hooked object
+            {
+                p=pick(keys(this),p); if(!p){return};
+                return this[p];
+            };
+
+            expect.knob(v); if(!this[p]){this[p]=[]}; // path must be array
+            radd(this[p],v); // call back added
+        }
+        .bind
+        ({
+
+        }),
+    });
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -777,6 +819,22 @@
          if(isin(['code','text'],t)){this.textContent=v; return this;}; // insert as TEXT
          if(isin("style,script,pre,span,h1,h2,h3,h4,h5,h6,p,a,i,b",t)){this.innerHTML=v; return this}; // insert as HTML
          let n=document.createElement('span'); n.innerHTML=v; this.appendChild(n); return this; // append text as span-node
+      },
+   });
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// tool :: (Object.prototype) : fuse ..
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   extend(Object.prototype)
+   ({
+      fuse:function(that,flag)
+      {
+          if(isFunc(that)){let resl=that; resl.bind(this); return resl};
+          if(!expect.knob(that)){return}; // can only merge objects
+          if((flag!==F)&&isin(keys(this),keys(that))){fail("danger :: force-override-existing-key with: `foo.fuse(bar,F)`");return};
+          v.each((v,k)=>{this[k]=v;}); return this;
       },
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------

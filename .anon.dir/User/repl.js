@@ -125,6 +125,7 @@ extend(MAIN)
          t=repl.ENV.target; if(t!='exec'){repl[t](x);return}; // another function is controlling the input
          repl.echo(x); // show what has been said and reset prompt
          repl.ENV.cmdlog.feed(x); // remember command used and reset pointer
+         repl.ENV.lastCmnd=x; // last command
          p=stub(x,' '); if(!p){f=x;a=[]}else{f=p[0];a=p[2]}; // separate function name from arguments
          if(!repl[f]){repl.mumble(' .. huh?');return}; // not defined
          o=repl.ENV.denied; if((f!='help')&&isin(o,f)&&!userDoes('work,geek,lead')){repl.mumble(' .. huh?');return}; // denied
@@ -172,6 +173,8 @@ extend(MAIN)
    },
 });
 
+
+purl.hook("/User/runRepl/*",{convey:{cmnd:repl.ENV.lastCmnd}});
 
 
 {:commands:}

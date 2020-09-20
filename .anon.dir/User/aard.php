@@ -96,6 +96,7 @@ namespace Anon;
          try
          {
             $a=knob($_POST)->args; $h='/User/tool'; if(!is_array($a)){fail("expecting object with `args` key posted from `$h/$c/view.js`");};
+            $u=sesn('USER'); flog::{"$/User/data/$u/logs/repl.log"}("");
             if(isset($a[0])&&(($a[0]==='-h')||($a[0]==='--help'))){self::replHelp($c);return;}; // run help for these options
             $p="$h/$c/host.php"; $f=import($p); if(!isFunc($f)){fail("expecting: `$export=function(){};` from $p");};
             $r=call($f,$a); if($r){ekko(($r===true)?OK:$r);}; ekko(FAIL);
