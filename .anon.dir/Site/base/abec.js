@@ -46,8 +46,8 @@
       if(!isText(h,1)||!isText(n,1)){return}; if(n.indexOf('*')<0){return (h===n)}; // validate
       if(n.indexOf('**')>-1){if(n.startsWith('**')||n.endsWith('**')){return;}}; // validate
       if(n==='*'){return TRUE;};if(n.length<2){return};if(wrapOf(n==='**')){n=unwrap(n); return (h.indexOf(n)>-1)}; // contains
-      if(n[0]==='*'){n=n.slice(1); l=n.length; f=h.slice(0-l); return (n===f);}; // ends-with
-      if(n.slice(-1)==='*'){n=n.slice(0,-1); l=n.length; f=h.slice(0,l); return (n===f);}; // starts-with
+      if(n.startsWith('*')){n=ltrim(n,'*'); return h.endsWith(n);}; // ends-with
+      if(n.slice(-1)==='*'){n=rtrim(n,'*'); return h.startsWith(n);}; // starts-with
       if(n.indexOf('**')<1){return FALS;}; p=n.split('**'); b=akin(h,(p[0]+'*')); e=akin(h,('*'+p[1])); return (b&&e); // starts-&-ends-with
    };
 // ---------------------------------------------------------------------------------------------------------------------------------------------

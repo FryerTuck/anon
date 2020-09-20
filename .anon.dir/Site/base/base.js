@@ -193,9 +193,12 @@
       if(!o.method){o.method='POST'}; if(!o.expect){o.expect='text'}; if(!isKnob(o.header)){o.header={}}; // method, responseType, headerOBJ
       if(!o.header.INTRFACE){o.header.INTRFACE='API'}; x=(new XMLHttpRequest()); x.open(o.method,o.target); x.responseType=o.expect; x.done=0;
 
-      let hk=purl.hook(o.target);
-      if(!!hk&&isKnob(hk.listen)){hk.listen.each((v,k)=>{x.addEventListener(k,v)})};
-      if(!!hk&&isKnob(hk.convey)){o.convey=copy(o.convey).fuse(copy(hk.convey))};
+      let hk=purl.hook(o.target); if(isList(hk)){hk.forEach((hf)=>
+      {
+          let ho=hf(); if(!isKnob(ho)){expect.knob(ho); return};
+          if(isKnob(ho.listen)){ho.listen.each((v,k)=>{x.addEventListener(k,v)})};
+          if(isKnob(ho.convey)){o.convey=dupe(o.convey).fuse(dupe(ho.convey));};
+      })};
 
       if(!o.silent){x.wait=function(){if(this.done<100){Busy.edit(this.purl,this.done)}}; tick.after(1250,()=>{x.wait()})};
       x.purl=o.target; o.listen.each((v,k)=>{x.addEventListener(k,v)}); o.header.each((v,k)=>{x.setRequestHeader(k,v)}); // events, headers
@@ -211,18 +214,18 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
     extend(purl)
     ({
-        hook:function(p,v)
+        hook:function(p,f)
         {
             if(!imsafe()){return}; expect.text(p,1); // security !! .. let the evil gears in you head enlighten us both .. contribute!
 
-            if(!v) // return hooked object
+            if(!f) // return hooked object
             {
-                let m; keys(this).forEach((i)=>{dump(i,p); if(akin(p,i)){m=i; return STOP}}); if(!m){return};
-                return this[m];
+                let m; keys(this).forEach((i)=>{if(akin(p,i)){m=i; return STOP}}); if(!m){return};
+                let r=this[m]; return r;
             };
 
-            expect.knob(v); if(!this[p]){this[p]=[]}; // path must be array
-            radd(this[p],v); // call back added
+            expect.func(f); if(!this[p]){this[p]=[]}; // path must be array
+            radd(this[p],f); // call back added
         }
         .bind
         ({

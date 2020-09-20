@@ -24,7 +24,8 @@ const stak = function(x,a, e,s,r,h,o,sve)
       p=p[1].split(' '); f=p[0]; if(f.indexOf(':')>0){p=f.split(':'); f=p[0]}else{p=p.pop().split(':')}; if(f=='/'){return};
       l=p[1]; r[r.length]=([c,f,l]).join(' ');
    });
-   if((x==':KEEP:')||(x==':SAVE:')){do{this.saved.unshift(r.pop())}while(r.length>0); return;};
+   if((x==':KEEP:')||(x==':SAVE:'))
+   {do{this.saved.unshift(r.pop())}while(r.length>0); while(this.saved.length>500){this.saved.pop()}; return;};
    if(this.saved.length>0){this.saved.forEach((sl)=>{r.push(sl);})};
    if(!isNaN(x*1)){return r[x]}; return r;
 }

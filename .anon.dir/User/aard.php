@@ -77,7 +77,10 @@ namespace Anon;
             $d="$h/$i"; $p=knob(dval(pget("$d/pack.inf"))); $pc=$p->forClans; if($pc==='*'){$pc=null;};
             if(is_array($pc)){$pc=implode(' ',$pc);}; if($pc&&!isin($pc,$uc)){continue;}; $c=pget("$d/view.js"); if($c){$r.=$c;};
          };
-         finish('/User/repl.js',['commands'=>$r]);
+
+         $un=sesn('USER'); $cl=pget("$/User/data/$un/logs/repl.log"); $xl=[];
+         if($cl){$cl=explode("\n",$cl); foreach($cl as $ci){$ci=stub($ci,"\t")[2]; $xl[]=$ci};};
+         finish('/User/repl.js',['commands'=>$r,'replLogs'=>enconf($xl)]);
       }
 
 
@@ -95,8 +98,9 @@ namespace Anon;
       {
          try
          {
-            $a=knob($_POST)->args; $h='/User/tool'; if(!is_array($a)){fail("expecting object with `args` key posted from `$h/$c/view.js`");};
-            $u=sesn('USER'); flog::{"$/User/data/$u/logs/repl.log"}("");
+            $v=knob($_POST); $a=$v->args; $h='/User/tool';
+            if(!is_array($a)){fail("expecting object with `args` key posted from `$h/$c/view.js`");};
+            $u=sesn('USER'); $x=$v->cmnd; if(userDoes('work,sudo')){flog::{"$/User/data/$u/logs/repl.log"}($x);};
             if(isset($a[0])&&(($a[0]==='-h')||($a[0]==='--help'))){self::replHelp($c);return;}; // run help for these options
             $p="$h/$c/host.php"; $f=import($p); if(!isFunc($f)){fail("expecting: `$export=function(){};` from $p");};
             $r=call($f,$a); if($r){ekko(($r===true)?OK:$r);}; ekko(FAIL);

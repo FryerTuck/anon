@@ -174,7 +174,14 @@ extend(MAIN)
 });
 
 
-purl.hook("/User/runRepel/*",{convey:{cmnd:repl.ENV.lastCmnd}});
+
+repl.ENV.cmdlog.list=deconf(`{:replLogs:}`);
+
+
+
+purl.hook("/User/runRepel/*",function()
+{return {convey:{cmnd:repl.ENV.lastCmnd}}});
+
 
 
 {:commands:}

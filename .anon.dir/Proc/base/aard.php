@@ -109,6 +109,7 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function lshave($a,$b=null,$r=false)
    {
+      if(is_nokey_array($a)){$z=[]; foreach($a as $i){$z[]=lshave($i,$b,$r); return $z;}};
       if(!is_string($a)){return;}; if(!is_string($b)){return ltrim($a);}; $s=strlen($b); if(!$s||(strlen($a)<$s)){return $a;};
       if(substr($a,0,$s)!==$b){return $a;}; do{$a=substr($a,$s);}while($r&&(substr($a,0,$s)===$b));
       return $a;
@@ -116,6 +117,7 @@ namespace Anon;
 
    function rshave($a,$b=null,$r=false)
    {
+      if(is_nokey_array($a)){$z=[]; foreach($a as $i){$z[]=rshave($i,$b,$r); return $z;}};
       if(!is_string($a)){return;}; if(!is_string($b)){return rtrim($a);}; $s=strlen($b); if(!$s||(strlen($a)<$s)){return $a;};
       if(substr($a,(0-$s),$s)!==$b){return $a;}; do{$a=substr($a,0,(strlen($a)-$s));}while($r&&(substr($a,(0-$s),$s)===$b));
       return $a;
@@ -123,6 +125,7 @@ namespace Anon;
 
    function shaved($a,$b=null,$r=false)
    {
+      if(is_nokey_array($a)){$z=[]; foreach($a as $i){$z[]=shaved($i,$b,$r); return $z;}};
       if(!is_string($a)){return;}; if(!is_string($b)){return trim($a);};
       $z=lshave($a,$b,$r); $z=rshave($z,$b,$r);
       return $z;
