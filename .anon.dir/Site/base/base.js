@@ -217,8 +217,8 @@
 
             if(!v) // return hooked object
             {
-                p=pick(keys(this),p); if(!p){return};
-                return this[p];
+                let m; keys(this).forEach((i)=>{if(akin(p,i)){m=i; return STOP}}); if(!m){return};
+                return this[m];
             };
 
             expect.knob(v); if(!this[p]){this[p]=[]}; // path must be array
