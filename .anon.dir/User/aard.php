@@ -79,7 +79,7 @@ namespace Anon;
          };
 
          $un=sesn('USER'); $cl=pget("$/User/data/$un/logs/repl.log"); $xl=[];
-         if($cl){$cl=explode("\n",$cl); foreach($cl as $ci){$ci=stub($ci,"\t")[2]; $xl[]=$ci};};
+         if($cl){$cl=explode("\n",$cl); foreach($cl as $ci){$ci=stub($ci,"\t")[2]; $xl[]=$ci;}};
          finish('/User/repl.js',['commands'=>$r,'replLogs'=>enconf($xl)]);
       }
 
