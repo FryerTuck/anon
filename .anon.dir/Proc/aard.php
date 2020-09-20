@@ -286,7 +286,7 @@ namespace Anon;
              $v=knob($_POST); if(!isWord($v->evnt)||!isin(keys($v),'data')){ekko("invalid event definition");};
              $fc=1; $e=$v->evnt; $d=json_decode(base64_decode($v->data)); $t=$v->trgt;
          };
-
+flog("signal",$d);
          if(!is_funnic($e)||self::$meta->hush->$e){return;}; // silence!!
 
          if($d===null){$d='!';}elseif(isAssa($d)||isKnob($d)){$d=knob($d);}; // data reference uniformity

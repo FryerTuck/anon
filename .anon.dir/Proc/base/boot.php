@@ -264,7 +264,8 @@ namespace Anon;
    require(path('$/Proc/base/fwal.php')); // essential security .. right of passage through "the pass"
    require(path('$/Proc/aard.php'));      // load Proc class .. now all is ready to gracefully handle anything
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-
+// flog("boot",NAVIPATH);
+// signal::dump("boot test 1");
 
 
 # func :: allStemRun : scans `$d` for a list of stems, for each stem run a php-file `$f`, starting with `$o`
