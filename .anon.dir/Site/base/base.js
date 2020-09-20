@@ -202,33 +202,33 @@
 
       x.send((isKnob(o.convey)?encode.JSON(o.convey):VOID)); // dispatch request
   }
-  .bind({});
+  // .bind({});
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
 // xtnd :: purl.hook : hook in a callback to use on purl events associated with path
 // --------------------------------------------------------------------------------------------------------------------------------------------
-    extend(purl)
-    ({
-        hook:function(p,v)
-        {
-            if(!imsafe()){return}; expect.text(p,1); // security !! .. let the evil gears in you head enlighten us both .. contribute!
-
-            if(!v&&!f) // return hooked object
-            {
-                p=pick(keys(this),p); if(!p){return};
-                return this[p];
-            };
-
-            expect.knob(v); if(!this[p]){this[p]=[]}; // path must be array
-            radd(this[p],v); // call back added
-        }
-        .bind
-        ({
-
-        }),
-    });
+    // extend(purl)
+    // ({
+    //     hook:function(p,v)
+    //     {
+    //         if(!imsafe()){return}; expect.text(p,1); // security !! .. let the evil gears in you head enlighten us both .. contribute!
+    //
+    //         if(!v&&!f) // return hooked object
+    //         {
+    //             p=pick(keys(this),p); if(!p){return};
+    //             return this[p];
+    //         };
+    //
+    //         expect.knob(v); if(!this[p]){this[p]=[]}; // path must be array
+    //         radd(this[p],v); // call back added
+    //     }
+    //     .bind
+    //     ({
+    //
+    //     }),
+    // });
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 

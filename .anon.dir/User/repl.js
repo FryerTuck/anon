@@ -174,7 +174,7 @@ extend(MAIN)
 });
 
 
-purl.hook("/User/runRepl/*",{convey:{cmnd:repl.ENV.lastCmnd}});
+// purl.hook("/User/runRepl/*",{convey:{cmnd:repl.ENV.lastCmnd}});
 
 
 {:commands:}
