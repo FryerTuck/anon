@@ -175,7 +175,7 @@ extend(MAIN)
 
 
 
-repl.ENV.cmdlog.list=deconf(`{:replLogs:}`);
+(deconf(`{:replLogs:}`).reverse()).forEach((i)=>{repl.ENV.cmdlog.feed(i)});
 
 
 
