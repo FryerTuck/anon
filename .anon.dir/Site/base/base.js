@@ -217,7 +217,7 @@
 
             if(!v) // return hooked object
             {
-                let m; keys(this).forEach((i)=>{if(akin(p,i)){m=i; return STOP}}); if(!m){return};
+                let m; keys(this).forEach((i)=>{dump(i,p); if(akin(p,i)){m=i; return STOP}}); if(!m){return};
                 return this[m];
             };
 
