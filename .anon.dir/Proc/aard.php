@@ -25,8 +25,11 @@ namespace Anon;
          self::$meta = knob();
          self::$meta->hush = knob();
          self::$meta->hook = knob();
-         self::$meta->wait = conf::Proc('sysClock')->server;
-         self::$meta->keep = conf::Proc('sysClock')->upkeep;
+         self::$meta->wait = $_SERVER['SYSCLOCK']->server;
+         self::$meta->keep = $_SERVER['SYSCLOCK']->upkeep;
+
+         spl_autoload_register(function($n)
+         {$n=str_replace('Anon\\','',$n); import($n);}); // auto-load class-assoc PHP file
       }
 
 

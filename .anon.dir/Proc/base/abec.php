@@ -238,6 +238,21 @@ namespace Anon;
 
 
 
+# func :: xord : re-order numeric-key-array alpha-numerically, optionally make sure the result starts with and in order of `$b`
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+    function xord($q,$b=null)
+    {
+        expect::numa($q); if(count($q)<1){return [];}; // empty
+        $a=dupe($q); sort($a); if(span($b)<1){return $a;}; // normal
+        $o=dupe($b); if(isText($o)){$o=dval($o); if(isText($o)){$o=[$o];}; }elseif(isKnob($o)){$o=((array)$o);}; // normalize
+        if(isAsso($o)){$o=array_flip($o); ksort($o); $o=array_values($o);}; expect::numa($o); $r=[]; // ready
+        foreach($o as $s){if(isin($a,$s)){$r[]=xpop($a,$s);}}; $r=array_merge($r,$a); // done
+        return $r;
+    }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 # func :: frag : combined fragment tools like `explode, str_split, substr, array_slice`
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function frag($x,$d=null,$i=null)
@@ -255,6 +270,15 @@ namespace Anon;
       {
          if($i<0){$i=(count($r)+$i);}; $r=array_slice($r,$d,$i); return $r;
       };
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+# func :: flip : swap values for keys and keys for values
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   function flip($x,$d=null,$i=null)
+   {
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 

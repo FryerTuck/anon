@@ -41,32 +41,22 @@ namespace Anon;
 
    defn(['AUTOMAIL'=>pget('$/Proc/conf/autoMail')]); // needed
    $_SERVER["ALTHANDLER"]=(kuki("ALTHANDLER")?"yes":(isee("/index.php")?"yes":null));
+
+   $cd=COREPATH; $rd=ROOTPATH; $cl=pget($cd); $rl=pget($rd); $sl=[C=>[],R=>[],A=>[]];
+   foreach($cl as $cs){if(is_funnic($cs)&&isProprCase($cs)){$sl[C][]="$/$cs"; $sl[A][]="$/$cs";}};
+   foreach($rl as $rs){if(is_funnic($rs)&&isProprCase($rs)){$sl[R][]="/$rs"; $sl[A][]="/$rs";}};
+   $_SERVER['STEMLIST']=$sl; unset($cd,$rd,$cl,$rl,$sl,$cs,$rs);
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
-# func :: dval : parse implied value from "neat" string .. assumes json at first and mitigates from there on
+# func :: stemList : returns the Stem-list associated with given argument
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   function dval($d,$z=0)
+   function stemList($a=null)
    {
-      if(!is_string($d)){return $d;}; $d=trim($d); if(($d==='')||($d==='null')||($d==='VOID')){return;};
-      if($d==='*'){return $d;}; if(strlen($d)<2){return $d;}; $b='{:'; $e=':}'; $x=strpos($d,$b); $n=strpos($d,"\n");
-      if($x!==false){if(isee('impose')){$d=impose($d,$b,$e);}else{fail::premature('`impose` is undefined');}};
-      $v=json_decode($d,true); if($v!==null){return $v;}; // covers a lot
-      if(!$n&&($d[0]==='+')){$v=substr($d,1); if(is_numeric($v)){return ($v*1);}}; // positive number
-      $q=strpos($d,'`'); $p=strpos($d,': '); $c=strpos($d,',');
-      $w=wrapOf($d); if(($w==='``')&&(substr_count($d,$w[0])<3)){$v=unwrap($d); return $v;};
-      if($c&&!$n&&!$q){$r=explode(',',$d); $z=[]; foreach($r as $t){$z[]=dval($t);}; return $z;};
-      if(!$n&&$z){return $d;}; // no further parsing needed
-
-      $a=explode("\n",$d); $r=[]; foreach($a as $l)
-      {
-          $l=trim($l); if($l===""){continue;}; $p=strpos($l,': '); $q=strpos($l,'`');
-          if(!$p||($p&&$q&&($q<$p))){$r[]=dval($l,1); continue;}; // simple
-          $p=stub($l,': '); $k=trim($p[0]); $v=dval($p[2],1); $r[$k]=$v; continue;
-      };
-
-      if(empty($r)){return;}; if(is_assoc_array($r)){return $r;}; if(!$n){return $r[0];}; return $r;
+       $d=((!$a||!is_string($a)||($a==='*'))?A:(($a==='$')?C:(($a==='/')?R:$a)));
+       if(!isset($_SERVER['STEMLIST'][$d])){return;}; // validate
+       return array_values($_SERVER['STEMLIST'][$d]); // return a copy
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -78,38 +68,6 @@ namespace Anon;
    {
       if(!path($p)){return;}; $l=trim($p,'/'); if(!strpos($l,'/')){return '/';}; $l=explode('/',$l);
       array_pop($l); $r=implode('/',$l); return ((($p[0]=='~')||($p[0]=='$'))?$r:"/$r");
-   }
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-# tool :: knob : plain object
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-   class knob
-   {
-      function __construct($d,$u=0)
-      {
-          foreach($d as $k => $v){if(is_assoc_array($v)){$v=(new knob($v,$u));}; if($u){$k=unwrap($k);}; $this->$k=$v;}
-      }
-
-      function __get($k){if(property_exists($this,$k)){return $this->$k;};}
-      function __call($k,$a){if(property_exists($this,$k)){return call_user_func_array($this->$k,$a);}; fail("undefined method `$k`");}
-      function __toString(){$r=json_encode($this,JSON_UNESCAPED_SLASHES); return $r;}
-   }
-
-   function knob($d=[],$unwrap=null)
-   {
-      if(is_string($d)){$d=trim($d); if(($d==='')||(!strpos($d,':')&&!isee($d))){return (new knob([]));}};
-      if(is_object($d)&&($d instanceof knob)){return $d;};
-      if(is_array($d)||is_object($d)){return (new knob($d,$unwrap));}; if(!is_string($d)){return (new knob([]));};
-      if(is_string($d)&&strpos($d,':')){$d=dval($d); if(is_assoc_array($d)){return (new knob($d));}};
-      $p=isee($d); if(!$p){return (new knob([]));};$x=pget($d);if(is_string($x)){$x=dval($x); return (new knob((is_assoc_array($x)?$x:[])));};
-      $r=(new knob([])); foreach($x as $i)
-      {
-         $p=isee("$d/$i"); if(is_dir($p)){$r->$i=[];}elseif(is_link("$d/$i")){$r->$i=readlink("$d/$i");}else
-         {$m=fext("$d/$i"); if($m&&!in_array($m,['inf','json'])){continue;}; $v=dval(pget("$d/$i")); $r->$i=(is_array($v)?knob($v):$v);};
-      };
-      return $r;
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -298,59 +256,36 @@ namespace Anon;
 
 
 
-# func :: allStemRun : run a php file found in all Anon-related stems on this system
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-    function allStemRun($_XF)
-    {
-       if(!is_string($_XF)){return;}; $_CP=COREPATH; $_RP=ROOTPATH;
-       $_SL=array_merge(padded(pget($_CP),"$_CP/",""),padded(pget($_RP),"$_RP/",""));
-
-       foreach($_SL as $_SD)
-       {
-           if(is_dir($_SD)&&file_exists("$_SD/$_XF"))
-           {ob_start(); require("$_SD/$_XF"); $OB=ob_get_clean();};
-       };
-    };
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
 # need :: tools : load dependencies
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   depend('F:$/Proc/base/dbug.php');      // check if dbug exists .. will fail if not
    require(path('$/Proc/base/dbug.php')); // this will take care of any further issues with the framework and any subsequent runtime errors
    require(path('$/Proc/base/abec.php')); // basic tools for heavy lifting .. if anything goes wrong in here, dbug will handle it .. awesomeness
    require(path('$/Proc/base/base.php')); // ABEC is full .. extend any other essential functions in here
    require(path('$/Proc/base/fwal.php')); // essential security .. right of passage through "the pass"
-   require(path('$/Proc/aard.php'));      // initialize Proc class
-   require(path('$/Repo/aard.php'));      // initialize Repo class
-   Proc::__init();
-   spl_autoload_register(function($n){$n=str_replace('Anon\\','',$n); import($n);}); // auto-load class-assoc PHP file
+   require(path('$/Proc/aard.php'));      // load Proc class .. now all is ready to gracefully handle anything
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+# func :: allStemRun : scans `$d` for a list of stems, for each stem run a php-file `$f`, starting with `$o`
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+    function allStemRun($f,$d=null,$o=null)
+    {
+        if(!isText($f,1)||!isPath("/$f")){return;}; $l=xord(stemList($d),$o); if(!$l){return;}; // validate
+        foreach($l as $p){if(isee("$p/$f")){$ob=requires::path("$p/$f");}};
+    };
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
 # dbug :: keep : housekeeping .. run regularly
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   if(!facing('DPR')&&!facing('BOT')&&!isin(["/User/upload","/Proc/execPath","/Proc/xenoCall","/Proc/makeTodo"],NAVIPATH))
-   {
-      clearstatcache(); clearstatcache(true);
-      $dbs=knob('$/Proc/conf/sysClock')->upkeep; $ldb=pget('$/Proc/vars/lastDbug');
-      if(!$ldb){$ldb=0;}; $ldb=($ldb*1); $tdf=(time()-$ldb);
-      $upk=0; if(isset($_GET['upkeep'])){$upk=$_GET['upkeep'];};
-
-      if(!$ldb||($tdf>$dbs)||$upk)
-      {
-          require(path('$/Proc/base/keep.php'));
-          upkeep($dbs,$ldb,time(),$upk);
-          path::make('$/Proc/vars/lastDbug',(time().''));
-      }
-      elseif(!isFold("$/Proc/temp/sesn"))
-      {
-          halt(500,"The server cache is causing issues");
-      };
-      unset($dbs,$ldb,$tmn,$tdf);
-   }
+    if(envi('UPKEEPER'))
+    {
+        require(path('$/Proc/base/keep.php'));
+        upkeep($_SERVER['SYSCLOCK']->upkeep,$_SERVER['UPKEEPER'],time(),knob($_GET)->upkeep);
+        path::make('$/Proc/vars/lastDbug',(time().''));
+    };
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -368,6 +303,7 @@ namespace Anon;
 
 # proc :: init : boot
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   allStemRun("boot.php"); // boot all bootable stems
+   allStemRun("boot.php",A,"$/Site"); // boot all bootable stems
+
    Proc::init(); // initialize Proc
 # ---------------------------------------------------------------------------------------------------------------------------------------------

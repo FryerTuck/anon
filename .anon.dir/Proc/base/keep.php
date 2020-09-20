@@ -43,7 +43,7 @@ namespace Anon;
 
       if(lock::exists("upkeep")&&!userDoes("lead sudo gang")&&isee("$h/refs")){return;}; // .. less is more
       lock::create("upkeep"); // run upkeep only when another power-user is not running it already
-      allStemRun("keep.php");
+      allStemRun("keep.php"); allStemRun("keep.php");
       lock::remove("upkeep");
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------

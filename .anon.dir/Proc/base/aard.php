@@ -532,18 +532,22 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function depend()
    {
-      $r=['R'=>'readable','W'=>'writable','F'=>'file','D'=>'folder','L'=>'link'];
-      $a=args(func_get_args()); foreach($a as $d)
+      $a=args(func_get_args()); $r=[]; foreach($a as $d)
       {
          $p=explode(':',$d); if(!isset($p[1])){array_unshift($p,'R');}; $q=$p[0]; $p=$p[1]; $p=path($p); if(!$p){continue;}; // validate vars
-         $q=str_split($q); if(!in_array('R',$q)){array_unshift($q,'R');}; $m=[]; $f=0; $t=0; foreach($q as $o)
-         {
-            if(!isset($r[$o])){$o='R';}; $w=$r[$o]; if(in_array($w,$m)){continue;}; $m[]=$w; if($o==='R'){$t=is_readable($p);}
-            elseif($o==='W'){$t=is_writable($p);}elseif($o==='F'){$t=is_file($p);}elseif($o==='D'){$t=is_dir($p);}else{$t=is_link($p);};
-            if(!$t){$f=1;};
-         };
-         if(!$f){continue;}; $m=implode(' ',$m); halt(424,"Failed dependency - expecting $p as $m");
+         $m=[]; $q=str_split($q); if(!in_array('R',$q)){array_unshift($q,'R');};
+
+         if(in_array('R',$q)&&!isee($p)){$m[]="readable ";};
+         if(in_array('W',$q)&&!is_writable($p)){$m[]="writable ";};
+         if(in_array('D',$q)&&!is_dir($p)){$m[]="folder";};
+         if(in_array('F',$q)&&!is_file($p)){$m[]="file";};
+         if(in_array('L',$q)&&!is_link($p)){$m[]="link";};
+
+         if(count($m)){$m=implode(' ',$m); $p=crop($p); $r[]="expecting `$p` as `$m` ..";};
       };
+
+      if(count($r)<1){return;}; $r=implode(' and ', $r);
+      return $r;
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -605,6 +609,65 @@ namespace Anon;
    }
 
    function lstub($t,$d){return stub($t,$d);};  function rstub($t,$d){return stub($t,$d,1);}
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+# func :: dval : parse implied value from "neat" string .. assumes json at first and mitigates from there on
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   function dval($d,$z=0)
+   {
+      if(!is_string($d)){return $d;}; $d=trim($d); if(($d==='')||($d==='null')||($d==='VOID')){return;};
+      if($d==='*'){return $d;}; if(strlen($d)<2){return $d;}; $b='{:'; $e=':}'; $x=strpos($d,$b); $n=strpos($d,"\n");
+      if($x!==false){if(isee('impose')){$d=impose($d,$b,$e);}else{halt(500,'`impose` is undefined');}};
+      $v=json_decode($d,true); if($v!==null){return $v;}; // covers a lot
+      if(!$n&&($d[0]==='+')){$v=substr($d,1); if(is_numeric($v)){return ($v*1);}}; // positive number
+      $q=strpos($d,'`'); $p=strpos($d,': '); $c=strpos($d,',');
+      $w=wrapOf($d); if(($w==='``')&&(substr_count($d,$w[0])<3)){$v=unwrap($d); return $v;};
+      if($c&&!$n&&!$q){$r=explode(',',$d); $z=[]; foreach($r as $t){$z[]=dval($t);}; return $z;};
+      if(!$n&&$z){return $d;}; // no further parsing needed
+
+      $a=explode("\n",$d); $r=[]; foreach($a as $l)
+      {
+          $l=trim($l); if($l===""){continue;}; $p=strpos($l,': '); $q=strpos($l,'`');
+          if(!$p||($p&&$q&&($q<$p))){$r[]=dval($l,1); continue;}; // simple
+          $p=stub($l,': '); $k=trim($p[0]); $v=dval($p[2],1); $r[$k]=$v; continue;
+      };
+
+      if(empty($r)){return;}; if(is_assoc_array($r)){return $r;}; if(!$n){return $r[0];}; return $r;
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+# tool :: knob : plain object
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   class knob
+   {
+      function __construct($d,$u=0)
+      {
+          foreach($d as $k => $v){if(is_assoc_array($v)){$v=(new knob($v,$u));}; if($u){$k=unwrap($k);}; $this->$k=$v;}
+      }
+
+      function __get($k){if(property_exists($this,$k)){return $this->$k;};}
+      function __call($k,$a){if(property_exists($this,$k)){return call_user_func_array($this->$k,$a);}; fail("undefined method `$k`");}
+      function __toString(){$r=json_encode($this,JSON_UNESCAPED_SLASHES); return $r;}
+   }
+
+   function knob($d=[],$unwrap=null)
+   {
+      if(is_string($d)){$d=trim($d); if(($d==='')||(!strpos($d,':')&&!isee($d))){return (new knob([]));}};
+      if(is_object($d)&&($d instanceof knob)){return $d;};
+      if(is_array($d)||is_object($d)){return (new knob($d,$unwrap));}; if(!is_string($d)){return (new knob([]));};
+      if(is_string($d)&&strpos($d,':')){$d=dval($d); if(is_assoc_array($d)){return (new knob($d));}};
+      $p=isee($d); if(!$p){return (new knob([]));};$x=pget($d);if(is_string($x)){$x=dval($x); return (new knob((is_assoc_array($x)?$x:[])));};
+      $r=(new knob([])); foreach($x as $i)
+      {
+         $p=isee("$d/$i"); if(is_dir($p)){$r->$i=[];}elseif(is_link("$d/$i")){$r->$i=readlink("$d/$i");}else
+         {$m=fext("$d/$i"); if($m&&!in_array($m,['inf','json'])){continue;}; $v=dval(pget("$d/$i")); $r->$i=(is_array($v)?knob($v):$v);};
+      };
+      return $r;
+   }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -688,6 +751,21 @@ namespace Anon;
 
 
 
+# cond :: defn : set UpKeeper global for use later .. no need to check again later in runtime
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   $_SERVER['UPKEEPER']=''; $_SERVER['SYSCLOCK']=knob('$/Proc/conf/sysClock');
+   if(!facing('DPR')&&!facing('BOT')&&!in_array(NAVIPATH,["/User/upload","/Proc/execPath","/Proc/xenoCall","/Proc/makeTodo"]))
+   {
+      $dbs=$_SERVER['SYSCLOCK']->upkeep; if(!$dbs){$dbs=180;}; $ldb=pget('$/Proc/vars/lastDbug');
+      if(!$ldb){$ldb=0;}; $ldb=($ldb*1); $tdf=(time()-$ldb); $upk=0; if(isset($_GET['upkeep'])){$upk=$_GET['upkeep'];};
+
+      $_SERVER['UPKEEPER']=((!$ldb||($tdf>$dbs)||$upk)?$ldb:0);
+      unset($dbs,$ldb,$tdf,$upk);
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 # dbug :: platform : check for expected PHP version and extensions .. demand short open tag
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    if(isee('mbstring curl zlib')!==1){halt(424,'Failed Dependency - need PHP extensions: mbstring, curl, zlib');}; // required extensons
@@ -712,20 +790,23 @@ namespace Anon;
 
 
 
+# dbug :: core : required for expected functionality
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   if(envi('UPKEEPER'))
+   {
+       if(!isee('$/Proc/temp/sesn/')){pset('$/Proc/temp/sesn/');}; // create if not exist
+       $d=depend('RF:$/Proc/base/boot.php','RF:$/Proc/base/dbug.php','WD:$/Proc/temp/sesn'); // get fail message -if any
+       if($d){halt(424,"Failed Dependency - $d");}; unset($d); // fail if bootstrapper is compromised
+   };
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 # dbug :: vars : USERDEED - request method as "CRUD" word
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    $l=array('OPTIONS'=>'permit','GET'=>'select','PUT'=>'update','POST'=>'insert','HEAD'=>'descry','DELETE'=>'delete','CONNECT'=>'listen');
    $x=envi('REQUEST_METHOD'); if(isset($l[$x])){$_SERVER['USERDEED']=$l[$x];}else{header('HTTP/1.1 405 Method Not Allowed'); die();};
    if($x=='OPTIONS'){$l=implode(array_keys($l,', ')); header('HTTP/1.1 200 OK'); header("Allow: $l"); die();}; unset($x,$l); // all is well
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-# dbug :: path : required for expected functionality
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-   if(!isee('$/Proc/temp/sesn/')){pset('$/Proc/temp/sesn/');}; // create if not exist
-   if(!is_writable(isee('$/Proc/temp/sesn'))){halt(417,'Expectation Failed - writable temp.sesn');};   // YOU HAVE DIED
-   if(!isee('$/Proc/base/boot.php')){halt(424,'Failed Dependency - boot');}; // YOU HAVE DIED
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
