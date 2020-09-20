@@ -201,7 +201,8 @@
       x.silent=o.silent; tick.after(750,()=>{if(x.done&&(x.done>99)){return}; x.busy=(x.silent?0:1)}); // show busy if true
 
       x.send((isKnob(o.convey)?encode.JSON(o.convey):VOID)); // dispatch request
-   };
+  }
+  .bind({});
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
