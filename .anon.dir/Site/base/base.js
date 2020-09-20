@@ -195,7 +195,7 @@
 
       let hk=purl.hook(o.target); if(isList(hk)){hk.forEach((hf)=>
       {
-          let ho=hf(); if(!isKnob(ho)){expect.knob(ho); return};
+          let ho=hf(); if(!isKnob(ho)){return};
           if(isKnob(ho.listen)){ho.listen.each((v,k)=>{x.addEventListener(k,v)})};
           if(isKnob(ho.convey)){o.convey=dupe(o.convey).fuse(dupe(ho.convey));};
       })};
