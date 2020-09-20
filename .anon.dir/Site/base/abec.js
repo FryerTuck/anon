@@ -150,7 +150,7 @@
             {
                if(!d.hasOwnProperty(p)){continue;};  var v=d[p];  var c={enumerable:FALS,configurable:FALS,writable:FALS};
                t=(typeof v)[0];if(v&&m&&((t=='f')||(t=='o'))){try{Object.defineProperty(v,'INTRINSIC',o)}catch(e){r=FALS;return}};
-               c.value=v; if(t=='f'){Object.defineProperty(v,'name',{writable:FALS,enumerable:FALS,configurable:FALS,value:p})};
+               c.value=v; if((t=='f')||(t=='o')){Object.defineProperty(v,'name',{writable:FALS,enumerable:FALS,configurable:FALS,value:p})};
                if(p=='each'){c.writable=TRUE}; try{Object.defineProperty(i,p,c)}catch(e){r=FALS;};
             };
             return r;
@@ -369,7 +369,7 @@
 // defn :: flag : words .. do NOT define these earlier (up) .. defn() needs all the above
 // --------------------------------------------------------------------------------------------------------------------------------------------
    defn('INIT AUTO COOL DARK LITE INFO GOOD NEED WARN FAIL NEXT SKIP STOP DONE ACTV NONE BUSY KEYS VALS ONCE EVRY BFOR AFTR UNTL EVNT FILL TILE SPAN OPEN SHUT');
-   // defn('TEXT NODE');
+   defn('KEEP SAVE');
    defn('TL TM TR RT RM RB BR BM BL LB LM LT');
    defn('A B C D E F G H I J K L M N O P Q R S T U V W X Y Z');
    defn('OK NA ANY ALL');
@@ -995,36 +995,43 @@
 
 // tool :: tick : waiting
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   const tick = // object
-   {
-      after:function(ws,cf){let rt = setTimeout(cf,ws); return rt},
-      every:function(ws,cf){let rt = setInterval(cf,ws); return rt},
-      while:function(w,c,i){let rt = setInterval((r)=>{r=w(); if(r===true){return}; clearInterval(rt); c(r)},(i||10)); return rt;},
-      until:function(w,c,l, t,s,r,n)
-      {
-         s=time(); t=setInterval(()=>
-         {
-            r=w(); if(r){clearInterval(t);return}; c();
-            if(!l){return}; n=time(); if((n-s)>l){clearInterval(t)};
-         },10);
-         return t;
-      },
-   };
+   extend(MAIN)
+   ({
+       tick:
+       {
+          after:function(ws,cf){let rt = setTimeout(cf,ws); return rt},
+          every:function(ws,cf){let rt = setInterval(cf,ws); return rt},
+          while:function(w,c,i){let rt = setInterval((r)=>{r=w(); if(r===true){return}; clearInterval(rt); c(r)},(i||10)); return rt;},
+          until:function(w,c,l, t,s,r,n)
+          {
+             s=time(); t=setInterval(()=>
+             {
+                r=w(); if(r){clearInterval(t);return}; c();
+                if(!l){return}; n=time(); if((n-s)>l){clearInterval(t)};
+             },10);
+             return t;
+          },
+       },
 
-   const wait = // object
-   {
-      until:function(w,c,l, t,s,r,n)
-      {
-         s=time(); t=setInterval(()=>
-         {
-            r=w(); if(!isVoid(r)&&(r!==FALS)){clearInterval(t);c(r);return};
-            if(!l){return}; n=time(); if((n-s)>l){clearInterval(t)};
-         },10);
-         return t;
-      },
 
-      while:function(w,c,i){let rt = setInterval((r)=>{r=w(); if(r===true){return}; clearInterval(rt); c(r)},(i||10)); return rt;},
-   };
+       wait:
+       {
+          until:function(w,c,l, t,s,r,n)
+          {
+             s=time(); t=setInterval(()=>
+             {
+                r=w(); if(!isVoid(r)&&(r!==FALS)){clearInterval(t);c(r);return};
+                if(!l){return}; n=time(); if((n-s)>l){clearInterval(t)};
+             },10);
+             return t;
+          },
+
+          while:function(w,c,i)
+          {
+              let rt = setInterval((r)=>{r=w(); if(r===true){return}; clearInterval(rt); c(r)},(i||10)); return rt;
+          },
+       }
+   });
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -1099,8 +1106,9 @@
             if(!r){k=k.join(', or '); fail('type :: expecting '+k);};
          };
       },
-      apply:function(o,x,a)
+      apply:function(o,x,a, r)
       {
+         stak(KEEP);
          a=a[0]; if(!isKnob(a)){fail('calling `expect` directly requires an object');return}; r=true;
          a.each((v,k)=>{let f=constant('is'+proprCase(k)); if(f&&!f(v)){fail('expecting '+k); r=false; return STOP}});
          return r;

@@ -15,7 +15,7 @@ const wack = function(r)
 }
 .bind({line:atob(window.WACKMESG).split('\n'),done:0});
 
-const stak = function(x,a, e,s,r,h,o)
+const stak = function(x,a, e,s,r,h,o,sve)
 {
    a=(a||''); e=(new Error('.')); s=e.stack.split('\n'); s.shift();  r=[]; h=HOSTPURL; o=['_fake_']; s.forEach((i)=>
    {
@@ -24,8 +24,11 @@ const stak = function(x,a, e,s,r,h,o)
       p=p[1].split(' '); f=p[0]; if(f.indexOf(':')>0){p=f.split(':'); f=p[0]}else{p=p.pop().split(':')}; if(f=='/'){return};
       l=p[1]; r[r.length]=([c,f,l]).join(' ');
    });
+   if((x==':KEEP:')||(x==':SAVE:')){do{this.saved.unshift(r.pop())}while(r.length>0); return;};
+   if(this.saved.length>0){this.saved.forEach((sl)=>{r.push(sl);})};
    if(!isNaN(x*1)){return r[x]}; return r;
-};
+}
+.bind({saved:[]});
 
 const sesn = function(a)
 {if(!stak(0)){wack();return}; if(((typeof a)!='string')||(a.length<1)||!this[a]){return}; return this[a];}.bind

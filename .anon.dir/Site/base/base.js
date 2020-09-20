@@ -145,7 +145,7 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
     const imsafe = function()
     {
-        if(!!stak(0)){return true;}; wack(); return false;
+        if(!!stak(0)){return true;}; dump("securityyyyyy !!!"); wack(); return false;
     };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -156,6 +156,7 @@
    const purl = function(p,d,f, o,x,e,cb,pe,ee)
    {
       if(MAIN.HALT){return};
+      stak(KEEP);
       if(isText(p)&&isVoid(d)&&isVoid(f)){o={target:p,method:'GET',listen:{}}} // only URL given
       else if(isText(p)&&isFunc(d)&&isVoid(f)){o={target:p,method:'GET',listen:{loadend:d}}} // URL + callback
       else if(isText(p)&&isKnob(d)&&isVoid(f)){o=d; o.target=p; if(!isKnob(o.listen)){o.listen={}};} // URL + options
@@ -192,7 +193,7 @@
       if(!o.method){o.method='POST'}; if(!o.expect){o.expect='text'}; if(!isKnob(o.header)){o.header={}}; // method, responseType, headerOBJ
       if(!o.header.INTRFACE){o.header.INTRFACE='API'}; x=(new XMLHttpRequest()); x.open(o.method,o.target); x.responseType=o.expect; x.done=0;
 
-      let hk=this.hook(o.target);
+      let hk=purl.hook(o.target);
       if(!!hk&&isKnob(hk.listen)){hk.listen.each((v,k)=>{x.addEventListener(k,v)})};
       if(!!hk&&isKnob(hk.convey)){o.convey=copy(o.convey).fuse(copy(hk.convey))};
 
@@ -201,34 +202,33 @@
       x.silent=o.silent; tick.after(750,()=>{if(x.done&&(x.done>99)){return}; x.busy=(x.silent?0:1)}); // show busy if true
 
       x.send((isKnob(o.convey)?encode.JSON(o.convey):VOID)); // dispatch request
-  }
-  // .bind({});
+  };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
 // xtnd :: purl.hook : hook in a callback to use on purl events associated with path
 // --------------------------------------------------------------------------------------------------------------------------------------------
-    // extend(purl)
-    // ({
-    //     hook:function(p,v)
-    //     {
-    //         if(!imsafe()){return}; expect.text(p,1); // security !! .. let the evil gears in you head enlighten us both .. contribute!
-    //
-    //         if(!v&&!f) // return hooked object
-    //         {
-    //             p=pick(keys(this),p); if(!p){return};
-    //             return this[p];
-    //         };
-    //
-    //         expect.knob(v); if(!this[p]){this[p]=[]}; // path must be array
-    //         radd(this[p],v); // call back added
-    //     }
-    //     .bind
-    //     ({
-    //
-    //     }),
-    // });
+    extend(purl)
+    ({
+        hook:function(p,v)
+        {
+            if(!imsafe()){return}; expect.text(p,1); // security !! .. let the evil gears in you head enlighten us both .. contribute!
+
+            if(!v) // return hooked object
+            {
+                p=pick(keys(this),p); if(!p){return};
+                return this[p];
+            };
+
+            expect.knob(v); if(!this[p]){this[p]=[]}; // path must be array
+            radd(this[p],v); // call back added
+        }
+        .bind
+        ({
+
+        }),
+    });
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -633,6 +633,7 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const requires = function(l,cbfn,cbpi, s,a,slf,bzy,ztst)
    {
+      stak(KEEP);
       // if(MAIN.HALT){return};
       if(!stak(0)){wack();return};
       if(!isFunc(cbfn)){cbfn=function(){}}; if(!isFunc(cbpi)){cbpi=function(){}};
@@ -832,10 +833,10 @@
    ({
       fuse:function(that,flag)
       {
-          if(isFunc(that)){let resl=that; resl.bind(this); return resl};
+          if(isFunc(that)){return that.bind(this)};
           if(!expect.knob(that)){return}; // can only merge objects
           if((flag!==F)&&isin(keys(this),keys(that))){fail("danger :: force-override-existing-key with: `foo.fuse(bar,F)`");return};
-          v.each((v,k)=>{this[k]=v;}); return this;
+          that.each((v,k)=>{this[k]=v;}); return this;
       },
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------
@@ -1445,6 +1446,7 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const popModal = function(arg)
    {
+      stak(KEEP);
       if(isKnob(arg))
       {
          let a,h,b,f; a=arg.attr; h=arg.head; b=arg.body; f=arg.foot;
@@ -1539,6 +1541,7 @@
                ]},
             ]}]}];
          };
+
 
          if(isList(obj.foot))
          {
