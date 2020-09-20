@@ -78,8 +78,9 @@ namespace Anon;
             if(is_array($pc)){$pc=implode(' ',$pc);}; if($pc&&!isin($pc,$uc)){continue;}; $c=pget("$d/view.js"); if($c){$r.=$c;};
          };
 
-         $un=sesn('USER'); $cl=pget("$/User/data/$un/logs/repl.log"); $xl=[];
-         if($cl){$cl=explode("\n",$cl); foreach($cl as $ci){$ci=stub($ci,"\t")[2]; $xl[]=$ci;}};
+         $un=sesn('USER'); $lp="$/User/data/$un/logs/repl.log"; $cl=pget($lp); $xl=[]; $rl=[];
+         if($cl){$cl=explode("\n",$cl); foreach($cl as $li){$ci=stub($li,"\t")[2]; if(!isin($rl,$li)){$rl[]=$li; $xl[]=$ci;}}};
+         if(count($xl)!==count($rl)){$rl=implode("\n"); path::make($lp,$rl);};
          finish('/User/repl.js',['commands'=>$r,'replLogs'=>enconf($xl)]);
       }
 
