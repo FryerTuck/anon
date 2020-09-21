@@ -6,12 +6,12 @@
       <meta name="description" content="{:appMotto:}" />
       <meta name="keywords" content="{:appWords:}" />
 
-      <meta property="og:title" content="{:appTitle:}">
-      <meta property="og:site_name" content="{:HOSTNAME:}">
-      <meta property="og:url" content="https://{:HOSTNAME:}/">
-      <meta property="og:description" content="{:appMotto:}">
+      <meta property="og:title" content="{:appTitle:}" />
+      <meta property="og:site_name" content="{:HOSTNAME:}" />
+      <meta property="og:url" content="https://{:HOSTNAME:}/" />
+      <meta property="og:description" content="{:appMotto:}" />
       <meta property="og:type" content="website">
-      <meta property="og:image" content="https://{:HOSTNAME:}{:appImage:}">
+      <meta property="og:image" content="https://{:HOSTNAME:}{:appImage:}" />
 
       <meta name="generator" content="Anon" />
       <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -59,7 +59,7 @@
 
          window.isModern.t=setInterval(function()
          {
-            if(!document.getElementById('nojs')){return;}; // wait for document to load
+            if(!document.getElementById('snth')){return;}; // wait for document to load
             clearInterval(window.isModern.t);
             if(window.self===window.top){document.body.style.backgroundColor="#2e3133"};
 
@@ -88,8 +88,14 @@
    <body>
       <div id="snth">
          <h1>{:appTitle:}</h1>
-         <img src="{:appImage:}" />
          <p>{:appMotto:}</p>
+         <form action="{:(botHoney):}" method="POST" rel="nofollow">
+            <input type="text" name="age"/><input type="submit" value="ok" />
+         </form>
+         <a href="{:(botHoney):}?welcome=yes" rel="nofollow">contacts</a>
+         <noscript id="nojs">
+            <meta http-equiv="refresh" content="1; URL={:(DBUGPATH):}" />
+         </noscript>
       </div>
    </body>
 </html>

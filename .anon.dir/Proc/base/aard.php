@@ -594,12 +594,16 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function cbot($k=false)
    {
-      $s=envi('USER_AGENT'); if(!$s){if($k){kbot();}};
-      $x=str_replace(str_split(' *.-_?!#&~:,|^'),'',$s); $x=trim($x); if(strlen($x)<3){if($k){kbot();}};  // suspects
-      $x=strpos(envi('ACCEPT'),'/'); if(!$x){if($k){kbot();}};
-      $b=envi('BOTMATCH'); if($b&&test($s,"/$b/i")){$b=true;}else{$b=false;}; $p=envi('URL'); $f=pget('$/Proc/conf/badRobot');
-      $f="$f\n"; if($p&&(strpos($f,"lure: $p\n")!==false)){if($k){kbot();};}; if($b){return $b;};
-      $h=sha1(envi('USERADDR').$s); if(is_link(path("$/Proc/temp/bots/$h"))){$b=true;}; return $b;
+      $s=envi('USER_AGENT'); if(!$s){if($k){kbot();}}; $b=envi('BOTMATCH'); $p=envi('URL');
+      $x=trim(str_replace(str_split(' *.-_?!#&~:,|^'),'',$s));  // susual uspects
+      if(strlen($x)<3){if($k){kbot();}; return true;}; // yup
+      // $x=strpos(envi('ACCEPT'),'/'); if(!$x){if($k){kbot();}; return true;}; // watcha' want huh?
+
+      if(test($s,"/$b/i")){return true;}; $c=dval(pget('$/Proc/conf/badRobot'));
+      $l=((is_assoc_array($c)&&isset($c['lure']))?$c['lure']:0); if(!is_string($l)||(strlen($l)<2)){$l=0;};
+      if($l&&$p&&(strpos($p,$l)!==false)){if($k){kbot();}; return true;};
+      $h=sha1(envi('USERADDR').$s); $p=isee("$/Proc/temp/bots/$h");
+      return ($p?true:false);
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -729,6 +733,7 @@ namespace Anon;
    $_SERVER['DBUGPATH']=lshave($g,"$b/.anon.dir"); unset($b,$g);
    if($s){$s="$c/Proc/temp/sesn/$s/USER"; if(file_exists($s)){$u=file_get_contents($s);}};
    if(!$u){$u='anonymous';}; $_SERVER['USERNAME']=$u; $_SERVER['USERPATH']="$c/User/data/$u/home";
+   if(!envi('ACCEPT')){$_SERVER['ACCEPT']=envi('CONTENT_TYPE');};
 
    $h=pget('$/Proc/conf/hostName'); if(!$h){$h=envi('SERVER_NAME'); if(!$h){$h=envi('HOST');}};
    $p=envi('URL'); $b=envi('BASEPATH'); if($b!=='/'){$p=lshave($p,"/$b");}; if(!$p){$p='/';};
