@@ -44,7 +44,7 @@ namespace Anon;
 
 # cond :: boot : GUI .. boot view first
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-     if(facing('GUI'))
+     if(!facing('SSE API DPR')&&!MADEFUBU)
      {
         guiStrap();
         //ekko::head(['Referrer-Policy'=>'origin','cache'=>false,'cookies'=>true]); // send bootStrap headers
@@ -57,7 +57,7 @@ namespace Anon;
 
      if(facing('DPR')&&(NAVIPATH==='/Site/base/boot.js'))
      {
-        $a=scan('$'); $b=scan('/',FOLD); $l=concat($a,$b); $r=[]; foreach($l as $i)
+        $l=stemList(A); $r=[]; foreach($l as $i)
         {
            $p=path::conf($i); if(!$p){continue;}; $d=dval(pget("$p/siteBoot"));
            if(!$d){continue;}; if(isText($d)){$d=[$d];}; if(!isNuma($d)){continue;};

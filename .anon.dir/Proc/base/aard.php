@@ -31,7 +31,6 @@ namespace Anon;
    function is_assoc_array($d){if(!is_array($d)){return false;}; return (array_keys($d) !== range(0,(count($d)-1)));} // associative
 
    function is_closure($d){if(is_object($d)){return (($d instanceof \Closure));}; return false;}; // function
-   function facing($a){return (envi('INTRFACE')===$a);} // assert interface .. usage:  if(facing('BOT')){};
 
    function fractime($p=3) // precision time NOW .. default is milliseconds
    {if(!is_int($p)||($p<1)){return time();}; $r=microtime(true); $r=round($r,$p); return $r;};
@@ -147,6 +146,21 @@ namespace Anon;
          if(!isset($v[$k])){continue;}; $q=$v[$k]; if($q&&!is_string($q)){$q=json_encode($q);}; if(is_string($q)&&(strlen($q)>0)){$f[$i]=$q;}
       };
       $c=count($f); if($s===1){if($c<1){return '';}; return $f[0];}; $r=($c/$s); return $r;
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+# func :: facing : assert interface .. usage:  if(facing('BOT')){};  ..  if(facing('BOT !API')){};
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   function facing($a)
+   {
+       if(!is_string($a)){return;}; $l=explode(' ',$a); $f=envi('INTRFACE'); $r=true; foreach($l as $q)
+       {
+           $q=trim($q); if(strlen($q)<3){continue;}; $n=0; if($q[0]==='!'){$n=1; $q=substr($q,1);};
+           if(!$n&&($q!==$f)){$r=false; break;}; if($n&&($q===$f)){$r=false; break;};
+       };
+       return $r;
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
