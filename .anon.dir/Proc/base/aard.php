@@ -735,14 +735,14 @@ namespace Anon;
    if(envi('ROOTPATH DBUGPATH HOST SCHEME BOTMATCH')!==1){header("HTTP/1.1 424 Failed Dependency - server vars"); die();}; // bad vars
    $d=envi('ROOTPATH'); $s=skey(); $u=''; $c=envi('COREPATH'); //$c=explode('/',envi('COREPATH')); $c=array_pop($c);
    $g=envi('DBUGPATH'); $b=envi('HREFBASE'); $_SERVER['BASEPATH']=$b;
-   $_SERVER['DBUGPATH']=lshave($g,"$b/.anon.dir"); unset($b,$g);
+   $_SERVER['DBUGPATH']=lshave($g,"$b/.anon.dir"); unset($g);
    if($s){$s="$c/Proc/temp/sesn/$s/USER"; if(file_exists($s)){$u=file_get_contents($s);}};
    if(!$u){$u='anonymous';}; $_SERVER['USERNAME']=$u; $_SERVER['USERPATH']="$c/User/data/$u/home";
    if(!envi('ACCEPT')){$_SERVER['ACCEPT']=envi('CONTENT_TYPE');};
 
    $h=pget('$/Proc/conf/hostName');
    if(!$h){$h=envi('SERVER_NAME'); if(!$h){$h=envi('HOST');}; if(strpos($h,"$b.")!==0){$h="$b.$h";}};
-   $p=envi('URL'); $b=envi('BASEPATH'); if($b!=='/'){$p=lshave($p,"/$b");}; if(!$p){$p='/';};
+   $p=envi('URL'); $b=envi('BASEPATH'); if($b!=='/'){$p=lshave($p,"/$b");}; if(!$p){$p='/';}; unset($b);
    defn
    ([
       'HOSTNAME' => $h,
