@@ -295,7 +295,7 @@
                  // dump(window.location.href);
              };
 
-             signal("AnonSiteViewLoaded",dw);};
+             signal("AnonSiteViewLoaded",dw);
 
              if(this.booted){bz(100); return}; this.booted=1; // run the code below only once
 
