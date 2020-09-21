@@ -334,7 +334,7 @@ namespace Anon;
       if(is_string($d))
       {
           if(($o!==DUMP)&&($o!==FLOG)){return $d;}; if($d===''){return '""';};
-          $r=str_replace(["\n",' ',"\t"],['↵','␣','⇥'],$d); return $r;
+          $r=str_replace(["\n","\t"],['↵','⇥'],$d); return $r;
       };
       if(is_nokey_array($d)){$d=array_values($d);}; //if($pp){$pp=JSON_PRETTY_PRINT;};
       if(is_closure($d)){$r=var_export($d,true);}elseif($o===DUMP){$r=json_encode($d,JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);}
