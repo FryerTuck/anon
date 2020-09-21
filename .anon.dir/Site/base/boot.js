@@ -268,9 +268,10 @@
       extend(MAIN)({Anon:{}}); bz(50);
       requires(bl,( np,ah,ab)=>
       {
-         bz(60);
-         ab=function(evnt,dm,db,se,pn)
+         bz(60); ab=function(evnt,dm,db,se,pn)
          {
+             if(this.booted){return}; this.booted=1; // run the code below only once
+
              pn=this.parentNode; pn.enclan("scrollHide");
              dm=this.contentDocument; if(!dm){fail("iframe :: invalid DOM"); return};
              db=dm.body.parentNode; dm.AnonSiteView=this; db.tapHit=0;
@@ -306,7 +307,7 @@
 
          if("{:INTRFACE:}"=="ALT")
          {
-             let r=create({iframe:"#AnonSiteView .spanFull", src:np}); r.listen("load",ab);
+             let r=create({iframe:"#AnonSiteView .spanFull", src:np, onload:ab}); r.listen("load",ab);
              select('#anonMainView').insert(r);
              return;
          };
