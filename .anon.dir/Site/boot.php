@@ -44,7 +44,7 @@ namespace Anon;
 
 # cond :: boot : GUI .. boot view first
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-     if(!MADEFUBU&&!facing('SSE API DPR'))
+     if(facing('BOT GUI'))
      {
         guiStrap();
         //ekko::head(['Referrer-Policy'=>'origin','cache'=>false,'cookies'=>true]); // send bootStrap headers
