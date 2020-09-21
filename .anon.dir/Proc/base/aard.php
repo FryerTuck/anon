@@ -332,7 +332,10 @@ namespace Anon;
    function tval($d,$o=null)
    {
       if(is_string($d))
-      {$v=trim($d); if($d===''){return '""';}; if($v!==''){return $d;}; $r=str_replace(["\n",' ',"\t"],['↵','␣','⇥'],$d); return $r;};
+      {
+          if(($o!==DUMP)&&($o!==FLOG)){return $d;}; if($d===''){return '""';};
+          $r=str_replace(["\n",' ',"\t"],['↵','␣','⇥'],$d); return $r;
+      };
       if(is_nokey_array($d)){$d=array_values($d);}; //if($pp){$pp=JSON_PRETTY_PRINT;};
       if(is_closure($d)){$r=var_export($d,true);}elseif($o===DUMP){$r=json_encode($d,JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);}
       else{$r=json_encode($d,JSON_UNESCAPED_SLASHES);};
@@ -678,7 +681,7 @@ namespace Anon;
 # refs :: constants : these help us express specific directives .. they all have the value of the word wrapped in `:` .. like :AUTO:
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    defn('AUTO KEYS VALS WORD XACT VOID NONE STEM TOOL FUNC PATH FOLD FILE LINK DUMP DONE GOOD INFO WARN FAIL MINI MIDI MAXI SKIP STOP TODO');
-   defn('BARE LOOP REPO DENY AFTR BFOR FLAT DEEP HIDN EMPT GONE FULL SPAN MIDL TREE OK');
+   defn('BARE LOOP REPO DENY AFTR BFOR FLAT DEEP HIDN EMPT GONE FULL SPAN MIDL TREE FLOG OK');
    defn('A B C D E F G H I J K L M N O P Q R S T U V W X Y Z');
    defn('count fetch using alter write claim touch where group order limit parse shape apply erase purge debug dbase table field sproc funct after basis named param parts');
    defn('NOFAIL NOINIT NOMAKE NOEXIT DOEXIT NATIVE REMOTE ORIGIN FORGET');

@@ -645,7 +645,7 @@ namespace Anon;
 
       static function __callStatic($p,$a)
       {
-         expect::path($p); $a=args($a); foreach($a as $k => $v){$a[$k]=tval($v);}; $ct=time(); ladd($a,$ct);
+         expect::path($p); $a=args($a); foreach($a as $k => $v){$a[$k]=tval($v,FLOG);}; $ct=time(); ladd($a,$ct);
          $f=pget($p); $r=($f?frag($f,"\n"):[]); $s=count($r); $x=conf('Proc/logFlood'); if($s===$x){rpop($r);}; $l=fuse($a,"\t");
          if(count($r)>0){$lp=stub($r[0],"\t"); $lt=($lp[0]*1); $cp=stub($l,"\t"); if((($ct-$lt)<2)&&($lp[2]===$cp[2])){return;}}; // skip dupe
          ladd($r,$l); $r=fuse($r,"\n"); path::make($p,$r); return OK;
