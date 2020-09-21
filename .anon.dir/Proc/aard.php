@@ -286,11 +286,12 @@ namespace Anon;
              $v=knob($_POST); if(!isWord($v->evnt)||!isin(keys($v),'data')){ekko("invalid event definition");};
              $fc=1; $e=$v->evnt; $d=json_decode(base64_decode($v->data)); $t=$v->trgt;
          };
-
          if(!is_funnic($e)||self::$meta->hush->$e){return;}; // silence!!
+         if(!isText($t,2)){$t=('#'.sesn('HASH'));}; // no-target = current-session
+flog("signal",$e,$t,$d);
          if($d===null){$d='!';}elseif(isAssa($d)||isKnob($d)){$d=knob($d);}; // data reference uniformity
          if(($e==='busy')&&self::$meta->hush->{"$e.$d->with"}){return;}; // silence!! i keel yoo
-         $h='/Proc/temp/sesn'; $c=0; $f=0; if(!isText($t,2)){$t=('#'.sesn('HASH'));};
+         $h='/Proc/temp/sesn'; $c=0; $f=0;
          if(is_string($t)&&(strlen($t)>1)){$c=$t[0]; $f=substr($t,1);};
 
          $w=self::$meta->wait; $l=pget($h); $t=[]; foreach($l as $i)
