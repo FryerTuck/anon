@@ -208,7 +208,7 @@ namespace Anon;
       static function foldMenu()
       {
          permit::fubu("clan:work");
-         $v=knob($_POST); $h=$v->root; if(!$h){$h='~';};
+         $v=knob($_POST); $h=$v->root; if(!$h){$h=$v->path;}; if(!$h){$h='~';}; expect::path($h,[R,D]);
 
          if(arg($h)->startsWith('~'))
          {
@@ -221,14 +221,14 @@ namespace Anon;
             };
          };
 
-         // $r=path::ogle
-         // ([
-         //    using => $h,
-         //    fetch => path::cols(),
-         //    limit => "data: fold, levl: 0",
-         // ]);
+         $r=path::ogle
+         ([
+            using => $h,
+            fetch => path::cols(),
+            limit => "data: fold, levl: 0",
+         ]);
 
-         ekko(dval("data: fold, levl: 0"));
+         ekko($r);
       }
 
 

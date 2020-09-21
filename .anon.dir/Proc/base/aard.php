@@ -641,14 +641,19 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function dval($d,$z=0)
    {
-      if(!is_string($d)){return $d;}; $d=trim($d); if(($d==='')||($d==='null')||($d==='VOID')){return;};
+      if(!is_string($d)){return $d;}; $d=trim($d); if(($d==='')||($d==='null')||($d==='VOID')){return;}; if(is_numeric($d)){return ($d*1);};
       if($d==='*'){return $d;}; if(strlen($d)<2){return $d;}; $b='{:'; $e=':}'; $x=strpos($d,$b); $n=strpos($d,"\n");
       if($x!==false){if(isee('impose')){$d=impose($d,$b,$e);}else{halt(500,'`impose` is undefined');}};
       $v=json_decode($d,true); if($v!==null){return $v;}; // covers a lot
       if(!$n&&($d[0]==='+')){$v=substr($d,1); if(is_numeric($v)){return ($v*1);}}; // positive number
       $q=strpos($d,'`'); $p=strpos($d,': '); $c=strpos($d,',');
       $w=wrapOf($d); if(($w==='``')&&(substr_count($d,$w[0])<3)){$v=unwrap($d); return $v;};
-      if($c&&!$n&&!$q){$r=explode(',',$d); $z=[]; foreach($r as $t){$z[]=dval($t);}; return $z;};
+      if($c&&!$n&&!$q)
+      {
+          $r=explode(',',$d); $z=[]; foreach($r as $t)
+          {$t=dval($t); if(!is_assoc_array($t)){$z[]=$t; continue;}; unset($k,$v); foreach($t as $k => $v){$z[$k]=$v;}};
+          return $z;
+      };
       if(!$n&&$z){return $d;}; // no further parsing needed
 
       $a=explode("\n",$d); $r=[]; foreach($a as $l)
@@ -894,7 +899,7 @@ namespace Anon;
    {
       $s=envi("PATHSTEM");
       if((envi("USERDEED")==="select")&&envi("MADEFUBU")&&(strpos(NAVIPATH,"/$s/")===0)){$i='DPR';}
-      elseif(isset($_GET['k'])&&($_GET['k']===$k)){$i='DPR';}
+      elseif(isset($_GET['k'])&&($_GET['k']===$k)){$i='DPR';}; // for web-workers that have no REFERER .. ya ikr
    };
 
    $_SERVER['INTRFACE']=$i; defn(['USERSKEY'=>$k]);

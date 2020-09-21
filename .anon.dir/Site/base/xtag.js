@@ -351,11 +351,24 @@ extend(custom.domtag)
             s=((s=='shut')?'open':'shut'); i=((s=='open')?'down':'right');
             this.fold[p]=s; itm.select('.treeTwigArro i')[0].className=('icon-chevron-'+i);
             itm.select('>').style.display=((s=='open')?'block':'none');
-            if(!isin('plug,dbase,table',itm.info.type)){return;};
             if(s!='open'){return};
 
             l=itm.info.levl; d=(!!itm.draggable); e=(!!itm.info.root.feedable); r=itm.info.repo; if(r){r=r.fork};
-            f=itm.select('>'); f.innerHTML=''; Busy.edit('/User/plugMenu',0);
+            f=itm.select('>'); f.innerHTML='';
+
+            if(itm.info.type=="fold"){purl('/User/foldMenu',{path:itm.info.path},(r)=>
+            {
+               if(!isJson(r.body))
+               {dump(r.body); alert("got non-json response, see console"); return};
+               r=decode.jso(r.body,1); if(!r){return}; r.each((v)=>
+               {
+                  v.path=(itm.info.path+"/"+v.name); v.root=itm.info.root;
+                  f.insert(itm.info.root.sprout(v,l,d,e,r));
+               });
+            });return};
+
+            if(!isin('plug,dbase,table',itm.info.type)){return;};
+            Busy.edit('/User/plugMenu',0);
             purl('/User/plugMenu',{path:itm.info.path},(r)=>
             {
                if(!isJson(r.body))
