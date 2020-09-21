@@ -270,8 +270,6 @@
       {
          bz(60); ab=function(evnt,dm,db,se,pn)
          {
-             if(this.booted){return}; this.booted=1; // run the code below only once
-
              pn=this.parentNode; pn.enclan("scrollHide");
              dm=this.contentDocument; if(!dm){fail("iframe :: invalid DOM"); return};
              db=dm.body.parentNode; dm.AnonSiteView=this; db.tapHit=0;
@@ -294,11 +292,12 @@
                  // dump(window.location.href);
              };
 
+             if(this.booted){bz(100); return}; this.booted=1; // run the code below only once
+
              bz(80); tick.after(250,()=>
              {
                 window.BOOTED=1;
                 signal("boot");
-                bz(100);
                 Busy.done();
              });
          };
