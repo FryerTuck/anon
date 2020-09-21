@@ -740,7 +740,8 @@ namespace Anon;
    if(!$u){$u='anonymous';}; $_SERVER['USERNAME']=$u; $_SERVER['USERPATH']="$c/User/data/$u/home";
    if(!envi('ACCEPT')){$_SERVER['ACCEPT']=envi('CONTENT_TYPE');};
 
-   $h=pget('$/Proc/conf/hostName'); if(!$h){$h=envi('SERVER_NAME'); if(!$h){$h=envi('HOST');}};
+   $h=pget('$/Proc/conf/hostName');
+   if(!$h){$h=envi('SERVER_NAME'); if(!$h){$h=envi('HOST');}; if(strpos($h,"$b.")!==0){$h="$b.$h";}};
    $p=envi('URL'); $b=envi('BASEPATH'); if($b!=='/'){$p=lshave($p,"/$b");}; if(!$p){$p='/';};
    defn
    ([
@@ -791,6 +792,7 @@ namespace Anon;
 
       $_SERVER['UPKEEPER']=((!$ldb||($tdf>$dbs)||$upk)?$ldb:0);
       unset($dbs,$ldb,$tdf,$upk);
+      if(envi('UPKEEPER')&&!pget('$/Proc/conf/hostName')){pset('$/Proc/conf/hostName',HOSTNAME);};
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
