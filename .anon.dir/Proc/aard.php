@@ -288,7 +288,7 @@ namespace Anon;
          };
          if(!is_funnic($e)||self::$meta->hush->$e){return;}; // silence!!
          if(!isText($t,2)){$t=('#'.sesn('HASH'));}; // no-target = current-session
-flog("signal",$e,$t,$d);
+
          if($d===null){$d='!';}elseif(isAssa($d)||isKnob($d)){$d=knob($d);}; // data reference uniformity
          if(($e==='busy')&&self::$meta->hush->{"$e.$d->with"}){return;}; // silence!! i keel yoo
          $h='/Proc/temp/sesn'; $c=0; $f=0;
@@ -298,18 +298,19 @@ flog("signal",$e,$t,$d);
          {
             if(isin($omit,$i)){continue;}; // omitted for specified session id
             $u=pget("$h/$i/USER"); if(($c==='@')&&($u===$f)){$t[]=$i;break;};       // target user specified
-            if(($t==='#')&&($i===$f)){$t[]=$i;break;};                              // target sesn specified
+            if(($c==='#')&&($i===$f)){$t[]=$i;break;};                              // target sesn specified
             if(($c==='.')&&isin(pget("/User/data/$u/clan"),$f)){$t[]=$i;continue;}; // target clan specified
-            if($t==='*'){$t[]=$i;}; // everyone connected
+            if($c==='*'){$t[]=$i;}; // everyone connected
          };
 
          if(!isNuma($t,1)){return;}; // nothing to do
-         $d=encode::jso(['name'=>$e,'data'=>$d]); $s=0;
+         $d=encode::jso(['name'=>$e,'data'=>$d]); $s=0; unset($x);
 
          foreach($t as $x)
          {
              $p="$h/$x/emit"; if(!isee($p)){path::make("$p/");}; // count items in existing "emit" folder for next name
-             $n=count(pget($p)); $n++; $p="$p/$n"; path::make($p,$d); $s++; // plain-text file now contains the event data
+             $n=count(pget($p)); $n++; $p="$p/$n"; flog("signal",$p,$d);
+             path::make($p,$d); $s++; // plain-text file now contains the event data
          };
 
          if($fc){ekko(OK);}; // was from client
