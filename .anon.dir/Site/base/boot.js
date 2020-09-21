@@ -268,10 +268,11 @@
       extend(MAIN)({Anon:{}}); bz(50);
       requires(bl,( np,ah,ab)=>
       {
-         bz(60); ab=function(evnt,dm,db,se,pn)
+         bz(60); ab=function(evnt,dm,dw,db,se,pn)
          {
              pn=this.parentNode; pn.enclan("scrollHide");
              dm=this.contentDocument; if(!dm){fail("iframe :: invalid DOM"); return};
+             dw=this.contentWindow;
              db=dm.body.parentNode; dm.AnonSiteView=this; db.tapHit=0;
 
              if(!db.tapSeq)
@@ -285,6 +286,8 @@
                      ms.tapHit=0; initPanl();
                  });
              };
+
+             dw.onunload=function(){bz(20); signal("AnonViewChange",this.location.href);};
 
              if(("{:INTRFACE:}"=="ALT"))
              {
@@ -419,6 +422,8 @@
           signal("otherSiteEvent: sudo",v);
       });
 
+
+      listen("AnonViewChange",function(evnt){dump(`AnonViewChange: ${evnt.detail}`);});
 
       server.vivify();
    });
