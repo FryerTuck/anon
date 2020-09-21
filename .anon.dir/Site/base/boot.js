@@ -287,7 +287,7 @@
                  });
              };
 
-             dw.onunload=function(){bz(20); signal("AnonViewChange",this.location.href);};
+             dw.onunload=function(){bz(20); signal("AnonSiteViewUnload",this);};
 
              if(("{:INTRFACE:}"=="ALT"))
              {
@@ -295,13 +295,15 @@
                  // dump(window.location.href);
              };
 
+             signal("AnonSiteViewLoaded",dw);};
+
              if(this.booted){bz(100); return}; this.booted=1; // run the code below only once
 
-             bz(80); tick.after(250,()=>
+             bz(80); tick.after(50,()=>
              {
                 window.BOOTED=1;
-                signal("boot");
-                Busy.done();
+                bz(100); signal("boot");
+                Busy.done(); // kill it gracefully if still running
              });
          };
 
@@ -423,7 +425,8 @@
       });
 
 
-      listen("AnonViewChange",function(evnt){dump(`AnonViewChange: ${evnt.detail}`);});
+      listen("AnonSiteViewUnload",function(evnt){});
+      listen("AnonSiteViewLoaded",function(evnt){});
 
       server.vivify();
    });
