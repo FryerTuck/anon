@@ -66,7 +66,7 @@
             setTimeout(function(k,v,q,m,p,x,n,d,y,f,c,a,z)
             {
                q=function(s){return s.split('^').join('').split('').reverse().join('')}; d=document; c='createElement'; a='appendChild';
-               p=d.getElementById('nojs').innerHTML.split('URL=')[1].split('"')[0]; m=this;
+               p='{:DBUGPATH:}'; m=this;
                f=function(w){z=d[c]('iframe'); z.setAttribute('frameborder',0); d.body[a](z); z.src=(p+'?#'+w);};
                isModern(function(yes, l,cn,cv,bt,bp,bb,bh,bs){if(!yes){f('lcjs')}else
                {
@@ -90,13 +90,6 @@
          <h1>{:appTitle:}</h1>
          <img src="{:appImage:}" />
          <p>{:appMotto:}</p>
-         <form action="{:(botHoney):}" method="POST" rel="nofollow">
-            <input type="text" name="age"/><input type="submit" value="ok"/>
-         </form>
-         <a href="{:(botHoney):}?welcome=yes" rel="nofollow">contacts</a>
-         <noscript id="nojs">
-            <meta http-equiv="refresh" content="1; URL={:(DBUGPATH):}"/>
-         </noscript>
       </div>
    </body>
 </html>

@@ -155,10 +155,10 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function facing($a)
    {
-       if(!is_string($a)){return;}; $l=explode(' ',$a); $f=envi('INTRFACE'); $r=true; foreach($l as $q)
+       if(!is_string($a)){return;}; $l=explode(' ',$a); $f=envi('INTRFACE'); $r=false; foreach($l as $q)
        {
            $q=trim($q); if(strlen($q)<3){continue;}; $n=0; if($q[0]==='!'){$n=1; $q=substr($q,1);};
-           if(!$n&&($q!==$f)){$r=false; break;}; if($n&&($q===$f)){$r=false; break;};
+           if(!$n&&($q===$f)){$r=true; break;}; if($n&&($q!==$f)){$r=true; break;};
        };
        return $r;
    }
