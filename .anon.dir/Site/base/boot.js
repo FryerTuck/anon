@@ -288,6 +288,7 @@
              };
 
              dw.onunload=function(){bz(20); signal("AnonSiteViewUnload",this);};
+             dm.onreadystatechange=function(foo){dump(foo);};
 
              if(("{:INTRFACE:}"=="ALT"))
              {
