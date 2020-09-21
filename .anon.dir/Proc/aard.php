@@ -161,8 +161,8 @@ namespace Anon;
       {
          permit::fubu(); // security
          if(!is_string($e)||!$e){$e='undefined';}; if(!is_string($d)){$d=tval($d);};
+         while(strlen($b)<8400){$d.=' ';}; // padd event with whitespace .. if too short then the connection will restart
          $k=sesn('HASH'); $d=base64_encode($d); $b=": \nevent: $e\ndata: $d\n\n";
-         while(strlen($b)<8400){$b.=' ';}; // padd event with whitespace .. if too short then the connection will restart
          if(facing('SSE')&&!headers_sent())
          {header_remove(); header("Content-Type: text/event-stream\n\n"); header('Cache-Control: no-cache, must-revalidate');};
          echo $b; return;
