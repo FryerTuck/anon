@@ -572,7 +572,7 @@
             this.vivify(()=>{server.stream.addEventListener(e,function(evnt)
             {
                if(this.au&&!userDoes(this.au)){return;}; // security
-               let d=atob(trim(evnt.data));
+               let d=atob(evnt.data);
                // if(isJson(d)){d=(decode.jso(d)||d)}; d=sval(d);
                this.cb(d);
             }.bind({cb:f,au:c}),false);});
