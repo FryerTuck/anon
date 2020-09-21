@@ -287,8 +287,7 @@
                  });
              };
 
-             dw.onunload=function(){bz(20); signal("AnonSiteViewUnload",this);};
-             dm.AnonSiteView.onreadystatechange=function(foo){dump(foo);};
+             dw.onunload=function(){bz(1); signal("AnonSiteViewUnload",this);};
 
              if(("{:INTRFACE:}"=="ALT"))
              {
