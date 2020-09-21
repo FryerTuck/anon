@@ -205,6 +205,34 @@ namespace Anon;
 
 
 
+      static function foldMenu()
+      {
+         permit::fubu("clan:work");
+         $v=knob($_POST); $h=$v->root; if(!$h){$h='~';};
+
+         if(arg($h)->startsWith('~'))
+         {
+            $u=user('name'); $h="/User/data/$u/home";
+            if(!isee("$h/root"))
+            {
+               $b=conf('Code/forkName'); if(!is_funnic($b)){fail("invalid branch name in Code config");};
+               if(!isRepo('/')){Repo::create('/'); wait(50);};
+               Repo::cloned('/',"$h/root",$b,$u);
+            };
+         };
+
+         // $r=path::ogle
+         // ([
+         //    using => $h,
+         //    fetch => path::cols(),
+         //    limit => "data: fold, levl: 0",
+         // ]);
+
+         ekko(dval("data: fold, levl: 0"));
+      }
+
+
+
       static function plugMenu()
       {
          permit::fubu("clan:work");

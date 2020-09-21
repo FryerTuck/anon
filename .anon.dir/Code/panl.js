@@ -210,7 +210,7 @@ extend(Anon)
       init:function(ini, mnu)
       {
          ini=(ini||{}); this.vars.external=ini;
-         mnu={treeview:'#CodeTreeMenu', source:'/User/treeMenu', uproot:true, draggable:true, feedable:true, listen:
+         mnu={treeview:'#CodeTreeMenu', source:'/User/foldMenu', uproot:true, draggable:true, feedable:true, listen:
          {
             'LeftClick':function(evnt)
             {
