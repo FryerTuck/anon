@@ -254,9 +254,10 @@ extend(Anon)
 
       open:function(nfo, pth,xst,drv,tab,ttl,tgt,slf,mim,lay)
       {
-         pth=nfo.path; Busy.edit(pth,0);
+         pth=nfo.path;
          slf=this; drv=select('#DrawTabber').driver; ttl=(pth+''); tab=drv.select(ttl);
-         if(!!tab){return}; this.load(pth,(img,nic)=>
+         if(!!tab){dump(ttl,tab); return};  Busy.edit(pth,0);
+         this.load(pth,(img,nic)=>
          {
             select('#DrawToolView').reclan('hide:show');
             select('#DrawPropView').reclan('hide:show');

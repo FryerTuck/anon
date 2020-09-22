@@ -17,7 +17,7 @@
     RewriteRule ^ - [E=HREFPATH:%1]
 
     RewriteCond %{ENV:HREFPATH} !^$
-    RewriteCond %{ENV:HREFPATH} ([a-zA-Z0-9-_\.]+)
+    RewriteCond %{ENV:HREFPATH} ([a-zA-Z0-9-_\.~\$]+)
     RewriteRule ^(.*)$ - [E=PATHSTEM:%1]
 
     RewriteRule ^(.*)$ - [E=ROOTPATH:%{DOCUMENT_ROOT}]
@@ -61,6 +61,9 @@
 
 # cond :: Anon : for if Anon is installed AND: there is no Anon session, or request is for Anon directly
 # -----------------------------------------------------------------------------------------------------------------------------
+    RewriteCond %{THE_REQUEST} \s/{2,}
+    RewriteRule ^(.*)$ - [R=404,L]
+
     RewriteCond %{ENV:ANONINDX} !^$
     RewriteCond %{HTTP_COOKIE} !ALTHANDLER=yes
     RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
@@ -72,6 +75,10 @@
     RewriteCond %{ENV:ANONINDX} !^$
     RewriteCond %{ENV:PATHSTEM} !^$
     RewriteCond %{ENV:ROOTPATH}/%{ENV:ANONFOLD}/%{ENV:PATHSTEM} -d
+    RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
+
+    RewriteCond %{ENV:ANONINDX} !^$
+    RewriteCond %{ENV:PATHSTEM} ^/?~
     RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
 
     RewriteCond %{ENV:ANONINDX} !^$
