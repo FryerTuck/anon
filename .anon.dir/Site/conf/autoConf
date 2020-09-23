@@ -1,2 +1,3 @@
 template: Anon
+showBusy: true
 adminUrl: /wp-admin/

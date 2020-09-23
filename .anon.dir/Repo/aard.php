@@ -10,25 +10,39 @@ namespace Anon;
       static $meta;
 
 
-      static function create($h,$o=null,$u=null)
+      static function create($dir,$ori,$bar=null,$usr=null)
       {
-         expect::path($h,[R,W,D]); if($h!=='/'){$h=rshave($h,'/');}; $x=("/Repo/data/".HOSTNAME.".git");
+         if($ori===BARE){expect::path($dir); $dir=null; $ori="file://$dir"; $bar=BARE;}; // args validation
+         expect::purl($ori); $inf=path::info($ori); $pth=$inf->path;  // args validation
+         if(isWord($bar)&&!$usr){$usr="$bar"; $bar=null;}; // args validation
 
-         if(!isee($x))
+         if($inf->plug==='file')
          {
-             $u=exec::{"whoami"}($h); $g=exec::{"id -gn"}($h); path::make("$x/");
-             exec::{"git init --bare --shared"}($x);  exec::{"cp hooks/post-update.sample hooks/post-update"}($x);
-             exec::{"git update-server-info"}($x);  exec::{"chown -R $u:$g ."}($x);
-             if($o===BARE){return OK;};  if(!$o){$o=path($x);};
+             if(!isee($pth)){path::make("$pth/");}; expect::path($pth,[R,W,D]);
+             if(isPath($pth,E))
+             {
+                 $u=exec::{"whoami"}($pth); $g=exec::{"id -gn"}($pth);
+                 exec::{"git init --bare --shared"}($pth);
+                 exec::{"cp hooks/post-update.sample hooks/post-update"}($pth);
+                 exec::{"git update-server-info"}($pth);  exec::{"chown -R $u:$g ."}($pth);
+             }
+             elseif(!isee("$pth/info/exclude"))
+             {fail::repo("expecting `$pth` as empty folder for a BARE git repo"); exit;};
+
+             if($bar===BARE){return OK;};
+         }
+         elseif($inf->plug!=='https')
+         {
+             fail::repo("scheme `$inf->plug` is not supported .. yet"); exit;
          };
 
-
-         if(isRepo($h)){fail("`$h` is already a repo");}; if(isWord($o)){$t="$u"; $u="$o"; $o="$t";}; // validate
-         exec::{"git init ."}($h); if(isText($o)&&isin($o,'/')){exec::{"git remote add origin $o"}($h);}; exec::{"git add --all"}($h);
-         $m=0; if(!isWord($u)){$u='master'; $m=TECHMAIL;}; $p=isee("/User/data/$u"); if(!$p){fail("user `$u` is undefined");};
-         if(!$m){$m=pget("$p/mail");}; exec::{"git config --local user.name \"$u\""}($h); exec::{"git config --local user.email \"$m\""}($h);
-         exec::{"git commit --allow-empty -m \"initial commit\""}($h);
-         if($h==='/'){$c=conf("Repo/fromAnon"); exec::{"git remote add fromAnon $c"}($h);};
+         if(!isee($dir)){path::make("$dir/");}; expect::path($dir,[R,W,D]); $fpo=path::purl($inf,1);
+         if(fext($pth)!=='git'){fail::reference("invalid repo origin: `$ori`"); exit;}; // validation
+         if(!isRepo($dir)){exec::{"git init ."}($dir);}; $xor=exec::{"git config --local --get remote.origin.url"}($dir);
+         if($xor!==$ori){exec::{"git remote set-url origin $fpo"}($dir);}; exec::{"git add --all"}($dir);
+         if(!isWord($usr)){$usr='master';}; $eml=pget("/User/data/$usr/mail"); if(!$eml){fail::config("user `$usr` is invalid");};
+         exec::{"git config --local user.name \"$usr\""}($dir); exec::{"git config --local user.email \"$eml\""}($dir);
+         exec::{"git commit --allow-empty -m \"initial commit\""}($dir);
 
          return OK;
       }
@@ -77,7 +91,7 @@ namespace Anon;
 
       static function origin($h,$deja=null)
       {
-         if(!$deja){expect::repo($h);}; $r=exec::{'git config --get remote.origin.url'}($h);
+         if(!$deja){expect::repo($h);}; $r=exec::{'git config --local --get remote.origin.url'}($h);
          $r=swap($r,'file://',''); if(isPath($r)){$r=crop($r);}; if($r===''){$r='/';};
          return $r;
       }
@@ -160,34 +174,24 @@ namespace Anon;
 
       static function cloned($orgn,$trgt,$bran=null,$user=null)
       {
-         expect::text($orgn,1); $orgn=swap($orgn,'file://',''); expect::path($trgt); $trgt=crop($trgt);
-         $remo=pick($orgn,['https://','http://','git://','ftp://','ftps://']);
+         expect::purl($orgn); $info=path::info($orgn); if($info->plug==="file"){$orgn=path::purl($info,1);};
          if(!isWord($user)){$user=user('name');}; $u=$user; $p=isee("/User/data/$u");
          if(!$p){fail("user `$u` is undefined");}; $m=pget("$p/mail");
+         if(!isee($trgt)){path::make("$trgt/");}; expect::path($trgt,[R,W,D,E]);
+         $q="git clone $orgn ."; if($bran){$q="git clone -b $bran --single-branch $orgn .";};
+         exec::{"$q"}($trgt);
 
-         if($remo)
+         if($info->plug==="file")
          {
-             $q="git clone $orgn ."; if($bran){$q="git clone -b $bran --single-branch $orgn .";};
-             if(isin($remo,'http'))
-             {
-                 exec::{"$q"}($trgt);
-             }
-             else
-             {
-                 todo::{'repo.cloned'}("enable clone from remote protocol: `$remo`",FAIL);return;
-             };
-             exec::{"git config --local user.name \"$u\""}($trgt); exec::{"git config --local user.email \"$m\""}($trgt);
-         }
-         else
-         {
-             $orgn=crop($orgn); $cb=self::branch($orgn); if(!$cb){expect::repo($orgn);}; $nb=($bran?self::branch($orgn,$bran,1):$cb);
-             if(isee($trgt)){expect::path($trgt,[D,E]);}else{path::make("$trgt/");}; $o=path($orgn); $t=path($trgt);
-             exec::{"git clone -b $nb --single-branch $o ."}($t); exec::{'git remote rm origin'}($t); exec::{"git remote add origin $o"}($t);
-             exec::{"git fetch --all"}($t); exec::{"git checkout $nb"}($t); exec::{"git branch --set-upstream-to origin/$nb"}($t);
-             exec::{"git add --all"}($t);
-             exec::{"git config --local user.name \"$u\""}($t); exec::{"git config --local user.email \"$m\""}($t);
-             exec::{"git commit --allow-empty -m \"initial commit\""}($t); exec::{"git push origin $nb"}($t);
+             $orgn=crop($info->path); $cb=self::branch($orgn); if(!$cb){expect::repo($orgn);};
+             $nb=($bran?self::branch($orgn,$bran,1):$cb); $o=path($orgn); $t=path($trgt);
+             exec::{'git remote rm origin'}($t); exec::{"git remote add origin $o"}($t);
+             exec::{"git fetch --all"}($t); exec::{"git checkout $nb"}($t);
+             exec::{"git branch --set-upstream-to origin/$nb"}($t); exec::{"git add --all"}($t);
          };
+
+         exec::{"git config --local user.name \"$u\""}($t); exec::{"git config --local user.email \"$m\""}($t);
+         exec::{"git commit --allow-empty -m \"initial commit\""}($t); exec::{"git push origin $nb"}($t);
 
          return OK;
       }

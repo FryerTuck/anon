@@ -31,15 +31,18 @@
     RewriteRule ^(.*)$ - [E=HREFBASE:%{HTTP_HOST}]
 
     RewriteRule ^(.*)$ - [E=ANONFOLD:.anon.dir]
-    RewriteCond %{ENV:ROOTPATH}/%{ENV:ANONFOLD} !-d
     RewriteCond %{ENV:HREFBASE} !^$
+    RewriteCond %{ENV:ROOTPATH}/%{ENV:ANONFOLD} !-d
     RewriteRule ^(.*)$ - [E=ANONFOLD:%{ENV:HREFBASE}/%{ENV:ANONFOLD}]
     RewriteCond %{ENV:ROOTPATH}/%{ENV:ANONFOLD} !-d
     RewriteRule ^(.*)$ - [E=ANONFOLD:]
 
     RewriteRule ^(.*)$ - [E=ANONINDX:.anon.php]
-    RewriteCond %{ENV:ROOTPATH}/%{ENV:ANONINDX} !-f
+    RewriteCond %{ENV:ROOTPATH}/%{ENV:ANONINDX} -f
+    RewriteRule ^(.*)$ - [E=ANONTOPD:yes]
+
     RewriteCond %{ENV:HREFBASE} !^$
+    RewriteCond %{ENV:ANONTOPD} ^$
     RewriteRule ^(.*)$ - [E=ANONINDX:%{ENV:HREFBASE}/%{ENV:ANONINDX}]
     RewriteCond %{ENV:ROOTPATH}/%{ENV:ANONINDX} !-f
     RewriteRule ^(.*)$ - [E=ANONINDX:]
@@ -47,7 +50,6 @@
     RewriteCond %{ENV:HREFBASE} !^$
     RewriteCond %{ENV:ROOTPATH}/%{ENV:HREFBASE}/index.php -f
     RewriteRule ^(.*)$ - [E=HOSTINDX:%{ENV:HREFBASE}/index.php]
-
     RewriteCond %{ENV:HOSTINDX} ^$
     RewriteCond %{ENV:ROOTPATH}/index.php -f
     RewriteRule ^(.*)$ - [E=HOSTINDX:index.php]

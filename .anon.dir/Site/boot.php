@@ -46,13 +46,13 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
      if((!MADEFUBU&&!facing('API')&&!facing('DPR'))||facing('BOT GUI'))
      {
-        guiStrap();
+        $c=conf('Site/autoConf'); $v=[]; $t=$c->template; $o=($c->showBusy?1:0);
         //ekko::head(['Referrer-Policy'=>'origin','cache'=>false,'cookies'=>true]); // send bootStrap headers
-        $v=['botHoney'=>conf('Proc/badRobot')->lure,'busyGear'=>base64_encode(pget('$/Site/base/busy.htm'))];
+        $v['busyGear']=base64_encode(import("$/Site/tmpl/$t/base/busy.htm",["showBusy"=>$o]));
+        $v['botHoney']=conf('Proc/badRobot')->lure;
         $v['WACKMESG']=base64_encode(pget('$/Proc/info/hack.inf'));
-        $v=fuse($v,conf('Site/identity'));
-        $r=import('$/Site/base/aard.htm',$v);
-        echo($r); done(); // send BootStrap GUI keeping headers intact
+        $v=fuse($v,conf('Site/identity')); $r=import('$/Site/base/aard.htm',$v);
+        guiStrap(); echo($r); done(); // send BootStrap GUI keeping headers intact
      };
 
      if(facing('DPR')&&(NAVIPATH==='/Site/base/boot.js'))

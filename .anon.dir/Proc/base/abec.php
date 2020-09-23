@@ -58,7 +58,7 @@ namespace Anon;
          elseif(($i===W)&&is_writable($v)){$of++;} // check writable
          elseif($i===E)
          {
-            $r=''; if(is_link($v)){$r=readlink($v);}elseif(is_file($v)){if(filesize($v)<3){$r=pget($v);}}else{$r=pget($v);};
+            $r=''; if(is_link($v)){$r=readlink($v);}elseif(is_file($v)){if(filesize($v)<3){$r=pget($v);}}else{$r=pget($v,0);};
             if(is_array($r)){$r=implode(' ',$r);}; $r=trim($r); if($r===''){$of++;}; // check empty
          };
       };
@@ -662,7 +662,7 @@ namespace Anon;
          if(!isText($d,1)){fail('expecting non-empty text');}; $n=null; $h=HOSTNAME;
          if(path($d)){$p=crop($d); if(frst($p)==='$'){$p=substr($p,1);}; $d="file://{$h}{$p}";};
          if(isin($d,'::')){$s=stub($d,'::'); $p=crop($s[2]); if(frst($p)==='$'){$p=$p=substr($p,1);}; $d="{$s[0]}://{$h}{$p}";};
-         $i=knob(parse_url($d)); $p=$i->path; $q=$i->query;
+         $i=knob(parse_url($d)); $p=crop(path($i->path)); $q=$i->query;
          if(!$i->scheme||!$i->host){if(!$fail){return;}; fail('expecting valid path-string -or URL-string');}; $x=stub($d,['#','&','?','@',':']);
          if(isin($d,'@')){$x=stub($d,'@')[0]; if(isin($x,['#','&','?'])){fail('invalid URL');}};
          $r=knob(['plug'=>$n,'user'=>$n,'pass'=>$n,'host'=>$n,'port'=>$n,'path'=>$n,'levl'=>0,'stem'=>$n,'twig'=>$n,'leaf'=>$n,'type'=>$n,'vars'=>$n]);
@@ -972,11 +972,11 @@ namespace Anon;
       }
 
 
-      static function purl($o)
+      static function purl($o,$fp=null)
       {
-         if(isAssa($o)){$o=knob($o);}; if(!isKnob($o)){fail('expecting :knob:');};
+         if(isAssa($o)){$o=knob($o);}; if(!isKnob($o)){fail('expecting :knob:'); exit;};
          $r=''; if($o->plug){$r.="$o->plug://";}; if($o->user){$r.="$o->user";}; if($o->pass){$r.=":$o->pass";};
-         if($o->host){$r.="@$o->host";}; if($o->path){$r.="$o->path";};
+         if($o->host){$r.="@$o->host";}; if($o->path){$p=$o->path; if($fp&&$o->plug==='file'){$p=path($p);}; $r.="$p";};
          if($o->vars){$v=[]; foreach($o->vars as $k => $v){$v[]="$k=$v";}; $v=fuse($v,'&'); $r.="?$v";};
          if($o->frag){$r.="#$o->frag";}; return $r;
       }

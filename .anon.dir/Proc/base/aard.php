@@ -307,7 +307,7 @@ namespace Anon;
 
 
 
-# func :: pget : path get .. read contents of path .. returns null if invalid .. returns string if file .. returns array if dir
+# func :: pget : path get .. read contents of path .. returns null if invalid .. returns string if file .. returns flat-array if dir
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function pget($p,$t=true)
    {
