@@ -21,10 +21,14 @@ namespace Anon;
              if(!isee($pth)){path::make("$pth/");}; expect::path($pth,[R,W,D]);
              if(isPath($pth,E))
              {
-                 $u=exec::{"whoami"}($pth); $g=exec::{"id -gn"}($pth);
-                 exec::{"git init --bare --shared"}($pth);
-                 exec::{"cp hooks/post-update.sample hooks/post-update"}($pth);
-                 exec::{"git update-server-info"}($pth);  exec::{"chown -R $u:$g ."}($pth);
+                 $u=exec::{"whoami"}($pth);  $g=exec::{"id -gn"}($pth);  $tmp='$/Repo/temp';
+                 if(!isee($tmp)){path::make("$tmp/");}; $fld=random(12); $tfp=path("$tmp/$fld");
+                 exec::{"git init --bare --shared"}($pth); exec::{"mkdir $fld"}($tmp);
+                 exec::{"git checkout --work-tree=$tfp --orphan master"}($pth);
+                 exec::{"git commit -m \"initial commit\" --allow-empty --work-tree=$tfp"}($pth); // for branch `master`
+                 exec::{"rmdir $fld"}($tmp); exec::{"cp hooks/post-update.sample hooks/post-update"}($pth);
+                 exec::{"chown -R $u:$g ."}($pth);
+                 // exec::{"git update-server-info"}($pth);  // TODO :: push to this server via https?
              }
              elseif(!isee("$pth/info/exclude"))
              {fail::repo("expecting `$pth` as empty folder for a BARE git repo"); exit;};
@@ -56,21 +60,28 @@ namespace Anon;
       }
 
 
-      static function differ($lp='/',$rn='fromAnon',$bn='master')
+      static function differ($rp='/',$rn='origin',$bn='master')
       {
-          expect::repo($lp); expect::word($rn); expect::word($bn); $r=null;
-          try{$r=exec::{"git fetch $rn master && git diff --name-only $bn $rn/$bn"}($lp);}catch(\Exception $e){};
-          if(!$r){return;}; $f=path::leaf(COREPATH); $r=swap($r,[COREPATH,ROOTPATH],''); $r=swap($r,"$f/","$/");
-          return $r;
+          expect::repo($rp); expect::word($rn); expect::word($bn); $rd=null; $ph=md5($rp);
+          try{$rd=exec::{"git fetch $rn $bn && git diff --name-only $bn $rn/$bn"}($rp);}catch(\Exception $e){};
+          if(!$rd){return;}; $f=path::leaf(COREPATH); $rd=swap($rd,[COREPATH,ROOTPATH],''); $rd=swap($r,"$f/","$/");
+
+          $gl=exec::{"git log -1 --oneline --decorate $rn/$bn"}($rp); $ch=0; // git-log .. fetch last line
+          $lp=stub($gl,"("); if($lp){$ch=trim($lp[0]); $lp=rstub($gl,"origin/HEAD)");}; if(!$lp){return;};  // line-parts
+          $cm=trim($lp[2]); $lh=pget("$/Repo/vars/pathHash/$ph"); // commit-message & last-hash
+          if($lh===$ch){return;}; // hashes match, no difference
+
+          path::make("$/Repo/vars/pathHash/$ph",$ch); // make this hash the last hash to check next time
+          return knob(["mesg"=>$cm,"diff"=>$rd]);
       }
 
 
-      static function getURL($lp='/',$rn='origin')
+      static function getURL($lp='/',$rn='origin',$cp=true)
       {
           expect::repo($lp); expect::word($rn);
           // $r=null; try{$r=exec::{"git remote get-url $rn"}($lp);}catch(\Exception $e){};
           $r=null; try{$r=exec::{"git config remote.$rn.url"}($lp);}catch(\Exception $e){};
-          if($r){$r=swap($r,[COREPATH,ROOTPATH],''); if(!$r){$r='/';};};
+          if($r&&$cp){$r=swap($r,[COREPATH,ROOTPATH],''); if(!$r){$r='/';};};
           return $r;
       }
 

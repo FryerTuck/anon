@@ -391,15 +391,13 @@ namespace Anon;
 
       static function update()
       {
-         permit::fubu('clan:lead,sudo'); $mp='$/User/data/master/pass';
-         $pw=pget($mp); path::make($mp,pget('$/Proc/info/pass.inf'));
-         exec::{'git stash'}('/');
-         Repo::update('/','master','pull','fromAnon');
-         try{exec::{'git stash apply'}('/');}catch(\Exception $e){};
-         path::make($mp,$pw);
-         $gl=exec::{"git log -1 --oneline --decorate fromAnon/master"}("/"); // git-log .. last line from fetch
-         $lp=stub($gl,"("); if($lp){$ch=trim($lp[0]); path::make("$/Proc/vars/lastHash",$ch);};
-         signal::ClientReboot("new system updates","*");
+         permit::fubu('clan:lead,sudo'); $mp='$/User/data/master/pass'; $pw=pget($mp);
+         path::make($mp,pget('$/Proc/info/pass.inf')); $uw=posted("from"); $cw=(proprCase($uw).'Branch');
+         $rp="$/Repo/data/native/$uw"; $gr=conf("Repo/gitRefer");
+
+         Repo::update($rp,$gr->$cw,'pull','origin');
+         path::make($mp,$pw); $we=Repo::differ($rp,'origin',$gr->$cw);
+         signal::ClientReboot("new system updates from $cw","*");
          return OK;
       }
    }

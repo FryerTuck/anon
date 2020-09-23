@@ -54,18 +54,16 @@ namespace Anon;
 
       static function checkUpdates()
       {
-          $ln="checkUpdates"; $fg=isin(NAVIPATH,$ln); // lock-name .. from-GUI
-          if(lock::exists($ln)){if($fg){ekko(OK); exit;}; return OK;}; // somebody else is already checking
-          lock::awaits($ln); $rd=Repo::differ(); // create lock & get repo-diff .. does fetch
-          if(!$rd){lock::remove($ln); if($fg){ekko(OK); exit;}; return OK;}; // no diff .. remove lock & exit
-          $gl=exec::{"git log -1 --oneline --decorate fromAnon/master"}("/"); // git-log .. last line from fetch
-          $lp=stub($gl,"("); if(!$lp){lock::remove($ln); if($fg){ekko(OK); exit;}; return OK;};  // line-parts .. exit if none
-          $ch=trim($lp[0]); $lp=rstub($gl,"fromAnon/HEAD)"); // current-hash
-          if(!$lp){lock::remove($ln); if($fg){ekko(OK); exit;}; return OK;};  // not fromAnon .. nothing to do
-          $cm=trim($lp[2]); $lh=pget("$/Proc/vars/lastHash"); // commit-message & last-hash
-          if($lh===$ch){lock::remove($ln); if($fg){ekko(OK); exit;}; return OK;}; // hashes match, nothing to do
-          $rd="$cm\n\n$rd"; signal::AnonUpdate($rd); // signal AnonUpdate to current user
-          lock::remove($ln); if($fg){ekko($rd); exit;}; return $rd; // done
+          $ln="checkUpdates"; $fg=isin(NAVIPATH,$ln); $gr=conf("Repo/gitRefer"); // lock-name .. from-gui .. git-refer
+          if(lock::exists($ln)){if($fg){ekko(OK); exit;}; return OK;};}; lock::awaits($ln); // lock to prevent multiple
+          $ad=Repo::differ('$/Repo/data/native/anon','origin',$gr->AnonBranch); // anon-diff
+          $sd=Repo::differ('$/Repo/data/native/site','origin',$gr->SiteBranch); // site-diff
+
+          if(!$rd&&!$sd){lock::remove($ln); if($fg){ekko(OK); exit;}; return OK;}; // no diff .. remove lock & return OK
+          if(!$fg){return knob(["anon"=>$ad,"site"=>$sd]);}; // not from-GUI so return data
+
+          if($ad){$ad->from="Anon"; signal::AnonUpdate($rd); lock::remove($ln); ekko($ad);};
+          if($ad){$sd->from="Anon"; signal::AnonUpdate($sd); lock::remove($ln); ekko($ad);};
       }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
