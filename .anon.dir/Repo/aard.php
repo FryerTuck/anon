@@ -12,7 +12,8 @@ namespace Anon;
 
       static function create($dir,$ori,$bar=null,$usr=null)
       {
-         if($ori===BARE){expect::path($dir); $dir=null; $ori="file://$dir"; $bar=BARE;}; // args validation
+         if($ori===BARE){expect::path($dir); $ori="file://$dir"; $dir=null; $bar=BARE;}; // args validation
+if(!isPurl($ori)){ekko($ori);};
          expect::purl($ori); $inf=path::info($ori); $pth=$inf->path;  // args validation
          if(isWord($bar)&&!$usr){$usr="$bar"; $bar=null;}; // args validation
 
