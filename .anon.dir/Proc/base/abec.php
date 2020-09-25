@@ -359,12 +359,16 @@ namespace Anon;
 
          if(!isKnob($a))
          {
-             $p="/$s/conf"; if($f){$p="$p/$f";};
-             if(isset(self::$meta[$p])){return self::$meta[$p];}; $q=pget($p); if($q===null){return;};
-             if(is_string($q)){$r=dval($q); if(is_assoc_array($r)){$r=knob($r);}; self::$meta[$p]=dupe($r); return $r;};
-             if(!is_array($q)){return;}; $r=knob();
+             $p="/$s/conf"; $b=stub($f,"/"); if($b){$f=$b[0]; $b=$b[2];}; if($f){$p="$p/$f";}; // file and bore
+             if(isset(self::$meta[$p])){return self::$meta[$p];}; $q=pget($p); if($q===null){return;}; // cache or undefined
+             if(is_string($q)) //file
+             {
+                 $r=dval($q); if(is_assoc_array($r)){$r=knob($r);};
+                 self::$meta[$p]=dupe($r); if(!$b){return $r;}; return bore($r,$b);
+             };
+             if(!is_array($q)){return;}; $r=knob(); // folder
              foreach($q as $i){$r->$i=dval(pget("$p/$i")); if(is_assoc_array($r->$i)){$r->$i=knob($r->$i);}};
-             self::$meta[$p]=dupe($r); return $r;
+             self::$meta[$p]=dupe($r); if(!$b){return $r;}; return bore($r,$b);
          };
 
          if(!isFold("/$s/conf")){fail::reference("expecting `/$s/conf` as folder"); exit;};
@@ -843,7 +847,7 @@ namespace Anon;
       {
          $of=path($pf); $ot=path($pt); if(!$of||!$ot){fail('expecting 2 paths');}; if(!isee($of)){fail("`$of` is undefined");};
          $tx=isee($ot); if(!$tx){$np=(isFold($of)?$ot:self::twig($ot)); pset("$np/");}; if(last($pf)==="/"){$of.="/.";};
-         $fx=($fx?'f':''); lock::awaits($ot); exec::{"cp -r{$fx} $of $ot"}(); lock::remove($ot); 
+         $fx=($fx?'f':''); lock::awaits($ot); exec::{"cp -r{$fx} $of $ot"}(); lock::remove($ot);
          return true; // will fail if not OK
       }
 

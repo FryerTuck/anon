@@ -1,101 +1,39 @@
 <!DOCTYPE html>
 <html>
-   <head>
-      <title>{:appTitle:}</title>
+    <head>
+        <title>{:appTitle:}</title>
 
-      <meta name="description" content="{:appMotto:}" />
-      <meta name="keywords" content="{:appWords:}" />
+        <meta name="description" content="{:appMotto:}" />
+        <meta name="keywords" content="{:appWords:}" />
 
-      <meta property="og:title" content="{:appTitle:}" />
-      <meta property="og:site_name" content="{:HOSTNAME:}" />
-      <meta property="og:url" content="https://{:HOSTNAME:}/" />
-      <meta property="og:description" content="{:appMotto:}" />
-      <meta property="og:type" content="website">
-      <meta property="og:image" content="https://{:HOSTNAME:}{:appImage:}" />
+        <meta property="og:title" content="{:appTitle:}" />
+        <meta property="og:site_name" content="{:HOSTNAME:}" />
+        <meta property="og:url" content="https://{:HOSTNAME:}/" />
+        <meta property="og:description" content="{:appMotto:}" />
+        <meta property="og:type" content="website">
+        <meta property="og:image" content="https://{:HOSTNAME:}{:appImage:}" />
 
-      <meta name="generator" content="Anon" />
-      <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="generator" content="Anon" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-      <style>
-         html,body{position:relative; height:100%; overflow:hidden; padding:0px; margin:0px; background:hsla(210,3%,16%,1); font-family: Arial, Helvetica, sans-serif; font-size:14px; line-height:16px; color:#AAA;}
-         #snth{display:inline-block; position:absolute; width:320px; height:240px; top:-9500px; left:-9500px; overflow:hidden;}
-         iframe{display:block; width:100%; height:100%; border:none; background:transparent; margin:0px; padding:0px;}
-      </style>
+        <style>
+            html,body{position:relative; height:100%; overflow:hidden; padding:0px; margin:0px; background:hsla(210,3%,16%,1); font-family: Arial, Helvetica, sans-serif; font-size:14px; line-height:16px; color:#AAA;}
+            #snth{display:inline-block; position:absolute; width:320px; height:240px; top:-9500px; left:-9500px; overflow:hidden;}
+            iframe{display:block; width:100%; height:100%; border:none; background:transparent; margin:0px; padding:0px;}
+        </style>
 
-      <script>
-         window.WACKMESG="{:WACKMESG:}";
-         window.dump=function(){console.log.apply(console,([].slice.call(arguments)));};
-         window.fail=function(a){console.error(a);};
-         window.onerror=function(m,f,l)
-         {if(window.BOOTED){return}; console.error("Unhandled BOOT ERROR!\n"+m+"\n"+f+"  "+l);};
-      </script>
-
-      <script>
-         !function(e){var n=!1;if("function"==typeof define&&define.amd&&(define(e),n=!0),"object"==typeof exports&&(module.exports=e(),n=!0),!n){var o=window.Cookies,t=window.Cookies=e();t.noConflict=function(){return window.Cookies=o,t}}}(function(){function g(){for(var e=0,n={};e<arguments.length;e++){var o=arguments[e];for(var t in o)n[t]=o[t]}return n}return function e(l){function C(e,n,o){var t;if("undefined"!=typeof document){if(1<arguments.length){if("number"==typeof(o=g({path:"/"},C.defaults,o)).expires){var r=new Date;r.setMilliseconds(r.getMilliseconds()+864e5*o.expires),o.expires=r}o.expires=o.expires?o.expires.toUTCString():"";try{t=JSON.stringify(n),/^[\{\[]/.test(t)&&(n=t)}catch(e){}n=l.write?l.write(n,e):encodeURIComponent(String(n)).replace(/%(23|24|26|2B|3A|3C|3E|3D|2F|3F|40|5B|5D|5E|60|7B|7D|7C)/g,decodeURIComponent),e=(e=(e=encodeURIComponent(String(e))).replace(/%(23|24|26|2B|5E|60|7C)/g,decodeURIComponent)).replace(/[\(\)]/g,escape);var i="";for(var c in o)o[c]&&(i+="; "+c,!0!==o[c]&&(i+="="+o[c]));return document.cookie=e+"="+n+i}e||(t={});for(var a=document.cookie?document.cookie.split("; "):[],s=/(%[0-9A-Z]{2})+/g,f=0;f<a.length;f++){var p=a[f].split("="),d=p.slice(1).join("=");this.json||'"'!==d.charAt(0)||(d=d.slice(1,-1));try{var u=p[0].replace(s,decodeURIComponent);if(d=l.read?l.read(d,u):l(d,u)||d.replace(s,decodeURIComponent),this.json)try{d=JSON.parse(d)}catch(e){}if(e===u){t=d;break}e||(t[u]=d)}catch(e){}}return t}}return(C.set=C).get=function(e){return C.call(C,e)},C.getJSON=function(){return C.apply({json:!0},[].slice.call(arguments))},C.defaults={},C.remove=function(e,n){C(e,"",g(n,{expires:-1}))},C.withConverter=e,C}(function(){})});
-         Cookies.defaults.path='/'; Cookies.defaults.domain='{:HOSTNAME:}';
-      </script>
-
-      <script>
-         window.isModern=function(cb)
-         {
-            var x='(function(){class $_$ extends Array{constructor(j=`a`,...c){const q=(({u:e})=>{return {[`${c}`]:Symbol(j)};})({});'+
-            'super(j,q,...c)}}new Promise(f=>{const a=function*(){return "\u{20BB7}".match(/./u)[0].length===2||!0};for (let z of a())'+
-            '{const [x,y,w,k]=[new Set(),new WeakSet(),new Map(),new WeakMap()];break}f(new Proxy({},{get:(h,i)=>i in h ?h[i]:"j".repeat'+
-            '(0o2)}))}).then(t=>new $_$(t.d)); if(btoa("jz\'")!=="anon"){throw "!"};})(); ';
-            // 'if(!window.top.navigator.storage||!window.top.navigator.storage.estimate){throw "!"}; '+
-            // 'let n=document.createElement; let g=(!!n.getContext?(n.getContext("webgl")||n.getContext("experimental-webgl")):null); '+
-            // 'if(!g||!(g instanceof WebGLRenderingContext)){throw "!"}; '+
-
-            if(!window.addEventListener){cb(false);return;}; var n=document.createElement('script'); n.ondone=function(event,s)
-            {
-               s=this; if(s.done){window.removeEventListener('error',s.ondone,true); if(s.parentNode){s.parentNode.removeChild(s)}; return};
-               this.done=1; cb(((event&&event.error)?false:true));
-            };
-
-            window.addEventListener('error',n.ondone,true); n.appendChild(document.createTextNode(x));
-            n.id='dbug'; document.head.appendChild(n); setTimeout(n.ondone,1);
-         };
-
-
-         window.isModern.t=setInterval(function()
-         {
-            if(!document.getElementById('snth')){return;}; // wait for document to load
-            clearInterval(window.isModern.t);
-            if(window.self===window.top){document.body.style.backgroundColor="#2e3133"};
-
-            setTimeout(function(k,v,q,m,p,x,n,d,y,f,c,a,z)
-            {
-               q=function(s){return s.split('^').join('').split('').reverse().join('')}; d=document; c='createElement'; a='appendChild';
-               p='{:DBUGPATH:}'; m=this;
-               f=function(w){z=d[c]('iframe'); z.setAttribute('frameborder',0); d.body[a](z); z.src=(p+'?#'+w);};
-               isModern(function(yes, l,cn,cv,bt,bp,bb,bh,bs){if(!yes){f('lcjs')}else
-               {
-                  l=Cookies.get(); if(!l||(Object.keys(l).length<1)){f('kuki');return}; v=0;
-                  for(cn in l){cv=l[cn]; if(cn.length<40){continue}; v=cv}; if(!v){f('kuki');return};
-                  try{v=m[q('bot^a')](v)}catch(e){console.error('boot fail\n\n'+btoa(v)); f('auto'); return};
-                  n=d[c]('script'); n[a](d.createTextNode(q(v))); delete window.isModern;
-
-                  bt=atob('{:(busyGear):}');
-
-                  bp=bt.split('<'+'script'+'>'); bb=bp[0]; bh=bp[1].split('<'+'/script'+'>')[0];
-                  d.body.innerHTML=''; d.body.innerHTML=bb; bs=d[c]('script'); bs.innerHTML=bh;
-                  d.head[a](bs); d.head[a](n);
-               }});
-            },500); // wait for evasive snth to misbehave
-         },10);
-      </script>
-   </head>
-   <body>
-      <div id="snth">
-         <h1>{:appTitle:}</h1>
-         <p>{:appMotto:}</p>
-         <form action="{:(botHoney):}" method="POST" rel="nofollow">
-            <input type="text" name="age"/><input type="submit" value="ok" />
-         </form>
-         <a href="{:(botHoney):}?welcome=yes" rel="nofollow">contacts</a>
-         <noscript id="nojs">
-            <meta http-equiv="refresh" content="1; URL={:(DBUGPATH):}" />
-         </noscript>
-      </div>
-   </body>
+        <script src="{:durl('$/Site/base/aard.js'):}"></script>
+    </head>
+    <body>
+        <div id="snth">
+            <h1>{:appTitle:}</h1>
+            <p>{:appMotto:}</p>
+            <img id="AnonGate" data-src="data:image/jpeg;base64,{:encode::b64('$/Site/base/prep.js'):}" />
+            <form action="{:botHoney:}" method="POST" rel="nofollow">
+                <input type="text" name="age"/><input type="submit" value="ok" />
+                <noscript id="nojs"><meta http-equiv="refresh" content="1; URL={:DBUGPATH:}" /></noscript>
+            </form>
+            <a href="{:botHoney:}?welcome=yes" rel="nofollow">contacts</a>
+        </div>
+    </body>
 </html>

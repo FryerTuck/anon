@@ -648,7 +648,7 @@ namespace Anon;
       if(!$n&&($d[0]==='+')){$v=substr($d,1); if(is_numeric($v)){return ($v*1);}}; // positive number
       $q=strpos($d,'`'); $p=strpos($d,': '); $c=strpos($d,',');
       $w=wrapOf($d); if(($w==='``')&&(substr_count($d,$w[0])<3)){$v=unwrap($d); return $v;};
-      if($c&&!$n&&!$q)
+      if($c&&!$n&&!$q&&(strpos($d,'(')===false))
       {
           $r=explode(',',$d); $z=[]; foreach($r as $t)
           {$t=dval($t); if(!is_assoc_array($t)){$z[]=$t; continue;}; unset($k,$v); foreach($t as $k => $v){$z[$k]=$v;}};
