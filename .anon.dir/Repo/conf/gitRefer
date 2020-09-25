@@ -1,0 +1,5 @@
+AnonOrigin: https://github.com/FryerTuck/anon.git
+AnonBranch: master
+
+SiteOrigin: file://$/Repo/data/remote/{:HOSTNAME:}.git
+SiteBranch: master
