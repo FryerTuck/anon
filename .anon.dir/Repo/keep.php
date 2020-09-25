@@ -5,27 +5,28 @@ namespace Anon;
 // cond :: repos : safely combine 2 repositories .. we need 5 .. 1 BARE .. 2 sources .. 1 test .. 1 root
 # -----------------------------------------------------------------------------------------------------------------------------
     $ref=conf("Repo/gitRefer"); $cfo="$ref->SiteOrigin";
-    $sto=(isRepo('/')?Repo::getURL('/','origin',false):''); $hst=HOSTNAME;
-
-    if($sto&&($sto!==$cfo)&&($cfo==="file://$/Repo/data/remote/$hst.git"))
+    $sto=(isRepo('/')?Repo::getURL('/','origin',false):''); $hst=HOSTNAME; $brn=$ref->AnonBranch;
+    if($sto&&($sto!==$cfo)&&($cfo==="file://$/Repo/data/remote/tank.git"))
     {$ref->SiteOrigin=$sto; conf::{"Repo/gitRefer"}($ref);}; // auto-set SiteOrigin to existing repo origin .. if any
-
-    $inf=path::info($ref->SiteOrigin); $ntv="$/Repo/data/native"; $rmt="$/Repo/data/remote";
+    $inf=path::info(crop($ref->SiteOrigin)); $ntv="$/Repo/data/native"; $rmt="$/Repo/data/remote";
     if(($inf->plug==="file")&&!isee($inf->path)){Repo::create($inf->path,BARE);}; // we will clone from here
 
-    if(!isFold("$rmt/tank")){Repo::create("$rmt/tank.git",BARE,"master");}; // create local origin
-    if(!isRepo("$ntv/test")){Repo::cloned("file://$rmt/tank.git","$ntv/tank",$ref->AnonBranch,"master");};
+    if(!isFold("$rmt/tank.git")){Repo::create("$rmt/tank.git",BARE,"master");}; // create local origin
+    if(span(pget("$rmt/tank.git/objects/pack"))<1){$brn=null;}; // no branch yet
+    if(!isRepo("$ntv/test")){Repo::cloned("file://$rmt/tank.git","$ntv/test",$brn,"master");}; // master = user
 
     if(!isRepo("$ntv/anon"))
     {
         Repo::cloned($ref->AnonOrigin,"$ntv/anon",$ref->AnonBranch,"master"); $lst=pget("$ntv/anon",false);
         foreach($lst as $itm){path::copy("$ntv/anon/$itm","$ntv/test",true);}; unset($lst,$itm);
+        Repo::commit("$ntv/test","cloned Anon",true);
     };
 
     if(!isRepo("$ntv/site"))
     {
         Repo::cloned($ref->SiteOrigin,"$ntv/site",$ref->SiteBranch,"master"); $lst=pget("$ntv/site",false);
         foreach($lst as $itm){path::copy("$ntv/site/$itm","$ntv/test",true);}; unset($lst,$itm);
+        Repo::commit("$ntv/test","cloned Site",true);
     };
 
 
@@ -37,7 +38,7 @@ namespace Anon;
             path::copy("/$itm","$ntv/test",true); // copy .. replace existing
         };
 
-        Repo::commit("$ntv/test","website backup",true); // commit changes in test & push test to tank
+        Repo::commit("$ntv/test","website backup",true); // add all & commit changes in test & push test to tank
 
         $tko=path::purl(path::info("$rmt/tank"),true); // tank origin url
         exec::{"rm -r ./* & git clone $tko ."}("/"); // clean out web-root & clone tank as web-root

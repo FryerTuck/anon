@@ -85,7 +85,8 @@ namespace Anon;
 
    function isRepo($d,$b=null)
    {
-      if(!isFold($d)){return;}; if(!isee("$d/.git")){return false;}; try{$r=exec::{"git branch"}($d);}catch(\Exception $e){return false;};
+      if(!isFold($d)){return;}; $dp=(isee("$d/.git")?"$d/.git":$d); if(!isee("$dp/info/exclude")){return false;};
+      if(($b===null)&&(fext($d)==="git")){return BARE;}; try{$r=exec::{"git branch"}($d);}catch(\Exception $e){return false;};
       $r="$r\n"; if(!is_funnic($b)){$b=null;}; if($b){$b=strpos($r,"$b\n"); return (($b===false)?false:$b);}; // check for given branch
       $b=strpos($r,'* '); if($b===false){return false;}; $e=strpos($r,"\n",$b); $r=substr($r,$b,$e); $r=trim($r); $r=ltrim($r,'*');
       $r=trim($r); return $r;
@@ -668,7 +669,7 @@ namespace Anon;
          if(isin($d,'::')){$s=stub($d,'::'); $p=crop($s[2]); if(frst($p)==='$'){$p=$p=substr($p,1);}; $d="{$s[0]}://{$h}{$p}";};
          $i=knob(parse_url($d)); $p=crop(path($i->path)); $q=$i->query; $skm=$i->scheme; $hst=$i->host;
          if(!$skm||(($skm!=='file')&&!$hst)){if(!$fail){return;}; fail('expecting valid path-string -or URL-string');}; $x=stub($d,['#','&','?','@',':']);
-         if(isin($d,'@')){$x=stub($d,'@')[0]; if(isin($x,['#','&','?'])){fail('invalid URL');}};
+         if(isin($d,'@')){$x=stub($d,'@')[0]; if(isin($x,['#','&','?'])){fail('invalid URL');}}; if(($skm==='file')&&($hst==='$')){$hst=null; $i->host=null;};
          $r=knob(['plug'=>$n,'user'=>$n,'pass'=>$n,'host'=>$n,'port'=>$n,'path'=>$n,'levl'=>0,'stem'=>$n,'twig'=>$n,'leaf'=>$n,'type'=>$n,'vars'=>$n]);
          $r->plug=$i->scheme; $r->user=$i->user; $r->pass=$i->pass; $r->host=$hst; $r->port=$i->port; $r->path=$p; $r->frag=$n; $s='/';
          if($p){$r->meta=self::meta($p); $r->levl=self::levl($p); $r->stem=self::stem($p); $r->twig=self::twig($p); $r->leaf=self::leaf($p); $r->type=self::type($p);};

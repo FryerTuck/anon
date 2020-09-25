@@ -13,21 +13,20 @@ namespace Anon;
       static function create($dir,$ori,$bar=null,$usr=null)
       {
          if($ori===BARE){expect::path($dir); $ori="file://$dir"; $dir=null; $bar=BARE;}; // args validation
-if(!isPurl($ori)){ekko($ori);};
          expect::purl($ori); $inf=path::info($ori); $pth=$inf->path;  // args validation
          if(isWord($bar)&&!$usr){$usr="$bar"; $bar=null;}; // args validation
 
          if($inf->plug==='file')
          {
              if(!isee($pth)){path::make("$pth/");}; expect::path($pth,[R,W,D]);
-             if(isPath($pth,E))
+             if(isFold($pth,E))
              {
-                 $u=exec::{"whoami"}($pth);  $g=exec::{"id -gn"}($pth);  $tmp='$/Repo/temp';
-                 if(!isee($tmp)){path::make("$tmp/");}; $fld=random(12); $tfp=path("$tmp/$fld");
-                 exec::{"git init --bare --shared"}($pth); exec::{"mkdir $fld"}($tmp);
-                 exec::{"git checkout --work-tree=$tfp --orphan master"}($pth);
-                 exec::{"git commit -m \"initial commit\" --allow-empty --work-tree=$tfp"}($pth); // for branch `master`
-                 exec::{"rmdir $fld"}($tmp); exec::{"cp hooks/post-update.sample hooks/post-update"}($pth);
+                 $u=exec::{"whoami"}($pth);  $g=exec::{"id -gn"}($pth);  $tmp=('/tmp/'.random(16));
+                 $y=exec::{"git init --bare --shared & mkdir $tmp"}($pth);
+                 $y=exec::{"git --work-tree=$tmp checkout --orphan master"}($pth);
+                 $y=exec::{"git --work-tree=$tmp commit --allow-empty -m \"initial commit\""}($pth);
+                 if(file_exists("$tmp")){exec::{"rm -rf $tmp"}($pth);};
+                 exec::{"cp hooks/post-update.sample hooks/post-update"}($pth);
                  exec::{"chown -R $u:$g ."}($pth);
                  // exec::{"git update-server-info"}($pth);  // TODO :: push to this server via https?
              }
@@ -189,22 +188,23 @@ if(!isPurl($ori)){ekko($ori);};
          expect::purl($orgn); $info=path::info($orgn); if($info->plug==="file"){$orgn=path::purl($info,1);};
          if(!isWord($user)){$user=user('name');}; $u=$user; $p=isee("/User/data/$u");
          if(!$p){fail("user `$u` is undefined");}; $m=pget("$p/mail");
-         if(!isee($trgt)){path::make("$trgt/");}; expect::path($trgt,[R,W,D,E]);
+         if(!isee($trgt)){path::make("$trgt/");}; expect::fold($trgt,[R,W,E]);
          $q="git clone $orgn ."; if($bran){$q="git clone -b $bran --single-branch $orgn .";};
-         exec::{"$q"}($trgt);
+         exec::{"$q"}($trgt); $t=path($trgt); $cb=self::branch($trgt,$bran,1); if(!$cb){expect::repo($trgt);};
+         $nb=(!$cb?"master":$cb);
 
          if($info->plug==="file")
          {
-             $orgn=crop($info->path); $cb=self::branch($orgn); if(!$cb){expect::repo($orgn);};
-             $nb=($bran?self::branch($orgn,$bran,1):$cb); $o=path($orgn); $t=path($trgt);
-             exec::{'git remote rm origin'}($t); exec::{"git remote add origin $o"}($t);
-             exec::{"git fetch --all"}($t); exec::{"git checkout $nb"}($t);
-             exec::{"git branch --set-upstream-to origin/$nb"}($t); exec::{"git add --all"}($t);
+             $orgn=crop($info->path);
+             // exec::{'git remote rm origin'}($t); exec::{"git remote add origin $o"}($t);
+             exec::{"git pull"}($t);
+             // exec::{"git checkout $nb"}($t);
+             exec::{"git branch --set-upstream-to origin/$nb"}($t);
+             exec::{"git add --all"}($t);
+             exec::{"git commit --allow-empty -m \"initial commit\""}($t); exec::{"git push origin $nb"}($t);
          };
 
          exec::{"git config --local user.name \"$u\""}($t); exec::{"git config --local user.email \"$m\""}($t);
-         exec::{"git commit --allow-empty -m \"initial commit\""}($t); exec::{"git push origin $nb"}($t);
-
          return OK;
       }
 
