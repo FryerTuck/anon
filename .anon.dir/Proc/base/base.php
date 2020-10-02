@@ -165,7 +165,7 @@ namespace Anon;
          {
             $t=isee($p); if($t&&is_dir($t)){$i=path::indx($t); if($i){$t="$t/$i";}}; if($t){$p="$t";};
             if(!$t||!is_file($t)||(fext($t)!=='php')){if($fldr){continue;}; $p=tval($p); fail("expecting `$p` as readable php file");};
-            $_PATH=$p; $export=null; ob_start(); require_once "$_PATH"; $r=trim(ob_get_clean()); $r=(isVoid($export)?$r:$export);
+            $_PATH=$p; $_TWIG=twig($p); $export=null; ob_start(); require_once "$_PATH"; $r=trim(ob_get_clean()); $r=(isVoid($export)?$r:$export);
             if($r){$_RESL[]=$r;};
          };
          $c=count($_RESL); $z=(($c<1)?true:(($c<2)?$_RESL[0]:$_RESL)); self::$mods->$cr=$z; return $z;
@@ -194,12 +194,18 @@ namespace Anon;
       static function hex($d)
       {return implode(unpack("H*",$d));}
 
+      static function zip($p)
+      {
+          $zip=requires::path("$/Proc/libs/zip");
+          todo("Anon back-end :: develop enode::zip()");
+      }
+
       static function __callStatic($n,$a)
       {
-         if(strlen($n)<1){fail::reference('invalid method name');}; if(!isset($a[0])){$a[0]=null;}; if(!isset($a[1])){$a[1]=null;};
+         if(strlen($n)<1){fail::reference('invalid encoder name');}; if(!isset($a[0])){$a[0]=null;}; if(!isset($a[1])){$a[1]=null;};
          $f=(($n==='hex')?'b16':(($n==='json')?'jso':(($n==='cfg')?'vmp':$n))); if(isin(__CLASS__,$f)){return self::{$f}($a[0],$a[1]);};
          $b=null; if($f[0]==='b'){$b=substr($f,1); $b=(is_numeric($b)?($b*1):null); if(!is_int($b)){$b=null;};};
-         if($b){return self::nbx($a[0],$b);}; $f=swap($f,' ',''); $l=frag($f,'->'); if(span($l)<2){fail("invalid method `$f`");};
+         if($b){return self::nbx($a[0],$b);}; $f=swap($f,' ',''); $l=frag($f,'->'); if(span($l)<2){fail("encoder `$f` is not defined .. yet");};
          $r=$a[0]; foreach($l as $i){$r=encode::{$i}($r,$a[1]);}; return $r;
       }
    }
@@ -224,12 +230,18 @@ namespace Anon;
       static function hex($d)
       {return pack("H*",$d);}
 
+      static function zip($p)
+      {
+          $zip=requires::path("$/Proc/libs/zip");
+          todo("Anon back-end :: develop deode::zip()");
+      }
+
       static function __callStatic($n,$a)
       {
-         if(strlen($n)<1){fail::reference('invalid method name');}; if(!isset($a[0])){$a[0]=null;}; if(!isset($a[1])){$a[1]=null;};
+         if(strlen($n)<1){fail::reference('invalid decoder name');}; if(!isset($a[0])){$a[0]=null;}; if(!isset($a[1])){$a[1]=null;};
          $f=(($n==='hex')?'b16':(($n==='json')?'jso':(($n==='cfg')?'vmp':$n))); if(isin(__CLASS__,$f)){self::{$f}($a[0],$a[1]);};
          $b=null; if($f[0]==='b'){$b=substr($f,1); $b=(is_numeric($b)?($b*1):null); if(!is_int($b)){$b=null;};};
-         if($b){return self::nbx($a[0],$b);}; fail("invalid method `$f`");
+         if($b){return self::nbx($a[0],$b);}; fail("invalid decoder `$f`");
       }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------

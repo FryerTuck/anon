@@ -80,10 +80,10 @@
     }
 
 
-   class DeleteOnExit
-   {
-      function __destruct(){unlink(__FILE__);}
-   }
+    class DeleteOnExit
+    {
+       function __destruct(){unlink(__FILE__);}
+    }
 # -----------------------------------------------------------------------------------------------------------------------------
 
 
@@ -108,7 +108,7 @@
         {
             print_r("<h1>Anon Installation</h1>");
             print_r("<p>You are about to install Anon here: $bp<br>");
-            print_r("Backup any old Anon-related files along with .git, README.md and .htaccess -if required</p>");
+            print_r("Backup any important files you don't want to lose.<br></p>");
             print_r("<a href=\"https://$hn/$fn?confirm=1\"><button>install</button></a>");
             die();
         };
@@ -140,36 +140,41 @@
 # -----------------------------------------------------------------------------------------------------------------------------
 
 
-# exec :: (cleanup) : remove all anon-related files
+
+# exec :: (cleanup) : backup .htaccess & remove all anon-related files
 # -----------------------------------------------------------------------------------------------------------------------------
-    $dr=base(); $ls=[".anon.dir",".git",".anon.php",".htaccess","README.md"];
+    $ls=[".anon.dir",".git",".anon.php",".htaccess","README.md"]; $ht="";
+    if(file_exists("$bp/.htaccess")){$ht=file_get_contents("$bp/.htaccess");};
+
+    if($ht&&!strpos($ht,"ANONINIT"))
+    {
+        $ha=explode("\n",$ht); foreach($ha as $hx => $hl)
+        {
+            $tl=trim($hl); if($tl[0]==="#"){continue;};
+            if(strpos($hl,"RewriteEngine On")===0){$ha[$hx]="#$hl";};
+        };
+        $ht=implode($ha,"\n");
+    };
+
     foreach($ls as $li){ if(($li!==$fn)&&file_exists("$bp/$li")){bash("rm -rf ./$li");}; };
-    exit;
 # -----------------------------------------------------------------------------------------------------------------------------
+
 
 
 # exec :: (install) : clone the Anon repo into a clean temp space, move contents over to CWD and dispose of temp
 # -----------------------------------------------------------------------------------------------------------------------------
     $rs=bash("git clone https://github.com/FryerTuck/anon.git");
     $rs=bash("shopt -s dotglob && mv anon/* . && rm -rf ./anon");
-# -----------------------------------------------------------------------------------------------------------------------------
-
-
-
-# cond :: (test) : check if installation works, if not then replace .htaccess contents with alternative
-# -----------------------------------------------------------------------------------------------------------------------------
-    $rk=sha1(file_get_contents(__FILE__));
-    $tl="https://$hn/";
-    $rs=spuf($tl);
-
-    if(strpos($rs,'500 Internal Server Error')||strpos($rs,'503 Service Unavailable')||strpos($rs,'<title>Index of /</title>'))
-    {$rs=bash("rm -f ./.htaccess && cp ./.anon.dir/Anon/base/access.cfg ./.htaccess"); sleep(1);};
-
+    if($ht){file_put_contents("$bp/.htaccess",$ht);};
     $mp=password_hash(trim(file_get_contents("$bp/.anon.dir/Proc/info/pass.inf")),PASSWORD_DEFAULT);
     file_put_contents("$bp/.anon.dir/User/data/master/pass",$mp);
-    $gone=(new DeleteOnExit());
+# -----------------------------------------------------------------------------------------------------------------------------
 
+
+
+# cond :: (test) : check if installation works
+# -----------------------------------------------------------------------------------------------------------------------------
+    $tl="https://$hn/"; $gone=(new DeleteOnExit());
     header("Location: $tl");
-
     die();
 # -----------------------------------------------------------------------------------------------------------------------------

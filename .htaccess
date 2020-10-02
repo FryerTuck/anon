@@ -1,3 +1,5 @@
+# === ANONINIT ===
+
 
 # init :: flow : initialize rewrite engine and force subdomain as `www` .. this must be here 1st, at the top
 # -----------------------------------------------------------------------------------------------------------------------------
@@ -89,9 +91,4 @@
 # -----------------------------------------------------------------------------------------------------------------------------
 
 
-
-# cond :: subdomain : if the request-path does not start with the existing-subdomain-folder-name then redirect it to be so
-# -----------------------------------------------------------------------------------------------------------------------------
-    RewriteCond %{ENV:HREFBASE}#%{ENV:PATHSTEM} !^([^#]+)#\1$
-    RewriteRule ^ %{REQUEST_SCHEME}://%{HTTP_HOST}/%{ENV:HREFBASE}%{REQUEST_URI} [R=302,L,NE]
-# -----------------------------------------------------------------------------------------------------------------------------
+# === ANONDONE ===

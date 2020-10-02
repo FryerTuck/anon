@@ -2,7 +2,7 @@
 namespace Anon;
 
 
-// cond :: repos : safely combine 2 repositories .. we need 5 .. 1 BARE .. 2 sources .. 1 test .. 1 root
+# cond :: repos : safely combine 2 repositories .. we need 5 .. 1 BARE .. 2 sources .. 1 test .. 1 root
 # -----------------------------------------------------------------------------------------------------------------------------
     $ref=conf("Repo/gitRefer"); $cfo="$ref->SiteOrigin";
     $sto=(isRepo('/')?Repo::getURL('/','origin',false):''); $hst=HOSTNAME; $brn=$ref->AnonBranch;
@@ -18,36 +18,39 @@ namespace Anon;
     if(!isRepo("$ntv/anon"))
     {
         Repo::cloned($ref->AnonOrigin,"$ntv/anon",$ref->AnonBranch,"master"); $lst=pget("$ntv/anon",false);
-        foreach($lst as $itm){path::copy("$ntv/anon/$itm","$ntv/test",true);}; unset($lst,$itm);
+        xpop($lst,".git"); foreach($lst as $itm){path::copy("$ntv/anon/$itm","$ntv/test",true);}; unset($lst,$itm);
         Repo::commit("$ntv/test","cloned Anon",true);
     };
 
     if(!isRepo("$ntv/site"))
     {
         Repo::cloned($ref->SiteOrigin,"$ntv/site",$ref->SiteBranch,"master"); $lst=pget("$ntv/site",false);
-        foreach($lst as $itm){path::copy("$ntv/site/$itm","$ntv/test",true);}; unset($lst,$itm);
+        xpop($lst,".git"); foreach($lst as $itm){path::copy("$ntv/site/$itm","$ntv/test",true);}; unset($lst,$itm);
         Repo::commit("$ntv/test","cloned Site",true);
     };
 
 
     if($cfo!==$sto)
     {
-        $lst=pget("/",false); $omt=[".git"]; foreach($lst as $itm)
+        $hsh=PROCHASH; path::make("/$hsh/"); // make temporary empty folder for tank repo
+        $tko=path::purl(path::info("$rmt/tank"),true); // tank origin url
+
+        exec::{"git clone $tko ."}("/$hsh/"); // clone tank into temporary folder
+        path::void("/.git"); $lst=pget("/$hsh/",false); // delete .git from web-root & get list of tank files
+
+        foreach($lst as $itm)
         {
-            if(isin($omt,$itm)){continue;}; // omit this
-            path::copy("/$itm","$ntv/test",true); // copy .. replace existing
+            path::copy("/$hsh/$itm","/",true); // copy all from tank into web-root & replace existing files
         };
 
-        Repo::commit("$ntv/test","website backup",true); // add all & commit changes in test & push test to tank
-
-        $tko=path::purl(path::info("$rmt/tank"),true); // tank origin url
-        exec::{"rm -r ./* & git clone $tko ."}("/"); // clean out web-root & clone tank as web-root
+        path::void("/$hsh"); // delete temporary tank folder
+        Repo::commit("/","website backup",true); // add all & commit changes in web-root & push to tank-repo
     };
 # -----------------------------------------------------------------------------------------------------------------------------
 
 
 
-// conf :: Anon : write the gitIgnor config into web-root .git/info/exclude .. this keeps Anon-config unchanged during updates
+# conf :: Anon : write the gitIgnor config into web-root .git/info/exclude .. this keeps Anon-config unchanged during updates
 # -----------------------------------------------------------------------------------------------------------------------------
     $h=ROOTPATH; $l=conf('Repo/gitIgnor'); unset($i);
     foreach($l as $i)
