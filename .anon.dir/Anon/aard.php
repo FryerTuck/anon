@@ -55,7 +55,7 @@ namespace Anon;
       static function checkUpdates()
       {
           $ln="checkUpdates"; $fg=isin(NAVIPATH,$ln); $gr=conf("Repo/gitRefer"); // lock-name .. from-gui .. git-refer
-          if(lock::exists($ln)){if($fg){ekko(OK); exit;}; return OK;};}; lock::awaits($ln); // lock to prevent multiple
+          if(lock::exists($ln)){if($fg){ekko(OK); exit;}; return OK;}; lock::awaits($ln); // lock to prevent multiple
           $ad=Repo::differ('$/Repo/data/native/anon','origin',$gr->AnonBranch); // anon-diff
           $sd=Repo::differ('$/Repo/data/native/site','origin',$gr->SiteBranch); // site-diff
 
