@@ -143,20 +143,21 @@
 
 # exec :: (cleanup) : backup .htaccess & remove all anon-related files
 # -----------------------------------------------------------------------------------------------------------------------------
-    $ls=[".anon.dir",".git",".anon.php",".htaccess","README.md"]; $ht="";
+    $ls=[".anon.dir",".git",".anon.php",".htaccess","README.md"]; $ht=""; $dl="# === ANONDONE ===";
     if(file_exists("$bp/.htaccess")){$ht=file_get_contents("$bp/.htaccess");};
+    if(strpos($ht,$dl)){$ht=explode($dl,$ht); $ht=array_pop($ht); $ht=trim($ht);};
 
-    if($ht&&!strpos($ht,"ANONINIT"))
+    if($ht)
     {
         $ha=explode("\n",$ht); foreach($ha as $hx => $hl)
         {
-            $tl=trim($hl); if($tl[0]==="#"){continue;};
+            $tl=trim($hl); if($tl&&($tl[0]==="#")){continue;};
             if(strpos($hl,"RewriteEngine On")===0){$ha[$hx]="#$hl";};
         };
         $ht=implode($ha,"\n");
     };
 
-    foreach($ls as $li){ if(($li!==$fn)&&file_exists("$bp/$li")){bash("rm -rf ./$li");}; };
+    foreach($ls as $li){if(($li!==$fn)&&file_exists("$bp/$li")){bash("rm -rf ./$li");}};
 # -----------------------------------------------------------------------------------------------------------------------------
 
 
@@ -165,7 +166,7 @@
 # -----------------------------------------------------------------------------------------------------------------------------
     $rs=bash("git clone https://github.com/FryerTuck/anon.git");
     $rs=bash("shopt -s dotglob && mv anon/* . && rm -rf ./anon");
-    if($ht){file_put_contents("$bp/.htaccess",$ht);};
+    if($ht){$ah=file_get_contents("$bp/.htaccess"); file_put_contents("$bp/.htaccess","$ah\n\n\n$ht");};
     $mp=password_hash(trim(file_get_contents("$bp/.anon.dir/Proc/info/pass.inf")),PASSWORD_DEFAULT);
     file_put_contents("$bp/.anon.dir/User/data/master/pass",$mp);
 # -----------------------------------------------------------------------------------------------------------------------------
