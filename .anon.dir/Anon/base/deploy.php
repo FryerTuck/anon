@@ -153,8 +153,8 @@
         {
             $tl=trim($hl); if($tl&&($tl[0]==="#")){continue;};
             $lc=strtolower($hl);
-            if(strpos($lc,"rewriteengine on")===0){$ha[$hx]="#$hl";};
-            if(strpos($lc,"rewritebase /")===0){$ha[$hx]="#$hl";};
+            if(strpos($lc,"rewriteengine on")===0){$ha[$hx]="# $hl .. dejavu";};
+            if(strpos($lc,"rewritebase /")===0){$ha[$hx]="# $hl .. dejavu";};
         };
         $ht=implode($ha,"\n");
     };

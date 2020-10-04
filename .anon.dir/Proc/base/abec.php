@@ -479,10 +479,11 @@ namespace Anon;
          elseif($vn){$r=$v->$i; if($r===null){$r=envi($i); if($r===''){$r=defn($i);}}}
          elseif(isin($i,'('))
          {
-            $p=rshave($i,')'); $p=stub($p,'('); $n=$p[0]; $a=trim($p[2]); $a=swap("[$a]",["['","',","']"],['["','",','"]']);
-            $a=dval($a); if(isFunc($n,1)){$r=call($n,$a);}
+            $p=rshave($i,')'); $p=stub($p,'('); $n=trim($p[0]); $a=trim($p[2]); $a=lshave($a,'(');
+            // $a=swap("[$a]",["['","',","']"],['["','",','"]']); // fix array args
+            $a=dval($a); if(isin(["''",'""','``'],wrapOf($a))){$a=unwrap($a);};
+            if(isText($n,1)){$r=call($n,$a); if(isin($r,$b)&&isin($r,$e)){$r=impose($r,$b,$e,$v,$u);}}
          }
-         // elseif(isin($i,'(')){$p=rshave($i,')'); $p=stub($p,'('); $n=$p[0]; $a=$p[2]; $a=dval("[$a]"); if(isFunc($n)){$r=call($n,$a);}}
          else{$r='';};
          if(!is_string($r)){$r=tval($r);}; $z=str_replace($f,$r,$z);
       };

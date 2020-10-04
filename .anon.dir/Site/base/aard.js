@@ -46,7 +46,9 @@ window.script=function(src,cbf)
 window.bootAnon=function(gate)
 {
     if(!gate){gate=document.getElementById('AnonGate')};
-    script(atob(gate.getAttribute('data-src')));
+    gate=gate.getAttribute('data-src').split(';base64,').pop();
+    console.log(atob(gate));
+    // script(atob(gate));
 };
 
 
@@ -59,7 +61,7 @@ window.isModern.t=setInterval(function()
     {
         if(pageGone){return}; // gotcha bitch .. smart-bot
         if(!really){userView('{:DBUGPATH:}?#lcjs'); return};  // bad browser goes to graceful fail
-        if('{:ALTHANDLER:}'=='yes'){userView('{:viewPath:}',bootAnon); return}; // boot handler first -if present
-        bootAnon(); // no other framework detected
+        if('{:ALTHANDLER:}'!='yes'){bootAnon(); return}; // no other framework detected
+        userView('{:viewPath:}',bootAnon); // boot handler first -if present
     })},250);
 },10);

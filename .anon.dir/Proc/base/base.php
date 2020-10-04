@@ -182,7 +182,8 @@ namespace Anon;
    {
       static function nbx($d,$b)
       {
-         if($b===64){if(!isText($d)){$d=tval($d);}; return base64_encode($d);};
+         if($b===64){if(!isText($d)){$d=tval($d);}
+         elseif(isPath($d)){$d=pget($d); if(isin($d,'{:')&&isin($d,':}')){$d=impose($d,'{:',':}');}}; return base64_encode($d);};
          if(!isNumr($d)||isin($d,'.')||($d<1)){fail::base_convert('expecting positive integer');};
          if(!is_int($b)||(($b%2)!==0)||($b>62)){fail::base_convert("invalid encoding base");};
          return gmp_strval(gmp_init($d,10),$b);
@@ -217,7 +218,9 @@ namespace Anon;
       {
          $v=(isNumr($d)?"$d":$d); if(!isText($v)){fail::arguments('expecting 1st arg as :text: or :numr:');};
          if(!is_int($b)||(($b%2)!==0)){fail::base("invalid encoding base");};
-         if($b===16){return hex2bin($v);}; if($b===64){return base64_decode($v);}; return hex2bin(gmp_strval(gmp_init($v,$b),16));
+         if($b===16){return hex2bin($v);};
+         if($b===64){if(isPath($v)){$v=pget($v);}; if(isin($v,'{:')&&isin($v,':}')){$v=impose($v,'{:',':}');} return base64_decode($v);};
+         return hex2bin(gmp_strval(gmp_init($v,$b),16));
       }
 
       static function jso($d,$v=null)
