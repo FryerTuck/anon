@@ -117,6 +117,7 @@ namespace Anon;
 
       static function authSudo()
       {
+         permit::fubu("clan:sudo");
          $un=sesn('USER'); $pw=posted('pw');
          $r=password_verify($pw,pget("/User/data/$un/pass")); if(!$r){ekko('nope, sorry');}; // RTFC
          done(OK);
