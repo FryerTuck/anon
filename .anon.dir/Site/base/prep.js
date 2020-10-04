@@ -53,7 +53,7 @@ script(AnonBusy,(s,c)=>
         s.shift(); s=s.join('.'); c.shift(); c=c.join('.');
         if(c!=s){console.error("hostname mismatch",s,c);wack();return};
     };
-console.log('yo');
+
     Object.keys(Cookies.get()).forEach((k)=>{if(k.length!=40){return}; Cookies.remove(k)});
     Cookies.set("{:SESNHASH:}","..."); bz(10); script('/Site/base/abec.js',()=>{bz(20); script('/Site/base/base.js',()=>
     {bz(30); script('/Proc/libs/opentype/opentype.min.js',()=>{bz(40); script('/Site/base/boot.js')})})});
