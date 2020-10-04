@@ -736,7 +736,7 @@ namespace Anon;
          if(!$skm||(($skm!=='file')&&!$hst)){if(!$fail){return;}; fail('expecting valid path-string -or URL-string');}; $x=stub($d,['#','&','?','@',':']);
          if(isin($d,'@')){$x=stub($d,'@')[0]; if(isin($x,['#','&','?'])){fail('invalid URL');}}; if(($skm==='file')&&($hst==='$')){$hst=null; $i->host=null;};
          $r=knob(['plug'=>$n,'user'=>$n,'pass'=>$n,'host'=>$n,'port'=>$n,'path'=>$n,'levl'=>0,'stem'=>$n,'twig'=>$n,'leaf'=>$n,'type'=>$n,'vars'=>$n]);
-         $r->plug=$i->scheme; $r->user=$i->user; $r->pass=$i->pass; $r->host=$hst; $r->port=$i->port; $r->path=$p; $r->frag=$n; $s='/';
+         $r->plug=$i->scheme; $r->path=$p; $r->frag=$n; $s='/'; if($skm!=='file'){$r->user=$i->user; $r->pass=$i->pass; $r->host=$hst; $r->port=$i->port;};
          if($p){$r->meta=self::meta($p); $r->levl=self::levl($p); $r->stem=self::stem($p); $r->twig=self::twig($p); $r->leaf=self::leaf($p); $r->type=self::type($p);};
          if($q){parse_str($q,$v); $r->vars=knob($v);}; if($i->fragment){$r->frag=$i->fragment;}; $r->purl=$d;
          return $r;
