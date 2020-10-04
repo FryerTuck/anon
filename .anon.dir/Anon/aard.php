@@ -59,11 +59,11 @@ namespace Anon;
           $ad=Repo::differ('$/Repo/data/native/anon','origin',$gr->AnonBranch); // anon-diff
           $sd=Repo::differ('$/Repo/data/native/site','origin',$gr->SiteBranch); // site-diff
 
-          if(!$rd&&!$sd){lock::remove($ln); if($fg){ekko(OK); exit;}; return OK;}; // no diff .. remove lock & return OK
+          if(!$ad&&!$sd){lock::remove($ln); if($fg){ekko(OK); exit;}; return OK;}; // no diff .. remove lock & return OK
           if(!$fg){return knob(["anon"=>$ad,"site"=>$sd]);}; // not from-GUI so return data
 
-          if($ad){$ad->from="Anon"; signal::AnonUpdate($rd); lock::remove($ln); ekko($ad);};
-          if($ad){$sd->from="Anon"; signal::AnonUpdate($sd); lock::remove($ln); ekko($ad);};
+          if($ad){$ad->from="Anon"; signal::AnonUpdate($ad); lock::remove($ln); ekko($ad);};
+          if($sd){$sd->from="Site"; signal::SiteUpdate($sd); lock::remove($ln); ekko($sd);};
       }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
