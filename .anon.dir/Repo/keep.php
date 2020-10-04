@@ -43,7 +43,8 @@ namespace Anon;
             path::copy("/$hsh/$itm","/",true); // copy all from tank into web-root & replace existing files
         };
 
-        path::void("/$hsh"); // delete temporary tank folder
+        $u="master"; $m=pget("$/User/data/$u/mail"); path::void("/$hsh"); // get master info .. delete temporary tank folder
+        exec::{"git config --local user.name \"$u\""}("/"); exec::{"git config --local user.email \"$m\""}("/");
         Repo::commit("/","website backup",true); // add all & commit changes in web-root & push to tank-repo
     };
 # -----------------------------------------------------------------------------------------------------------------------------
