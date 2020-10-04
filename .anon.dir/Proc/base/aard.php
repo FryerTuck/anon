@@ -734,8 +734,8 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    if(envi('ROOTPATH DBUGPATH HOST SCHEME BOTMATCH')!==1){header("HTTP/1.1 424 Failed Dependency - server vars"); die();}; // bad vars
    $d=envi('ROOTPATH'); $s=skey(); $u=''; $c=envi('COREPATH'); //$c=explode('/',envi('COREPATH')); $c=array_pop($c);
-   $g=envi('DBUGPATH'); $b=envi('HREFBASE'); $_SERVER['BASEPATH']=$b;
-   $_SERVER['DBUGPATH']=lshave($g,"$b/.anon.dir"); unset($g);
+   $g=envi('DBUGPATH'); $b=envi('HREFBASE'); $_SERVER['BASEPATH']=($b?$b:$d);
+   $_SERVER['DBUGPATH']=("$".($b?lshave($g,"$b/.anon.dir"):lshave($g,".anon.dir"))); unset($g);
    if($s){$s="$c/Proc/temp/sesn/$s/USER"; if(file_exists($s)){$u=file_get_contents($s);}};
    if(!$u){$u='anonymous';}; $_SERVER['USERNAME']=$u; $_SERVER['USERPATH']="$c/User/data/$u/home";
    if(!envi('ACCEPT')){$_SERVER['ACCEPT']=envi('CONTENT_TYPE');};
@@ -788,9 +788,9 @@ namespace Anon;
    if(!facing('DPR')&&!facing('BOT')&&!in_array(NAVIPATH,["/User/upload","/Proc/execPath","/Proc/xenoCall","/Proc/makeTodo"]))
    {
       $dbs=$_SERVER['SYSCLOCK']->upkeep; if(!$dbs){$dbs=180;}; $ldb=pget('$/Proc/vars/lastDbug');
-      if(!$ldb){$ldb=0;}; $ldb=($ldb*1); $tdf=(time()-$ldb); $upk=0; if(isset($_GET['upkeep'])){$upk=$_GET['upkeep'];};
+      if(!$ldb){$ldb=1;}; $ldb=($ldb*1); $tdf=(time()-$ldb); $upk=0; if(isset($_GET['upkeep'])){$upk=$_GET['upkeep'];};
 
-      $_SERVER['UPKEEPER']=((!$ldb||($tdf>$dbs)||$upk)?$ldb:0);
+      $_SERVER['UPKEEPER']=(((!$ldb||($tdf>$dbs)||$upk)?$ldb:"")."");
       unset($dbs,$ldb,$tdf,$upk);
       if(envi('UPKEEPER')&&!pget('$/Proc/conf/hostName')){pset('$/Proc/conf/hostName',HOSTNAME);};
    }

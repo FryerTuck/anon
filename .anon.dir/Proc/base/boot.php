@@ -283,7 +283,7 @@ namespace Anon;
     if(envi('UPKEEPER'))
     {
         require(path('$/Proc/base/keep.php'));
-        upkeep($_SERVER['SYSCLOCK']->upkeep,$_SERVER['UPKEEPER'],time(),knob($_GET)->upkeep);
+        upkeep($_SERVER['SYSCLOCK']->upkeep,($_SERVER['UPKEEPER']*1),time(),knob($_GET)->upkeep);
         path::make('$/Proc/vars/lastDbug',(time().''));
     };
 # ---------------------------------------------------------------------------------------------------------------------------------------------

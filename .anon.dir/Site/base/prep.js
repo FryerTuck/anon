@@ -4,6 +4,9 @@ const HOSTNAME='{:HOSTNAME:}';
 const HOSTPURL=('https://'+HOSTNAME);
 const UNDF=(function(){}());
 
+!function(e){var n=!1;if("function"==typeof define&&define.amd&&(define(e),n=!0),"object"==typeof exports&&(module.exports=e(),n=!0),!n){var o=window.Cookies,t=window.Cookies=e();t.noConflict=function(){return window.Cookies=o,t}}}(function(){function g(){for(var e=0,n={};e<arguments.length;e++){var o=arguments[e];for(var t in o)n[t]=o[t]}return n}return function e(l){function C(e,n,o){var t;if("undefined"!=typeof document){if(1<arguments.length){if("number"==typeof(o=g({path:"/"},C.defaults,o)).expires){var r=new Date;r.setMilliseconds(r.getMilliseconds()+864e5*o.expires),o.expires=r}o.expires=o.expires?o.expires.toUTCString():"";try{t=JSON.stringify(n),/^[\{\[]/.test(t)&&(n=t)}catch(e){}n=l.write?l.write(n,e):encodeURIComponent(String(n)).replace(/%(23|24|26|2B|3A|3C|3E|3D|2F|3F|40|5B|5D|5E|60|7B|7D|7C)/g,decodeURIComponent),e=(e=(e=encodeURIComponent(String(e))).replace(/%(23|24|26|2B|5E|60|7C)/g,decodeURIComponent)).replace(/[\(\)]/g,escape);var i="";for(var c in o)o[c]&&(i+="; "+c,!0!==o[c]&&(i+="="+o[c]));return document.cookie=e+"="+n+i}e||(t={});for(var a=document.cookie?document.cookie.split("; "):[],s=/(%[0-9A-Z]{2})+/g,f=0;f<a.length;f++){var p=a[f].split("="),d=p.slice(1).join("=");this.json||'"'!==d.charAt(0)||(d=d.slice(1,-1));try{var u=p[0].replace(s,decodeURIComponent);if(d=l.read?l.read(d,u):l(d,u)||d.replace(s,decodeURIComponent),this.json)try{d=JSON.parse(d)}catch(e){}if(e===u){t=d;break}e||(t[u]=d)}catch(e){}}return t}}return(C.set=C).get=function(e){return C.call(C,e)},C.getJSON=function(){return C.apply({json:!0},[].slice.call(arguments))},C.defaults={},C.remove=function(e,n){C(e,"",g(n,{expires:-1}))},C.withConverter=e,C}(function(){})});
+Cookies.defaults.path='/'; Cookies.defaults.domain=HOSTNAME;
+
 Math.rand=function(min,max){return Math.floor(Math.random()*(max-min+1)+min);};
 
 const wack = function(r)
@@ -13,7 +16,7 @@ const wack = function(r)
    d.innerHTML=`<div style="height:100%; background:hsla(0,0%,0%,0.7);padding:10px">${m}</div>`;
    setTimeout(function(){d.style.backgroundImage=`url('/User/dcor/wal1.jpg')`;},Math.rand(900,3000));
 }
-.bind({line:atob(window.WACKMESG).split('\n'),done:0});
+.bind({line:atob("{:encode::b64('$/Proc/info/hack.inf'):}").split('\n'),done:0});
 
 const stak = function(x,a, e,s,r,h,o,sve)
 {
@@ -35,24 +38,23 @@ const sesn = function(a)
 {if(!stak(0)){wack();return}; if(((typeof a)!='string')||(a.length<1)||!this[a]){return}; return this[a];}.bind
 ({USER:'{:SESNUSER:}',MAIL:'{:SESNMAIL:}',CLAN:'{:SESNCLAN:}',HASH:'{:SESNHASH:}'});
 
-const script=function(p,f, n){n=document.createElement('script'); n.src=`${p}`; n.onload=f; document.head.appendChild(n);};
 const bz=function(p){Busy.edit('/anonBoot',p);};
 
-(function(s,c)
+window.AnonBusy=(atob('{:busyGear:}')).split('<script>');
+document.body.innerHTML=AnonBusy[0]; AnonBusy=AnonBusy[1].split('</script>')[0];
+script(AnonBusy,(s,c)=>
 {
-   if({:denyDomainSpoofs:})
-   {
-      s=HOSTNAME.split('.'); c=location.host.split('.');
-      if((s.length<3)||(c.length<3)){console.error("invalid hostname");wack();return};
-      s.shift(); s=s.join('.'); c.shift(); c=c.join('.');
-      if(c!=s){console.error("hostname mismatch",s,c);wack();return};
-   };
+    delete window.AnonBusy;
 
-   Object.keys(Cookies.get()).forEach((k)=>{if(k.length!=40){return}; Cookies.remove(k)});
-
-   setTimeout(()=>{Cookies.set("{:SESNHASH:}","..."); setTimeout(()=>
-   {
-       bz(10); script('/Site/base/abec.js',()=>{bz(20); script('/Site/base/base.js',()=>
-       {bz(30); script('/Proc/libs/opentype/opentype.min.js',()=>{bz(40); script('/Site/base/boot.js')})})});
-   },60)},60);
-}());
+    if({:denyDomainSpoofs:})
+    {
+        s=HOSTNAME.split('.'); c=location.host.split('.');
+        if((s.length<3)||(c.length<3)){console.error("invalid hostname");wack();return};
+        s.shift(); s=s.join('.'); c.shift(); c=c.join('.');
+        if(c!=s){console.error("hostname mismatch",s,c);wack();return};
+    };
+console.log('yo');
+    Object.keys(Cookies.get()).forEach((k)=>{if(k.length!=40){return}; Cookies.remove(k)});
+    Cookies.set("{:SESNHASH:}","..."); bz(10); script('/Site/base/abec.js',()=>{bz(20); script('/Site/base/base.js',()=>
+    {bz(30); script('/Proc/libs/opentype/opentype.min.js',()=>{bz(40); script('/Site/base/boot.js')})})});
+});

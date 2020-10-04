@@ -3,25 +3,6 @@ namespace Anon;
 
 
 
-# func :: guiStrap : make & send boot cookie
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-   function guiStrap($u=null,$sc=1)
-   {
-      $h=sesn('HASH'); $v=knob(); $p='$/Site/base/aard.js'; $d=[];
-      if(!$u){$u=sesn('USER');}; $v->SESNUSER=$u; $v->SESNCLAN=pget("$/User/data/$u/clan"); $v->SESNMAIL=user('mail');
-      $v->denyDomainSpoofs=tval(conf("Proc/antiHack")->denyDomainSpoofs);
-      foreach($_COOKIE as $cn => $cv){if(test($cn,'/^[a-z0-9]{40}$/')&&($cn!==$h)){kuki($cn,VOID);}};
-      $c=import($p,$v); $c=base64_encode(strrev($c)); $m=4000;
-
-      $f="after encoding, `$p` exceeds maximum cookie size of $m bytes";
-      if(span($c)>$m){fail::boot($f);};
-
-      if($sc){kuki($h,$c);return true;}; return $c;
-   }
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
 # evnt :: siteEvent : signal `siteEvent` only if so configured
 # ---------------------------------------------------------------------------------------------------------------------------------------------
     if(!facing('SSE')&&!facing('DPR')&&conf('Proc/autoConf')->eventSpy)
@@ -46,13 +27,14 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
      if((!MADEFUBU&&!facing('API')&&!facing('DPR'))||facing('BOT GUI'))
      {
-        $c=conf('Site/autoConf'); $v=[]; $t=$c->template; $o=($c->showBusy?1:0);
+        $c=conf('Site/autoConf'); $v=knob(); $t=$c->template; $o=($c->showBusy?1:0); $h=sesn('HASH'); $u=sesn('USER');
+        $v->SESNUSER=$u; $v->SESNCLAN=pget("$/User/data/$u/clan"); $v->SESNMAIL=user('mail');
+        $v->denyDomainSpoofs=tval(conf("Proc/antiHack")->denyDomainSpoofs);
         //ekko::head(['Referrer-Policy'=>'origin','cache'=>false,'cookies'=>true]); // send bootStrap headers
-        $v['busyGear']=base64_encode(import("$/Site/tmpl/$t/base/busy.htm",["showBusy"=>$o]));
-        $v['botHoney']=conf('Proc/badRobot')->lure;
-        $v['WACKMESG']=base64_encode(pget('$/Proc/info/hack.inf'));
+        $v->busyGear=base64_encode(import("$/Site/tmpl/$t/base/busy.htm",["showBusy"=>$o]));
+        $v->botHoney=conf('Proc/badRobot')->lure;
         $v=fuse($v,conf('Site/identity')); $r=import('$/Site/base/aard.htm',$v);
-        guiStrap(); echo($r); done(); // send BootStrap GUI keeping headers intact
+        kuki($h,'...'); echo($r); done(); // send BootStrap GUI keeping headers intact
      };
 
      if(facing('DPR')&&(NAVIPATH==='/Site/base/boot.js'))

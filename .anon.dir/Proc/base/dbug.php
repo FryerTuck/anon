@@ -72,7 +72,6 @@ namespace Anon;
          $o->mesg=self::wash($o->mesg); $o->file=self::wash($o->file); $x=fext(NAVIPATH); $m=$o->mesg;
          $h="HTTP/1.1 500 Internal Server Error"; $s=[]; if(!is_array($o->stak)){$o->stak=[];};
          foreach($o->stak as $i){$s[]="$i->func $i->file $i->line";}; $o->stak=$s; $n=$o->name; $f=$o->file; $l=$o->line; $t=tval($o);
-
          if(facing('API')){if(!headers_sent()){header($h);}; echo($t); exit;};
          if(facing('DPR')&&($x=='js')){\error_clear_last(); ekko("fail($t); "); exit;};//API & js-dpr
          if(facing('DPR')){if(is_class("Proc")){signal::fail($t);}; $m=str_replace(["\n",'"'],['',"`"],$m); $m=crop($m,60); harakiri("$m"); exit;}; // any other file
@@ -196,8 +195,7 @@ namespace Anon;
 
    register_shutdown_function(function()
    {
-      $e=\error_get_last(); if(!$e||envi("HALT")){exit;};
-      \error_clear_last(); $b='';
+      $e=\error_get_last(); if(!$e||envi("HALT")){exit;}; \error_clear_last(); $b='';
       while(ob_get_level()){$b.=("\n".ob_get_clean());}; $b=trim($b);
       $e=knob(['name'=>dbug::name($e['type']),'mesg'=>trim($e['message']."\n".$b),'file'=>$e['file'],'line'=>$e['line']]);
       $e->stak=stak(); dbug::view($e); exit;

@@ -6,7 +6,7 @@
     RewriteEngine on
     RewriteBase /
 
-    RewriteCond %{HTTP_HOST} ^[^.]+\.[^.]+\.[^.]+$ [OR]
+    RewriteCond %{HTTP_HOST} ^[^.]+\.[^.]+\.[^.]+$
     RewriteCond %{HTTP_HOST} ^[^.]+\.[^.]+$
     RewriteRule ^(.*)$ %{REQUEST_SCHEME}://www.%{HTTP_HOST}/$1 [L,R=301]
 # -----------------------------------------------------------------------------------------------------------------------------

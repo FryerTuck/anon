@@ -348,6 +348,27 @@ namespace Anon;
 
 
 
+// func :: bore : get/set/rip keys of objects by path reference
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   function bore($o,$p,$v=null)
+   {
+      if(isAsso($o)){$o=knob($o);}; $k=shaved($p,"/"); // prep
+      if(!isKnob($o,1)||!isText($k,1)){return $o;}; // invalid/undefined
+      $l=explode("/",$k); $r=dupe($o);
+
+      if($v===null) // get
+      {
+          if(isin(keys($o),$p)){return $o->$p;}; // whole path is key
+          do{$i=array_shift($l); $r=$r->$i; if(!isKnob($r)){break;}}while(count($l)); return $r;
+      };
+
+      if($v!==VOID){todo("bore :: make set available");};
+      todo("bore :: make rip available");
+  };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 # tool :: conf : get/set config relative to stem/path
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    class conf
@@ -355,21 +376,23 @@ namespace Anon;
       private static $meta=[];
       static function __callStatic($n,$a)
       {
-         $n=trim($n); $n=shaved($n,"/"); if(strlen($n)<3){return;}; $a=(isset($a[0])?$a[0]:null); $q=explode("/",$n);
-         $s=$q[0]; $f=(isset($q[1])?$q[1]:((is_string($a)&&!isin($a,"/"))?$a:null)); if(is_assoc_array($a)){$a=knob($a);};
+         $n=trim($n); $n=shaved($n,"/"); if(strlen($n)<3){return;}; $a=(isset($a[0])?$a[0]:null);
+         $s=stub($n,"/"); $f=null; $b=null; if($s){$f=$s[2]; $s=$s[0];}else{$s=$n;};
+         if($f){$b=stub($f,"/"); if($b){$f=$b[0]; $b=$b[2];}}; if(is_assoc_array($a)){$a=knob($a);};
 
          if(!isKnob($a))
          {
-             $p="/$s/conf"; $b=stub($f,"/"); if($b){$f=$b[0]; $b=$b[2];}; if($f){$p="$p/$f";}; // file and bore
-             if(isset(self::$meta[$p])){return self::$meta[$p];}; $q=pget($p); if($q===null){return;}; // cache or undefined
+             $p=($f?"/$s/conf/$f":"/$s/conf");
+             if(isset(self::$meta[$p])){$r=self::$meta[$p]; return ($b?bore($r,$b):$r);}; // cache & bore
+             $q=pget($p); if($q===null){return;}; // undefined
              if(is_string($q)) //file
              {
                  $r=dval($q); if(is_assoc_array($r)){$r=knob($r);};
-                 self::$meta[$p]=dupe($r); if(!$b){return $r;}; return bore($r,$b);
+                 self::$meta[$p]=dupe($r); return ($b?bore($r,$b):$r);
              };
              if(!is_array($q)){return;}; $r=knob(); // folder
              foreach($q as $i){$r->$i=dval(pget("$p/$i")); if(is_assoc_array($r->$i)){$r->$i=knob($r->$i);}};
-             self::$meta[$p]=dupe($r); if(!$b){return $r;}; return bore($r,$b);
+             self::$meta[$p]=dupe($r); return ($b?bore($r,$b):$r);
          };
 
          if(!isFold("/$s/conf")){fail::reference("expecting `/$s/conf` as folder"); exit;};
@@ -417,6 +440,44 @@ namespace Anon;
          foreach($a as $k => $v){$r=((wrapOf($k)==='//')?test($s,$k):akin($s,$k)); if($r){return $v;}}; return;
       }
    }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+# tool :: vars : immutable blobal variables
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+    class vars
+    {
+        private static $meta;
+
+        static function init()
+        {
+            self::$meta=knob();
+        }
+
+        static function get($d)
+        {
+            if($d==='*'){return self::$meta;};
+            return bore(self::$meta,$d);
+        }
+
+        static function set($k,$v)
+        {
+            if(!isText($k,1)){return;}; // invalid
+            if(span(self::$meta->$k)>0){return;}; // denied
+            self::$meta->$k=$v; return true;
+        }
+    }
+
+    function vars($d)
+    {
+        if(is_string($d)){return vars::get($d);};
+        if(is_assoc_array($d)){$d=knob($d);};
+        if(!is_object($d)){return;};
+        foreach($d as $k => $v){vars::set($k,$v);};
+    }
+
+    vars::init();
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -472,7 +533,9 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function impose($z,$b,$e,$v=null,$u=null)
    {
-      $l=expose($z,$b,$e); if(!$l){return $z;}; if(!isKnob($v)){$v=knob();}; foreach($l as $i)
+      $l=expose($z,$b,$e); if(!$l){return $z;};
+      if(is_assoc_array($v)){$v=knob($v);}elseif(!isKnob($v)){$v=knob();};
+      foreach($l as $i)
       {
          $f="{$b}{$i}{$e}"; if($u){$i=unwrap($i);}; $vn=is_funnic($i); $pn=isee($i);
          if($pn){$r=import($i,$v); if(isVoid($r)&&isFile($i)){$r=pget($i);}}
@@ -481,8 +544,9 @@ namespace Anon;
          {
             $p=rshave($i,')'); $p=stub($p,'('); $n=trim($p[0]); $a=trim($p[2]); $a=lshave($a,'(');
             // $a=swap("[$a]",["['","',","']"],['["','",','"]']); // fix array args
-            $a=dval($a); if(isin(["''",'""','``'],wrapOf($a))){$a=unwrap($a);};
-            if(isText($n,1)){$r=call($n,$a); if(isin($r,$b)&&isin($r,$e)){$r=impose($r,$b,$e,$v,$u);}}
+            if(!isText($n,1)){continue;}; $a=dval($a); if(isin(["''",'""','``'],wrapOf($a))){$a=unwrap($a);};
+            if(isPath($a)){vars::set($a,$v);}; $r=call($n,$a);
+            if(isin($r,$b)&&isin($r,$e)){$r=impose($r,$b,$e,$v,$u);};
          }
          else{$r='';};
          if(!is_string($r)){$r=tval($r);}; $z=str_replace($f,$r,$z);

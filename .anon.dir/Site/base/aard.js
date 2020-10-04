@@ -1,4 +1,3 @@
-window.WACKMESG="{:WACKMESG:}";
 window.pageGone=0;
 window.onbeforeunload=function(){pageGone=1};
 window.dump=function(){console.log.apply(console,([].slice.call(arguments)));};
@@ -34,20 +33,28 @@ window.userView=function(url,cbf)
 };
 
 
-window.script=function(src,cbf)
+window.script=function(src,cbf, txt,nde)
 {
-    var n=document.createElement('script');
-    if(src.startsWith('/')&&src.endsWith('.js')){n.src=src;}
-    else{n.innerHTML=src}; n.onload=cbf; document.head.appendChild(n);
-    return n;
+    txt=src.trim(); nde=document.createElement('script'); nde.onload=cbf;
+    if(!txt.startsWith('/')||!txt.endsWith('.js')){txt=('data:application/javascript;base64,'+btoa(txt))};
+    nde.src=txt; document.head.appendChild(nde);
 };
+
+
+// window.script=function(src,cbf)
+// {
+//     var n=document.createElement('script');
+//     if(src.startsWith('/')&&src.endsWith('.js')){n.src=src;}
+//     else{n.innerHTML=src}; n.onload=cbf; document.head.appendChild(n);
+//     return n;
+// };
 
 
 window.bootAnon=function(gate)
 {
-    if(!gate){gate=document.getElementById('AnonGate')};
-    gate=gate.getAttribute('data-src').split(';base64,').pop();
-    script(atob(gate));
+    if(((typeof gate)=='string')&&(gate.indexOf('/')>-1)){script(gate); return};
+    gate=document.getElementById('AnonGate'); gate=gate.getAttribute('data-src').split(';base64,').pop();
+    try{gate=atob(gate);}catch(e){console.error(gate); return}; script(gate);
 };
 
 

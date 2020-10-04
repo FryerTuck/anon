@@ -15,6 +15,8 @@ namespace Anon;
          if($ori===BARE){expect::path($dir); $ori="file://$dir"; $dir=null; $bar=BARE;}; // args validation
          expect::purl($ori); $inf=path::info($ori); $pth=$inf->path;  // args validation
          if(isWord($bar)&&!$usr){$usr="$bar"; $bar=null;}; // args validation
+         if(!isWord($usr)){$usr='master';}; $eml=pget("/User/data/$usr/mail");
+         if(!$eml){fail::config("user `$usr` is invalid");};
 
          if($inf->plug==='file')
          {
@@ -23,6 +25,8 @@ namespace Anon;
              {
                  $u=exec::{"whoami"}($pth);  $g=exec::{"id -gn"}($pth);  $tmp=('/tmp/'.random(16));
                  $y=exec::{"git init --bare --shared & mkdir $tmp"}($pth);
+                 $y=exec::{"git config --local user.name \"$usr\""}($pth); 
+                 $y=exec::{"git config --local user.email \"$eml\""}($pth);
                  $y=exec::{"git --work-tree=$tmp checkout --orphan master"}($pth);
                  $y=exec::{"git --work-tree=$tmp commit --allow-empty -m \"initial commit\""}($pth);
                  if(file_exists("$tmp")){exec::{"rm -rf $tmp"}($pth);};
@@ -44,7 +48,6 @@ namespace Anon;
          if(fext($pth)!=='git'){fail::reference("invalid repo origin: `$ori`"); exit;}; // validation
          if(!isRepo($dir)){exec::{"git init ."}($dir);}; $xor=exec::{"git config --local --get remote.origin.url"}($dir);
          if($xor!==$ori){exec::{"git remote set-url origin $fpo"}($dir);}; exec::{"git add --all"}($dir);
-         if(!isWord($usr)){$usr='master';}; $eml=pget("/User/data/$usr/mail"); if(!$eml){fail::config("user `$usr` is invalid");};
          exec::{"git config --local user.name \"$usr\""}($dir); exec::{"git config --local user.email \"$eml\""}($dir);
          exec::{"git commit --allow-empty -m \"initial commit\""}($dir);
 
