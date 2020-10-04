@@ -47,8 +47,7 @@ window.bootAnon=function(gate)
 {
     if(!gate){gate=document.getElementById('AnonGate')};
     gate=gate.getAttribute('data-src').split(';base64,').pop();
-    console.log(atob(gate));
-    // script(atob(gate));
+    script(atob(gate));
 };
 
 
