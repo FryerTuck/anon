@@ -152,7 +152,9 @@
         $ha=explode("\n",$ht); foreach($ha as $hx => $hl)
         {
             $tl=trim($hl); if($tl&&($tl[0]==="#")){continue;};
-            if(strpos($hl,"RewriteEngine On")===0){$ha[$hx]="#$hl";};
+            $lc=strtolower($hl);
+            if(strpos($lc,"rewriteengine on")===0){$ha[$hx]="#$hl";};
+            if(strpos($lc,"rewritebase /")===0){$ha[$hx]="#$hl";};
         };
         $ht=implode($ha,"\n");
     };
