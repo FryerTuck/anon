@@ -1108,7 +1108,7 @@
       },
       apply:function(o,x,a, r)
       {
-         stak(KEEP);
+         // stak(KEEP);
          a=a[0]; if(!isKnob(a)){fail('calling `expect` directly requires an object');return}; r=true;
          a.each((v,k)=>{let f=constant('is'+proprCase(k)); if(f&&!f(v)){fail('expecting '+k); r=false; return STOP}});
          return r;

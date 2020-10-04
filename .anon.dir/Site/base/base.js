@@ -156,7 +156,7 @@
    const purl = function(p,d,f, o,x,e,cb,pe,ee)
    {
       if(MAIN.HALT){return};
-      stak(KEEP);
+      // stak(KEEP);
       if(isText(p)&&isVoid(d)&&isVoid(f)){o={target:p,method:'GET',listen:{}}} // only URL given
       else if(isText(p)&&isFunc(d)&&isVoid(f)){o={target:p,method:'GET',listen:{loadend:d}}} // URL + callback
       else if(isText(p)&&isKnob(d)&&isVoid(f)){o=d; o.target=p; if(!isKnob(o.listen)){o.listen={}};} // URL + options
@@ -636,7 +636,7 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const requires = function(l,cbfn,cbpi, s,a,slf,bzy,ztst)
    {
-      stak(KEEP);
+      // stak(KEEP);
       // if(MAIN.HALT){return};
       if(!stak(0)){wack();return};
       if(!isFunc(cbfn)){cbfn=function(){}}; if(!isFunc(cbpi)){cbpi=function(){}};
@@ -1449,7 +1449,7 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const popModal = function(arg)
    {
-      stak(KEEP);
+      // stak(KEEP);
       if(isKnob(arg))
       {
          let a,h,b,f; a=arg.attr; h=arg.head; b=arg.body; f=arg.foot;

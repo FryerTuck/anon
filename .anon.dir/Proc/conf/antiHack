@@ -1,6 +1,6 @@
 denyDomainSpoofs: true
 denyScriptInject: true
-seeConsoleOutput: true
+seeConsoleOutput: false
 stainLargeImages: true
 stainWhenExceeds: 1280,720
 stainIgnoreThese: /Proc/dcor/*,/User/dcor/*

@@ -16,7 +16,6 @@
 // defn :: conf : front-end configuration
 // --------------------------------------------------------------------------------------------------------------------------------------------
    globVars({antiHack:deconf(`{:enconf('Proc/antiHack'):}`)});
-
    const timeVars = {e6:0};
 
    const badCfg='{:badCfg:}';
