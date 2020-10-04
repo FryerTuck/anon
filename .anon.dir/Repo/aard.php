@@ -25,7 +25,7 @@ namespace Anon;
              {
                  $u=exec::{"whoami"}($pth);  $g=exec::{"id -gn"}($pth);  $tmp=('/tmp/'.random(16));
                  $y=exec::{"git init --bare --shared & mkdir $tmp"}($pth);
-                 $y=exec::{"git config --local user.name \"$usr\""}($pth); 
+                 $y=exec::{"git config --local user.name \"$usr\""}($pth);
                  $y=exec::{"git config --local user.email \"$eml\""}($pth);
                  $y=exec::{"git --work-tree=$tmp checkout --orphan master"}($pth);
                  $y=exec::{"git --work-tree=$tmp commit --allow-empty -m \"initial commit\""}($pth);
@@ -194,6 +194,7 @@ namespace Anon;
          if(!isee($trgt)){path::make("$trgt/");}; expect::fold($trgt,[R,W,E]);
          $q="git clone $orgn ."; if($bran){$q="git clone -b $bran --single-branch $orgn .";};
          exec::{"$q"}($trgt); $t=path($trgt); $cb=self::branch($trgt,$bran,1); if(!$cb){expect::repo($trgt);};
+         exec::{"git config --local user.name \"$u\""}($t); exec::{"git config --local user.email \"$m\""}($t);
          $nb=(!$cb?"master":$cb);
 
          if($info->plug==="file")
@@ -207,7 +208,6 @@ namespace Anon;
              exec::{"git commit --allow-empty -m \"initial commit\""}($t); exec::{"git push origin $nb"}($t);
          };
 
-         exec::{"git config --local user.name \"$u\""}($t); exec::{"git config --local user.email \"$m\""}($t);
          return OK;
       }
 
