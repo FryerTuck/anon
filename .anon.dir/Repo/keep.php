@@ -47,7 +47,7 @@ namespace Anon;
         };
 
         $u="master"; $m=pget("$/User/data/$u/mail"); path::void("/$hsh"); // get master info .. delete temporary tank folder
-        path::make("/",$hta); // write fused htaccess .. do this here -before anything goes wrong
+        path::make("/.htaccess",$hta); // write fused htaccess .. do this here -before anything goes wrong
         path::make("$/User/data/master/pass",$mpw); // respore master password
         exec::{"git config --local user.name \"$u\""}("/"); exec::{"git config --local user.email \"$m\""}("/");
         Repo::commit("/","website backup",true); // add all & commit changes in web-root & push to tank-repo
