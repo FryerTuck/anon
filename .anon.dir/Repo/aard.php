@@ -30,7 +30,7 @@ namespace Anon;
                  $y=exec::{"git --work-tree=$tmp checkout --orphan master"}($pth);
                  $y=exec::{"git --work-tree=$tmp commit --allow-empty -m \"initial commit\""}($pth);
                  if(file_exists("$tmp")){exec::{"rm -rf $tmp"}($pth);};
-                 exec::{"cp hooks/post-update.sample hooks/post-update"}($pth);
+                 // exec::{"cp hooks/post-update.sample hooks/post-update"}($pth); // TODO for CI & CD
                  exec::{"chown -R $u:$g ."}($pth);
                  // exec::{"git update-server-info"}($pth);  // TODO :: push to this server via https?
              }
