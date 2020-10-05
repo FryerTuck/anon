@@ -26,8 +26,11 @@ $export=function($a,$u,$d)
       $ck=$vc->toggleUserPanl; if(isin($ck,'`')){$ck="` $ck `";};
 
       pset("$h/name",$u); pset("$h/pass",$x); pset("$h/mail",$m); pset("$h/clan",implode(',',$d->clan));
-      pset("$h/face",'/User/dcor/mug2.jpg'); pset("$h/rate",'0'); $v=['userName'=>$u]; $p="$h/home/boot"; pset("$p/");
-      pset("$p/hack.js",import('/User/tmpl/bootHack.js',$v)); pset("$p/skin.css",import('/User/tmpl/bootSkin.css',$v));
+      pset("$h/face",'/User/dcor/mug2.jpg'); pset("$h/rate",'0'); $v=['userName'=>$u]; $p="$h/home/Custom"; pset("$p/");
+      pset("$p/client.js",import('/User/tmpl/bootHack.js',$v)); pset("$p/pretty.css",import('/User/tmpl/bootSkin.css',$v));
+      pset("$p/server.php",import('/User/tmpl/bootHack.php',$v)); pset("$h/home/Shared/");
+
+      Repo::clone(conf('Repo/gitRefer/UserOrigin'),"$h/home/MyRepo",conf('Repo/gitRefer/UserBranch'),$u);
       Proc::signal('madeUser',['nick'=>$u,'mail'=>$m,'clan'=>$cl]);
 
       signal::busy(['with'=>"mail",'done'=>50]);
