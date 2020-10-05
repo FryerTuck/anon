@@ -410,7 +410,7 @@ namespace Anon;
          };
          path::make($mp,$pw);
 
-         Repo::commit("/","$aw update",true); // add all & commit changes in web-root & push to tank-repo
+         Repo::commit("/","$uw update",true); // add all & commit changes in web-root & push to tank-repo
          signal::ClientReboot("new updates from $cw","*");
          return OK;
       }
