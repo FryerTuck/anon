@@ -5,4 +5,4 @@ SiteOrigin: file://$/Repo/data/remote/tank.git
 SiteBranch: master
 
 UserOrigin: file://$/Repo/data/remote/tank.git
-UserBranch: tanker
+UserBranch: master
