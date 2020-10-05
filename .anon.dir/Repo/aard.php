@@ -112,14 +112,14 @@ namespace Anon;
 
       static function status($dir,$hsh=null)
       {
+         $dir=repoOf($dir); if(!$dir){return;}; $brn=isRepo($dir); $src=self::origin($dir,1); $hst=HOSTNAME; $bdy=knob();
+
          if($hsh===':HASH:')
          {
-            $gl=exec::{"git log -1 --oneline --decorate $rn/$bn"}($dir); $ch=null; // git-log .. fetch last line
+            $gl=exec::{"git log -1 --oneline --decorate $src/$brn"}($dir); $ch=null; // git-log .. fetch last line
             $lp=stub($gl,"("); if($lp){$ch=trim($lp[0]);};
             return $ch;
          };
-
-         $dir=repoOf($dir); if(!$dir){return;}; $brn=isRepo($dir); $src=self::origin($dir,1); $hst=HOSTNAME; $bdy=knob();
 
          if(isin($src,['https://','http://']))
          {
