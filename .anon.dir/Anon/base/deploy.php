@@ -98,7 +98,7 @@
             if(strpos($lc,"rewritebase /")===0){$ha[$hx]="# $hl .. dejavu";};
         };
 
-        $nt=implode($ha,"\n"); $rt=($at."\n\n\n".$at);
+        $nt=implode($ha,"\n"); $rt=($at."\n\n\n".$nt);
         return $rt;
     }
 
@@ -166,7 +166,7 @@
 
 # exec :: (cleanup) : backup .htaccess & remove all anon-related files
 # -----------------------------------------------------------------------------------------------------------------------------
-    $ls=[".anon.dir",".git",".anon.php","README.md"];
+    $ls=["anon",".anon.dir",".git",".anon.php","README.md"];
     foreach($ls as $li){if(($li!==$fn)&&file_exists("$bp/$li")){bash("rm -rf ./$li");}};
 # -----------------------------------------------------------------------------------------------------------------------------
 
