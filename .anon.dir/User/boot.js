@@ -66,7 +66,8 @@
          {
             Busy.edit('initPanl',61); wait.until(()=>{return (!!select('#AnonReplFeed'))},()=>
             {
-               Busy.edit('initPanl',81); requires(['/User/initBoot/skin.css','/User/initBoot/hack.js'],()=>
+               Busy.edit('initPanl',81);
+               requires(['/User/initBoot/pretty.css','/User/initBoot/client.js'],()=>
                {
                   Busy.edit('initPanl',100); AnonPanl.show(); // finish up as expected
                   tick.after(250,()=> // force Busy to close after 0.25 sec
@@ -163,11 +164,19 @@
 
 // cond :: clan : if user is logged in and is worker -then show the panel
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   if(userDoes("work sudo"))
+   if(userDoes("work,sudo"))
    {
       globVars({idleTime:{:'/User/conf/inactive':}});
       globVars({authTime:time()},[`XMLHttpRequest.authSudo /User/getRepel`]);
       globVars({mailBusy:0},[`Object.mailTime /User/boot.js`,`XMLHttpRequest.pingMail /User/boot.js`]);
+
+      listen("SSEReady",function()
+      {
+          purl("/User/initBoot/server",function()
+          {
+              dump("ran: ~/server.php upon `SSEReady` event");
+          });
+      });
 
 
       listen("clockSec",function()

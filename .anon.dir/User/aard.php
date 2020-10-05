@@ -179,8 +179,12 @@ namespace Anon;
 
       static function initBoot($a)
       {
-         $u=sesn('USER'); $p="/User/data/$u/home/boot/$a";
-         if(!isin(sesn('CLAN'),'work')||!isee($p)){ekko::head(['Content-Type'=>mime($p)]); die('/* one love */');};
+         permit::fubu('clan:work'); $u=sesn('USER'); $p="$/User/data/$u/home/Custom";
+
+         if($a==='server')
+         {if(!isee("$p/$a.php")){ekko(FAIL);}; $r=requires::path("$p/$a.php"); ekko((span($r)>0)?$r:OK); exit;};
+
+         if(!isee("$p/$a")){ekko::head(['Content-Type'=>mime("$p/$a")]); die('/* one love */');};
          finish($p);
       }
 
