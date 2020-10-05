@@ -114,7 +114,7 @@ namespace Anon;
       }
 
 
-      function deploy($d,$b='tanker')
+      function deploy($d,$b='master')
       {
          $i=$this->mean; $p=$i->purl; if(isin($p,'file:')||isin($p,'git:')){$p=path($i->path);}; $s=$this->status()->code;
          if($s!==200){$s=conf('c0r3/stat')->$s; fail("`$p` is $s");}; $d=crop(path($d)); if(!$d){fail('invalid destination');};

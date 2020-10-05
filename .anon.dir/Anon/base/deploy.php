@@ -70,6 +70,13 @@
     }
 
 
+    function pget($p)
+    {
+        $b=base(); if(!file_exists($b.$p)){return '';};
+        return file_get_contents($b.$p);
+    }
+
+
     function bash($c)
     {
         $p=base(); $q=array(array("pipe","r"), array("pipe","w"), array("pipe","w")); $v=null;
@@ -77,6 +84,22 @@
         $o=trim(stream_get_contents($x[1])); fclose($x[1]); $e=trim(stream_get_contents($x[2])); fclose($x[2]);
         $z=trim(proc_close($r)); if($z){$z=(($e&&$o)?"$e ..\n$o":($e?$e:$o));}; if(!$z){return $o;};
         if(strpos($z,"cnf $y")){$c=bail("system host can't run: $y");}; bail($z);
+    }
+
+
+    function hbkp($nt,$at)
+    {
+        $dl="# === ANONDONE === #"; if(strpos($nt,$dl)){$nt=explode($dl,$nt); $nt=array_pop($nt); $nt=trim($nt);};
+
+        $ha=explode("\n",$nt); foreach($ha as $hx => $hl)
+        {
+            $tl=trim($hl); if($tl&&($tl[0]==="#")){continue;}; $lc=strtolower($hl);
+            if(strpos($lc,"rewriteengine on")===0){$ha[$hx]="# $hl .. dejavu";};
+            if(strpos($lc,"rewritebase /")===0){$ha[$hx]="# $hl .. dejavu";};
+        };
+
+        $nt=implode($ha,"\n"); $rt=($at."\n\n\n".$at);
+        return $rt;
     }
 
 
@@ -143,22 +166,7 @@
 
 # exec :: (cleanup) : backup .htaccess & remove all anon-related files
 # -----------------------------------------------------------------------------------------------------------------------------
-    $ls=[".anon.dir",".git",".anon.php",".htaccess","README.md"]; $ht=""; $dl="# === ANONDONE ===";
-    if(file_exists("$bp/.htaccess")){$ht=file_get_contents("$bp/.htaccess");};
-    if(strpos($ht,$dl)){$ht=explode($dl,$ht); $ht=array_pop($ht); $ht=trim($ht);};
-
-    if($ht)
-    {
-        $ha=explode("\n",$ht); foreach($ha as $hx => $hl)
-        {
-            $tl=trim($hl); if($tl&&($tl[0]==="#")){continue;};
-            $lc=strtolower($hl);
-            if(strpos($lc,"rewriteengine on")===0){$ha[$hx]="# $hl .. dejavu";};
-            if(strpos($lc,"rewritebase /")===0){$ha[$hx]="# $hl .. dejavu";};
-        };
-        $ht=implode($ha,"\n");
-    };
-
+    $ls=[".anon.dir",".git",".anon.php","README.md"];
     foreach($ls as $li){if(($li!==$fn)&&file_exists("$bp/$li")){bash("rm -rf ./$li");}};
 # -----------------------------------------------------------------------------------------------------------------------------
 
@@ -166,10 +174,11 @@
 
 # exec :: (install) : clone the Anon repo into a clean temp space, move contents over to CWD and dispose of temp
 # -----------------------------------------------------------------------------------------------------------------------------
-    $rs=bash("git clone https://github.com/FryerTuck/anon.git");
-    $rs=bash("shopt -s dotglob && mv anon/* . && rm -rf ./anon");
-    if($ht){$ah=file_get_contents("$bp/.htaccess"); file_put_contents("$bp/.htaccess","$ah\n\n\n$ht");};
-    $mp=password_hash(trim(file_get_contents("$bp/.anon.dir/Proc/info/pass.inf")),PASSWORD_DEFAULT);
+    bash("git clone https://github.com/FryerTuck/anon.git");
+    $ht=hbkp(pget("/.htaccess"),pget("/anon/.htaccess"));
+    bash("shopt -s dotglob && mv anon/* . && rm -rf ./anon");
+    file_put_contents("$bp/.htaccess",$ht);
+    $mp=password_hash(trim(pget("/.anon.dir/Proc/info/pass.inf")),PASSWORD_DEFAULT);
     file_put_contents("$bp/.anon.dir/User/data/master/pass",$mp);
 # -----------------------------------------------------------------------------------------------------------------------------
 

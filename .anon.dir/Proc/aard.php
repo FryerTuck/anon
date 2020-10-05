@@ -394,44 +394,27 @@ namespace Anon;
 
       static function update()
       {
-         permit::fubu('clan:lead,sudo'); $ln="SoftwareUpdate";
-         $mp='$/User/data/master/pass'; $pw=pget($mp);
-         $uw=lowerCase(posted("from")); $cw=(proprCase($uw).'Branch');
-         $rp="$/Repo/data/native/$uw"; $gr=conf("Repo/gitRefer");
-         $nt="$/Repo/data/native/test";
+         permit::fubu('clan:lead,sudo'); $sp=pget("$/Repo/data/native/site");
+         $uw=lowerCase(posted("from"));  $cw=(proprCase($uw).'Branch');
+         $up="$/Repo/data/native/$uw";   $gr=conf("Repo/gitRefer");
+         $tp="$/Repo/data/native/test";  $ln="SoftwareUpdate";
+         // $mp='$/User/data/master/pass';  $pw=pget($mp);
 
          if(lock::exists($ln)){return OK;}; lock::create($ln);
-         Repo::update($rp,$gr->$cw,'pull','origin');
+         Repo::update($up,$gr->$cw,'pull','origin');
          $fl=pget($rp,false); $om=[".git"];
-
-         $ht=pget("$nt/.htaccess"); $dl="# === ANONDONE ===";
-         if(isin($ht,$dl)){$ht=explode($dl,$ht); $ht=array_pop($ht); $ht=trim($ht);};
 
          foreach($fl as $fn)
          {
              if(isin($om,$fn)){continue;};
-             path::copy("$rp/$fn","$nt/$fn",true);
+             path::copy("$up/$fn","$tp/$fn",true);
          };
 
-         if($ht)
-         {
-             $ha=explode("\n",$ht); foreach($ha as $hx => $hl)
-             {
-                 $tl=trim($hl); if($tl&&($tl[0]==="#")){continue;};
-                 $lc=strtolower($hl);
-                 if(strpos($lc,"rewriteengine on")===0){$ha[$hx]="# $hl .. dejavu";};
-                 if(strpos($lc,"rewritebase /")===0){$ha[$hx]="# $hl .. dejavu";};
-             };
-             $ht=implode($ha,"\n");
-         };
-
-         path::make("$nt/.htaccess",$ht);
-         path::make($mp,$pw);
-
-         Repo::commit("$nt","$uw update",true); // add all & commit changes & push to tank-repo
+         // path::make($mp,$pw);
+         $ht=htbackup(pget("$sp/.htaccess"),pget("$/Repo/data/native/anon/.htaccess"));
+         path::make("$tp/.htaccess",$ht); Repo::commit($tp,"$uw update",true); // add all & commit changes & push to tank-repo
          Repo::update('/','pull'); // Any `gitIgnor` will be fine .. don't worry
-
-         signal::ClientReboot("new updates from $cw","*");
+         lock::remove($ln); signal::ClientReboot("new updates from $cw","*");
          return OK;
       }
    }
@@ -451,6 +434,26 @@ namespace Anon;
          $r=Proc::signal($n,$d,$t); wait($c); return $r;
       }
    }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+# func :: htbackup : fuze navite htaccess with Anon's
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+    function htbackup($nt,$at)
+    {
+        $dl="# === ANONDONE === #"; if(strpos($nt,$dl)){$nt=explode($dl,$nt); $nt=array_pop($nt); $nt=trim($nt);};
+
+        $ha=explode("\n",$nt); foreach($ha as $hx => $hl)
+        {
+            $tl=trim($hl); if($tl&&($tl[0]==="#")){continue;}; $lc=strtolower($hl);
+            if(strpos($lc,"rewriteengine on")===0){$ha[$hx]="# $hl .. dejavu";};
+            if(strpos($lc,"rewritebase /")===0){$ha[$hx]="# $hl .. dejavu";};
+        };
+
+        $nt=implode($ha,"\n"); $rt=($at."\n\n\n".$at);
+        return $rt;
+    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 

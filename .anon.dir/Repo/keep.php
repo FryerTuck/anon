@@ -35,8 +35,10 @@ namespace Anon;
         $hsh=PROCHASH; path::make("/$hsh/"); // make temporary empty folder for tank repo
         $tko=path::purl(path::info("$rmt/tank"),true); // tank origin url
         $mpw=pget("$/User/data/master/pass"); // backup master password
+        $hta=pget("/.htaccess"); if(!$hta){$hta='';};
 
         exec::{"git clone $tko ."}("/$hsh/"); // clone tank into temporary folder
+        $hta=htbackup($hta,pget("$ntv/anon/.htaccess")); // fused htaccess
         path::void("/.git"); $lst=pget("/$hsh/",false); // delete .git from web-root & get list of tank files
 
         foreach($lst as $itm)
@@ -45,6 +47,7 @@ namespace Anon;
         };
 
         $u="master"; $m=pget("$/User/data/$u/mail"); path::void("/$hsh"); // get master info .. delete temporary tank folder
+        path::make("/",$hta); // write fused htaccess .. do this here -before anything goes wrong
         path::make("$/User/data/master/pass",$mpw); // respore master password
         exec::{"git config --local user.name \"$u\""}("/"); exec::{"git config --local user.email \"$m\""}("/");
         Repo::commit("/","website backup",true); // add all & commit changes in web-root & push to tank-repo
