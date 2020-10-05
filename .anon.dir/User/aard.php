@@ -194,17 +194,7 @@ namespace Anon;
       {
          permit::fubu("clan:work");
          $v=knob($_POST); $h=$v->root; if(!$h){$h='~';};
-
-         if(arg($h)->startsWith('~'))
-         {
-            $u=user('name'); $h="/User/data/$u/home";
-            if(!isee("$h/root"))
-            {
-               $b=conf('Code/forkName'); if(!is_funnic($b)){fail("invalid branch name in Code config");};
-               if(!isRepo('/')){Repo::create('/'); wait(50);};
-               Repo::cloned('/',"$h/root",$b,$u);
-            };
-         };
+         if(arg($h)->startsWith('~')){$u=user('name'); $h="/User/data/$u/home";};
 
          $r=path::tree($h); ekko($r);
       }
@@ -215,17 +205,7 @@ namespace Anon;
       {
          permit::fubu("clan:work");
          $v=knob($_POST); $h=$v->root; if(!$h){$h=$v->path;}; if(!$h){$h='~';}; expect::path($h,[R,D]);
-
-         if(arg($h)->startsWith('~'))
-         {
-            $u=user('name'); $h="/User/data/$u/home";
-            if(!isee("$h/root"))
-            {
-               $b=conf('Code/forkName'); if(!is_funnic($b)){fail("invalid branch name in Code config");};
-               if(!isRepo('/')){Repo::create('/'); wait(50);};
-               Repo::cloned('/',"$h/root",$b,$u);
-            };
-         };
+         if(arg($h)->startsWith('~')){$u=user('name'); $h="/User/data/$u/home";};
 
          $r=path::ogle
          ([
