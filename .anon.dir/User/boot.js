@@ -170,8 +170,10 @@
       globVars({authTime:time()},[`XMLHttpRequest.authSudo /User/getRepel`]);
       globVars({mailBusy:0},[`Object.mailTime /User/boot.js`,`XMLHttpRequest.pingMail /User/boot.js`]);
 
+
       listen("SSEReady",function()
       {
+          if(!userDoes("work")){return};
           purl("/User/initBoot/server",function()
           {
               dump("ran: ~/server.php upon `SSEReady` event");
