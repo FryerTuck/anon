@@ -398,18 +398,19 @@ namespace Anon;
          $mp='$/User/data/master/pass'; $pw=pget($mp);
          $uw=lowerCase(posted("from")); $cw=(proprCase($uw).'Branch');
          $rp="$/Repo/data/native/$uw"; $gr=conf("Repo/gitRefer");
+         $nt="$/Repo/data/native/test";
 
          if(lock::exists($ln)){return OK;}; lock::create($ln);
          Repo::update($rp,$gr->$cw,'pull','origin');
          $fl=pget($rp,false); $om=[".git"];
 
-         $ht=pget("/.htaccess"); $dl="# === ANONDONE ===";
+         $ht=pget("$nt/.htaccess"); $dl="# === ANONDONE ===";
          if(isin($ht,$dl)){$ht=explode($dl,$ht); $ht=array_pop($ht); $ht=trim($ht);};
 
          foreach($fl as $fn)
          {
              if(isin($om,$fn)){continue;};
-             path::copy("$rp/$fn","/",true);
+             path::copy("$rp/$fn","$nt/$fn",true);
          };
 
          if($ht)
@@ -424,10 +425,12 @@ namespace Anon;
              $ht=implode($ha,"\n");
          };
 
-         path::make("/.htaccess",$ht);
+         path::make("$nt/.htaccess",$ht);
          path::make($mp,$pw);
 
-         Repo::commit("/","$uw update",true); // add all & commit changes in web-root & push to tank-repo
+         Repo::commit("$nt","$uw update",true); // add all & commit changes & push to tank-repo
+         Repo::update('/','pull'); // Any `gitIgnor` will be fine .. don't worry
+
          signal::ClientReboot("new updates from $cw","*");
          return OK;
       }

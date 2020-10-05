@@ -33,7 +33,7 @@ namespace Anon;
     if($cfo!==$sto)
     {
         $hsh=PROCHASH; path::make("/$hsh/"); // make temporary empty folder for tank repo
-        $tko=path::purl(path::info("$rmt/tank"),true); // tank origin url
+        $tko=path::purl(path::info("$ntv/test"),true); // tank origin url
         $mpw=pget("$/User/data/master/pass"); // backup master password
 
         exec::{"git clone $tko ."}("/$hsh/"); // clone tank into temporary folder
@@ -48,6 +48,7 @@ namespace Anon;
         path::make("$/User/data/master/pass",$mpw); // respore master password
         exec::{"git config --local user.name \"$u\""}("/"); exec::{"git config --local user.email \"$m\""}("/");
         Repo::commit("/","website backup",true); // add all & commit changes in web-root & push to tank-repo
+        Repo::update('$/Repo/data/native/test','pull');
     };
 # -----------------------------------------------------------------------------------------------------------------------------
 

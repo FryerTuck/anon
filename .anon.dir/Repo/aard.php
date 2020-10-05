@@ -242,7 +242,7 @@ namespace Anon;
 
       static function update($dir,$brn=null,$run='pull',$nic='origin')
       {
-         expect::repo($dir);
+         expect::repo($dir); if(isin($brn,['pull','push'])){$run="$brn"; $brn=null;};
          if(!$brn){$brn=self::branch($dir);}elseif(!is_funnic($brn)){fail::reference('invalid branch name');};
          exec::{"git $run $nic $brn"}($dir); $ph=md5($dir); $ch=self::status($dir,':HASH:');
          if(!$ch){fail::repo("could not get hash-reference from: $dir");exit;};
