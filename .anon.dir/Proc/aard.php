@@ -401,15 +401,15 @@ namespace Anon;
 
          if(lock::exists($ln)){return OK;}; lock::create($ln);
          Repo::update($rp,$gr->$cw,'pull','origin');
-
          $fl=pget($rp,false); $om=[".git"];
+
          foreach($fl as $fn)
          {
              if(isin($om,$fn)){continue;};
              path::copy("$rp/$fn","/",true);
          };
-         path::make($mp,$pw);
 
+         path::make($mp,$pw);
          Repo::commit("/","$uw update",true); // add all & commit changes in web-root & push to tank-repo
          signal::ClientReboot("new updates from $cw","*");
          return OK;
