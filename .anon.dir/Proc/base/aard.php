@@ -351,7 +351,8 @@ namespace Anon;
           $r=str_replace(["\n","\t"],['↵','⇥'],$d); return $r;
       };
       if(is_nokey_array($d)){$d=array_values($d);}; //if($pp){$pp=JSON_PRETTY_PRINT;};
-      if(is_closure($d)){$r=var_export($d,true);}elseif($o===DUMP){$r=json_encode($d,JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);}
+      if(is_closure($d)){try{$r=blojob($d);}catch(\Exception $e){$r=var_export($d,true);}}
+      elseif($o===DUMP){$r=json_encode($d,JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);}
       else{$r=json_encode($d,JSON_UNESCAPED_SLASHES);};
       if(!is_string($r)){$r=print_r($d,true);}; return trim($r);
    }

@@ -165,10 +165,11 @@ namespace Anon;
          {
             $t=isee($p); if($t&&is_dir($t)){$i=path::indx($t); if($i){$t="$t/$i";}}; if($t){$p="$t";};
             if(!$t||!is_file($t)||(fext($t)!=='php')){if($fldr){continue;}; $p=tval($p); fail("expecting `$p` as readable php file");};
-            $_PATH=$p; $_TWIG=twig($p); $export=null; ob_start(); require_once "$_PATH"; $r=trim(ob_get_clean()); $r=(isVoid($export)?$r:$export);
+            $_PATH=$p; $_TWIG=twig($p); $export=null; ob_start(); require "$_PATH"; $r=trim(ob_get_clean()); $r=(isVoid($export)?$r:$export);
             if($r){$_RESL[]=$r;};
          };
-         $c=count($_RESL); $z=(($c<1)?true:(($c<2)?$_RESL[0]:$_RESL)); self::$mods->$cr=$z; return $z;
+         $c=count($_RESL); $z=(($c<1)?true:(($c<2)?$_RESL[0]:$_RESL));
+         self::$mods->$cr=$z; return $z;
       }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------

@@ -191,7 +191,7 @@ namespace Anon;
       $t=substr(type($x),0,2); if(!$n&&($t!='li')&&($t!='no')){return $x;};
       if($t=='li'){$r=[]; $k=null; $v=null; foreach($x as $k => $v){$r[$k]=dupe($v);}; return $r;};
       if($t=='no'){$r=(clone $x); return $r;}; if(is_number($x)){$x="$x";};
-      if(!is_string($x)||($n<1)){return $x;}; $r=''; for($i=0; $i<=$n; $i++){$r.=$x;}; return $r;
+      if(!is_string($x)||($n<1)){return $x;}; $r=''; for($i=0; $i<$n; $i++){$r.=$x;}; return $r;
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -262,6 +262,7 @@ namespace Anon;
 
       if(is_string($x))
       {
+         if(is_int($d)&&is_int($i)){if($i<$d){return;}; return mb_substr($x,$d,($i-$d));};
          if(($i===null)&&(($d===null)||(is_int($d))||($d===''))){return ((is_int($d)&&($d>1))?str_split($x,$d):str_split($x));};
          if(($i===null)&&is_string($d)){return explode($d,$x);}; if(is_int($i)&&is_int($d)){return mb_substr($x,$d,$i);};
          return;
@@ -519,7 +520,7 @@ namespace Anon;
       $r=[]; $m=mb_strlen($b); $n=mb_strlen($e);
       do
       {
-         $a=indx($t,$b,0); $i=($a+$m); $z=indx($t,$e,$i); $i++; $z=indx($t,$e,$i);
+         $a=indx($t,$b,0); $i=($a+$m+0); $z=indx($t,$e,$i);
          if(($a===null)||($z===null)){break;}; $z+=$n; $x=mb_substr($t,($a+$m),($z-$a));
          $r[]=mb_substr($x,0,mb_strpos($x,$e)); $t=mb_substr($t,$z); if($x===false){break;};
       }
@@ -559,35 +560,27 @@ namespace Anon;
 
 # func :: depose : delete strings between strings - including thre wrap
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   function depose($z,$b,$e)
+   function depose($z,$b,$e,$r='')
    {
       $l=expose($z,$b,$e); if(!$l){return $z;};
-      foreach($l as $i){$f="{$b}{$i}{$e}"; $r=''; $z=str_replace($f,$r,$z);};
+      foreach($l as $i){$f="{$b}{$i}{$e}"; $z=str_replace($f,$r,$z);};
       return $z;
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
-# func :: qtFill : fills quoted text with some character
+# func :: redact : replace characters between strings with other characters .. string length remains the same
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   function qtFill($h,$n='ಠ')
+   function redact($t,$b,$e,$r='█')
    {
-      if(!isText($h,1)||!isText($n,1,1)){return;};
-      $qc=['"',"'",'`']; $qx=null; $en=null; $hs=strlen($h); $ns=strlen($n); $rt=''; for($i=0; $i<$hs; $i++)
-      {$cc=$h[$i]; $en=($cc==='\\'); if(isin($qc,$cc)){$qx=((($qx===$cc)&&!$en)?null:$cc); $rt.=$cc; continue;}; $rt.=($qx?$n:$cc);};
-      return $rt;
-   }
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-# func :: uqIndx : returns index of needle in haystack -in which quoted text is ignored
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-   function uqIndx($h,$n,$p=0,$t=null)
-   {
-      if(!isText($h,1)||!isText($n,1)||!is_int($p)||($p<0)){return;};
-      if(!$t){$t=qtFill($h);}; $r=mb_strpos($t,$n,$p); return $r;
+      $z="$t"; if((span($b)===1)&&($b===$e)){$t=str_replace("\\$b",($r.$r),$z); unset($z); $z="$t";};
+      $l=expose($t,$b,$e); if(!$l){return $t;}; foreach($l as $i)
+      {
+          $f=($b.$i.$e); $n=($b.dupe($r,mb_strlen($i)).$e);
+          $z=explode("$f",$z); $z=implode("$n",$z);
+      };
+      return $z;
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -595,13 +588,15 @@ namespace Anon;
 
 # func :: bpIndx : returns bracket-pair indices found in haystack .. respects multi-level .. ignores quoted text
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   function bpIndx($h,$n,$p=0,$t=null)
+   function bpIndx($h,$n,$p=0)
    {
-      if(!isText($h,1)||!isText($n,2,2)||!isin(['{}','()','[]'],$n)||!is_int($p)||($p<0)){return;}; if(!$t){$t=qtFill($h);};
-      if(!isin($t,$n[0])||!isin($t,$n[1])){return;}; $hs=strlen($h); $bl=0; $bs=0; $xb=$n[0]; $xe=$n[1]; $r=[]; for($i=$p; $i<$hs; $i++)
+      if(!isText($h,1)||!isText($n,2,2)||!isin(['{}','()','[]','<>'],$n)||!is_int($p)||($p<0)){return;};
+      $hs=mb_strlen($h); $bl=0; $bs=0; $xb=$n[0]; $xe=$n[1]; $r=[]; if(!isin($h,$xb)||!isin($h,$xe)){return;};
+      for($i=$p; $i<$hs; $i++)
       {
-         $cc=mb_substr($t,$i,1); if(($cc!==$xb)&&($cc!==$xe)){continue;}; if($cc==$xb){$bl++;}else{$bl--;};
-         if(($cc==$xb)&&($bs===0)&&($bl===1)){$bs=1; $r[]=$i;}elseif(($cc==$xe)&&($bs===1)&&($bl===0)){$r[]=$i; break;};
+         $cc=mb_substr($h,$i,1);
+         if($cc===$xb){$bl++; if($bl===1){$r[]=$i;}; continue;};
+         if($cc===$xe){$bl--; if($bl===0){$r[]=$i; break;}};
       };
       return $r;
    }
@@ -613,11 +608,13 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function blojob($a)
    {
-      if(!isFunc($a)){return;}; $i=(new \ReflectionFunction($a)); $p=$i->getFileName();  $b=$i->getStartLine();  $e=$i->getEndLine();
-      $t=pget($p); $l=explode("\n",$t); $t=array_slice($l,($b-1),(($e-$b)+1)); $w='function'; $f=$t[0]; $q=qtFill($f); $x=uqIndx($f,$w,0,$q);
-      if(uqIndx($f,$w,($x+1),$q)){fail("ambiguous blojob in `$p` on line $b ... shameless");}; $t[0]=mb_substr($f,$x); $t=implode("\n",$t);
-      $x=uqIndx($t,'{'); $h=mb_substr($t,0,$x); $b=mb_substr($t,$x); $x=bpIndx($b,'{}'); $b=mb_substr($b,$x[0],(($x[1]-$x[0])+1));
-      $r=($h.$b.';'); return $r;
+      if(!isFunc($a)){return;}; $i=(new \ReflectionFunction($a)); $p=$i->getFileName(); $b=$i->getStartLine(); $e=$i->getEndLine();
+      $t=pget($p); $l=explode("\n",$t); $t=array_slice($l,($b-1),(($e-$b)+1)); $t=implode("\n",$t);  // now `$t` is interesting
+      $q=redact($t,'"','"'); $q=redact($q,"'","'"); $q=redact($q,"/*","*/");  $q=redact($q,"//","\n"); $q=redact($q,"#","\n");
+      $l=explode("\n",$q); $f=$l[0]; $hx=indx($f,'function'); $m="multi blojob in `$p` on line";
+      if(indx($f,'function',($hx+1))){fail("$m $b ... shameless"); exit;}; $bx=bpIndx($q,'{}');
+      $h=frag($t,$hx,$bx[0]); $b=frag($t,$bx[0],($bx[1]+1));
+      $r=($h.$b); return $r;
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
