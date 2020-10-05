@@ -447,8 +447,8 @@ namespace Anon;
         $ha=explode("\n",$nt); foreach($ha as $hx => $hl)
         {
             $tl=trim($hl); if($tl&&($tl[0]==="#")){continue;}; $lc=strtolower($hl);
-            if(strpos($lc,"rewriteengine on")===0){$ha[$hx]="# $hl .. dejavu";};
-            if(strpos($lc,"rewritebase /")===0){$ha[$hx]="# $hl .. dejavu";};
+            if(strpos($lc,"rewriteengine on")===0){$ha[$hx]="# $tl .. dejavu";};
+            if(strpos($lc,"rewritebase /")===0){$ha[$hx]="# $tl .. dejavu";};
         };
 
         $nt=implode($ha,"\n"); $rt=($at."\n\n\n".$nt);
