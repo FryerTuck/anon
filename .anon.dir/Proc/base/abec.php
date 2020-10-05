@@ -604,15 +604,15 @@ namespace Anon;
 
 
 
-# func :: blojob : quick-and-dirty closure serialization .. for use as job in another process .. use with caution and care .. because ... STDs
+# func :: blojob : quick-and-dirty function-to-string .. for use as job in another process .. use with care and caution .. because ... STDs
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function blojob($a)
    {
       if(!isFunc($a)){return;}; $i=(new \ReflectionFunction($a)); $p=$i->getFileName(); $b=$i->getStartLine(); $e=$i->getEndLine();
       $t=pget($p); $l=explode("\n",$t); $t=array_slice($l,($b-1),(($e-$b)+1)); $t=implode("\n",$t);  // now `$t` is interesting
       $q=redact($t,'"','"'); $q=redact($q,"'","'"); $q=redact($q,"/*","*/");  $q=redact($q,"//","\n"); $q=redact($q,"#","\n");
-      $l=explode("\n",$q); $f=$l[0]; $hx=indx($f,'function'); $m="multi blojob in `$p` on line";
-      if(indx($f,'function',($hx+1))){fail("$m $b ... shameless"); exit;}; $bx=bpIndx($q,'{}');
+      $l=explode("\n",$q); $f=$l[0]; $hx=indx($f,'function');
+      if(indx($f,'function',($hx+1))){fail("multi-job in `$p` on line $b ... shameless"); exit;}; $bx=bpIndx($q,'{}');
       $h=frag($t,$hx,$bx[0]); $b=frag($t,$bx[0],($bx[1]+1));
       $r=($h.$b); return $r;
    }
