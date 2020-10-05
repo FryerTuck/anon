@@ -403,13 +403,30 @@ namespace Anon;
          Repo::update($rp,$gr->$cw,'pull','origin');
          $fl=pget($rp,false); $om=[".git"];
 
+         $ht=pget("/.htaccess"); $dl="# === ANONDONE ===";
+         if(isin($ht,$dl)){$ht=explode($dl,$ht); $ht=array_pop($ht); $ht=trim($ht);};
+
          foreach($fl as $fn)
          {
              if(isin($om,$fn)){continue;};
              path::copy("$rp/$fn","/",true);
          };
 
+         if($ht)
+         {
+             $ha=explode("\n",$ht); foreach($ha as $hx => $hl)
+             {
+                 $tl=trim($hl); if($tl&&($tl[0]==="#")){continue;};
+                 $lc=strtolower($hl);
+                 if(strpos($lc,"rewriteengine on")===0){$ha[$hx]="# $hl .. dejavu";};
+                 if(strpos($lc,"rewritebase /")===0){$ha[$hx]="# $hl .. dejavu";};
+             };
+             $ht=implode($ha,"\n");
+         };
+
+         path::make("/.htaccess",$ht);
          path::make($mp,$pw);
+
          Repo::commit("/","$uw update",true); // add all & commit changes in web-root & push to tank-repo
          signal::ClientReboot("new updates from $cw","*");
          return OK;
