@@ -72,6 +72,8 @@ namespace Anon;
           $gl=exec::{"git log -1 --oneline --decorate $rn/$bn"}($rp); $ch=0; // git-log .. fetch last line
           $lp=stub($gl,"("); if($lp){$ch=trim($lp[0]); $lp=rstub($gl,"origin/HEAD)");}; if(!$lp){return;};  // line-parts
           $cm=trim($lp[2]); $lh=pget("$/Repo/vars/pathHash/$ph"); // commit-message & last-hash
+ekko("$gl\n$lh");
+
           if($lh===$ch){return;}; // hashes match, no difference
 
           path::make("$/Repo/vars/pathHash/$ph",$ch); // make this hash the last hash to check next time
