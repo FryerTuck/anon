@@ -12,15 +12,8 @@ namespace Anon;
 
       static function treeMenu()
       {
-         $u=user('name'); $h="/User/data/$u/home";
-
-         if(!isee("$h/root"))
-         {
-            $b=conf('Code/forkName'); if(!is_funnic($b)){fail("invalid branch name in Code config");};
-            if(!isRepo('/')){Repo::create('/'); wait(50);}; Repo::cloned('/',"$h/root",$b,user('name'));
-         };
-
-         $r=path::tree($h); dump($r);
+         // $un=user('name'); $hp="/User/data/$u/home";
+         // $r=path::tree($h); dump($r);
       }
 
 

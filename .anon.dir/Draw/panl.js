@@ -176,7 +176,7 @@ extend(Anon)
 
       init:function(slf)
       {
-         select('#DrawTreePanl').insert({treeview:'', source:'/User/treeMenu', uproot:true, draggable:true, feedable:true, listen:
+         select('#DrawTreePanl').insert({treeview:'', source:'/User/foldMenu', uproot:true, draggable:true, feedable:true, listen:
          {
             'LeftClick':function(evnt)
             {
