@@ -116,7 +116,7 @@ namespace Anon;
 
          if($hsh===':HASH:')
          {
-            $gl=exec::{"git log -1 --oneline --decorate $src/$brn"}($dir); $ch=null; // git-log .. fetch last line
+            $gl=exec::{"git log -1 --oneline --decorate origin/$brn"}($dir); $ch=null; // git-log .. fetch last line
             $lp=stub($gl,"("); if($lp){$ch=trim($lp[0]);};
             return $ch;
          };
