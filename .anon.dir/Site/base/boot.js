@@ -365,28 +365,31 @@
 
       server.listen('done',function(d){if(d!="!"){dump(`\nserver is done with:\n${d}`)}; Busy.done();});
       server.listen('dump',function(d, v){v=(isJson(d)?decode.jso(d):sval(d)); dump(v)});
+      server.listen("SoftwareUpdate: sudo,lead,gang",function(d){signal("SoftwareUpdate",d);});
 
 
-      server.listen("AnonUpdate: sudo lead gang",function(d)
+      listen("SoftwareUpdate",function(d)
       {
+          d=d.detail; if(!isJson(d)){console.error(`SoftwareUpdate fail: ${d}`); return}; d=decode.jso(d);
           popModal(`cog :: New Updates`)
           ({
               body:[{panl:
               [
-                  {h2:`Updates available`},
-                  {pre:d},
-                  {p:`Would you like to install now?`},
+                  {h2:`${d.from} Updates available`},
+                  {h4:d.mesg},
+                  {pre:d.diff},
+                  {p:`<br>Would you like to install now?`},
               ]}],
               foot:
               [
                   {butn:`.cool`, text:"Update Now", onclick:function(e,s)
                   {
-                      Busy.edit("AnonUpdate",0); s=this;
-                      purl("/Proc/update",(r)=>
+                      Busy.edit("SoftwareUpdate",0); s=this;
+                      purl("/Proc/update",d,(r)=>
                       {
-                          Busy.edit("AnonUpdate",100); r=r.body;
+                          Busy.edit("SoftwareUpdate",100); r=r.body;
                           if(r==OK){s.root.exit(); return};
-                          fail("AnonUpdateError: ".r); s.root.exit();
+                          fail("SoftwareUpdate: "+r); s.root.exit();
                       });
                   }},
                   {butn:`.auto`, text:"Maybe Later", onclick:function()

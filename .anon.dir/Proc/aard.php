@@ -259,7 +259,10 @@ namespace Anon;
                if(userDoes("sudo lead gang"))
                {
                    $updt=pget('$/Proc/vars/lastUpdt','0'); $updt*=1; if(($tnow-$updt)>$keep)
-                   {Anon::checkUpdates(); path::make('$/Proc/vars/lastUpdt',time());};
+                   {
+                       $updt=Anon::checkUpdates(); path::make('$/Proc/vars/lastUpdt',time());
+                       if($updt){self::emit("SoftwareUpdate",$updt);}; unset($updt);
+                   };
                };
             };
          // -----------------------------------------------------------------------------------------------------------------------------------
@@ -391,16 +394,24 @@ namespace Anon;
 
       static function update()
       {
-         permit::fubu('clan:lead,sudo');
+         permit::fubu('clan:lead,sudo'); $ln="SoftwareUpdate";
          $mp='$/User/data/master/pass'; $pw=pget($mp);
-         // path::make($mp,pget('$/Proc/info/pass.inf'));
-         $uw=posted("from"); $cw=(proprCase($uw).'Branch');
+         $uw=lowerCase(posted("from")); $cw=(proprCase($uw).'Branch');
          $rp="$/Repo/data/native/$uw"; $gr=conf("Repo/gitRefer");
 
+         if(lock::exists($ln)){return OK;}; lock::create($ln);
          Repo::update($rp,$gr->$cw,'pull','origin');
+
+         $fl=pget($rp,false); $om=[".git"];
+         foreach($fl as $fn)
+         {
+             if(isin($om,$fn)){continue;};
+             path::copy("$rp/$fn","/",true);
+         };
          path::make($mp,$pw);
-         $we=Repo::differ($rp,'origin',$gr->$cw);
-         signal::ClientReboot("new system updates from $cw","*");
+
+         Repo::commit("/","$aw update",true); // add all & commit changes in web-root & push to tank-repo
+         signal::ClientReboot("new updates from $cw","*");
          return OK;
       }
    }

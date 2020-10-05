@@ -66,6 +66,7 @@ extend(Anon)
                  {
                      rsl=rsl.body;
                      if(rsl==OK){popAlert("thumbs-up :: All is well : There are no new updates.");return};
+                     signal("SoftwareUpdate",rsl);
                  });
              }},
          ]);

@@ -56,14 +56,14 @@ namespace Anon;
       {
           $ln="checkUpdates"; $fg=isin(NAVIPATH,$ln); $gr=conf("Repo/gitRefer"); // lock-name .. from-gui .. git-refer
           if(lock::exists($ln)){if($fg){ekko(OK); exit;}; return OK;}; lock::awaits($ln); // lock to prevent multiple
-          $ad=Repo::differ('$/Repo/data/native/anon','origin',$gr->AnonBranch); // anon-diff
-          $sd=Repo::differ('$/Repo/data/native/site','origin',$gr->SiteBranch); // site-diff
+          $su=Repo::differ('$/Repo/data/native/anon','origin',$gr->AnonBranch); // anon-diff
 
-          if(!$ad&&!$sd){lock::remove($ln); if($fg){ekko(OK); exit;}; return OK;}; // no diff .. remove lock & return OK
-          if(!$fg){return knob(["anon"=>$ad,"site"=>$sd]);}; // not from-GUI so return data
+          if($su){$su->from="Anon";}else
+          {$su=Repo::differ('$/Repo/data/native/site','origin',$gr->SiteBranch); if($su){$su->from="Site";}}; // site-diff
+          lock::remove($ln); if(!$su){if($fg){ekko(OK); exit;}; return OK;}; // no diff .. remove lock & return OK
 
-          if($ad){$ad->from="Anon"; signal::AnonUpdate($ad); lock::remove($ln); ekko($ad);};
-          if($sd){$sd->from="Site"; signal::SiteUpdate($sd); lock::remove($ln); ekko($sd);};
+          if(!$fg){return $su;}; // not from-GUI so return data
+          ekko($su); // for-GUI
       }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------

@@ -73,7 +73,8 @@ namespace Anon;
           $lp=stub($gl,"("); if($lp){$ch=trim($lp[0]); $lp=rstub($gl,"origin/HEAD)");}; if(!$lp){return;};  // line-parts
           $cm=trim($lp[2]); $lh=pget("$/Repo/vars/pathHash/$ph"); // commit-message & last-hash
           if($lh===$ch){return;}; // hashes match, no difference
-          return knob(["mesg"=>$cm,"diff"=>$rd]);
+          $rd=knob(["mesg"=>$cm,"diff"=>$rd]);
+          return $rd;
       }
 
 
@@ -109,8 +110,15 @@ namespace Anon;
       }
 
 
-      static function status($dir)
+      static function status($dir,$hsh=null)
       {
+         if($hsh===':HASH:')
+         {
+            $gl=exec::{"git log -1 --oneline --decorate $rn/$bn"}($dir); $ch=null; // git-log .. fetch last line
+            $lp=stub($gl,"("); if($lp){$ch=trim($lp[0]);};
+            return $ch;
+         };
+
          $dir=repoOf($dir); if(!$dir){return;}; $brn=isRepo($dir); $src=self::origin($dir,1); $hst=HOSTNAME; $bdy=knob();
 
          if(isin($src,['https://','http://']))
@@ -234,8 +242,12 @@ namespace Anon;
 
       static function update($dir,$brn=null,$run='pull',$nic='origin')
       {
-         expect::repo($dir); if(!$brn){$brn=self::branch($dir);}elseif(!is_funnic($brn)){fail::reference('invalid branch name');};
-         exec::{"git $run $nic $brn"}($dir); return true;
+         expect::repo($dir);
+         if(!$brn){$brn=self::branch($dir);}elseif(!is_funnic($brn)){fail::reference('invalid branch name');};
+         exec::{"git $run $nic $brn"}($dir); $ph=md5($dir); $ch=self::status($dir,':HASH:');
+         if(!$ch){fail::repo("could not get hash-reference from: $dir");exit;};
+         path::make("$/Repo/vars/pathHash/$ph",$ch); // make this hash the last hash to check next time
+         return true;
       }
 
 
