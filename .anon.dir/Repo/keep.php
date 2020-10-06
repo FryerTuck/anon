@@ -55,11 +55,10 @@ namespace Anon;
 
     if($wro!==$tko)
     {
-        $hsh=PROCHASH; $mpw=pget("$/User/data/master/pass"); $usr="master"; $eml=pget("$/User/data/$usr/mail"); // prep vars
-        $cmd="mkdir $hsh && cd $hsh && git clone $tko . && cd .. && shopt -s dotglob && cp -rf ./$hsh/* . && rm -rf ./$hsh";
-        exec::{$cmd}("/"); // run the commands above as fast as possible in one go .... basically it clones tank into web-root
+        $hsh=PROCHASH; $usr="master"; $eml=simp(pget("$/User/data/$usr/mail")); $mpw=pget("$/User/data/$usr/pass"); // vars
+        exec::{"mkdir $hsh && git clone $tko $hsh && cp -rf $hsh/. . && rm -rf $hsh"}("/"); // clone .. copy .. clean-up
         exec::{"git config --local user.name \"$usr\""}("/"); exec::{"git config --local user.email \"$eml\""}("/"); // Git ID
-        path::make("$/User/data/master/pass",$mpw); chmod(ROOTPATH."/.htaccess",0444); // restore master password & harden hta
+        path::make("$/User/data/$usr/pass",$mpw); chmod(ROOTPATH."/.htaccess",0444); // restore master password & harden hta
     };
 # -----------------------------------------------------------------------------------------------------------------------------
 

@@ -407,6 +407,25 @@ namespace Anon;
 
 
 
+# func :: simp : simplify a complex string .. `$opt` = optional-letter-flag
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   function simp($str,$opt=null)
+   {
+       if(!isText($str,1)){return $str;};
+
+       if(isPlug($str))
+       {
+           $inf=path::info($str); $scm=$inf->plug;
+           if($scm==="mail"){return "$inf->user@$inf->host";};
+       };
+
+       return $str;
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
 # tool :: todo : make a docket from calling `todo::{"some title"}("some message");` in code
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    class todo

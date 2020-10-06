@@ -15,7 +15,7 @@ namespace Anon;
          if($ori===BARE){expect::path($dir); $ori="file://$dir"; $dir=null; $bar=BARE;}; // args validation
          expect::purl($ori); $inf=path::info($ori); $pth=$inf->path;  // args validation
          if(isWord($bar)&&!$usr){$usr="$bar"; $bar=null;}; // args validation
-         if(!isWord($usr)){$usr='master';}; $eml=pget("/User/data/$usr/mail");
+         if(!isWord($usr)){$usr='master';}; $eml=simp(pget("/User/data/$usr/mail"));
          if(!$eml){fail::config("user `$usr` is invalid");};
 
          if($inf->plug==='file')
@@ -197,7 +197,7 @@ namespace Anon;
       {
          expect::purl($orgn); $info=path::info($orgn); if($info->plug==="file"){$orgn=path::purl($info,1);};
          if(!isWord($user)){$user=user('name');}; $u=$user; $p=isee("/User/data/$u");
-         if(!$p){fail("user `$u` is undefined");}; $m=pget("$p/mail");
+         if(!$p){fail("user `$u` is undefined");}; $m=simp(pget("$p/mail"));
          if(!isee($trgt)){path::make("$trgt/");}; expect::fold($trgt,[R,W,E]);
          $q="git clone $orgn ."; if($bran){$q="git clone -b $bran --single-branch $orgn .";};
          exec::{"$q"}($trgt); $t=path($trgt); $cb=self::branch($trgt,$bran,1); if(!$cb){expect::repo($trgt);};
