@@ -16,10 +16,7 @@ namespace Anon;
          $p=$x->path; if(!isee($p)){$tp=((fext($p)==='sdb')?twig($p):$p); if(!isee($tp)){path::make("$tp/");}};
          $t=path::type($p); $fm="database folder specified, but no `base.sdb file nor `defn.php` file in:";
          if($t==='none'){$p="$p.sdb";}elseif($t==='fold')
-         {
-             $p="$p/base.sdb"; if(!isee($p)&&!isee("$x->path/defn.php")){fail::sqlite("$fm `$x->path`"); exit;};
-             $x->path="$x->path/base.sdb";
-         };
+         {$p="$p/base.sdb"; if(!isee($p)&&!isee("$x->path/defn.php")){fail::sqlite("$fm `$x->path`"); exit;}};
          $this->mean=$x; $this->mean->mime='application/sql'; $m=$this->mean->meta;
          $this->info=knob(['maxLevel'=>2,'levlType'=>$x]); $bp=$m->base;
 
@@ -78,7 +75,8 @@ namespace Anon;
 
       function create($d=null)
       {
-         $i=$this->mean; $p=$i->meta->base; if(isee($p)&&(path::size($p)>0)){return;};
+         $i=$this->mean; $p=$i->meta->base; if(isFile($p)&&(path::size($p)>0)){return;};
+         if(fext($p)!=="sdb"){if(!isee($p)){path::make("$p/");}; $p="$p/base.sdb";};
          $h=path::twig($p); if(!isFold($h)){path::make("$h/");};
          try{$l=(new \SQLite3(path($p), SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE));}
          catch(\Exception $e){$m=$e->getMessage(); fail::plug("$m .. `$p`"); exit;};
