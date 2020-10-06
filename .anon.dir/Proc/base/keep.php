@@ -39,7 +39,7 @@ namespace Anon;
 
       if(facing('GUI'))
       {
-         $hn=pget('$/Proc/conf/hostName'); if(!$hn){pset('$/Proc/conf/hostName',HOSTNAME);};
+         if(!pget('$/Proc/conf/hostName')){pset('$/Proc/conf/hostName',HOSTNAME);};
          // if(!path::indx('/')){path::copy('$/Site/dcor/README.md','/README.md');};
       };
 
