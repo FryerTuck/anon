@@ -176,8 +176,9 @@
 # -----------------------------------------------------------------------------------------------------------------------------
     bash("git clone https://github.com/FryerTuck/anon.git");
     $ht=hbkp(pget("/.htaccess"),pget("/anon/.htaccess"));
+    if(file_exists("$bp/.htaccess")){chmod("$bp/.htaccess",0644);}; // make htaccess writable for now
     bash("shopt -s dotglob && mv anon/* . && rm -rf ./anon");
-    file_put_contents("$bp/.htaccess",$ht);
+    file_put_contents("$bp/.htaccess",$ht); chmod("$bp/.htaccess",0444); // fused htaccess as read-only
     $mp=password_hash(trim(pget("/.anon.dir/Proc/info/pass.inf")),PASSWORD_DEFAULT);
     file_put_contents("$bp/.anon.dir/User/data/master/pass",$mp);
 # -----------------------------------------------------------------------------------------------------------------------------

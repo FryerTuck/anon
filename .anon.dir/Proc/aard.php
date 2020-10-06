@@ -412,8 +412,11 @@ namespace Anon;
 
          // path::make($mp,$pw);
          $ht=htbackup(pget("$sp/.htaccess"),pget("$/Repo/data/native/anon/.htaccess"));
-         path::make("$tp/.htaccess",$ht); Repo::commit($tp,"$uw update",true); // add all & commit changes & push to tank-repo
-         Repo::update('/','pull'); // Any `gitIgnor` will be fine .. don't worry
+         path::make("$tp/.htaccess",$ht); // write fused htaccess to test-repo
+         Repo::commit($tp,"$uw update",true); // add all & commit changes & push to tank-repo
+         chmod(ROOTPATH."/.htaccess",0644); // make htaccess writable for now
+         Repo::update('/','pull'); // update web-root .. any `gitIgnor` should be fine
+         chmod(ROOTPATH."/.htaccess",0444); // make htaccess read-only
          lock::remove($ln); signal::ClientReboot("new updates from $cw","*");
          return OK;
       }

@@ -13,10 +13,13 @@ namespace Anon;
 
       function __construct($x)
       {
-         $p=$x->path; $t=path::type($p);
-         $fm="database folder specified, but no `base.sdb file nor `defn.php` file in:";
+         $p=$x->path; if(!isee($p)){$tp=((fext($p)==='.sdb')?twig($p):$p); if(!isee($tp)){path::make("$tp/");}};
+         $t=path::type($p); $fm="database folder specified, but no `base.sdb file nor `defn.php` file in:";
          if($t==='none'){$p="$p.sdb";}elseif($t==='fold')
-         {$p="$p/base.sdb"; if(!isee($p)&&!isee("$x->path/defn.php")){fail::sqlite("$fm `$x->path`"); exit;}};
+         {
+             $p="$p/base.sdb"; if(!isee($p)&&!isee("$x->path/defn.php")){fail::sqlite("$fm `$x->path`"); exit;};
+             $x->path="$x->path/base.sdb";
+         };
          $this->mean=$x; $this->mean->mime='application/sql'; $m=$this->mean->meta;
          $this->info=knob(['maxLevel'=>2,'levlType'=>$x]); $bp=$m->base;
 
