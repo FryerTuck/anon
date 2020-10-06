@@ -13,6 +13,13 @@
 
 
 
+// shiv :: (polyfill) : make things normal
+// --------------------------------------------------------------------------------------------------------------------------------------------
+    if(!MAIN.URL){MAIN.URL=MAIN.webkitURL};
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 // defn :: (refs) : immutable
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const VOID = (function(){}()); // undefined
@@ -1132,7 +1139,7 @@
                 return resl;
             };
 
-            if(isKnob(arg1)&&isText(arg1.mime))
+            if(isKnob(arg1)&&(isText(arg1.mime)||isText(arg1.type))&&!!arg1.data)
             {
                 let l,s,a,r; s=arg1.data.length; l=(new Array(s));
                 for(let i=0; i<s; i++){l[i]=arg1.data.charCodeAt(i)};
@@ -1169,19 +1176,22 @@
       {
          BLOB:function(d,f)
          {
-            if(d instanceof Blob)
+             console.log(d);
+            if((d instanceof Blob)||(!!d&&isPath(`/${d.type}`)&&isInum(d.size)&&isInum(d.lastModified)))
             {
                 var p=(new FileReader()); p.onloadend=function(){f(p.result);};
                 p.readAsDataURL(d); return;
             };
 
-            if(isKnob(d)&&isText(d.mime))
+            if(isKnob(d)&&(isText(d.mime)||isText(d.type)))
             {
                 let r=encode.BLOB(d);
+                if(!r){fail("Type :: invalid blob(ish) object"); return};
                 decode.BLOB(r,f); return;
             };
 
-            fail("invalid 1st parameter");
+            console.error(d);
+            fail("Args :: invalid 1st parameter");
          },
 
          JSON:function(data,nofail, r)

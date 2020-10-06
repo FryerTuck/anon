@@ -115,11 +115,10 @@ extend(custom.domtag)
       if(a.feedable)
       {
          n.feedMe=function(fp,fd)
-         {
-            upload(pathOf(fp),fd,()=>{this.update();});
-         };
+         {upload(pathOf(fp),fd,()=>{this.blur(); this.update();});};
 
-         n.onFeed(function(fd,fn){this.feedMe(`${repl.PWD}/${fn}`,fd);});
+         n.onFeed(function(fd,fn)
+         {this.feedMe(`${repl.PWD}/${fn}`,fd);});
 
          n.listen("dragenter",function(){this.enclan(`dragover`);});
          n.listen("dragleave",function(){this.declan(`dragover`);});
@@ -133,7 +132,9 @@ extend(custom.domtag)
 
       if((n.events.RightClick===VOID)&&(n.events.contextmenu===VOID)){n.listen('RightClick',function(e, x,m,t,w,l)
       {
-         x=VOID; x=e.srcElement; if(nodeName(x)!='treeview'){x=x.lookup('^',3); if(nodeName(x)!='treetwig'){x=x.parentNode}};
+         x=VOID; x=e.srcElement;
+         if(nodeName(x)!='treeview'){x=x.lookup('^',3); if(nodeName(x)!='treetwig'){x=x.parentNode}}
+         else if(!x.info.path&&!x.info.mime){x.info={name:twig(repl.PWD),path:repl.PWD,mime:'inode/directory',type:'fold'}};
          m=VOID; if(!x.info.root){x.info.root=x;}; m=x.info.mime.split('/')[0]; t=x.info.type; w=t; if(t=='fold'){w='folder'};
          // dump(x.info);
          if(x.info.repo&&x.info.repo.head&&x.info.repo.host){t='repoMain'; w='repo';};
