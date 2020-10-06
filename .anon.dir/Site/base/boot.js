@@ -300,13 +300,12 @@
 
              bz(80); tick.after(50,()=>
              {
-                window.BOOTED=1;
                 bz(100); signal("boot");
                 Busy.done(); // kill it gracefully if still running
              });
          };
 
-         np=location.href;
+         np=location.href; window.BOOTED=1;
 
          if("{:INTRFACE:}"=="ALT")
          {
@@ -320,7 +319,7 @@
          {
              let fr=(nodeName(r)=="iframe"); if(fr){r.id="AnonSiteView"; r.listen("load",ab);};
              select('#anonMainView').insert(r);
-             if(!fr){tick.after(250,()=>{window.BOOTED=1; signal("boot"); bz(100); Busy.done();});};
+             if(!fr){tick.after(250,()=>{signal("boot"); bz(100); Busy.done();});};
          });
       });
    });
