@@ -13,7 +13,7 @@ namespace Anon;
 
       function __construct($x)
       {
-         $p=$x->path; if(!isee($p)){$tp=((fext($p)==='.sdb')?twig($p):$p); if(!isee($tp)){path::make("$tp/");}};
+         $p=$x->path; if(!isee($p)){$tp=((fext($p)==='sdb')?twig($p):$p); if(!isee($tp)){path::make("$tp/");}};
          $t=path::type($p); $fm="database folder specified, but no `base.sdb file nor `defn.php` file in:";
          if($t==='none'){$p="$p.sdb";}elseif($t==='fold')
          {
