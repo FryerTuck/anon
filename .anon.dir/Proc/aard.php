@@ -397,7 +397,7 @@ namespace Anon;
          permit::fubu('clan:lead,sudo'); $sp="$/Repo/data/native/site";
          $uw=lowerCase(posted("from"));  $cw=(proprCase($uw).'Branch');
          $up="$/Repo/data/native/$uw";   $gr=conf("Repo/gitRefer");
-         $tp="$/Repo/data/native/test";  $ln="SoftwareUpdate";
+         $tp="$/Repo/data/native/fuse";  $ln="SoftwareUpdate";
          // $mp='$/User/data/master/pass';  $pw=pget($mp);
 
          if(lock::exists($ln)){return OK;}; lock::create($ln);
