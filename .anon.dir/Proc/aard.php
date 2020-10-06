@@ -394,7 +394,7 @@ namespace Anon;
 
       static function update()
       {
-         permit::fubu('clan:lead,sudo'); $sp=pget("$/Repo/data/native/site");
+         permit::fubu('clan:lead,sudo'); $sp="$/Repo/data/native/site";
          $uw=lowerCase(posted("from"));  $cw=(proprCase($uw).'Branch');
          $up="$/Repo/data/native/$uw";   $gr=conf("Repo/gitRefer");
          $tp="$/Repo/data/native/test";  $ln="SoftwareUpdate";
