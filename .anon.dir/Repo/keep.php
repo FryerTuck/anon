@@ -6,6 +6,7 @@ namespace Anon;
 # -----------------------------------------------------------------------------------------------------------------------------
     $ref=conf("Repo/gitRefer"); $sto="$ref->SiteOrigin"; // $ref = config .. $sto = site-origin
     $wro=(isRepo('/')?Repo::getURL('/','origin',false):''); $hst=HOSTNAME; $brn=$ref->AnonBranch; // $wro = web-root-origin
+    $hta=pget("/.htaccess"); if($hta){chmod((ROOTPATH"/.htaccess"),0644);  // make web-root htaccess writable for now
     $ntv="$/Repo/data/native"; $rmt="$/Repo/data/remote";
 
     if($wro&&($wro!==$sto)&&($wro!==$ref->AnonOrigin)&&($sto==="file://$/Repo/data/remote/tank.git")) // if web-root is repo
@@ -32,9 +33,9 @@ namespace Anon;
                 if(isin($omt,$itm)){if($itm!==".git"){path::void("$ntv/site/$itm");};continue;}; // remove & ignore Anon files
                 path::copy("/$itm","$ntv/site",true);
             };
-            $hta=pget("/.htaccess"); if($hta){$hta=explode("# === ANONDONE === #",$hta); $hta=rpop($hta); $hta=trim($hta);};
-            if($hta){chmod(path("$ntv/site/.htaccess"),0644); path::make("$ntv/site/.htaccess",$hta);};
-            unset($lst,$itm,$omt,$dlm,$hta); // remove Anon from htaccess
+            if($hta){$hta=explode("# === ANONDONE === #",$hta); $hta=rpop($hta); $hta=trim($hta);};
+            path::make("$ntv/site/.htaccess",$hta);};
+            unset($lst,$itm,$omt,$dlm); // remove Anon from htaccess
         };
 
         unset($lst); $lst=pget("$ntv/site",false); xpop($lst,".git"); // copy site items to fuse repo
@@ -70,7 +71,6 @@ namespace Anon;
         $hsh=PROCHASH; path::make("/$hsh/"); // make temporary empty folder for tank repo
         $mpw=pget("$/User/data/master/pass"); // backup master password
 
-        if(isee("/.htaccess")){chmod(ROOTPATH."/.htaccess",0644);}; // make web-root htaccess writable for now -if it exists
         exec::{"git clone $tko ."}("/$hsh/"); // clone tank into temporary folder .. can only clone into empty folder
         path::void("/.git"); $lst=pget("/$hsh/",false); // delete .git from web-root & get list of tank files
         foreach($lst as $itm){path::copy("/$hsh/$itm","/",true);}; // copy all from tank into web-root & replace existing
