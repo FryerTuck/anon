@@ -786,7 +786,7 @@ namespace Anon;
 # cond :: defn : set UpKeeper global for use later .. no need to check again later in runtime
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    $_SERVER['UPKEEPER']=''; $_SERVER['SYSCLOCK']=knob('$/Proc/conf/sysClock');
-   if(!facing('DPR')&&!facing('BOT')&&!in_array(NAVIPATH,["/User/upload","/Proc/execPath","/Proc/xenoCall","/Proc/makeTodo"]))
+   if(!in_array(NAVIPATH,["/User/upload","/Proc/execPath","/Proc/xenoCall","/Proc/makeTodo"]))
    {
       $key=skey();
       if($key&&(pget("$/Proc/temp/sesn/$key/USER")==="master")){$_SERVER['UPKEEPER']=1;} // always run upkeep for master
@@ -910,6 +910,7 @@ namespace Anon;
    };
 
    $_SERVER['INTRFACE']=$i; defn(['USERSKEY'=>$k]);
+   if(facing('BOT DPR GUI')){$_SERVER['UPKEEPER']='';};
 
    $vl=array_keys(get_defined_vars());
    foreach($vl as $vn){if(substr($vn,0,1)==="_"){continue;}; unset($$vn);}; unset($vl,$vn);

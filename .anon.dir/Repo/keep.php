@@ -4,12 +4,12 @@ namespace Anon;
 
 # prep :: repo : define vars .. create remote-BARE tank repo .. create native NON-BARE fuse repo cloned from tank
 # -----------------------------------------------------------------------------------------------------------------------------
-    $ref=conf("Repo/gitRefer"); $cfo="$ref->SiteOrigin"; // $ref = config .. $cfo = configured-from-origin
-    $sto=(isRepo('/')?Repo::getURL('/','origin',false):''); $hst=HOSTNAME; $brn=$ref->AnonBranch; // $sto = site-origin
+    $ref=conf("Repo/gitRefer"); $sto="$ref->SiteOrigin"; // $ref = config .. $sto = site-origin
+    $wro=(isRepo('/')?Repo::getURL('/','origin',false):''); $hst=HOSTNAME; $brn=$ref->AnonBranch; // $wro = web-root-origin
     $ntv="$/Repo/data/native"; $rmt="$/Repo/data/remote";
 
-    if($sto&&($sto!==$cfo)&&($sto!==$ref->AnonOrigin)&&($cfo==="file://$/Repo/data/remote/tank.git")) // if web-root is repo
-    {$ref->SiteOrigin=$sto; conf::{"Repo/gitRefer"}($ref);}; // if so then write SiteOrigin-config as existing repo origin
+    if($wro&&($wro!==$sto)&&($wro!==$ref->AnonOrigin)&&($sto==="file://$/Repo/data/remote/tank.git")) // if web-root is repo
+    {$ref->SiteOrigin=$wro; conf::{"Repo/gitRefer"}($ref);}; // if so then write SiteOrigin-config as existing repo origin
 
     if(!isFold("$rmt/tank.git")){Repo::create("$rmt/tank.git",BARE,"master");}; // create local BARE tank repo as origin
     if(span(pget("$rmt/tank.git/objects/pack"))<1){$brn=null;}; // no branch yet
@@ -63,10 +63,11 @@ namespace Anon;
 
 # cond :: prep : if configured-from-origin and site-origin differ then the following must be run
 # -----------------------------------------------------------------------------------------------------------------------------
-    if($cfo!==$sto)
+    $tko=path::purl(path::info("$rmt/tank.git"),true); // tank origin url
+
+    if($wro!==$tko)
     {
         $hsh=PROCHASH; path::make("/$hsh/"); // make temporary empty folder for tank repo
-        $tko=path::purl(path::info("$rmt/tank.git"),true); // tank origin url
         $mpw=pget("$/User/data/master/pass"); // backup master password
 
         if(isee("/.htaccess")){chmod(ROOTPATH."/.htaccess",0644);}; // make web-root htaccess writable for now -if it exists
