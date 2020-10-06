@@ -44,7 +44,6 @@ namespace Anon;
       };
 
       if(lock::exists("upkeep")||!userDoes("lead sudo gang")){return;}; // .. less is more ;)
-dump("proc.keep test 2");
       lock::create("upkeep"); allStemRun("keep.php"); lock::remove("upkeep"); // lock upkeep and run keep for all stems
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
