@@ -56,7 +56,7 @@ namespace Anon;
     if($wro!==$tko)
     {
         $hsh=PROCHASH; $usr="master"; $eml=simp(pget("$/User/data/$usr/mail")); $mpw=pget("$/User/data/$usr/pass"); // vars
-        exec::{"mkdir $hsh && git clone $tko $hsh && cp -fTr $hsh/* . && rm -rf $hsh"}("/"); // clone .. copy .. clean-up
+        exec::{"mkdir $hsh && git clone $tko ./$hsh && cp -r --remove-destination ./$hsh/* . && rm -rf $hsh"}("/"); // see bash
         exec::{"git config --local user.name \"$usr\""}("/"); exec::{"git config --local user.email \"$eml\""}("/"); // Git ID
         path::make("$/User/data/$usr/pass",$mpw); chmod(ROOTPATH."/.htaccess",0444); // restore master password & harden hta
     };
