@@ -42,8 +42,9 @@ namespace Anon;
          if(!pget('$/Proc/conf/hostName')){pset('$/Proc/conf/hostName',HOSTNAME);};
          // if(!path::indx('/')){path::copy('$/Site/dcor/README.md','/README.md');};
       };
-dump("keep test 1");
+
       if(lock::exists("upkeep")||!userDoes("lead sudo gang")){return;}; // .. less is more ;)
+dump("proc.keep test 2");
       lock::create("upkeep"); allStemRun("keep.php"); lock::remove("upkeep"); // lock upkeep and run keep for all stems
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
