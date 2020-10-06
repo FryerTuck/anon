@@ -6,11 +6,10 @@ namespace Anon;
 # -----------------------------------------------------------------------------------------------------------------------------
     $ref=conf("Repo/gitRefer"); $cfo="$ref->SiteOrigin"; // $ref = config .. $cfo = configured-from-origin
     $sto=(isRepo('/')?Repo::getURL('/','origin',false):''); $hst=HOSTNAME; $brn=$ref->AnonBranch; // $sto = site-origin
-    if($sto&&($sto!==$cfo)&&($sto!==$ref->AnonOrigin)&&($cfo==="file://$/Repo/data/remote/tank.git")) // if web-root is repo
-    {$ref->SiteOrigin=$sto; conf::{"Repo/gitRefer"}($ref);}; // if so then write SiteOrigin-config to existing repo origin
-    $inf=path::info(crop($ref->SiteOrigin));
     $ntv="$/Repo/data/native"; $rmt="$/Repo/data/remote";
-    if(($inf->plug==="file")&&!isee($inf->path)){Repo::create($inf->path,BARE);}; // we will clone from here
+
+    if($sto&&($sto!==$cfo)&&($sto!==$ref->AnonOrigin)&&($cfo==="file://$/Repo/data/remote/tank.git")) // if web-root is repo
+    {$ref->SiteOrigin=$sto; conf::{"Repo/gitRefer"}($ref);}; // if so then write SiteOrigin-config as existing repo origin
 
     if(!isFold("$rmt/tank.git")){Repo::create("$rmt/tank.git",BARE,"master");}; // create local BARE tank repo as origin
     if(span(pget("$rmt/tank.git/objects/pack"))<1){$brn=null;}; // no branch yet
@@ -34,7 +33,7 @@ namespace Anon;
                 path::copy("/$itm","$ntv/site",true);
             };
             $hta=pget("/.htaccess"); if($hta){$hta=explode("# === ANONDONE === #",$hta); $hta=rpop($hta); $hta=trim($hta);};
-            if($hta){chmod(path("$ntv/site/.htaccess"),0644); path::make("$ntv/site/.htaccess",$hta);}; 
+            if($hta){chmod(path("$ntv/site/.htaccess"),0644); path::make("$ntv/site/.htaccess",$hta);};
             unset($lst,$itm,$omt,$dlm,$hta); // remove Anon from htaccess
         };
 
