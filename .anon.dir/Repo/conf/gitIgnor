@@ -1,11 +1,5 @@
-*
-
-!.htaccess
-!.anon.php
-!$
-!$/**/*
-
-$/**/conf/**/*
 $/**/data/**/*
 $/**/temp/**/*
 $/**/vars/**/*
+
+!$/**/data/**/defn.php
