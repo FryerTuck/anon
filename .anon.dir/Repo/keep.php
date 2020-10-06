@@ -19,69 +19,47 @@ namespace Anon;
 
 
 
-# prep :: repo : site .. clone from config SiteOrigin .. if empty then copy all from web-root -EXCEPT Anon-related contents
-# -----------------------------------------------------------------------------------------------------------------------------
-    if(!isRepo("$ntv/site"))
-    {
-        Repo::cloned($ref->SiteOrigin,"$ntv/site",$ref->SiteBranch,"master"); // clone tank-repo as site-repo
-
-        $lst=pget("$ntv/site",false); xpop($lst,".git"); if(span($lst)<1) // SiteOrigin is empty .. copy from web-root
-        {
-            $lst=pget("/",false); $omt=[".anon.dir",".git",".anon.php"]; // get all items to copy .. $omt = omit
-            foreach($lst as $itm)
-            {
-                if(isin($omt,$itm)){if($itm!==".git"){path::void("$ntv/site/$itm");};continue;}; // remove & ignore Anon files
-                path::copy("/$itm","$ntv/site",true);
-            };
-            if($hta){$hta=explode("# === ANONDONE === #",$hta); $hta=rpop($hta); $hta=trim($hta);};
-            path::make("$ntv/site/.htaccess",$hta);};
-            unset($lst,$itm,$omt,$dlm); // remove Anon from htaccess
-        };
-
-        unset($lst); $lst=pget("$ntv/site",false); xpop($lst,".git"); // copy site items to fuse repo
-        foreach($lst as $itm){path::copy("$ntv/site/$itm","$ntv/fuse",true);}; unset($lst,$itm);
-
-        Repo::commit("$ntv/fuse","cloned Site",true); // track & commit & push fuse-repo-changes to tank
-    };
-# -----------------------------------------------------------------------------------------------------------------------------
-
-
-
-# prep :: repo : anon .. clone from config AnonOrigin .. fuse htaccess rules from site-repo .. copy all to fuse-repo
+# prep :: repo : clone anon-repo from config AnonOrigin .. fuse htaccess rules from site-repo .. copy all to fuse-repo
 # -----------------------------------------------------------------------------------------------------------------------------
     if(!isRepo("$ntv/anon"))
     {
-        Repo::cloned($ref->AnonOrigin,"$ntv/anon",$ref->AnonBranch,"master"); // clone remote Anon repo as native anon-repo
-        $lst=pget("$ntv/anon",false); xpop($lst,".git"); // list of items to copy .. omit `.git`
+        Repo::cloned($ref->AnonOrigin,"$ntv/anon",$ref->AnonBranch,"master"); // clone "remote" Anon repo as native anon-repo
+        $lst=pget("$ntv/anon",false); xpop($lst,".git"); // get list of anon-repo items to copy to fuse-repo .. omit `.git`
         foreach($lst as $itm){path::copy("$ntv/anon/$itm","$ntv/fuse",true);}; // copy all to fuse-repo
-        $hta=pget("$ntv/site/.htaccess"); if(!$hta){$hta='';}; $hta=htbackup($hta,pget("$ntv/anon/.htaccess"));// fuse htaccess
-        path::make("$ntv/fuse/.htaccess",$hta); unset($lst,$itm,$hta); // write fused htaccess to fuse-repo
         Repo::commit("$ntv/fuse","cloned Anon",true); // track & commit & push fuse-repo-changes to tank
     };
 # -----------------------------------------------------------------------------------------------------------------------------
 
 
 
-# cond :: prep : if configured-from-origin and site-origin differ then the following must be run
+# prep :: repo : clone site-repo from config SiteOrigin .. copy all from web-root to fuse-repo -EXCEPT Anon-related contents
+# -----------------------------------------------------------------------------------------------------------------------------
+    if(!isRepo("$ntv/site"))
+    {
+        Repo::cloned($ref->SiteOrigin,"$ntv/site",$ref->SiteBranch,"master"); // clone "remote" Site repo as native site-repo
+        $srl=pget("$ntv/site",false); $wrl=pget("/",false); // get lists of site-repo-items & web-root-items
+        $omt=[".anon.dir",".git",".anon.php",".htaccess"]; // omit these when copying below to avoid repo corruption
+        foreach($srl as $sri){if(!isin($omt,$sri)){path::copy("/$sri","$ntv/fuse/$sri");}}; // all site-repo items to fuse-repo
+        foreach($wrl as $wri){if(!isin($omt,$wri)&&!isin($lst,$wri)){path::copy("/$wri","$ntv/fuse/$wri");}}; // root to fuse
+        $fht=pget("$ntv/site/.htaccess"); if(!$fht){$fht="$hta";}; $fht=htbackup($fht,pget("$ntv/anon/.htaccess")); // fuse hta
+        path::make("$ntv/fuse/.htaccess",$fht); unset($srl,$sri,$wrl,$wri,$fht,$hta); // write fused htaccess to fuse-repo
+        Repo::commit("$ntv/fuse","cloned Site & fused htaccess",true); // track & commit & push fuse-repo-changes to tank
+    };
+# -----------------------------------------------------------------------------------------------------------------------------
+
+
+
+# cond :: prep : if web-root-origin and site-origin differ then clone tank to temp folder & move into web-root
 # -----------------------------------------------------------------------------------------------------------------------------
     $tko=path::purl(path::info("$rmt/tank.git"),true); // tank origin url
 
     if($wro!==$tko)
     {
-        $hsh=PROCHASH; path::make("/$hsh/"); // make temporary empty folder for tank repo
-        $mpw=pget("$/User/data/master/pass"); // backup master password
-
-        exec::{"git clone $tko ."}("/$hsh/"); // clone tank into temporary folder .. can only clone into empty folder
-        path::void("/.git"); $lst=pget("/$hsh/",false); // delete .git from web-root & get list of tank files
-        foreach($lst as $itm){path::copy("/$hsh/$itm","/",true);}; // copy all from tank into web-root & replace existing
-
-        path::make("/.htaccess",pget("$ntv/fuse/.htaccess")); // write fused htaccess .. -before anything goes wrong!
-        path::make("$/User/data/master/pass",$mpw); // restore master password .. just in case
-        path::void("/$hsh"); $u="master"; $m=pget("$/User/data/$u/mail"); // delete temp-tank folder .. get master-user info
-        exec::{"git config --local user.name \"$u\""}("/"); exec::{"git config --local user.email \"$m\""}("/");
-        Repo::commit("/","website backup",true); // track & commit & push root-repo-changes to tank
-        Repo::update("$ntv/fuse",'pull'); // pull any cnages made in tank into fuse-repo
-        chmod(ROOTPATH."/.htaccess",0444); // make htaccess read-only
+        $hsh=PROCHASH; $mpw=pget("$/User/data/master/pass"); $usr="master"; $eml=pget("$/User/data/$usr/mail"); // prep vars
+        $cmd="mkdir $hsh && cd $hsh && git clone $tko . && cd .. && shopt -s dotglob && mv -f ./$hsh/* . && rm -rf ./$hsh";
+        exec::{$cmd}("/"); // run the commands above as fast as possible in one go .... basically it clones tank into web-root
+        exec::{"git config --local user.name \"$usr\""}("/"); exec::{"git config --local user.email \"$eml\""}("/"); // Git ID
+        path::make("$/User/data/master/pass",$mpw); chmod(ROOTPATH."/.htaccess",0444); // restore master password & harden hta
     };
 # -----------------------------------------------------------------------------------------------------------------------------
 
