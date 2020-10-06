@@ -402,7 +402,7 @@ namespace Anon;
 
          if(lock::exists($ln)){return OK;}; lock::create($ln);
          Repo::update($up,$gr->$cw,'pull','origin');
-         $fl=pget($rp,false); $om=[".git"];
+         $fl=pget($up,false); $om=[".git"];
 
          foreach($fl as $fn)
          {
