@@ -66,7 +66,7 @@ namespace Anon;
     if($cfo!==$sto)
     {
         $hsh=PROCHASH; path::make("/$hsh/"); // make temporary empty folder for tank repo
-        $tko=path::purl(path::info("$rmt/tank"),true); // tank origin url
+        $tko=path::purl(path::info("$rmt/tank.git"),true); // tank origin url
         $mpw=pget("$/User/data/master/pass"); // backup master password
 
         if(isee("/.htaccess")){chmod(ROOTPATH."/.htaccess",0644);}; // make web-root htaccess writable for now -if it exists
