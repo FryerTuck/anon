@@ -6,7 +6,7 @@ namespace Anon;
 # -----------------------------------------------------------------------------------------------------------------------------
     $ref=conf("Repo/gitRefer"); $sto="$ref->SiteOrigin"; // $ref = config .. $sto = site-origin
     $wro=(isRepo('/')?Repo::getURL('/','origin',false):''); $hst=HOSTNAME; $brn=$ref->AnonBranch; // $wro = web-root-origin
-    $hta=pget("/.htaccess"); if($hta){chmod((ROOTPATH"/.htaccess"),0644);  // make web-root htaccess writable for now
+    $hta=pget("/.htaccess"); if($hta){chmod((ROOTPATH."/.htaccess"),0644);  // make web-root htaccess writable for now
     $ntv="$/Repo/data/native"; $rmt="$/Repo/data/remote";
 
     if($wro&&($wro!==$sto)&&($wro!==$ref->AnonOrigin)&&($sto==="file://$/Repo/data/remote/tank.git")) // if web-root is repo
@@ -49,7 +49,7 @@ namespace Anon;
 
 
 
-# cond :: prep : if web-root-origin and site-origin differ then clone tank to temp folder & move into web-root
+# cond :: prep : if web-root-origin and tank-origin differ then clone tank as web-root .. all seems ready now
 # -----------------------------------------------------------------------------------------------------------------------------
     $tko=path::purl(path::info("$rmt/tank.git"),true); // tank origin url
 
