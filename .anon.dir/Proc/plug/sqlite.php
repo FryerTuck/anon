@@ -31,6 +31,7 @@ namespace Anon;
 
          $this->mean->refs=$r; if($l<2){return;};
 
+
          // $b=$r->dbase; $t="$r->table"; $q="STATUS where Db = '$b' AND Name = '$t'"; $sp=$this->adjure("SHOW PROCEDURE $q");
          // if(span($sp<1)){$sp=0;}; $fn=$this->adjure("SHOW FUNCTION $q"); if(span($fn<1)){$fn=0;}; if(!$sp&&!$fn){return;};
          // $z=($sp?'sproc':'funct'); unset($r->table); $r->$z=$t; $r->basis=$z; $this->mean->refs=$r; $this->mean->mime='application/sql';
