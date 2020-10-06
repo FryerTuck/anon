@@ -39,13 +39,11 @@ namespace Anon;
 
       if(facing('GUI'))
       {
-         $h=pget('$/Proc/conf/hostName'); if(!$h){pset('$/Proc/conf/hostName',HOSTNAME);};
+         $hn=pget('$/Proc/conf/hostName'); if(!$hn){pset('$/Proc/conf/hostName',HOSTNAME);};
          // if(!path::indx('/')){path::copy('$/Site/dcor/README.md','/README.md');};
       };
 
-      if(lock::exists("upkeep")&&!userDoes("lead sudo gang")&&isee("$h/refs")){return;}; // .. less is more
-      lock::create("upkeep"); // run upkeep only when another power-user is not running it already
-      allStemRun("keep.php"); allStemRun("keep.php");
-      lock::remove("upkeep");
+      if(lock::exists("upkeep")||!userDoes("lead sudo gang")){return;}; // .. less is more ;)
+      lock::create("upkeep"); allStemRun("keep.php"); lock::remove("upkeep"); // lock upkeep and run keep for all stems
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
