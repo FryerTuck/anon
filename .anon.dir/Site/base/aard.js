@@ -41,15 +41,6 @@ window.script=function(src,cbf, txt,nde)
 };
 
 
-// window.script=function(src,cbf)
-// {
-//     var n=document.createElement('script');
-//     if(src.startsWith('/')&&src.endsWith('.js')){n.src=src;}
-//     else{n.innerHTML=src}; n.onload=cbf; document.head.appendChild(n);
-//     return n;
-// };
-
-
 window.bootAnon=function(gate)
 {
     if(((typeof gate)=='string')&&(gate.indexOf('/')>-1)){script(gate); return};

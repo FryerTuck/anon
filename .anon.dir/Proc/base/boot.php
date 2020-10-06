@@ -38,14 +38,28 @@ namespace Anon;
    $s=trim(NAVIPATH,'/'); if(!$s){$s='/';}elseif(strpos($s,'/')){$s=explode('/',$s)[0];}; defn(['NAVISTEM'=>$s]); unset($s);
    defn(['EXPROPER'=>'!= !~ >= <= << >> /* */ // ## : = ~ < > & | ! ? + - * / % ^ @ . , ; # ( ) [ ] { } `']);
    defn(['SPECIALS'=>'_^~|.-*+=#$@$!%?:;&/']);
-
    defn(['AUTOMAIL'=>pget('$/Proc/conf/autoMail')]); // needed
-   $_SERVER["ALTHANDLER"]=(kuki("ALTHANDLER")?"yes":(isee("/index.php")?"yes":null));
 
    $cd=COREPATH; $rd=ROOTPATH; $cl=pget($cd); $rl=pget($rd); $sl=[C=>[],R=>[],A=>[]];
    foreach($cl as $cs){if(is_funnic($cs)&&isProprCase($cs)){$sl[C][]="$/$cs"; $sl[A][]="$/$cs";}};
    foreach($rl as $rs){if(is_funnic($rs)&&isProprCase($rs)){$sl[R][]="/$rs"; $sl[A][]="/$rs";}};
    $_SERVER['STEMLIST']=$sl; unset($cd,$rd,$cl,$rl,$sl,$cs,$rs);
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+# cond :: ALTHANDLER : check if an alternative handler is defined .. best attempt
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   $ah=''; if(kuki("ALTHANDLER")){$ah='yes';}elseif(isee("/index.php")){$ah='yes';}else
+   {
+       $ht=explode('# === ANONDONE === #',pget('/.htaccess')); $ht=array_pop($ht);
+       $tl=['^(.*)$','.*','.','^']; $ht=explode("\n",$ht); foreach($ht as $hl)
+       {
+           if($ah){break;}; $hl=trim($hl); if((strlen($hl)<1)||($hl[0]==='#')){continue;};
+           foreach($tl as $ti){if(strpos($hl,"RewriteRule $ti ")){$ah='yes'; break;}};
+       };
+   };
+   $_SERVER["ALTHANDLER"]="$ah"; unset($ah,$ht,$tl,$hl,$ti);
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
