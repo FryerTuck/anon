@@ -51,6 +51,15 @@
    overflow:hidden; */
 }
 
+
+.CodeViewWrap
+{
+    position:absolute;
+    top:0px; left:0px;
+    overflow:auto;
+}
+
+
 .ace_active-line
 {
    opacity:0.5 !important;

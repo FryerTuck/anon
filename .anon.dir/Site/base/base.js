@@ -1722,7 +1722,8 @@
    {
       if(isText(a)){a=select(a)}; if(!isNode(a)){fail('expecting node or #nodeID');return};
       if(!a.parentNode){fail('node is not attached to the DOM .. yet');return};
-      let r=a.getBoundingClientRect(); return r;
+      let r=decode.jso(encode.jso(a.getBoundingClientRect())); r.each((v,k)=>{r[k]=Math.round(v)});
+      return r;
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 

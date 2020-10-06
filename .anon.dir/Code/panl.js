@@ -434,6 +434,7 @@ extend(Anon)
          pth=nfo.path; ttl=pth; tpe=nfo.type; drv=select('#CodeTabber').driver; ext=fext(pth); //if(pth[0]=='~'){pth=('/'+pth);};
          if(!isin(['jpg','jpeg','png','svg','gif','md'],ext)){alert('previewing file type `'+ext+'` is not supported .. yet');return};
 
+         Busy.edit('/Code/openFile',0);
          purl('/Code/openFile',{path:pth,view:1},(r)=>
          {
             if(ext=='md')
@@ -487,6 +488,7 @@ extend(Anon)
                }};
                tab.body.select('.CodeViewBufr')[0].editor=tab.head.editor;
             };
+            Busy.edit('/Code/openFile',100);
          });
       },
 
