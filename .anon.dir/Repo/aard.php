@@ -67,7 +67,8 @@ namespace Anon;
       {
           expect::repo($rp); expect::word($rn); expect::word($bn); $rd=null; $ph=md5($rp);
           try{$rd=exec::{"git fetch $rn $bn && git diff --name-only $bn $rn/$bn"}($rp);}catch(\Exception $e){};
-          if(!$rd){return;}; $f=path::leaf(COREPATH); $rd=swap($rd,[COREPATH,ROOTPATH],''); $rd=swap($rd,"$f/","$/");
+          if(!$rd){return;}; $f=path::leaf(COREPATH); $rd=swap($rd,[COREPATH,ROOTPATH],'');
+          $rd=trim(swap($rd,"$f/","$/")); if(span($rd)<1){return;}; // no file changes, no difference
 
           $gl=exec::{"git log -1 --oneline --decorate $rn/$bn"}($rp); $ch=0; // git-log .. fetch last line
           $lp=stub($gl,"("); if($lp){$ch=trim($lp[0]); $lp=rstub($gl,"origin/HEAD)");}; if(!$lp){return;};  // line-parts
