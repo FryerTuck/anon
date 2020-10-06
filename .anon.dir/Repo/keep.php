@@ -6,7 +6,7 @@ namespace Anon;
 # -----------------------------------------------------------------------------------------------------------------------------
     $ref=conf("Repo/gitRefer"); $cfo="$ref->SiteOrigin"; // $ref = config .. $cfo = configured-from-origin
     $sto=(isRepo('/')?Repo::getURL('/','origin',false):''); $hst=HOSTNAME; $brn=$ref->AnonBranch; // $sto = site-origin
-    if($sto&&($sto!==$cfo)&&($cfo==="file://$/Repo/data/remote/tank.git")) // check if web-root is repo
+    if($sto&&($sto!==$cfo)&&($sto!==$ref->AnonOrigin)&&($cfo==="file://$/Repo/data/remote/tank.git")) // if web-root is repo
     {$ref->SiteOrigin=$sto; conf::{"Repo/gitRefer"}($ref);}; // if so then write SiteOrigin-config to existing repo origin
     $inf=path::info(crop($ref->SiteOrigin));
     $ntv="$/Repo/data/native"; $rmt="$/Repo/data/remote";
@@ -25,22 +25,22 @@ namespace Anon;
     {
         Repo::cloned($ref->SiteOrigin,"$ntv/site",$ref->SiteBranch,"master"); // clone tank-repo as site-repo
 
-        // $lst=pget("$ntv/site",false); xpop($lst,".git"); if(span($lst)<1) // SiteOrigin is empty .. copy from web-root
-        // {
-        //     $lst=pget("/",false); $omt=[".anon.dir",".git",".anon.php"]; // get all items to copy .. $omt = omit
-        //     foreach($lst as $itm)
-        //     {
-        //         if(isin($omt,$itm)){if($itm!==".git"){path::void("$ntv/site/$itm");};continue;}; // remove & ignore Anon files
-        //         path::copy("/$itm","$ntv/site",true);
-        //     };
-        //     $hta=pget("/.htaccess"); if($hta){$hta=explode("# === ANONDONE === #",$hta); $hta=rpop($hta); $hta=trim($hta);};
-        //     if($hta){path::make("$ntv/site/.htaccess",$hta);}; unset($lst,$itm,$omt,$dlm,$hta); // remove Anon from htaccess
-        // };
-        //
-        // unset($lst); $lst=pget("$ntv/site",false); xpop($lst,".git"); // copy site items to fuse repo
-        // foreach($lst as $itm){path::copy("$ntv/site/$itm","$ntv/fuse",true);}; unset($lst,$itm);
-        //
-        // Repo::commit("$ntv/fuse","cloned Site",true); // track & commit & push fuse-repo-changes to tank
+        $lst=pget("$ntv/site",false); xpop($lst,".git"); if(span($lst)<1) // SiteOrigin is empty .. copy from web-root
+        {
+            $lst=pget("/",false); $omt=[".anon.dir",".git",".anon.php"]; // get all items to copy .. $omt = omit
+            foreach($lst as $itm)
+            {
+                if(isin($omt,$itm)){if($itm!==".git"){path::void("$ntv/site/$itm");};continue;}; // remove & ignore Anon files
+                path::copy("/$itm","$ntv/site",true);
+            };
+            $hta=pget("/.htaccess"); if($hta){$hta=explode("# === ANONDONE === #",$hta); $hta=rpop($hta); $hta=trim($hta);};
+            if($hta){path::make("$ntv/site/.htaccess",$hta);}; unset($lst,$itm,$omt,$dlm,$hta); // remove Anon from htaccess
+        };
+
+        unset($lst); $lst=pget("$ntv/site",false); xpop($lst,".git"); // copy site items to fuse repo
+        foreach($lst as $itm){path::copy("$ntv/site/$itm","$ntv/fuse",true);}; unset($lst,$itm);
+
+        Repo::commit("$ntv/fuse","cloned Site",true); // track & commit & push fuse-repo-changes to tank
     };
 # -----------------------------------------------------------------------------------------------------------------------------
 
