@@ -34,7 +34,8 @@ namespace Anon;
                 path::copy("/$itm","$ntv/site",true);
             };
             $hta=pget("/.htaccess"); if($hta){$hta=explode("# === ANONDONE === #",$hta); $hta=rpop($hta); $hta=trim($hta);};
-            if($hta){path::make("$ntv/site/.htaccess",$hta);}; unset($lst,$itm,$omt,$dlm,$hta); // remove Anon from htaccess
+            if($hta){chmod(path("$ntv/site/.htaccess"),0644); path::make("$ntv/site/.htaccess",$hta);}; 
+            unset($lst,$itm,$omt,$dlm,$hta); // remove Anon from htaccess
         };
 
         unset($lst); $lst=pget("$ntv/site",false); xpop($lst,".git"); // copy site items to fuse repo
