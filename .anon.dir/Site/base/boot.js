@@ -370,7 +370,8 @@
 
       listen("SoftwareUpdate",function(d)
       {
-          d=d.detail; if(!isJson(d)){console.error(`SoftwareUpdate fail: ${d}`); return}; d=decode.jso(d);
+          d=d.detail; if(d==OK){return};
+          if(!isJson(d)){console.error(`SoftwareUpdate fail: ${d}`); return}; d=decode.jso(d);
           popModal(`cog :: New Updates`)
           ({
               body:[{panl:
