@@ -788,12 +788,16 @@ namespace Anon;
    $_SERVER['UPKEEPER']=''; $_SERVER['SYSCLOCK']=knob('$/Proc/conf/sysClock');
    if(!facing('DPR')&&!facing('BOT')&&!in_array(NAVIPATH,["/User/upload","/Proc/execPath","/Proc/xenoCall","/Proc/makeTodo"]))
    {
-      $dbs=$_SERVER['SYSCLOCK']->upkeep; if(!$dbs){$dbs=180;}; $ldb=pget('$/Proc/vars/lastDbug');
-      if(!$ldb){$ldb=1;}; $ldb=($ldb*1); $tdf=(time()-$ldb); $upk=0; if(isset($_GET['upkeep'])){$upk=$_GET['upkeep'];};
+      $key=skey();
+      if($key&&(pget("$/Proc/temp/sesn/$key/USER")==="master")){$_SERVER['UPKEEPER']=1;} // always run upkeep for master
+      else
+      {
+          $dbs=$_SERVER['SYSCLOCK']->upkeep; if(!$dbs){$dbs=180;}; $ldb=pget('$/Proc/vars/lastDbug');
+          if(!$ldb){$ldb=1;}; $ldb=($ldb*1); $tdf=(time()-$ldb); $upk=0; if(isset($_GET['upkeep'])){$upk=$_GET['upkeep'];};
+          $_SERVER['UPKEEPER']=(((!$ldb||($tdf>$dbs)||$upk)?$ldb:"").""); unset($dbs,$ldb,$tdf,$upk);
+      };
 
-      $_SERVER['UPKEEPER']=(((!$ldb||($tdf>$dbs)||$upk)?$ldb:"")."");
-      unset($dbs,$ldb,$tdf,$upk);
-      if(envi('UPKEEPER')&&!pget('$/Proc/conf/hostName')){pset('$/Proc/conf/hostName',HOSTNAME);};
+      if(envi('UPKEEPER')&&!pget('$/Proc/conf/hostName')){pset('$/Proc/conf/hostName',HOSTNAME);}; unset($key);
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
