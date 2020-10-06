@@ -23,8 +23,8 @@ namespace Anon;
 # -----------------------------------------------------------------------------------------------------------------------------
     if(!isRepo("$ntv/site"))
     {
-        // Repo::cloned($ref->SiteOrigin,"$ntv/site",$ref->SiteBranch,"master"); // clone tank-repo as site-repo
-        //
+        Repo::cloned($ref->SiteOrigin,"$ntv/site",$ref->SiteBranch,"master"); // clone tank-repo as site-repo
+
         // $lst=pget("$ntv/site",false); xpop($lst,".git"); if(span($lst)<1) // SiteOrigin is empty .. copy from web-root
         // {
         //     $lst=pget("/",false); $omt=[".anon.dir",".git",".anon.php"]; // get all items to copy .. $omt = omit
