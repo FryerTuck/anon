@@ -73,6 +73,8 @@ namespace Anon;
       return isKnob(path::info($d,0));
    }
 
+   function isPlug($d){return isPurl($d);}
+
    function isJson($d,$g=null,$l=null)
    {
        if(!isText($d,$g,$l)){return false;};
