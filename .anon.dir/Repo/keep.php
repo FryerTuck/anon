@@ -69,7 +69,7 @@ namespace Anon;
         $tko=path::purl(path::info("$rmt/tank"),true); // tank origin url
         $mpw=pget("$/User/data/master/pass"); // backup master password
 
-        if($hta){chmod(ROOTPATH."/.htaccess",0644);}; // make web-root htaccess writable for now
+        if(isee("/.htaccess")){chmod(ROOTPATH."/.htaccess",0644);}; // make web-root htaccess writable for now -if it exists
         exec::{"git clone $tko ."}("/$hsh/"); // clone tank into temporary folder .. can only clone into empty folder
         path::void("/.git"); $lst=pget("/$hsh/",false); // delete .git from web-root & get list of tank files
         foreach($lst as $itm){path::copy("/$hsh/$itm","/",true);}; // copy all from tank into web-root & replace existing
