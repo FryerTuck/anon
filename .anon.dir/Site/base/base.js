@@ -750,7 +750,7 @@
       a=t; t=VOID; t=keys(a)[0]; n=document.createElement(t); // new element
       ca=isin(a,["contents","$","children"]);
       if(isList(a[t])){c=a[t];} // tag value is contents
-      else if(isText(a[t],2)&&((a[t][0]=='#')||(a[t][0]=='.'))) // tag value is id and/or classes
+      else if(isText(a[t],2)&&((a[t][0]=='#')||(a[t][0]=='.'))&&test(a[t],/^([a-zA-Z0-9- _\.#]){2,432}$/)) // tag value is id and/or classes
       {
          x=a[t]; delete a[t]; if(!a.class){a.class=''}; a.class=a.class.split(' '); // quick id & non/existing classes
          x.split(' ').forEach((i)=>{c=i[0]; i=i.slice(1); if(c=='#'){a.id=i; a.name=i}else{a.class.push(i)}}); // set id/classes
