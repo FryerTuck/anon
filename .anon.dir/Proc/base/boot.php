@@ -55,8 +55,9 @@ namespace Anon;
        $ht=explode('# === ANONDONE === #',pget('/.htaccess')); $ht=array_pop($ht);
        $tl=['^(.*)$','.*','.','^']; $ht=explode("\n",$ht); foreach($ht as $hl)
        {
-           if($ah){break;}; $hl=trim($hl); if((strlen($hl)<1)||($hl[0]==='#')){continue;};
-           foreach($tl as $ti){if(strpos($hl,"RewriteRule $ti ")){$ah='yes'; break;}};
+           if($ah){break;}; $hl=trim($hl);
+           if((strlen($hl)<1)||($hl[0]==='#')||(strpos($hl,'RewriteRule')===false)){continue;};
+           foreach($tl as $ti){if(strpos($hl,"RewriteRule $ti ")!==false){$ah='yes'; break;}};
        };
    };
    $_SERVER["ALTHANDLER"]="$ah"; unset($ah,$ht,$tl,$hl,$ti);
