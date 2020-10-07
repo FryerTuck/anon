@@ -445,7 +445,9 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
     function htbackup($nt,$at)
     {
-        $dl="# === ANONDONE === #"; if(strpos($nt,$dl)){$nt=explode($dl,$nt); $nt=array_pop($nt); $nt=trim($nt);};
+        $dl="# === ANONDONE === #"; if(!is_string($nt)){$nt="";};
+        if(strpos($nt,$dl)){$nt=explode($dl,$nt); $nt=array_pop($nt);};
+        $nt=trim($nt); $at=trim($at);
 
         $ha=explode("\n",$nt); foreach($ha as $hx => $hl)
         {
@@ -454,7 +456,7 @@ namespace Anon;
             if(strpos($lc,"rewritebase /")===0){$ha[$hx]="# $tl .. dejavu";};
         };
 
-        $nt=implode($ha,"\n"); $rt=($at."\n\n\n".$nt);
+        $nt=implode($ha,"\n"); $rt=trim($at."\n\n\n".$nt);
         return $rt;
     }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
