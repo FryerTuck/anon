@@ -27,7 +27,7 @@ namespace Anon;
         $srl=pget("$ntv/site",false); $wrl=pget("/",false); // get lists of site-repo-items & web-root-items
         $omt=[".anon.dir",".git",".anon.php",".htaccess"]; // omit these when copying below to avoid repo corruption
         foreach($srl as $sri){if(!isin($omt,$sri)){path::copy("/$sri","$ntv/fuse/$sri");}}; // all site-repo items to fuse-repo
-        foreach($wrl as $wri){if(!isin($omt,$wri)&&!isin($lst,$wri)){path::copy("/$wri","$ntv/fuse/$wri");}}; // root to fuse
+        foreach($wrl as $wri){if(!isin($omt,$wri)&&!isin($srl,$wri)){path::copy("/$wri","$ntv/fuse/$wri");}}; // root to fuse
         $nht=pget("$ntv/site/.htaccess"); if($nht){$hta="$nht";}; unset($srl,$sri,$wrl,$wri,$nht);  // get htaccess rules
         unset($lst,$itm); Repo::commit("$ntv/fuse","cloned Site & fused htaccess",true); // track & commit & push changes
     };
