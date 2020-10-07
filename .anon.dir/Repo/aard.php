@@ -247,6 +247,8 @@ namespace Anon;
       {
          expect::repo($dir); if(isin($brn,['pull','push'])){$run="$brn"; $brn=null;};
          if(!$brn){$brn=self::branch($dir);}elseif(!is_funnic($brn)){fail::reference('invalid branch name');};
+         exec::{'git add --all'}($dir); exec::{"git fsck && git gc --aggressive"}($dir);
+         exec::{"git commit --allow-empty -m '$run $nic'"}($dir);
          exec::{"git $run $nic $brn"}($dir); $ph=md5($dir); $ch=self::status($dir,':HASH:');
          if(!$ch){fail::repo("could not get hash-reference from: $dir");exit;};
          path::make("$/Repo/vars/pathHash/$ph",$ch); // make this hash the last hash to check next time
