@@ -39,7 +39,7 @@ namespace Anon;
     {
         Repo::cloned($ref->SiteOrigin,"$ntv/site",$ref->SiteBranch,"master"); // clone remote site-repo to native
         $lst=pget("$ntv/site",false); xpop($lst,".git"); // get list of site-repo items to copy to fuse-repo .. omit `.git`
-        foreach($lst as $itm){path::copy("$ntv/anon/$itm","$ntv/fuse",true);}; // copy all site-items to fuse-repo
+        foreach($lst as $itm){path::copy("$ntv/site/$itm","$ntv/fuse",true);}; // copy all site-items to fuse-repo
         $hta=pget("$ntv/site/.htaccess"); htbackup(($hta?$hta:""),pget("$ntv/anon/.htaccess")); // get fused htaccess rules
         path::make("$ntv/fuse/.htaccess",$hta); // write anon-site-fused htaccess rules to fuse-repo
         unset($lst,$itm); Repo::commit("$ntv/fuse","cloned Site",true); // track & commit & push fuse-repo-changes to tank
