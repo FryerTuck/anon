@@ -1072,8 +1072,10 @@ namespace Anon;
    function durl($d,$m=null)
    {
       if(isText($m,3)&&isin($m,'/')&&is_string($d)){$r=base64_encode($d); return "data:$m;base64,$r";};
-      $p=path($d); $m=mime($p); if(!$p||!$m||!is_readable($p)){return;};
-      $r=base64_encode((($m==='inode/directory')?json_encode(scan($d)):scan($d))); return "data:$m;base64,$r";
+      $p=isee($d); $m=mime($p); if(!$p||!$m){return;}; // invalid path or invalid mime
+      $r=pget($p); if(!is_string($r)){$r=json_encode($r);}; // if it was a folder, it's now a json array as text
+      $r=base64_encode(((span($r)<5)||!(isin($r,'{:')&&isin($r,':}')))?$r:impose($r,'{:',':}',vars(crop($p)))); // who needs code-readability?
+      return "data:$m;base64,$r"; // put a smile on your face 'ol chap .. you get access to ENV variables related to any path ref ;)
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 

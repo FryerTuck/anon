@@ -185,7 +185,7 @@ namespace Anon;
       {
          if($b===64)
          {
-             if(!isPath($d)){return base64_encode(tval($d));}; $v=pget($d); if(span($v)<5){return $v;};
+             if(!isPath($d)){return base64_encode(tval($d));}; $v=pget($d); if(span($v)<5){return base64_encode($v);};
              if(isin($v,'{:')&&isin($v,':}')){$v=impose($v,'{:',':}',vars($d));}; return base64_encode($v);
          };
          if(!isNumr($d)||isin($d,'.')||($d<1)){fail::base_convert('expecting positive integer');};
@@ -225,7 +225,7 @@ namespace Anon;
          if($b===16){return hex2bin($v);};
          if($b===64)
          {
-             if(!isPath($d)){return base64_decode($v);}; $v=pget($d); if(span($v)<5){return $v;};
+             if(!isPath($d)){return base64_decode($v);}; $v=pget($d); if(span($v)<5){return base64_encode($v);};
              if(isin($v,'{:')&&isin($v,':}')){$v=impose($v,'{:',':}',vars($d));}; return base64_decode($v);
          };
          return hex2bin(gmp_strval(gmp_init($v,$b),16));
