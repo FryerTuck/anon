@@ -394,12 +394,13 @@ namespace Anon;
 
       static function update()
       {
-         permit::fubu('clan:lead,sudo'); $sp="$/Repo/data/native/site";
-         $uw=lowerCase(posted("from"));  $cw=(proprCase($uw).'Branch');
+         permit::fubu('clan:lead,sudo'); $pv=knob($_POST);
+         $sp="$/Repo/data/native/site";  $uw=lowerCase($pv->from);
+         $cw=(proprCase($uw).'Branch');  $rd=$pv->diff;
          $up="$/Repo/data/native/$uw";   $gr=conf("Repo/gitRefer");
          $tp="$/Repo/data/native/fuse";  $ln="SoftwareUpdate";
          // $mp='$/User/data/master/pass';  $pw=pget($mp);
-
+signal::dump($rd); return OK;
          if(lock::exists($ln)){return OK;}; lock::create($ln);
          Repo::update($up,$gr->$cw,'pull','origin');
          $fl=pget($up,false); $om=[".git"];
