@@ -58,13 +58,13 @@ namespace Anon;
           if(lock::exists($ln)||!isee('$/Repo/data/native/fuse')){if($fg){ekko(OK); exit;}; return OK;}; // real immature :D
           lock::awaits($ln); // lock to prevent multiple
           $su=Repo::differ('$/Repo/data/native/anon','origin',$gr->AnonBranch); // anon-diff
+          if($su){$su->from="Anon"; lock::remove($ln); if(!$fg){return $su;}; ekko($su);}; // run Anon updates first, if any
 
-          if($su){$su->from="Anon";}else
-          {$su=Repo::differ('$/Repo/data/native/site','origin',$gr->SiteBranch); if($su){$su->from="Site";}}; // site-diff
-          lock::remove($ln); if(!$su){if($fg){ekko(OK); exit;}; return OK;}; // no diff .. remove lock & return OK
+          if(!isPlug($gr->SiteBranch)){if($fg){ekko(OK); exit;}; return OK;}; // SiteOrigin not set .. nothing else to do
+          $su=Repo::differ('$/Repo/data/native/site','origin',$gr->SiteBranch); // site-diff
+          if($su){$su->from="Site"; lock::remove($ln); if(!$fg){return $su;}; ekko($su);}; // run Site updates last, if any
 
-          if(!$fg){return $su;}; // not from-GUI so return data
-          ekko($su); // for-GUI
+          if($fg){ekko(OK); exit;}; return OK; // all is well
       }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------

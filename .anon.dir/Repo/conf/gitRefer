@@ -2,7 +2,7 @@ AnonOrigin: https://github.com/FryerTuck/anon.git
 AnonBranch: master
 
 SiteOrigin: VOID
-SiteBranch: VOID
+SiteBranch: master
 
 UserOrigin: file://$/Repo/data/remote/tank.git
 UserBranch: master
