@@ -85,9 +85,9 @@
     RewriteCond %{ENV:PATHSTEM} ^/?~
     RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
 
-    RewriteCond %{ENV:ANONINDX} !^$
-    RewriteCond %{ENV:HOSTINDX} ^$
-    RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
+    # RewriteCond %{ENV:ANONINDX} !^$
+    # RewriteCond %{ENV:HOSTINDX} ^$
+    # RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
 # -----------------------------------------------------------------------------------------------------------------------------
 
 
