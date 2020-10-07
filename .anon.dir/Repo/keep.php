@@ -26,7 +26,7 @@ namespace Anon;
         Repo::cloned($ref->AnonOrigin,"$ntv/anon",$ref->AnonBranch,"master"); // clone "remote" Anon repo as native anon-repo
         $lst=pget("$ntv/anon",false); xpop($lst,".git"); // get list of anon-repo items to copy to fuse-repo .. omit `.git`
         foreach($lst as $itm){path::copy("$ntv/anon/$itm","$ntv/fuse",true);}; // copy all to fuse-repo
-        Repo::commit("$ntv/fuse","cloned Anon",true); // track & commit & push fuse-repo-changes to tank
+        unset($lst,$itm); Repo::commit("$ntv/fuse","cloned Anon",true); // track & commit & push fuse-repo-changes to tank
     };
 # -----------------------------------------------------------------------------------------------------------------------------
 
@@ -56,7 +56,8 @@ namespace Anon;
     if($wro!==$tko)
     {
         $hsh=PROCHASH; $usr="master"; $eml=simp(pget("$/User/data/$usr/mail")); $mpw=pget("$/User/data/$usr/pass"); // vars
-        exec::{"mkdir $hsh && git clone $tko ./$hsh && cp -r --remove-destination ./$hsh/* . && rm -rf $hsh"}("/"); // see bash
+        exec::{"mkdir $hsh && git clone $tko ./$hsh"}("/"); $lst=pget("/",false); // clone tank to temp & get contents
+        foreach($lst as $itm){exec::{"cp -T ./$hsh/$itm ./$itm"}("/");}; exec::{"rm -rf ./$hsh"}("/"); // replace & cleanup
         exec::{"git config --local user.name \"$usr\""}("/"); exec::{"git config --local user.email \"$eml\""}("/"); // Git ID
         path::make("$/User/data/$usr/pass",$mpw); chmod(ROOTPATH."/.htaccess",0444); // restore master password & harden hta
     };
