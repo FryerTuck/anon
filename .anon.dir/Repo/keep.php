@@ -43,7 +43,7 @@ namespace Anon;
         $hta=pget("$ntv/site/.htaccess"); htbackup(($hta?$hta:""),pget("$ntv/anon/.htaccess")); // get fused htaccess rules
         path::make("$ntv/fuse/.htaccess",$hta); // write anon-site-fused htaccess rules to fuse-repo
         unset($lst,$itm); Repo::commit("$ntv/fuse","cloned Site",true); // track & commit & push fuse-repo-changes to tank
-        Repo::update('/','pull');
+        chmod((ROOTPATH."/.htaccess"),0644); Repo::update('/','pull'); chmod(ROOTPATH."/.htaccess",0444);
     };
 # -----------------------------------------------------------------------------------------------------------------------------
 
