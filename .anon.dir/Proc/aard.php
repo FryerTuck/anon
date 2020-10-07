@@ -396,19 +396,20 @@ namespace Anon;
       {
          permit::fubu('clan:lead,sudo'); $pv=knob($_POST);
          $sp="$/Repo/data/native/site";  $uw=lowerCase($pv->from);
-         $cw=(proprCase($uw).'Branch');  $rd=$pv->diff;
+         $cw=(proprCase($uw).'Branch');  $rd=explode("\n",$pv->diff);
          $up="$/Repo/data/native/$uw";   $gr=conf("Repo/gitRefer");
          $tp="$/Repo/data/native/fuse";  $ln="SoftwareUpdate";
          // $mp='$/User/data/master/pass';  $pw=pget($mp);
-signal::dump($rd); return OK;
+
          if(lock::exists($ln)){return OK;}; lock::create($ln);
          Repo::update($up,$gr->$cw,'pull','origin');
-         $fl=pget($up,false); $om=[".git"];
+         $om=conf('Repo/gitIgnor'); // TODO :: stuff to omit
 
-         foreach($fl as $fn)
+         foreach($rd as $dp)
          {
-             if(isin($om,$fn)){continue;};
-             path::copy("$up/$fn","$tp/$fn",true);
+             if(isin($om,$fn)){continue;}; // TODO :: has to be `akin`
+             if(arg($dp)->startsWith('$/')){$ap=swap($dp,'$/','.anon.dir/');}; // for Anon-core
+             path::copy("$up/$ap","$tp/$ap",true);
          };
 
          // path::make($mp,$pw);
