@@ -256,10 +256,10 @@
    {
       extend(MAIN)({Anon:{}}); bz(50);
 
-      requires(decode.jso((`{:bootList:}`||`[]`)),( np,ah,ab)=>
+      requires(decode.jso((`{:bootList:}`||`[]`)),(av)=>
       {
-         window.BOOTED=1; bz(60);
-         function(evnt,dm,dw,db,se,pn)
+         window.BOOTED=1; bz(60); av=select(`#AnonView`);
+         av.init=function(evnt,dm,dw,db,se,pn)
          {
              pn=this.parentNode; pn.enclan("scrollHide");
              dm=this.contentDocument; if(!dm){fail("iframe :: invalid DOM"); return};
@@ -276,9 +276,9 @@
                 bz(100); signal("boot");
                 Busy.done(); // kill it gracefully if still running
              });
-         }
-         .bind(select(`AnonView`));
-
+         };
+         av.init.bind(av);
+         av.init();
 
          // np=location.href;
          //
