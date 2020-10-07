@@ -219,13 +219,19 @@ namespace Anon;
       $ri=conf('Mail/checkSec'); if(!is_int($ri)||($ri<5)){fail('invalid `checkSec` config in Mail .. expecting int > 4');}; // validate
       $tn=time(); $lr=pget('/Mail/vars/lastRead'); if(!$lr){$lr=($tn-($ri+1));}; $lr=($lr*1); $td=($tn-$lr);
       if($td<$ri){return OK;}; // read later
-      if(lock::exists($lock,$ri)){return ':BUSY:';}; lock::create($lock); // only run this once
+      if(lock::exists($lock,$ri)){return ':BUSY:';};
       $l=fuse(pget('$'),pget('/')); $pl=[]; // $a=args(func_get_args());
-      foreach($l as $i){if(!isFold("/$i")){continue;}; $x=path::conf("/$i"); $c=pget("$x/autoMail"); if($x&&$c&&!isin($pl,$c)){$pl[]=$c;}};
-      if(!online()){signal::dump("xena :: server offline .. I'll fetchNewAutoMail later"); lock::remove($lock); return;};
+      foreach($l as $i)
+      {
+          if(!isFold("/$i")){continue;}; $x=path::conf("/$i"); $c=pget("$x/autoMail");
+          if($x&&$c&&!isin($pl,$c)){$pl[]=$c;}
+      };
+      if(!online()){signal::dump("xena :: server offline .. I'll fetchNewAutoMail later"); return;};
+      lock::create($lock); // only run this once
       Proc::impede('busy.mail'); // let's do this dicreet
       foreach($pl as $pv)
       {
+         if(!isPlug($pv)){signal::dump("xena::fetchNewAutoMail - ignored invalid mail plug: `$pv`"); continue;};
          Mail::openPlug($pv);
          Mail::fetchBox($pv);
       };
