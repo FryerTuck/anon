@@ -28,7 +28,7 @@ window.userView=function(url,cbf)
 {
     var view=document.createElement('iframe'); if(!cbf){cbf=function(){}};
     view.setAttribute('id','AnonView'); view.setAttribute('frameborder',0);
-    view.setAttribute('src',url); view.done=cbf; view.onload=function(){this.done(this)};
+    view.setAttribute('src',url); view.onload=cbf;
     document.body.innerHTML=""; document.body.appendChild(view);
 };
 
@@ -44,21 +44,21 @@ window.script=function(src,cbf, txt,nde)
 window.bootAnon=function(gate)
 {
     if(((typeof gate)=='string')&&(gate.indexOf('/')>-1)){script(gate); return};
-    gate=document.getElementById('AnonGate'); gate=gate.getAttribute('data-src').split(';base64,').pop();
+    gate=gate.getAttribute('data-src').split(';base64,').pop();
     try{gate=atob(gate);}catch(e){console.error(gate); return}; script(gate);
 };
 
 
-window.isModern.t=setInterval(function()
+window.isModern.t=setInterval(function(gate)
 {
-    if(!document.getElementById('nojs')){return;}; clearInterval(window.isModern.t); // wait for document to load
-    if(window.self===window.top){document.body.style.backgroundColor="{:conf('Site/bootSkin/parentBG'):}"}; // blend in
+    gate=document.getElementById('AnonGate'); if(!gate){return;}; clearInterval(window.isModern.t); // wait until ready
+    if(window.self!==window.top){document.body.style.backgroundColor="{:conf('Site/bootSkin/parentBG'):}"}; // blend in
 
     setTimeout(function(){isModern(function(really) // wait for evasive snth to misbehave
     {
         if(pageGone){return}; // gotcha bitch .. smart-bot
         if(!really){userView('{:DBUGPATH:}?#lcjs'); return};  // bad browser goes to graceful fail
         if('{:ALTHANDLER:}'!='yes'){bootAnon(); return}; // no other framework detected
-        userView('{:viewPath:}',bootAnon); // boot handler first -if present
+        userView('{:NAVIPURL:}',function(){bootAnon(gate)}); // boot handler first -if present
     })},250);
 },10);
