@@ -254,39 +254,20 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    listen("ready",function()
    {
-      let bl=decode.jso((`{:bootList:}`||`[]`));
-
       extend(MAIN)({Anon:{}}); bz(50);
-      requires(bl,( np,ah,ab)=>
+
+      requires(decode.jso((`{:bootList:}`||`[]`)),( np,ah,ab)=>
       {
-         bz(60); ab=function(evnt,dm,dw,db,se,pn)
+         window.BOOTED=1; bz(60);
+         function(evnt,dm,dw,db,se,pn)
          {
              pn=this.parentNode; pn.enclan("scrollHide");
              dm=this.contentDocument; if(!dm){fail("iframe :: invalid DOM"); return};
-             dw=this.contentWindow;
-             db=dm.body.parentNode; dm.AnonSiteView=this; db.tapHit=0;
-
-             if(!db.tapSeq)
-             {
-                 db.tapSeq=1;
-                 db.addEventListener("click",function(ev,ms)
-                 {
-                     ms=this; ms.tapHit+=1;
-                     if(ms.tapTmo){clearTimeout(ms.tapTmo)};
-                     if(ms.tapHit<4){ms.tapTmo=setTimeout(()=>{ms.tapHit=0;},350); return;};
-                     ms.tapHit=0; initPanl();
-                 });
-             };
+             dw=this.contentWindow; db=dm.body.parentNode; dm.AnonSiteView=this;
 
              dw.onunload=function(){bz(1); signal("AnonSiteViewUnload",this);};
-
-             if(("{:INTRFACE:}"=="ALT"))
-             {
-                 // pn.style.backgroundColor="#FFFFFF";
-                 // dump(window.location.href);
-             };
-
              signal("AnonSiteViewLoaded",dw);
+             db.addEventListener("click",tapper);
 
              if(this.booted){bz(100); return}; this.booted=1; // run the code below only once
 
@@ -295,24 +276,26 @@
                 bz(100); signal("boot");
                 Busy.done(); // kill it gracefully if still running
              });
-         };
+         }
+         .bind(select(`AnonView`));
 
-         np=location.href; window.BOOTED=1;
 
-         if("{:INTRFACE:}"=="ALT")
-         {
-             let r=create({iframe:"#AnonSiteView .spanFull", src:np, onload:ab}); r.listen("load",ab);
-             select('#anonMainView').insert(r);
-             return;
-         };
-
-         np+=((isin(np,"?")?"&":"?")+"init");
-         render(np,(r)=>
-         {
-             let fr=(nodeName(r)=="iframe"); if(fr){r.id="AnonSiteView"; r.listen("load",ab);};
-             select('#anonMainView').insert(r);
-             if(!fr){tick.after(250,()=>{signal("boot"); bz(100); Busy.done();});};
-         });
+         // np=location.href;
+         //
+         // if("{:INTRFACE:}"=="ALT")
+         // {
+         //     let r=create({iframe:"#AnonSiteView .spanFull", src:np, onload:ab}); r.listen("load",ab);
+         //     select('#anonMainView').insert(r);
+         //     return;
+         // };
+         //
+         // np+=((isin(np,"?")?"&":"?")+"init");
+         // render(np,(r)=>
+         // {
+         //     let fr=(nodeName(r)=="iframe"); if(fr){r.id="AnonSiteView"; r.listen("load",ab);};
+         //     select('#anonMainView').insert(r);
+         //     if(!fr){tick.after(250,()=>{signal("boot"); bz(100); Busy.done();});};
+         // });
       });
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------
