@@ -30,6 +30,7 @@ namespace Anon;
         foreach($wrl as $wri){if(!isin($omt,$wri)&&!isin($srl,$wri)){path::copy("/$wri","$ntv/fuse/$wri");}}; // root to fuse
         $nht=pget("$ntv/site/.htaccess"); if($nht){$hta="$nht";}; unset($srl,$sri,$wrl,$wri,$nht);  // get htaccess rules
         unset($lst,$itm); Repo::commit("$ntv/fuse","cloned Site & fused htaccess",true); // track & commit & push changes
+        Repo::ignore("$ntv/site",write,[".anon.dir/*",".anon.php"]);
     };
 # -----------------------------------------------------------------------------------------------------------------------------
 

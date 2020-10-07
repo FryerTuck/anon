@@ -221,6 +221,7 @@ namespace Anon;
 
       static function ignore($h,$a,$i)
       {
+         if(isNuma($i)){foreach($i as $r){$z=self::ignore($h,$a,$r);}; return $z;}; // bulk rules
          expect::repo($h); $h=rshave($h,'/'); $p="$h/.git/info/exclude"; if(!$h){$h='/';}; expect::path($p,[W,F]);
          if(($a!==write)&&($a!==erase)){fail('expecting 2nd arg as either :write: or :erase:');};
          expect::text($i,1); $r=pget($p); $q="\n$i";
