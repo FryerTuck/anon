@@ -912,7 +912,7 @@ namespace Anon;
       {
          $of=path($pf); $ot=path($pt); if(!$of||!$ot){fail('expecting 2 paths');}; if(!isee($of)){fail("`$of` is undefined");};
          $tx=isee($ot); if(!$tx){$np=(isFold($of)?$ot:self::twig($ot)); pset("$np/");}; if(last($pf)==="/"){$of.="/.";};
-         $rn=($rx?"rm -rf $ot && cp $of $ot":"cp -r $of $ot"); lock::awaits($ot); exec::{"$rn"}('/'); lock::remove($ot);
+         $rn=($rx?"rm -rf $ot && cp -r $of $ot":"cp -r $of $ot"); lock::awaits($ot); exec::{"$rn"}('/'); lock::remove($ot);
          return true; // will fail if not OK
       }
 
