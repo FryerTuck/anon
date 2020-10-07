@@ -1,8 +1,8 @@
 AnonOrigin: https://github.com/FryerTuck/anon.git
 AnonBranch: master
 
-SiteOrigin: file://$/Repo/data/remote/tank.git
-SiteBranch: master
+SiteOrigin: VOID
+SiteBranch: VOID
 
 UserOrigin: file://$/Repo/data/remote/tank.git
 UserBranch: master
