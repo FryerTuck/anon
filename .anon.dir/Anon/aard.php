@@ -55,16 +55,19 @@ namespace Anon;
       static function checkUpdates()
       {
           $ln="checkUpdates"; $fg=isin(NAVIPATH,$ln); $gr=conf("Repo/gitRefer"); // lock-name .. from-gui .. git-refer
-          if(lock::exists($ln)||!isee('$/Repo/data/native/fuse')){if($fg){ekko(OK); exit;}; return OK;}; // real immature :D
-          lock::awaits($ln); // lock to prevent multiple
+          if(lock::exists($ln)){signal::dump("ignored `$ln` .. another process locked it"); return OK;};
+          if(!isee('$/Repo/data/native/fuse')){signal::dump("ignored `$ln` .. the fuse-repo is not defined yet"); return OK;};
+
+          lock::awaits($ln); // lock it!
+
           $su=Repo::differ('$/Repo/data/native/anon','origin',$gr->AnonBranch); // anon-diff
-          if($su){$su->from="Anon"; lock::remove($ln); if(!$fg){return $su;}; ekko($su);}; // run Anon updates first, if any
+          if($su){$su->from="Anon"; lock::remove($ln); return $su;}; // run Anon updates first, if any
 
-          if(!isPlug($gr->SiteBranch)){if($fg){ekko(OK); exit;}; return OK;}; // SiteOrigin not set .. nothing else to do
+          if(!isPlug($gr->SiteOrigin)){signal::dump("the site-repo has no origin yet"); return OK;}; // nothing to do
           $su=Repo::differ('$/Repo/data/native/site','origin',$gr->SiteBranch); // site-diff
-          if($su){$su->from="Site"; lock::remove($ln); if(!$fg){return $su;}; ekko($su);}; // run Site updates last, if any
+          if($su){$su->from="Site"; lock::remove($ln); return $su;}; // run Site updates last, if any
 
-          if($fg){ekko(OK); exit;}; return OK; // all is well
+          return OK; // all is well
       }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
