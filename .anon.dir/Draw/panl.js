@@ -240,12 +240,6 @@ extend(Anon)
                return;
             };
 
-            // if(isin(['js','json','css','htm','html','txt','php','inf'],ext))
-            // {
-            //    rsp=stub(rsp.body,';base64,')[2]; rsp=atob(rsp); img=create({code:'',contents:rsp}); img.rectInfo((i)=>
-            //    {img=VOID; img=create({svg:'', width:Math.ceil(i.width), height:Math.ceil(i.height), contents:[{text:rsp.body}]}); cbf(img)});
-            // };
-
             alert('file type `'+ext+'` is not supported .. yet');
          });
       },
