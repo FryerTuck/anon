@@ -43,6 +43,7 @@ namespace Anon;
         $hta=pget("$ntv/site/.htaccess"); htbackup(($hta?$hta:""),pget("$ntv/anon/.htaccess")); // get fused htaccess rules
         path::make("$ntv/fuse/.htaccess",$hta); // write anon-site-fused htaccess rules to fuse-repo
         unset($lst,$itm); Repo::commit("$ntv/fuse","cloned Site",true); // track & commit & push fuse-repo-changes to tank
+        Repo::update('/','pull');
     };
 # -----------------------------------------------------------------------------------------------------------------------------
 
@@ -57,6 +58,7 @@ namespace Anon;
         $hsh=PROCHASH; $usr="master"; $eml=simp(pget("$/User/data/$usr/mail")); $mpw=pget("$/User/data/$usr/pass"); // vars
         exec::{"rm -r ./.git && mkdir $hsh && git clone $tko ./$hsh && cp -r ./$hsh/.git . && rm -rf ./$hsh"}("/"); // copy git
         exec::{"git config --local user.name \"$usr\""}("/"); exec::{"git config --local user.email \"$eml\""}("/"); // Git ID
+        Repo::commit("/","cloned web-root",true); Repo::update('/','pull');
         path::make("$/User/data/$usr/pass",$mpw); chmod(ROOTPATH."/.htaccess",0444); // restore master password & harden hta
     };
 
