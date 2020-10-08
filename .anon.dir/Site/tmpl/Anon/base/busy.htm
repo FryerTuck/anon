@@ -92,7 +92,7 @@
 
    Busy.init = function(j,v)
    {
-      consol.log(`(~conf('Site/anonBusy/alwaysRender')~)`);
+      console.log(`(~conf('Site/anonBusy/alwaysRender')~)`);
       if(!!document.getElementById("AnonAppsMenu"))
       {
          Busy.base.skin=Busy.base.skin.split("background:hsla(0,0%,100%,0.9)").join("background:hsla(0,0%,15%,0.9)");
