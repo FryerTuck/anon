@@ -84,25 +84,25 @@ namespace Anon;
          catch(\Exception $e){$m=$e->getMessage(); lock::remove($p); fail::plug("$m .. `$p`"); exit;};
          if(!isee($p)){$l->close(); lock::remove($p); fail::database("unable to create file: `$p`"); exit;};
          if(!$d&&isee("$h/defn.php")){$d=import("$h/defn.php");}; if(isAssa($d)){$d=knob($d);};
-         $l->close(); wait(10); if(!isKnob($d,1)){lock::remove($p); return true;};
+         $l->close(); wait(10); lock::remove($p); if(!isKnob($d,1)){return true;};
          $l=$this->vivify(); $tl=keys($this->descry('*'));
 
          foreach($d as $tn => $td)
          {
-            if(!isWord($tn)){fail::database("invalid table-name `$tn`");}; if(isin($tl,$tn)){continue;};
-            if(!isKnob($td->cols)){fail::database("invalid table definition .. expeciting `cols` as object"); exit;};
+            if(!isWord($tn)){$this->pacify(); fail::database("invalid table-name `$tn`");}; if(isin($tl,$tn)){continue;};
+            if(!isKnob($td->cols)){$this->pacify(); fail::database("invalid table definition .. expeciting `cols` as object"); exit;};
             $cl=[]; foreach($td->cols as $cn => $cd)
             {
-                if(!isWord($cn)){lock::remove($p); fail::database("invalid column name `$cn`"); exit;};
+                if(!isWord($cn)){$this->pacify(); fail::database("invalid column name `$cn`"); exit;};
                 radd($cl,"$cn $cd");
             };
             $cl=implode($cl,', '); $q="CREATE TABLE $tn ($cl);\n"; $this->adjure($q); if(!$td->rows){continue;};
-            if(!isNuma($td->rows)){fail::database('invalid rows definition .. expecting `rows` as numeric-key-array .. or not-defined at all');};
+            if(!isNuma($td->rows)){$this->pacify(); fail::database('invalid rows definition .. expecting `rows` as numeric-key-array .. or not-defined at all');};
             $this->insert([using=>$tn,write=>$td->rows]);
             // todo::{'sqlite plug'}("upon `create`, if `rows` are defined, insert them",FAIL);
          };
 
-         $l->close(); lock::remove($p); wait(10); return true;
+         $this->pacify(); wait(10); return true;
       }
 
 
