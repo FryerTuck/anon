@@ -78,15 +78,13 @@ namespace Anon;
       {
          $i=$this->mean; $p=$i->meta->base; if(isFile($p)&&(path::size($p)>0)){return;};
          if(fext($p)!=="sdb"){if(!isee($p)){path::make("$p/");}; $p="$p/base.sdb";};
-         $h=path::twig($p); if(!isFold($h)){path::make("$h/");};
+         $h=path::twig($p); if(!isFold($h)){path::make("$h/");}; $this->mean->meta->base=$p; lock::awaits($p);
          try{$l=(new \SQLite3(path($p), SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE));}
-         catch(\Exception $e){$m=$e->getMessage(); fail::plug("$m .. `$p`"); exit;};
-         if(!isee($p)){fail::database("unable to create file: `$p`"); exit;};
+         catch(\Exception $e){$m=$e->getMessage(); lock::remove($p); fail::plug("$m .. `$p`"); exit;};
+         if(!isee($p)){$l->close(); lock::remove($p); fail::database("unable to create file: `$p`"); exit;};
          if(!$d&&isee("$h/defn.php")){$d=import("$h/defn.php");}; if(isAssa($d)){$d=knob($d);};
-         $l->close(); wait(10); unset($l);
-         $this->link=(new \SQLite3(path($p), SQLITE3_OPEN_READWRITE));
-         if(!isKnob($d,1)){$this->pacify(); return true;};
-         $l=$this->link; $tl=keys($this->descry('*'));
+         if(!isKnob($d,1)){$l->close(); lock::remove($p); wait(10); return true;}; $this->link=$l;
+         $tl=keys($this->descry('*'));
 
          foreach($d as $tn => $td)
          {
@@ -100,7 +98,7 @@ namespace Anon;
             // todo::{'sqlite plug'}("upon `create`, if `rows` are defined, insert them",FAIL);
          };
 
-         $l->close(); wait(10); return true;
+         $l->close(); lock::remove($p); wait(10); return true;
       }
 
 
