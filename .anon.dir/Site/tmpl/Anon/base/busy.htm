@@ -90,14 +90,11 @@
    };
 
 
-   Busy.init = function(j,v)
+   Busy.init = function(j,v, ap,sb)
    {
-      console.log(`(~conf('Site/anonBusy/alwaysRender')~)`);
-      if(!!document.getElementById("AnonAppsMenu"))
-      {
-         Busy.base.skin=Busy.base.skin.split("background:hsla(0,0%,100%,0.9)").join("background:hsla(0,0%,15%,0.9)");
-         Busy.base.gear=Busy.base.gear.split("stroke:#444;").join("stroke:#AAA;").split("fill:#444;").join("fill:#AAA;");
-      };
+      ap=document.getElementById("AnonMainGrid");
+      sb=(("(~conf('Site/anonBusy/alwaysRender')~)"=="true")?1:(ap?1:0));
+      if(sb){Busy.base.skin=Busy.base.skin.split("display:none").join("display:block");};
 
       if(!!Busy.node){Busy.node.style.opacity=1; Busy.edit(j,(v||0)); return};
       var p=document.createElement('div'); p.id='busyPane';
