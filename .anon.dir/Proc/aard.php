@@ -406,6 +406,7 @@ namespace Anon;
          // $mp='$/User/data/master/pass';  $pw=pget($mp);
 
          if(lock::exists($ln)){return OK;}; lock::create($ln);
+         $ht=pget("/.htaccess"); if(isee("$sp/.htaccess")){$ht=pget("/.htaccess");};
          Repo::update($up,$gr->$cw,'pull','origin');
          $om=conf('Repo/gitIgnor'); // TODO :: stuff to omit
 
@@ -418,7 +419,7 @@ namespace Anon;
          };
 
          // path::make($mp,$pw);
-         $ht=htbackup(pget("$sp/.htaccess"),pget("$/Repo/data/native/anon/.htaccess"));
+         $ht=htbackup($ht,pget("$/Repo/data/native/anon/.htaccess"));
          path::make("$tp/.htaccess",$ht); // write fused htaccess to test-repo
          Repo::commit($tp,"$uw update",true); // add all & commit changes & push to tank-repo
          chmod(ROOTPATH."/.htaccess",0644); // make htaccess writable for now
