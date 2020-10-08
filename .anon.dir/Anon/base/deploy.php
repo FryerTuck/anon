@@ -119,7 +119,7 @@
     $fm = '503 Service Unavailable'; $bp=base();
     $pk = ''; if(isset($_GET['pk'])){$pk=$_GET['pk'];};
     $ck = '(~ck~)';
-    $hn = envi('SERVER_NAME'); if(!$hn){$hn=envi('HOST');};
+    $hn = $hn=envi('HOST');
     $fn = __FILE__;  $fn=explode('/',$fn);  $fn=array_pop($fn);
 # -----------------------------------------------------------------------------------------------------------------------------
 
