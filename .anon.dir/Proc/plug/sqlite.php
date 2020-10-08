@@ -21,7 +21,8 @@ namespace Anon;
          $this->info=knob(['maxLevel'=>2,'levlType'=>$x]); $bp=$m->base;
 
          if(isPath($m->base,[D,W])&&!isee($p)){$bp=($m->base.$m->path); $m->base=$bp; $m->path=''; $this->mean->meta=$m;};
-         if(!isFile($bp)||(path::size($bp)<1)){$this->create();};
+         if(!isFile($bp)||(path::size($bp)<1))
+         {$this->create();};
 
          if(!$p){$p=[];}; $x=['table','field'];
          $l=($m?$m->levl:0); if($l>$this->info->maxLevel){fail('path-depth unreachable');exit;};
@@ -83,12 +84,14 @@ namespace Anon;
          if(!isee($p)){fail::database("unable to create file: `$p`"); exit;};
          if(!$d&&isee("$h/defn.php")){$d=import("$h/defn.php");}; if(isAssa($d)){$d=knob($d);};
          if(!isKnob($d,1)){$l->close(); wait(10); return true;}; $this->link=$l;
+         $tl=keys($this->descry('*'));
 
          foreach($d as $tn => $td)
          {
-            if(!isWord($tn)){fail("invalid table-name `$tn`");};
-            if(!isKnob($td->cols)){fail("invalid table definition .. expeciting `cols` as object");}; $q="CREATE TABLE $tn "; $q.='(';
-            foreach($td->cols as $cn => $cd) {if(!isWord($cn)){fail("invalid column name `$cn`");}; $q.="$cn $cd, ";};
+            if(!isWord($tn)){fail("invalid table-name `$tn`");}; if(isin($tl,$tn)){continue;};
+            if(!isKnob($td->cols)){fail("invalid table definition .. expeciting `cols` as object"); exit;};
+            $q="CREATE TABLE $tn "; $q.='('; // messes with syntax highlighting in Atom if not done this way
+            foreach($td->cols as $cn => $cd) {if(!isWord($cn)){fail("invalid column name `$cn`"); exit;}; $q.="$cn $cd, ";};
             $q=(rtrim($q,', ').");\n"); $l->exec($q); if(!$td->rows){continue;};
             if(!isNuma($td->rows)){fail('invalid rows definition .. expecting `rows` as numeric-key-array .. or not-defined at all');};
             $this->insert([using=>$tn,write=>$td->rows]);

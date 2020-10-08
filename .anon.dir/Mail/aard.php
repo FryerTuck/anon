@@ -166,25 +166,28 @@ namespace Anon;
       $mi=path::info($c); if(!$fa){$fa="$mi->user@$mi->host";};
       if(!online()){fail('`'.HOSTNAME.'` is offline'); exit;};
 
-      $r=crud($c)->insert
+      $MO=// array
+      [
+        'fromAddr' => $fa,
+        'fromName' => $fn,
+        'destAddr' => $da,
+        'destName' => $dn,
+        'mesgHead' => $mh,
+        'htmlBody' => $hb,
+        'textBody' => $tb,
+        'attached' => $o->attached,
+      ];
+
+      $r=plug($c)->insert
       ([
          debug => $o->runDebug,
-         write =>
-         ([
-            'fromAddr' => $fa,
-            'fromName' => $fn,
-            'destAddr' => $da,
-            'destName' => $dn,
-            'mesgHead' => $mh,
-            'htmlBody' => $hb,
-            'textBody' => $tb,
-            'attached' => $o->attached,
-         ])
+         write => $MO,
       ]);
 
       if($r->fail)
       {
-         $f=$r->fail; $m="Cannot send mail\n..";
+         $f=$r->fail; $m="Cannot send mail using `$c`\n\n";
+
          if(isin($f,'SMTP connect() failed'))
          {
             $i=path::info($c); $u="$i->user@$i->host";
@@ -196,11 +199,17 @@ namespace Anon;
              $m=rstub($f,']}'); $m=($m[0].']}'); $m=decode::jso($m);
              dbug::view($m); exit;
          }
+         elseif(arg($f)->startsWith('<head><title>'))
+         {
+             $eh=expose($f,'<h1>','</h1>'); if($eh){$eh=$eh[0];};
+             $eb=expose($f,'<p>','</p>');  if($eb){$eb=$eb[0];};
+             if(!$eh||!$eb){$r=$f;}else{$r="$eh\n$eb";};
+         }
          else
          {
              $r="$m $f\n.. make sure the mailbox exists";
          };
-         if($o->runDebug){fail($r);}; return $r;
+         if($o->runDebug){fail::mailer($r);}; return $r;
       };
 
       signal::done("!");
