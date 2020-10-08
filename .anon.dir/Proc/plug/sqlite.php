@@ -51,7 +51,7 @@ namespace Anon;
       }
 
 
-      function vivify()
+      function vivify($p=null)
       {
          if($this->link){return $this->link;}; $p=$this->mean->meta->base;
          if(!isFile($p)||(path::size($p)<1)){$this->create();};
@@ -69,7 +69,7 @@ namespace Anon;
 
       function pacify()
       {
-         if(!$this->link){return true;}; $this->link->close(); lock::remove($this->mean->path);
+         if(!$this->link){return true;}; $this->link->close(); lock::remove($this->mean->meta->base);
          $this->link=null; return true;
       }
 
@@ -85,7 +85,8 @@ namespace Anon;
          if(!isee($p)){$l->close(); lock::remove($p); fail::database("unable to create file: `$p`"); exit;};
          if(!$d&&isee("$h/defn.php")){$d=import("$h/defn.php");}; if(isAssa($d)){$d=knob($d);};
          $l->close(); wait(10); lock::remove($p); if(!isKnob($d,1)){return true;};
-         $l=$this->vivify(); $tl=keys($this->descry('*'));
+         $this->link=(new \SQLite3(path($p), SQLITE3_OPEN_READWRITE));
+         $l=$this->link; $tl=keys($this->descry('*'));
 
          foreach($d as $tn => $td)
          {
