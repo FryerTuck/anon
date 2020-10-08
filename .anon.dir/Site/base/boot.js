@@ -15,12 +15,12 @@
 
 // defn :: conf : front-end configuration
 // --------------------------------------------------------------------------------------------------------------------------------------------
-   globVars({antiHack:deconf(`{:enconf('Proc/antiHack'):}`)});
+   globVars({antiHack:deconf(`(~enconf('Proc/antiHack')~)`)});
    const timeVars = {e6:0};
 
-   const badCfg='{:badCfg:}';
+   const badCfg='(~badCfg~)';
 
-   globVars({mime:deconf(`{:enconf('Proc/mimeType'):}`)});
+   globVars({mime:deconf(`(~enconf('Proc/mimeType')~)`)});
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -154,7 +154,7 @@
             ({
                'need::report bug and refresh':function(ce, fm)
                {
-                  fm="Failed to report bug :(\n\nPlease contact tech support:\n{:TECHMAIL:}";
+                  fm="Failed to report bug :(\n\nPlease contact tech support:\n(~TECHMAIL~)";
                   try{purl("/Proc/makeTodo",{mesg:btoa(encode.jso(e.detail))},(r)=>
                   {
                      if(r.body!=OK){console.error(r.body); this.root.exit(); popAlert(fm);return};
@@ -189,7 +189,7 @@
             focusObj:{hash:VOID,node:VOID},
             ProcInfo:
             {
-               sysClock:deconf(`{:enconf('Proc/sysClock'):}`).client,
+               sysClock:deconf(`(~enconf('Proc/sysClock')~)`).client,
             },
          });
 
@@ -238,7 +238,7 @@
    {
       extend(MAIN)({Anon:{}}); bz(50);
 
-      requires(decode.jso((`{:bootList:}`||`[]`)),(av,np)=>
+      requires(decode.jso((`(~bootList~)`||`[]`)),(av,np)=>
       {
          window.BOOTED=1; bz(60); av=select(`#AnonView`);
 

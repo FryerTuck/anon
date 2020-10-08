@@ -127,7 +127,7 @@
 
 # cond :: (security) : only run when appropriate
 # -----------------------------------------------------------------------------------------------------------------------------
-    if($ck===('{'.':ck:'.'}')) // install without AnonDeploy
+    if($ck===('('.'~ck~'.')')) // install without AnonDeploy
     {
         if(!isset($_GET['confirm']))
         {

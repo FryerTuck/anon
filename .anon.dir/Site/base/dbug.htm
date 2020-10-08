@@ -352,8 +352,8 @@
 
          window.dbug = // object
          {
-            data:'(~(DBUGDATA)~)',
-            dump:'(~(DUMPMESG)~)',
+            data:'(~DBUGDATA~)',
+            dump:'(~DUMPMESG~)',
 
             fail:function(n, dd,fd)
             {
@@ -372,10 +372,10 @@
 
             init:function(dd,dk,df)
             {
-               if(dbug.dump!=('{'+':(DUMPMESG):'+'}')){console.log(atob(dbug.dump));};
+               if(dbug.dump!=('('+'~DUMPMESG~'+')')){console.log(atob(dbug.dump));};
                if((location.href+'').indexOf('?#')>-1){dk=(location.href+'').split('?')[1]; df=Select(dk);}; // check fail from URL
                if(df){dbug.fail(dk.substr(1));return}; // direct fail from URL
-               if(dbug.data==('{'+':(DBUGDATA):'+'}')){dbug.fail('epic');return}; // direct fail from .htaccess .. no PHP
+               if(dbug.data==('('+'~DBUGDATA~'+'}')){dbug.fail('epic');return}; // direct fail from .htaccess .. no PHP
                dd=dbug.data; try{dd=atob(dd); if(Select('#'+dd)){dbug.fail(dd);return}}catch(e){dbug.fail('hack');return;}; // direct or hack
                try{dd=JSON.parse(dd);}catch(e){dbug.fail('hack');return;}; // invalid dbug data
                dk=['name','mesg','file','line','stak','user','clan']; dk.forEach(function(k){if(!dd[k]){df='hack'}}); // validate dbug data
