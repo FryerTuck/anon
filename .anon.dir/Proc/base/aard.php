@@ -915,7 +915,7 @@ namespace Anon;
    };
 
    $_SERVER['INTRFACE']=$i; defn(['USERSKEY'=>$k]);
-   if(facing('BOT DPR GUI')){$_SERVER['UPKEEPER']='';};
+   if(!(envi("MADEFUBU")&&facing('API'))){$_SERVER['UPKEEPER']='';}; // upkeep only available for API-calls made FUBU
 
    $vl=array_keys(get_defined_vars());
    foreach($vl as $vn){if(substr($vn,0,1)==="_"){continue;}; unset($$vn);}; unset($vl,$vn);

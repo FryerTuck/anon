@@ -5,8 +5,8 @@ namespace Anon;
 
 $export=function($a,$u,$d)
 {
-   $bf="cannot perform `$a` on user `$u`"; if($u==='anonymous'){ekko($bf);};
-   if(($u==='master')&&!isin($d,"clan:+")){ekko($bf);exit;};
+   $CU=sesn('USER'); $bf="dear $CU .. you cannot perform `$a` on user `$u`";
+   if($u==='anonymous'){ekko($bf); exit;}; if(($u==='master')&&($CU!==$u)){ekko($bf);exit;};
 
    $d=dval(swap($d,":",": ")); if(is_assoc_array($d)){$d=knob($d);}; $h="/User/data/$u"; $sudo=isin(user('clan'),'sudo');
 
@@ -59,7 +59,7 @@ $export=function($a,$u,$d)
          {
             if(span($dc)<2){ekko('invalid clan name');}; $ca=$dc[0]; $cn=substr($dc,1);
             if(($ca!=='+')&&($ca!=='-')){ekko('invalid clan action');}; $w=(($ca==='+')?'invite others to':'banish members from');
-
+            if(($u==='master')&&($ca==='-')&&($dc==='sudo')){ekko("master cannot do that");};
             if(!isin($cuc,$cn)&&!$sudo){ekko("you can only $w clans you belong to .. unless you're a sudoer");};
             if(isin($tuc,$cn)&&($ca==='+')){ekko("$u is already a {$cn}er");};
             if(!isin($tuc,$cn)&&($ca==='-')){ekko("$u is not a {$cn}er");};
@@ -116,6 +116,7 @@ $export=function($a,$u,$d)
 
    if($a==='void')
    {
+      if($u==='master'){ekko("master cannot do that");};
       if(!userDoes("sudo lead")){ekko("only leaders and sudoers can do that"); exit;};
       if(!isee($h)){ekko("user `$u` is undefined"); exit;};  $s=find::sesnByUser($u);
       signal::ClientReboot("user deleted","#$u"); wait(1000);
