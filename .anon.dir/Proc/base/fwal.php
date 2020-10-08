@@ -47,8 +47,6 @@ namespace Anon;
       {
       # cond :: init : protect the framework core and limit browsing freedom according to config
       # ---------------------------------------------------------------------------------------------------------------------------------------
-         $h=pget('$/Proc/conf/hostName'); if($h&&($h!==envi('HOST')))
-         {fail::hostname("configured hostname does not match the request hostname"); exit;};
          self::$vars=knob(['faceList'=>['API','BOT','DPR','GUI','SSE']]);
 
          $s=test::{NAVIPATH}(conf('Proc/redirect')); // get redirect config for the current web URL

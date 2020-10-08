@@ -745,7 +745,9 @@ namespace Anon;
    if(!envi('ACCEPT')){$_SERVER['ACCEPT']=envi('CONTENT_TYPE');};
 
    $h=pget('$/Proc/conf/hostName');
-   if(!$h){$h=envi('HOST'); if($b&&(strpos($h,"$b.")!==0)){$h="$b.$h";}};
+   if(!$h){$h=envi('HOST'); if($b&&(strpos($h,"$b.")!==0)){$h="$b.$h";}}
+   elseif($h!==envi('HOST')){header("Location: ".envi('SCHEME').'://'.$h.envi('URI')); exit;}; // KEEP IT REAL!
+
    $p=envi('URL'); $b=envi('BASEPATH'); if($b!=='/'){$p=lshave($p,"/$b");}; if(!$p){$p='/';}; unset($b);
    defn
    ([
