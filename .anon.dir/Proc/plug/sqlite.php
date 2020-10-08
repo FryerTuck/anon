@@ -83,8 +83,10 @@ namespace Anon;
          catch(\Exception $e){$m=$e->getMessage(); fail::plug("$m .. `$p`"); exit;};
          if(!isee($p)){fail::database("unable to create file: `$p`"); exit;};
          if(!$d&&isee("$h/defn.php")){$d=import("$h/defn.php");}; if(isAssa($d)){$d=knob($d);};
-         if(!isKnob($d,1)){$l->close(); wait(10); return true;}; wait(10); $this->link=$l;
-         $tl=keys($this->descry('*'));
+         $l->close(); wait(10); unset($l);
+         $this->link=(new \SQLite3(path($p), SQLITE3_OPEN_READWRITE));
+         if(!isKnob($d,1)){$this->pacify(); return true;};
+         $l=$this->link; $tl=keys($this->descry('*'));
 
          foreach($d as $tn => $td)
          {
