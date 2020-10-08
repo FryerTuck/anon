@@ -62,7 +62,7 @@ window.isModern.t=setInterval(function(gate)
     {
         if(pageGone){return}; // gotcha bitch .. smart-bot
         if(!really){userView('(~DBUGPATH~)?#lcjs'); return};  // bad browser goes to graceful fail
-        if('(~ALTHANDLER~)'!='yes'){bootAnon(); return}; // no other framework detected
+        if('(~ALTHANDLER~)'!='yes'){bootAnon(gate); return}; // no other framework detected
         userView('(~NAVIPURL~)',function(){bootAnon(gate)}); // boot handler first -if present
     })},250);
 },10);
