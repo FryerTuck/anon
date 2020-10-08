@@ -78,22 +78,26 @@ namespace Anon;
       {
          $i=$this->mean; $p=$i->meta->base; if(isFile($p)&&(path::size($p)>0)){return;};
          if(fext($p)!=="sdb"){if(!isee($p)){path::make("$p/");}; $p="$p/base.sdb";};
-         $h=path::twig($p); if(!isFold($h)){path::make("$h/");}; $this->mean->meta->base=$p; lock::awaits($p);
+         $h=path::twig($p); if(!isFold($h)){path::make("$h/");}; $this->mean->meta->base=$p;
+         if(!lock::exists($p)){lock::awaits($p);}; // lock it .. just incase
          try{$l=(new \SQLite3(path($p), SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE));}
          catch(\Exception $e){$m=$e->getMessage(); lock::remove($p); fail::plug("$m .. `$p`"); exit;};
          if(!isee($p)){$l->close(); lock::remove($p); fail::database("unable to create file: `$p`"); exit;};
          if(!$d&&isee("$h/defn.php")){$d=import("$h/defn.php");}; if(isAssa($d)){$d=knob($d);};
-         if(!isKnob($d,1)){$l->close(); lock::remove($p); wait(10); return true;}; $this->link=$l;
-         $tl=keys($this->descry('*'));
+         $l->close(); wait(10); if(!isKnob($d,1)){lock::remove($p); return true;};
+         $l=$this->vivify(); $tl=keys($this->descry('*'));
 
          foreach($d as $tn => $td)
          {
-            if(!isWord($tn)){fail("invalid table-name `$tn`");}; if(isin($tl,$tn)){continue;};
-            if(!isKnob($td->cols)){fail("invalid table definition .. expeciting `cols` as object"); exit;};
-            $q="CREATE TABLE $tn "; $q.='('; // messes with syntax highlighting in Atom if not done this way
-            foreach($td->cols as $cn => $cd) {if(!isWord($cn)){fail("invalid column name `$cn`"); exit;}; $q.="$cn $cd, ";};
-            $q=(rtrim($q,', ').");\n"); $l->exec($q); if(!$td->rows){continue;};
-            if(!isNuma($td->rows)){fail('invalid rows definition .. expecting `rows` as numeric-key-array .. or not-defined at all');};
+            if(!isWord($tn)){fail::database("invalid table-name `$tn`");}; if(isin($tl,$tn)){continue;};
+            if(!isKnob($td->cols)){fail::database("invalid table definition .. expeciting `cols` as object"); exit;};
+            $cl=[]; foreach($td->cols as $cn => $cd)
+            {
+                if(!isWord($cn)){lock::remove($p); fail::database("invalid column name `$cn`"); exit;};
+                radd($cl,"$cn $cd");
+            };
+            $cl=implode($cl,', '); $q="CREATE TABLE $tn ($cl);\n"; $this->adjure($q); if(!$td->rows){continue;};
+            if(!isNuma($td->rows)){fail::database('invalid rows definition .. expecting `rows` as numeric-key-array .. or not-defined at all');};
             $this->insert([using=>$tn,write=>$td->rows]);
             // todo::{'sqlite plug'}("upon `create`, if `rows` are defined, insert them",FAIL);
          };
