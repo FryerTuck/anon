@@ -164,7 +164,11 @@ namespace Anon;
          $k=sesn('HASH'); $d=base64_encode($d); $b=": \nevent: $e\ndata: $d\n\n";
          while(strlen($b)<8400){$b.=' ';}; // padd event with whitespace .. if too short then the connection will restart
          if(facing('SSE')&&!headers_sent())
-         {header_remove(); header("Content-Type: text/event-stream\n\n"); header('Cache-Control: no-cache, must-revalidate');};
+         {
+             header_remove(); header("Content-Type: text/event-stream\n\n");
+             header('Cache-Control: no-cache, must-revalidate');
+             header('Content-Encoding: none'); flush(); $_SERVER['SSEREADY']='yes';
+         };
          echo $b; return;
       }
 
@@ -183,8 +187,8 @@ namespace Anon;
          while(ob_get_level()){ob_end_clean();}; if(facing('SSE')&&!headers_sent())
          {
              header_remove(); header("Content-Type: text/event-stream\n\n");
-             header('Cache-Control: no-cache, must-revalidate'); flush();
-             $_SERVER['SSEREADY']='yes';
+             header('Cache-Control: no-cache, must-revalidate');
+             header('Content-Encoding: none'); flush(); $_SERVER['SSEREADY']='yes';
          };
 
          requires::stem('Mail');
