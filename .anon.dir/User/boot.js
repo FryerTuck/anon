@@ -46,7 +46,7 @@
    (function(c,h,m)
    {
       // Busy.kill();
-      c=deconf(`{:enconf("User/viewConf"):}`);
+      c=deconf(`(~enconf("User/viewConf")~)`);
       c.each((v,k)=>{if(conf[k]){fail('`conf.'+k+'` is already defined');return}; conf[k]=v});
    }());
    MAIN.CONFIRMLEAVE=1;
@@ -166,7 +166,7 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    if(userDoes("work,sudo"))
    {
-      globVars({idleTime:{:'/User/conf/inactive':}});
+      globVars({idleTime:(~'/User/conf/inactive'~)});
       globVars({authTime:time()},[`XMLHttpRequest.authSudo /User/getRepel`]);
       globVars({mailBusy:0},[`Object.mailTime /User/boot.js`,`XMLHttpRequest.pingMail /User/boot.js`]);
 

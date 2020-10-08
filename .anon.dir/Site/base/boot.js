@@ -57,24 +57,6 @@
 
 
 
-// defn :: view : structure
-// --------------------------------------------------------------------------------------------------------------------------------------------
-   select('body')[0].insert
-   ([
-      {view:'#anonHidnView .full', style:'overflow:hidden; opacity:0'},
-      {view:'#anonMarkView .full', style:'overflow:hidden; opacity:0.1', contents:
-      [
-         // {img:'.cenmid', src:'/Site/dcor/mark.svg'}
-      ]},
-      {view:'#anonMainView .full'},
-      {view:'#anonPanlView .hide'},
-      {view:'#anonModlView .hide'},
-      {view:'#anonNoteView .hide'},
-   ]);
-// --------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
 
 // load :: auto : control DOM mutation and boot any other front-end features
 // --------------------------------------------------------------------------------------------------------------------------------------------
@@ -256,10 +238,23 @@
    {
       extend(MAIN)({Anon:{}}); bz(50);
 
-      requires(decode.jso((`{:bootList:}`||`[]`)),(av)=>
+      requires(decode.jso((`{:bootList:}`||`[]`)),(av,np)=>
       {
          window.BOOTED=1; bz(60); av=select(`#AnonView`);
-         av.init=function(evnt,dm,dw,db,se,pn)
+
+         if(!av)
+         {
+             np=location.href; np+=((isin(np,"?")?"&":"?")+"init"); render(np,(r)=>
+             {
+                 let fr=(nodeName(r)=="iframe"); if(fr){r.id="AnonSiteView"; r.listen("load",ab);};
+                 select('#anonMainView').insert(r);
+                 if(!fr){tick.after(250,()=>{signal("boot"); bz(100); Busy.done();});};
+             });
+             return;
+         };
+
+
+         av.onload=VOID; av.onload=function(evnt,dm,dw,db,se,pn)
          {
              pn=this.parentNode; pn.enclan("scrollHide");
              dm=this.contentDocument; if(!dm){fail("iframe :: invalid DOM"); return};
@@ -277,25 +272,7 @@
                 Busy.done(); // kill it gracefully if still running
              });
          };
-         av.init.bind(av);
-         av.init();
-
-         // np=location.href;
-         //
-         // if("{:INTRFACE:}"=="ALT")
-         // {
-         //     let r=create({iframe:"#AnonSiteView .spanFull", src:np, onload:ab}); r.listen("load",ab);
-         //     select('#anonMainView').insert(r);
-         //     return;
-         // };
-         //
-         // np+=((isin(np,"?")?"&":"?")+"init");
-         // render(np,(r)=>
-         // {
-         //     let fr=(nodeName(r)=="iframe"); if(fr){r.id="AnonSiteView"; r.listen("load",ab);};
-         //     select('#anonMainView').insert(r);
-         //     if(!fr){tick.after(250,()=>{signal("boot"); bz(100); Busy.done();});};
-         // });
+         av.onload();
       });
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------

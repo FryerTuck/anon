@@ -1,6 +1,6 @@
 "use strict";
 
-const HOSTNAME='{:HOSTNAME:}';
+const HOSTNAME='(~HOSTNAME~)';
 const HOSTPURL=('https://'+HOSTNAME);
 const UNDF=(function(){}());
 
@@ -16,7 +16,7 @@ const wack = function(r)
    d.innerHTML=`<div style="height:100%; background:hsla(0,0%,0%,0.7);padding:10px">${m}</div>`;
    setTimeout(function(){d.style.backgroundImage=`url('/User/dcor/wal1.jpg')`;},Math.rand(900,3000));
 }
-.bind({line:atob("{:encode::b64('$/Proc/info/hack.inf'):}").split('\n'),done:0});
+.bind({line:atob("(~encode::b64('$/Proc/info/hack.inf')~)").split('\n'),done:0});
 
 const stak = function(x,a, e,s,r,h,o,sve)
 {
@@ -36,25 +36,30 @@ const stak = function(x,a, e,s,r,h,o,sve)
 
 const sesn = function(a)
 {if(!stak(0)){wack();return}; if(((typeof a)!='string')||(a.length<1)||!this[a]){return}; return this[a];}.bind
-({USER:'{:SESNUSER:}',MAIL:'{:SESNMAIL:}',CLAN:'{:SESNCLAN:}',HASH:'{:SESNHASH:}'});
+({USER:'(~SESNUSER~)',MAIL:'(~SESNMAIL~)',CLAN:'(~SESNCLAN~)',HASH:'(~SESNHASH~)'});
 
 const bz=function(p){Busy.edit('/anonBoot',p);};
 
-window.AnonBusy=(atob('{:busyGear:}')).split('<script>');
-document.body.innerHTML=AnonBusy[0]; AnonBusy=AnonBusy[1].split('</script>')[0];
-script(AnonBusy,(s,c)=>
+
+window.AnonBusy=setInterval(function(snth)
 {
-    delete window.AnonBusy;
+    snth=document.getElementById('snth'); if(!snth){return;}; clearInterval(AnonBusy); // wait until ready
+    AnonBusy=(atob('(~busyGear~)')).split('<script>'); snth.innerHTML=AnonBusy[0]; AnonBusy=AnonBusy[1].split('</script>')[0];
 
-    if({:denyDomainSpoofs:})
+    script(AnonBusy,(s,c)=>
     {
-        s=HOSTNAME.split('.'); c=location.host.split('.');
-        if((s.length<3)||(c.length<3)){console.error("invalid hostname");wack();return};
-        s.shift(); s=s.join('.'); c.shift(); c=c.join('.');
-        if(c!=s){console.error("hostname mismatch",s,c);wack();return};
-    };
+        delete window.AnonBusy; snth.parentNode.removeChild(snth);
 
-    Object.keys(Cookies.get()).forEach((k)=>{if(k.length!=40){return}; Cookies.remove(k)});
-    Cookies.set("{:SESNHASH:}","..."); bz(10); script('/Site/base/abec.js',()=>{bz(20); script('/Site/base/base.js',()=>
-    {bz(30); script('/Proc/libs/opentype/opentype.min.js',()=>{bz(40); script('/Site/base/boot.js')})})});
-});
+        if((~denyDomainSpoofs~))
+        {
+            s=HOSTNAME.split('.'); c=location.host.split('.');
+            if((s.length<3)||(c.length<3)){console.error("invalid hostname");wack();return};
+            s.shift(); s=s.join('.'); c.shift(); c=c.join('.');
+            if(c!=s){console.error("hostname mismatch",s,c);wack();return};
+        };
+
+        Object.keys(Cookies.get()).forEach((k)=>{if(k.length!=40){return}; Cookies.remove(k)});
+        Cookies.set("(~SESNHASH~)","..."); bz(0); script('/Site/base/abec.js',()=>{bz(10); script('/Site/base/base.js',()=>
+        {bz(20); script('/Proc/libs/opentype/opentype.min.js',()=>{bz(30); script('/Site/base/boot.js')})})});
+    });
+},10);

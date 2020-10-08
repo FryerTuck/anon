@@ -178,7 +178,7 @@ extend(MAIN)
 
 
 
-(deconf(`{:replLogs:}`).reverse()).forEach((i)=>{repl.ENV.cmdlog.feed(i)});
+(deconf(`(~replLogs~)`).reverse()).forEach((i)=>{repl.ENV.cmdlog.feed(i)});
 
 
 
@@ -191,4 +191,4 @@ purl.hook("/User/runRepel/*",function( cc,lc)
 
 
 
-{:commands:}
+(~commands~)

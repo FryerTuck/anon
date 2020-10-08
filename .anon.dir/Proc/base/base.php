@@ -185,8 +185,8 @@ namespace Anon;
       {
          if($b===64)
          {
-             if(!isPath($d)){return base64_encode(tval($d));}; $v=pget($d); if(span($v)<5){return base64_encode($v);};
-             if(isin($v,'{:')&&isin($v,':}')){$v=impose($v,'{:',':}',vars($d));}; return base64_encode($v);
+             if(!isPath($d)){return base64_encode(tval($d));};
+             return base64_encode(isFold($d)?json_encode(pget($d)):import($d,vars(crop($d))));
          };
          if(!isNumr($d)||isin($d,'.')||($d<1)){fail::base_convert('expecting positive integer');};
          if(!is_int($b)||(($b%2)!==0)||($b>62)){fail::base_convert("invalid encoding base");};
@@ -225,8 +225,9 @@ namespace Anon;
          if($b===16){return hex2bin($v);};
          if($b===64)
          {
-             if(!isPath($d)){return base64_decode($v);}; $v=pget($d); if(span($v)<5){return base64_encode($v);};
-             if(isin($v,'{:')&&isin($v,':}')){$v=impose($v,'{:',':}',vars($d));}; return base64_decode($v);
+             if(!isPath($v)){return base64_decode($v);}; if(!isFile($v)){fail::reference("path `$v` is not a file"); exit;};
+             $v=base64_decode(pget($d)); if(span($v)<5){return base64_decode($v);};
+             if(isin($v,'(~')&&isin($v,'~)')){$v=impose($v,'(~','~)',vars(crop($d)));}; return $v;
          };
          return hex2bin(gmp_strval(gmp_init($v,$b),16));
       }

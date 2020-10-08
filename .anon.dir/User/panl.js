@@ -24,7 +24,7 @@
                         [
                            {col:'#AnonAppsMenu', contents:(function()
                            {
-                              var mods={:(mods):}; var btns=[];
+                              var mods=(~(mods)~); var btns=[];
                               mods.each((v,k)=>{btns.push({butn:('#'+k+'MenuKnob .AnonMainButn'), icon:v, title:k, listen:
                               {
                                  'mouseover,mouseout':function(evnt)
@@ -64,7 +64,7 @@
                      [
                         {row:
                         [
-                           {col:'#AnonReplProc',contents:{pre:'#AnonReplProm',contents:('['+sesn('USER')+'&nbsp;~]')}},
+                           {col:'#AnonReplProc',contents:{pre:'#AnonReplProm',contents:('['+sesn('USER')+'&nbsp;~)')}},
                            {col:'',style:'width:6px'},
                            {col:[{input:'#AnonReplFeed',type:'text',spellcheck:FALS, autocomplete:'off', listen:
                            {

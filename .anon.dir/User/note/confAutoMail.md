@@ -13,8 +13,8 @@ That command simply writes some text into a configuration file.
 In this case, this text has very special meaning to Anon, because it's a URL standard that Anon uses
 as "connection string" to securely connect to an existing email account in order to send/receive email.
 
-You should have an existing email account for this; like: `mailroom@{:HOSTNAME:}` -recommended
-Using `mailroom@{:HOSTNAME:}` as example, "mailroom" will be the `username` part in this URL.
+You should have an existing email account for this; like: `mailroom@(~HOSTNAME~)` -recommended
+Using `mailroom@(~HOSTNAME~)` as example, "mailroom" will be the `username` part in this URL.
 
 Take care when you construct your own connection string as above, here's why:
 - every special character in that text has special meaning in a URL, no spaces allowed

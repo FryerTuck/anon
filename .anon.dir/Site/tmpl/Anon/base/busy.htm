@@ -1,10 +1,10 @@
-<div id="busyPane" style="position:fixed; z-index:99999999; width:100%; height:100%; top:0px; left:0px; background:hsla(0,0%,100%,0.9); opacity:{:showBusy:}">
+<div id="busyPane" style="position:fixed; z-index:99999999; width:100%; height:100%; top:0px; left:0px; background:(~conf('Site/anonBusy/bgTint')~); display:(~conf('Site/anonBusy/showAs')~)">
    <svg id="busyGear" viewBox="0 0 100 100" style="width:5rem; height:5rem; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);">
       <style>
          path.line
          {
             fill:none;
-            stroke:#444;
+            stroke:(~conf('Site/anonBusy/fgTint')~);
             stroke-width:0.8;
             /* stroke-linecap:round;
             stroke-linejoin:round; */
@@ -16,7 +16,7 @@
          path.fill
          {
             stroke-width:0.8;
-            fill:#444;
+            fill:(~conf('Site/anonBusy/fgTint')~);
             fill-opacity:0.5;
             opacity:0.5;
          }
@@ -49,12 +49,6 @@
    Busy.data = 0;
    Busy.size = 4.5;
    Busy.actv = 0;
-
-   if(window.self===window.top)
-   {
-      Busy.base.skin=Busy.base.skin.split("background:hsla(0,0%,100%,0.9)").join("background:hsla(0,0%,15%,0.9)");
-      Busy.base.gear=Busy.base.gear.split("stroke:#444;").join("stroke:#AAA;").split("fill:#444;").join("fill:#AAA;");
-   };
 
    Busy.edit = function(k,v, n,j,t,l,i,d,m,p,u,g,a)
    {

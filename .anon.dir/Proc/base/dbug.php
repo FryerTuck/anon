@@ -12,7 +12,7 @@ namespace Anon;
 
 # dbug :: path : expected files
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   if(NAVIPATH===DBUGPATH){$r=pget(DBUGPATH); $r=str_replace('{:(TECHMAIL):}',TECHMAIL,$r); print_r($r); flush(); die();}; // must fail nicely
+   if(NAVIPATH===DBUGPATH){$r=pget(DBUGPATH); $r=str_replace('(~(TECHMAIL)~)',TECHMAIL,$r); print_r($r); flush(); die();}; // must fail nicely
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -76,7 +76,7 @@ namespace Anon;
          if(facing('DPR')&&($x=='js')){\error_clear_last(); ekko("fail($t); "); exit;};//API & js-dpr
          if(facing('DPR')){if(is_class("Proc")){signal::fail($t);}; $m=str_replace(["\n",'"'],['',"`"],$m); $m=crop($m,60); harakiri("$m"); exit;}; // any other file
          if(facing('SSE')){if(is_class('Proc')){Proc::emit('fail',$t); exit;}; ekko($o); exit;}; // server side event
-         if(facing('GUI')){$d=base64_encode($t); $r=str_replace('{:(DBUGDATA):}',$d,pget(envi('DBUGPATH'))); echo($r); exit;}; // GUI
+         if(facing('GUI')){$d=base64_encode($t); $r=str_replace('(~(DBUGDATA)~)',$d,pget(envi('DBUGPATH'))); echo($r); exit;}; // GUI
 
          harakiri('Service Unavailable'); exit; // BOT,SYS,ETC ... ssssshhhh .. sweet screams
       }

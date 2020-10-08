@@ -1073,9 +1073,8 @@ namespace Anon;
    {
       if(isText($m,3)&&isin($m,'/')&&is_string($d)){$r=base64_encode($d); return "data:$m;base64,$r";};
       $p=isee($d); $m=mime($p); if(!$p||!$m){return;}; // invalid path or invalid mime
-      $r=pget($p); if(!is_string($r)){$r=json_encode($r);}; // if it was a folder, it's now a json array as text
-      $r=base64_encode(((span($r)<5)||!(isin($r,'{:')&&isin($r,':}')))?$r:impose($r,'{:',':}',vars(crop($p)))); // who needs code-readability?
-      return "data:$m;base64,$r"; // put a smile on your face 'ol chap .. you get access to ENV variables related to any path ref ;)
+      $r=base64_encode(isFold($p)?json_encode(pget($p)):import($p,vars(crop($p))));
+      return "data:$m;base64,$r"; // you get access to ENV variables related to any path ref ;)
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -1213,7 +1212,7 @@ namespace Anon;
       if(!defn('CTRLKEYS')){$y=conf('User/viewConf'); defn(['CTRLKEYS'=>$y->toggleUserPanl]);};
       if($x!=='php') // htm js md txt json
       {
-         $z=pget($p); $z=impose($z,'<!--[',']--->',$v); $z=impose($z,'/*{:',':}*/',$v,1); $z=impose($z,'{:',':}',$v,1);
+         $z=pget($p); $z=impose($z,'<!--[',']--->',$v); $z=impose($z,'/*(~','~)*/',$v,1); $z=impose($z,'(~','~)',$v,1);
          return $z;
       };
 

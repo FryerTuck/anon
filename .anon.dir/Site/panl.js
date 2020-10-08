@@ -19,7 +19,7 @@ extend(Anon)
    {
       vars:
       {
-          conf:deconf(`{:enconf("Site/autoConf"):}`),
+          conf:deconf(`(~enconf("Site/autoConf")~)`),
       },
 
 

@@ -251,7 +251,7 @@ In order to change anything in your Anon system (the Anon way), you'll need to u
 >You benefit from using "the Anon way" because Anon logs your time and provides security and assistance relative to what you're doing.
 
 #### How to toggle the WorkPanel on and off
-- To open: on your keyboard press -and hold the `` {:CTRLKEYS:} `` keys in sequence together then let go .. quickly does it ;)
+- To open: on your keyboard press -and hold the `` (~CTRLKEYS~) `` keys in sequence together then let go .. quickly does it ;)
 - To shut: do the exact same thing as above :D
 
 

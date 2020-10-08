@@ -3,7 +3,10 @@ window.onbeforeunload=function(){pageGone=1};
 window.dump=function(){console.log.apply(console,([].slice.call(arguments)));};
 window.fail=function(a){console.error(a);};
 window.onerror=function(m,f,l)
-{if(!window.BOOTED){console.error("Unhandled BOOT ERROR!\n"+m+"\n"+f+"  "+l);}};
+{
+    if(window.Busy){Busy.tint('red')};
+    if(!window.BOOTED){console.error("Unhandled BOOT ERROR!\n"+m+"\n"+f+"  "+l);}
+};
 
 
 window.isModern=function(cb)
@@ -28,8 +31,8 @@ window.userView=function(url,cbf)
 {
     var view=document.createElement('iframe'); if(!cbf){cbf=function(){}};
     view.setAttribute('id','AnonView'); view.setAttribute('frameborder',0);
-    view.setAttribute('src',url); view.onload=cbf;
-    document.body.innerHTML=""; document.body.appendChild(view);
+    view.setAttribute('class','layr'); view.setAttribute('src',url); view.onload=cbf;
+    document.getElementById('anonMainView').appendChild(view);
 };
 
 
@@ -52,14 +55,14 @@ window.bootAnon=function(gate)
 window.isModern.t=setInterval(function(gate)
 {
     gate=document.getElementById('AnonGate'); if(!gate){return;}; clearInterval(window.isModern.t); // wait until ready
-    if('{:ALTHANDLER:}'=='yes'){document.body.style.backgroundColor="{:conf('Site/bootSkin/handlrBG'):}"} // blend althandler
-    else if(window.self!==window.top){document.body.style.backgroundColor="{:conf('Site/bootSkin/parentBG'):}"};// blend parent
+    if('(~ALTHANDLER~)'=='yes'){document.body.style.backgroundColor="(~conf('Site/bootSkin/handlrBG')~)"} // blend althandler
+    else if(window.self!==window.top){document.body.style.backgroundColor="(~conf('Site/bootSkin/parentBG')~)"};// blend parent
 
     setTimeout(function(){isModern(function(really) // wait for evasive snth to misbehave
     {
         if(pageGone){return}; // gotcha bitch .. smart-bot
-        if(!really){userView('{:DBUGPATH:}?#lcjs'); return};  // bad browser goes to graceful fail
-        if('{:ALTHANDLER:}'!='yes'){bootAnon(); return}; // no other framework detected
-        userView('{:NAVIPURL:}',function(){bootAnon(gate)}); // boot handler first -if present
+        if(!really){userView('(~DBUGPATH~)?#lcjs'); return};  // bad browser goes to graceful fail
+        if('(~ALTHANDLER~)'!='yes'){bootAnon(); return}; // no other framework detected
+        userView('(~NAVIPURL~)',function(){bootAnon(gate)}); // boot handler first -if present
     })},250);
 },10);

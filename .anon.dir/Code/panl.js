@@ -190,8 +190,8 @@ extend(Anon)
 
       conf:
       {
-         tabSpace:(("{:/Code/conf/tabSpace:}"||3)*1),
-         beatTime:(("{:/Code/conf/beatTime:}"||360)*1),
+         tabSpace:(("(~/Code/conf/tabSpace~)"||3)*1),
+         beatTime:(("(~/Code/conf/beatTime~)"||360)*1),
       },
 
 

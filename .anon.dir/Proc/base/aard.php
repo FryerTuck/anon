@@ -544,7 +544,7 @@ namespace Anon;
 
       $f=str_replace(envi('COREPATH'),'',$f); $m=str_replace(envi('COREPATH'),'',$m);
       $d=array('name'=>'Boot', 'mesg'=>$m, 'file'=>$f, 'line'=>$l, 'stak'=>array(), 'user'=>$u, 'clan'=>$k);
-      $d=base64_encode(json_encode($d)); $r=file_get_contents($p); $r=str_replace('{:(DBUGDATA):}',$d,$r);
+      $d=base64_encode(json_encode($d)); $r=file_get_contents($p); $r=str_replace('(~(DBUGDATA)~)',$d,$r);
       echo $r; die();
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -645,7 +645,7 @@ namespace Anon;
    function dval($d,$z=0)
    {
       if(!is_string($d)){return $d;}; $d=trim($d); if(($d==='')||($d==='null')||($d==='VOID')){return;}; if(is_numeric($d)){return ($d*1);};
-      if($d==='*'){return $d;}; if(strlen($d)<2){return $d;}; $b='{:'; $e=':}'; $x=strpos($d,$b); $n=strpos($d,"\n");
+      if($d==='*'){return $d;}; if(strlen($d)<2){return $d;}; $b='(~'; $e='~)'; $x=strpos($d,$b); $n=strpos($d,"\n");
       if($x!==false){if(isee('impose')){$d=impose($d,$b,$e);}else{halt(500,'`impose` is undefined');}};
       $v=json_decode($d,true); if($v!==null){return $v;}; // covers a lot
       if(!$n&&($d[0]==='+')){$v=substr($d,1); if(is_numeric($v)){return ($v*1);}}; // positive number
@@ -868,8 +868,8 @@ namespace Anon;
    if($s&&!$k)
    {
       if($b==='BOT'){halt(503,'Service Unavailable');}; // here be deamons posing as ourselves to do its bidding .. scary sh!t
-      $r=pget($f); $r=str_replace('{:(TECHMAIL):}',envi('TECHMAIL'),$r);
-      $r=str_replace('{:(DUMPMESG):}',base64_encode('from us, but no sesn'),$r);
+      $r=pget($f); $r=str_replace('(~(TECHMAIL)~)',envi('TECHMAIL'),$r);
+      $r=str_replace('(~(DUMPMESG)~)',base64_encode('from us, but no sesn'),$r);
       print_r($r); flush(); die(); // cookies disabled ? .. YOU HAVE DIED
    };
 
