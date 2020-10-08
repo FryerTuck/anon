@@ -64,7 +64,7 @@
                      [
                         {row:
                         [
-                           {col:'#AnonReplProc',contents:{pre:'#AnonReplProm',contents:('['+sesn('USER')+'&nbsp;~)')}},
+                           {col:'#AnonReplProc',contents:{pre:'#AnonReplProm',contents:('['+sesn('USER')+'&nbsp;~]')}},
                            {col:'',style:'width:6px'},
                            {col:[{input:'#AnonReplFeed',type:'text',spellcheck:FALS, autocomplete:'off', listen:
                            {
