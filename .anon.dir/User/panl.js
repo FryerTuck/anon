@@ -24,7 +24,7 @@
                         [
                            {col:'#AnonAppsMenu', contents:(function()
                            {
-                              var mods=(~(mods)~); var btns=[];
+                              var mods=(~mods~); var btns=[];
                               mods.each((v,k)=>{btns.push({butn:('#'+k+'MenuKnob .AnonMainButn'), icon:v, title:k, listen:
                               {
                                  'mouseover,mouseout':function(evnt)

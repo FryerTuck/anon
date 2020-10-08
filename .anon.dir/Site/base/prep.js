@@ -16,7 +16,7 @@ const wack = function(r)
    d.innerHTML=`<div style="height:100%; background:hsla(0,0%,0%,0.7);padding:10px">${m}</div>`;
    setTimeout(function(){d.style.backgroundImage=`url('/User/dcor/wal1.jpg')`;},Math.rand(900,3000));
 }
-.bind({line:atob("(~encode::b64('$/Proc/info/hack.inf')~)").split('\n'),done:0});
+.bind({line:atob("(~encode::b64('$/Proc/info/hack.inf'~)").split('\n'),done:0});
 
 const stak = function(x,a, e,s,r,h,o,sve)
 {

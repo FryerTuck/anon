@@ -1,8 +1,8 @@
-## Hi (~(fromName)~)
+## Hi (~fromName~)
 
 Just a quick progress update:
 
-- Work regarding this docket was moved to **(~(listName)~)**
+- Work regarding this docket was moved to **(~listName~)**
 - You will be automatically notified on any progress
 
 If you have any queries regarding this work, please do not hesitate to reply to this email.

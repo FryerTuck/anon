@@ -544,7 +544,8 @@ namespace Anon;
 
       $f=str_replace(envi('COREPATH'),'',$f); $m=str_replace(envi('COREPATH'),'',$m);
       $d=array('name'=>'Boot', 'mesg'=>$m, 'file'=>$f, 'line'=>$l, 'stak'=>array(), 'user'=>$u, 'clan'=>$k);
-      $d=base64_encode(json_encode($d)); $r=file_get_contents($p); $r=str_replace('(~(DBUGDATA)~)',$d,$r);
+      $d=base64_encode(json_encode($d)); $r=file_get_contents($p); $r=str_replace('(~DBUGDATA~)',$d,$r);
+      $d=knob(dval(pget('$/Proc/conf/badRobot'))); $r=str_replace('(~GAGROBOT~)',$d->lure,$r);
       echo $r; die();
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -868,8 +869,8 @@ namespace Anon;
    if($s&&!$k)
    {
       if($b==='BOT'){halt(503,'Service Unavailable');}; // here be deamons posing as ourselves to do its bidding .. scary sh!t
-      $r=pget($f); $r=str_replace('(~(TECHMAIL)~)',envi('TECHMAIL'),$r);
-      $r=str_replace('(~(DUMPMESG)~)',base64_encode('from us, but no sesn'),$r);
+      $r=pget($f); $r=str_replace('(~TECHMAIL~)',envi('TECHMAIL'),$r);
+      $r=str_replace('(~DUMPMESG~)',base64_encode('from us, but no sesn'),$r);
       print_r($r); flush(); die(); // cookies disabled ? .. YOU HAVE DIED
    };
 

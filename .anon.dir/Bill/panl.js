@@ -65,8 +65,8 @@ extend(Anon)
    {
       vars:
       {
-          conf:deconf(`(~enconf("Bill/autoConf")~)`),
-          anon:decode.jso(`(~knob("$/Bill/tmpl/conf")~)`),
+          conf:deconf(`(~enconf("Bill/autoConf"~)`),
+          anon:decode.jso(`(~knob("$/Bill/tmpl/conf"~)`),
       },
 
 
