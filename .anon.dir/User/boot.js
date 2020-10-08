@@ -58,7 +58,12 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const initPanl = function()
    {
-      if((typeof AnonPanl)!='undefined'){if(!AnonPanl.actv){AnonPanl.show();return}; AnonPanl.hide();return}; // panl exists .. show/hide
+      window.ANONSHOWBUSY=1;
+      if((typeof AnonPanl)!='undefined')
+      {
+          if(!AnonPanl.actv){AnonPanl.show();return};
+          window.ANONSHOWBUSY=0; AnonPanl.hide();return
+      }; // panl exists .. show/hide
 
       Busy.edit('initPanl',1); document.head.insert({script:'',src:'/User/getPanel', onready:function() // load the panl once
       {
@@ -154,8 +159,6 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
     listen("tap4",function()
     {
-
-        // if(!!select(`#AnonReplPanl`)){return};
         initPanl();
     });
 // --------------------------------------------------------------------------------------------------------------------------------------------

@@ -92,8 +92,7 @@
 
    Busy.init = function(j,v, ap,sb)
    {
-      ap=document.getElementById("AnonMainGrid");
-      sb=(("(~conf('Site/anonBusy/alwaysRender')~)"=="true")?1:(ap?1:0));
+      sb=(("(~conf('Site/anonBusy/alwaysRender')~)"=="true")?1:window.ANONSHOWBUSY);
       if(sb){Busy.base.skin=Busy.base.skin.split("display:none").join("display:block");};
 
       if(!!Busy.node){Busy.node.style.opacity=1; Busy.edit(j,(v||0)); return};
