@@ -1,10 +1,10 @@
-<div id="busyPane" style="position:fixed; z-index:99999999; width:100%; height:100%; top:0px; left:0px; background:(~conf('Site/anonBusy/bgTint')~); display:(~conf('Site/anonBusy/showAs')~)">
+<div id="busyPane" style="position:fixed; z-index:99999999; width:100%; height:100%; top:0px; left:0px; background:(~conf('Site/anonBusy/overlayColor')~); display:none">
    <svg id="busyGear" viewBox="0 0 100 100" style="width:5rem; height:5rem; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);">
       <style>
          path.line
          {
             fill:none;
-            stroke:(~conf('Site/anonBusy/fgTint')~);
+            stroke:(~conf('Site/anonBusy/objectsColor')~);
             stroke-width:0.8;
             /* stroke-linecap:round;
             stroke-linejoin:round; */
@@ -16,7 +16,7 @@
          path.fill
          {
             stroke-width:0.8;
-            fill:(~conf('Site/anonBusy/fgTint')~);
+            fill:(~conf('Site/anonBusy/objectsColor')~);
             fill-opacity:0.5;
             opacity:0.5;
          }
@@ -49,6 +49,7 @@
    Busy.data = 0;
    Busy.size = 4.5;
    Busy.actv = 0;
+
 
    Busy.edit = function(k,v, n,j,t,l,i,d,m,p,u,g,a)
    {
@@ -91,11 +92,13 @@
 
    Busy.init = function(j,v)
    {
+      consol.log(`(~conf('Site/anonBusy/alwaysRender')~)`);
       if(!!document.getElementById("AnonAppsMenu"))
       {
          Busy.base.skin=Busy.base.skin.split("background:hsla(0,0%,100%,0.9)").join("background:hsla(0,0%,15%,0.9)");
          Busy.base.gear=Busy.base.gear.split("stroke:#444;").join("stroke:#AAA;").split("fill:#444;").join("fill:#AAA;");
       };
+
       if(!!Busy.node){Busy.node.style.opacity=1; Busy.edit(j,(v||0)); return};
       var p=document.createElement('div'); p.id='busyPane';
       p.setAttribute('style',Busy.base.skin); p.innerHTML=Busy.base.gear; document.body.appendChild(p);
