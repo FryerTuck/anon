@@ -35,8 +35,12 @@ const stak = function(x,a, e,s,r,h,o,sve)
 .bind({saved:[]});
 
 const sesn = function(a)
-{if(!stak(0)){wack();return}; if(((typeof a)!='string')||(a.length<1)||!this[a]){return}; return this[a];}.bind
-({USER:'(~SESNUSER~)',MAIL:'(~SESNMAIL~)',CLAN:'(~SESNCLAN~)',HASH:'(~SESNHASH~)'});
+{
+    if(!stak(0)&&window.ANONGATEPREP){wack();return};
+    if(((typeof a)!='string')||(a.length<1)||!this[a]){return};
+    return this[a];
+}
+.bind({USER:'(~SESNUSER~)',MAIL:'(~SESNMAIL~)',CLAN:'(~SESNCLAN~)',HASH:'(~SESNHASH~)'});
 
 const bz=function(p){Busy.edit('/anonBoot',p);};
 
@@ -46,6 +50,7 @@ window.AnonBusy=setInterval(function(snth)
     snth=document.getElementById('snth'); if(!snth){return;}; clearInterval(AnonBusy); // wait until ready
     AnonBusy=(atob('(~busyGear~)')).split('<script>'); snth.innerHTML=AnonBusy[0]; AnonBusy=AnonBusy[1].split('</script>')[0];
     if(sesn('CLAN').indexOf('work')>-1){window.ANONSHOWBUSY=1;};
+    Object.defineProperty(window,'ANONGATEPREP',{writable:false,enumerable:false,configurable:false,value:1});
 
     script(AnonBusy,(s,c)=>
     {
