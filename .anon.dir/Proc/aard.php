@@ -414,6 +414,7 @@ namespace Anon;
          Repo::update($up,$gr->$cw,'pull','origin');
          $om=conf('Repo/gitIgnor'); // TODO :: stuff to omit
          $bn=Repo::branch($tp);
+         Repo::update($tp,'pull'); // update fuse by pulling from tank
 
          foreach($rd as $dp)
          {
