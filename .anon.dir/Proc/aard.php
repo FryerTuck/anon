@@ -409,7 +409,7 @@ namespace Anon;
          if(lock::exists($ln)){return OK;}; lock::awaits($ln);
          signal::dump("running software update"); signal::lockAllClients('bgn','*'); wait(3000); // wait for procs to finish
          pset("$/Proc/temp/lock/AnonSystemLock",time()); // lock all front-ends to avoid collision
-         // try{exec::{'git stash && git stash clear'}('/');}catch(\Exception $e){ }; // ignore any changes made in web-root
+         try{exec::{'git stash && git stash clear'}('/');}catch(\Exception $e){ }; // ignore any changes made in web-root
          $ht=pget("/.htaccess"); if(isee("$sp/.htaccess")){$ht=pget("/.htaccess");}; // hta may have auto-changed elsewhere
          Repo::update($up,$gr->$cw,'pull','origin');
          $om=conf('Repo/gitIgnor'); // TODO :: stuff to omit
@@ -428,10 +428,12 @@ namespace Anon;
          // path::make($mp,$pw);
          $ht=htbackup($ht,pget("$/Repo/data/native/anon/.htaccess"));
          path::make("$tp/.htaccess",$ht); // write fused htaccess to test-repo
+         wait(50); exec::{"git commit -am \"$uw update\""}($tp);
          // Repo::commit($tp,"$uw update",true); // add all & commit changes & push to tank-repo
          chmod(ROOTPATH."/.htaccess",0644); // make htaccess writable for now
          // try{exec::{'git stash && git stash clear'}('/');}catch(\Exception $e){ }; // clear changes made in web-root since last
-         Repo::update('/','pull'); // update web-root by pulling from tank .. any `gitIgnor` should be respected
+         // Repo::update('/','pull'); // update web-root by pulling from tank .. any `gitIgnor` should be respected
+         exec::{"git pull origin master"}('/');
          chmod(ROOTPATH."/.htaccess",0444); // make htaccess read-only
          void("$/Proc/temp/lock/AnonSystemLock"); lock::remove($ln); signal::lockAllClients('end','*');
          signal::ClientReboot("new updates from $cw","*");
