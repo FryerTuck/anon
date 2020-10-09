@@ -419,6 +419,7 @@ namespace Anon;
              if(isin($om,$dp)){continue;}; // TODO :: <-- this has to be `akin`
              if(arg($dp)->startsWith('$/')){$ap=swap($dp,'$/','.anon.dir/');} // for Anon-core
              else{$ap="$dp";}; // for site
+             signal::dump("copying: `$up/$ap` to: $tp/$ap");
              path::copy("$up/$ap","$tp/$ap",true);
          };
 
