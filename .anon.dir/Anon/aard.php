@@ -56,6 +56,7 @@ namespace Anon;
       {
           $ln="checkUpdates"; $fg=isin(NAVIPATH,$ln); $gr=conf("Repo/gitRefer"); // lock-name .. from-gui .. git-refer
           $im="ignored `$ln` .."; if(lock::exists($ln)){signal::dump("$im another process locked it"); return OK;};
+          if(isee("$/Proc/temp/lock/AnonSystemLock")){signal::dump("$im AnonSystemLock is active"); return OK;};
           if(!isRepo('$/Repo/data/native/fuse')){signal::dump("$im the fuse-repo is not defined yet"); return OK;};
           if(!isRepo('$/Repo/data/native/anon')){signal::dump("$im the anon-repo is not defined yet"); return OK;}; // race
           if(!isPlug(pget('$/Proc/conf/autoMail'))){signal::dump("$im `autoMail` is not defined yet"); return OK;};
