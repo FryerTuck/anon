@@ -30,6 +30,7 @@ $export=function($a,$u,$d)
       pset("$h/face",'/User/dcor/mug2.jpg'); pset("$h/rate",'0'); $v=['userName'=>$u]; $p="$h/home/Custom"; pset("$p/");
       pset("$p/client.js",import('/User/tmpl/bootHack.js',$v)); pset("$p/pretty.css",import('/User/tmpl/bootSkin.css',$v));
       pset("$p/server.php",import('/User/tmpl/bootHack.php',$v)); pset("$h/home/Shared/");
+      signal::dump("user created: $u");
 
       Repo::cloned(conf('Repo/gitRefer/UserOrigin'),"$h/home/MyRepo",conf('Repo/gitRefer/UserBranch'),$u);
       Proc::signal('madeUser',['nick'=>$u,'mail'=>$m,'clan'=>$cl]);

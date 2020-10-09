@@ -178,6 +178,8 @@ namespace Anon;
         'attached' => $o->attached,
       ];
 
+      signal::dump("sending email to: $da");
+
       $r=plug($c)->insert
       ([
          debug => $o->runDebug,

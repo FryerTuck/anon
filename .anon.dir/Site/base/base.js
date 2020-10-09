@@ -568,7 +568,6 @@
             if(!server.opened&&deja){fail(`server is not ready yet !!!!`); return;}; // ?
             if(!server.opened){return;}; // added this to server events, will be called when vivified
 
-            dump(`listening on SSE event "${e}"`);
             this.vivify(()=>{server.stream.addEventListener(e,function(evnt)
             {
                if(this.au&&!userDoes(this.au)){return;}; // security

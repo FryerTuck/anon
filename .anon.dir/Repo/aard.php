@@ -199,6 +199,7 @@ namespace Anon;
          if(!isWord($user)){$user=user('name');}; $u=$user; $p=isee("/User/data/$u");
          if(!$p){fail("user `$u` is undefined");}; $m=simp(pget("$p/mail"));
          if(!isee($trgt)){path::make("$trgt/");}; expect::fold($trgt,[R,W,E]);
+         signal::dump("cloning repo `$orgn` into: $trgt");
          $q="git clone $orgn ."; if($bran){$q="git clone -b $bran --single-branch $orgn .";};
          exec::{"$q"}($trgt); $t=path($trgt); $cb=self::branch($trgt,$bran,1); if(!$cb){expect::repo($trgt);};
          exec::{'git config --local pack.windowMemory 10m'}($trgt); // memory handling
