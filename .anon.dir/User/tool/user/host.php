@@ -22,11 +22,11 @@ $export=function($a,$u,$d)
       $l=pget('/User/data'); foreach($l as $i){if(pget("/User/$i/mail")===$m){ekko("email address `$m` is taken");}};
 
       requires::stem('Mail'); // dependencies
-      $pw=random(8); $x=password_hash($pw,PASSWORD_DEFAULT);
+      $pw=random(8); $HP=password_hash($pw,PASSWORD_DEFAULT);
       $cl=[]; foreach($co as $cn => $cv){$cl[]="- **$cn** - $cv";}; $cl=implode("\n",$cl); $vc=knob(dval(pget('/User/conf/viewConf')));
       $ck=$vc->toggleUserPanl; if(isin($ck,'`')){$ck="` $ck `";};
 
-      pset("$h/name",$u); pset("$h/pass",$x); pset("$h/mail",$m); pset("$h/clan",implode(',',$d->clan));
+      pset("$h/name",$u); pset("$h/pass","$HP"); pset("$h/mail",$m); pset("$h/clan",implode(',',$d->clan));
       pset("$h/face",'/User/dcor/mug2.jpg'); pset("$h/rate",'0'); $v=['userName'=>$u]; $p="$h/home/Custom"; pset("$p/");
       pset("$p/client.js",import('/User/tmpl/bootHack.js',$v)); pset("$p/pretty.css",import('/User/tmpl/bootSkin.css',$v));
       pset("$p/server.php",import('/User/tmpl/bootHack.php',$v)); pset("$h/home/Shared/");
