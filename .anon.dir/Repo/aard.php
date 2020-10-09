@@ -238,8 +238,8 @@ namespace Anon;
 
       static function commit($dir,$msg,$psh=null,$brn=null)
       {
-         expect::repo($dir); if(isText($msg)){$msg=trim($msg);}; expect::text($msg,1); $msg=swap($msg,"'",'`');
-         exec::{'git add --all'}($dir); exec::{"git commit --allow-empty -am '$msg'"}($dir); if(!$psh){return true;};
+         expect::repo($dir); if(isText($msg)){$msg=trim($msg);}; expect::text($msg,1); $msg=swap($msg,'"',"`");
+         exec::{'git add --all'}($dir); exec::{"git commit --allow-empty -am \"$msg\""}($dir); if(!$psh){return true;};
          // exec::{"git fsck && git gc"}($dir); // repair if needed
          if(!$brn){$brn=self::branch($dir);}elseif(!is_funnic($brn)){fail('invalid branch name');};
          signal::dump("repo update: `$dir` .. push origin $brn");
@@ -253,7 +253,7 @@ namespace Anon;
          expect::repo($dir); if(isin($brn,['pull','push'])){$run="$brn"; $brn=null;};
          if(!$brn){$brn=self::branch($dir);}elseif(!is_funnic($brn)){fail::reference('invalid branch name');};
          signal::dump("repo update: `$dir` .. $run $nic $brn");
-         exec::{'git add --all'}($dir); exec::{"git commit --allow-empty -am '$run $nic'"}($dir);
+         exec::{'git add --all'}($dir); exec::{"git commit --allow-empty -am \"$run $nic\""}($dir);
          // exec::{"git fsck && git gc"}($dir); // repair if needed
          exec::{"git $run $nic $brn"}($dir); $ph=md5($dir); $ch=self::status($dir,':HASH:');
          if(!$ch){fail::repo("could not get hash-reference from: $dir");exit;};
