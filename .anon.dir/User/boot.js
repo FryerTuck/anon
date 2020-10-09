@@ -29,7 +29,7 @@
               },
               loadend:function(r)
               {
-                  if(!isJson(r.body)){fail(`expecting JSON`); return};
+                  if(!isJson(r.body)){return};
                   r=decode.jso(r.body); r.each((v,k)=>{slf[k]=v;})
               },
           }
