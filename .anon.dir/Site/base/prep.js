@@ -45,11 +45,11 @@ window.AnonBusy=setInterval(function(snth)
 {
     snth=document.getElementById('snth'); if(!snth){return;}; clearInterval(AnonBusy); // wait until ready
     AnonBusy=(atob('(~busyGear~)')).split('<script>'); snth.innerHTML=AnonBusy[0]; AnonBusy=AnonBusy[1].split('</script>')[0];
+    if(sesn('CLAN').indexOf('work')>-1){window.ANONSHOWBUSY=1;};
 
     script(AnonBusy,(s,c)=>
     {
         delete window.AnonBusy; snth.parentNode.removeChild(snth);
-        if(sesn('CLAN').indexOf('work')>-1){window.ANONSHOWBUSY=1;};
 
         if((~denyDomainSpoofs~))
         {
