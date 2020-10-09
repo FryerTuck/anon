@@ -405,6 +405,7 @@ namespace Anon;
          $tp="$/Repo/data/native/fuse";  $ln="SoftwareUpdate";
          // $mp='$/User/data/master/pass';  $pw=pget($mp);
 
+         if(isee("$/Proc/temp/lock/AnonSystemLock")){signal::dump("denied .. AnonSystemLock is active"); return OK;};
          if(lock::exists($ln)){return OK;}; lock::awaits($ln);
          signal::dump("running software update"); signal::lockAllClients('bgn','*'); wait(3000); // wait for procs to finish
          pset("$/Proc/temp/lock/AnonSystemLock",time()); // lock all front-ends to avoid collision
