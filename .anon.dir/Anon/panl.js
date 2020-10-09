@@ -46,7 +46,7 @@ extend(Anon)
    {
       anew:function(cbf)
       {
-          dump("anew"); // chowmane
+          dump("anew"); // party time!
       },
 
 
