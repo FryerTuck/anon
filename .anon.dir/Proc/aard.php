@@ -413,6 +413,7 @@ namespace Anon;
          $ht=pget("/.htaccess"); if(isee("$sp/.htaccess")){$ht=pget("/.htaccess");}; // hta may have auto-changed elsewhere
          Repo::update($up,$gr->$cw,'pull','origin');
          $om=conf('Repo/gitIgnor'); // TODO :: stuff to omit
+         $bn=Repo::branch($tp);
 
          foreach($rd as $dp)
          {
