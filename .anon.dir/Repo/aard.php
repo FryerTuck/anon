@@ -227,6 +227,7 @@ namespace Anon;
          if(isNuma($i)){foreach($i as $r){$z=self::ignore($h,$a,$r);}; return $z;}; // bulk rules
          expect::repo($h); $h=rshave($h,'/'); $p="$h/.git/info/exclude"; if(!$h){$h='/';}; expect::path($p,[W,F]);
          if(($a!==write)&&($a!==erase)){fail('expecting 2nd arg as either :write: or :erase:');};
+         $i=trim($i); $i=lshave($i,'/'); if(arg($i)->startsWith('$/')){$i=stub($i,'/')[2]; $i=".anon.dir/$i";};
          if(!isText($i,1)){return;}; $r=pget($p); $q="\n$i";
          if((($a===write)&&isin($r,$q))||(($a===erase)&&!isin($r,$q))){return OK;}; // nothing to do
          if($a===write){$r.=$q;}else{$r=swap($r,$q,'');}; path::make($p,$r); // finish exclude
@@ -240,10 +241,10 @@ namespace Anon;
       {
          expect::repo($dir); if(isText($msg)){$msg=trim($msg);}; expect::text($msg,1); $msg=swap($msg,'"',"`");
          exec::{'git add --all'}($dir); exec::{"git commit --allow-empty -am \"$msg\""}($dir); if(!$psh){return true;};
-         // exec::{"git fsck && git gc"}($dir); // repair if needed
+         exec::{"git fsck && git gc"}($dir); // repair if needed
          if(!$brn){$brn=self::branch($dir);}elseif(!is_funnic($brn)){fail('invalid branch name');};
          signal::dump("repo update: `$dir` .. push origin $brn");
-         // exec::{"git pull origin $brn"}($dir);
+         exec::{"git pull origin $brn"}($dir);
          exec::{"git push origin $brn"}($dir); return true;
       }
 
@@ -254,7 +255,8 @@ namespace Anon;
          if(!$brn){$brn=self::branch($dir);}elseif(!is_funnic($brn)){fail::reference('invalid branch name');};
          signal::dump("repo update: `$dir` .. $run $nic $brn");
          exec::{'git add --all'}($dir); exec::{"git commit --allow-empty -am \"$run $nic\""}($dir);
-         // exec::{"git fsck && git gc"}($dir); // repair if needed
+         exec::{"git fsck && git gc"}($dir); // repair if needed
+         if($run==='push'){exec::{"git pull origin $brn"}($dir);};
          exec::{"git $run $nic $brn"}($dir); $ph=md5($dir); $ch=self::status($dir,':HASH:');
          if(!$ch){fail::repo("could not get hash-reference from: $dir");exit;};
          path::make("$/Repo/vars/pathHash/$ph",$ch); // make this hash the last hash to check next time
