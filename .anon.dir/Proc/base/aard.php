@@ -775,7 +775,7 @@ namespace Anon;
 
    if($b){$_SERVER['INTRFACE']='BOT';}; // facing BOT .. it's behaving for now so all seems OK this far
 
-   $m=pget('$/Proc/conf/autoMail'); if(!$m){$m=envi('SERVER_ADMIN');}else
+   $m=pget('$/Proc/conf/autoMail'); $MM="$m"; if(!$m){$m=envi('SERVER_ADMIN');}else
    {
        $m=explode('?',$m)[0]; $m=rshave($m,'/'); $m=explode('@',$m); $d=$m[1];
        $u=explode('//',$m[0]); $u=explode(':',$u[1]); $u=$u[0]; $m="$u@$d";
@@ -917,7 +917,8 @@ namespace Anon;
    };
 
    $_SERVER['INTRFACE']=$i; defn(['USERSKEY'=>$k]);
-   if(!(envi("MADEFUBU")&&facing('API'))){$_SERVER['UPKEEPER']='';}; // upkeep only available for API-calls made FUBU
+   if(!(envi("MADEFUBU")&&facing('API'))||!$MM){$_SERVER['UPKEEPER']='';};
+   // upkeep is only available for API-calls made FUBU -and when autoMail has been set
 
    $vl=array_keys(get_defined_vars());
    foreach($vl as $vn){if(substr($vn,0,1)==="_"){continue;}; unset($$vn);}; unset($vl,$vn);

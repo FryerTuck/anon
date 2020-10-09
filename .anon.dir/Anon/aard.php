@@ -58,6 +58,7 @@ namespace Anon;
           $im="ignored `$ln` .."; if(lock::exists($ln)){signal::dump("$im another process locked it"); return OK;};
           if(!isRepo('$/Repo/data/native/fuse')){signal::dump("$im the fuse-repo is not defined yet"); return OK;};
           if(!isRepo('$/Repo/data/native/anon')){signal::dump("$im the anon-repo is not defined yet"); return OK;}; // race
+          if(!isPlug(pget('$/Proc/conf/autoMail'))){signal::dump("$im `autoMail` is not defined yet"); return OK;};
 
           lock::awaits($ln); // lock it!
 
