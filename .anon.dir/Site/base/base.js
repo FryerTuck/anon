@@ -507,6 +507,7 @@
                tick.after(6100,()=>
                {
                   if(server.sensor.live){server.status="open"; return};
+                  if(select("#AnonSystemLock")){return;};
                   // prevent reconnect flood for in case the server disconnects upon connect
                   // debug this issue by visiting the event emitter via API interface
                   purl
