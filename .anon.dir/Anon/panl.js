@@ -46,7 +46,7 @@ extend(Anon)
    {
       anew:function(cbf)
       {
-          dump("anew"); // lookee here!
+          // dump("anew"); // lookee here!
       },
 
 
