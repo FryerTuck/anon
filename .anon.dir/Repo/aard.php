@@ -201,8 +201,8 @@ namespace Anon;
          if(!isee($trgt)){path::make("$trgt/");}; expect::fold($trgt,[R,W,E]);
          $q="git clone $orgn ."; if($bran){$q="git clone -b $bran --single-branch $orgn .";};
          exec::{"$q"}($trgt); $t=path($trgt); $cb=self::branch($trgt,$bran,1); if(!$cb){expect::repo($trgt);};
-         exec::{'git config pack.windowMemory 10m'}($trgt); // memory handling
-         exec::{'git config pack.packSizeLimit 20m'}($trgt); // memory handling
+         exec::{'git config --local pack.windowMemory 10m'}($trgt); // memory handling
+         exec::{'git config --local pack.packSizeLimit 20m'}($trgt); // memory handling
          exec::{"git config --local user.name \"$u\""}($t); exec::{"git config --local user.email \"$m\""}($t);
          $nb=(!$cb?"master":$cb);
 
