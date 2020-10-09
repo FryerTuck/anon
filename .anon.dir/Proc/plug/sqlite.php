@@ -116,7 +116,7 @@ namespace Anon;
       {
          if(is_string($q)){$q=trim($q); $q=trim($q,';'); $q.=';';};
          if(!isText($q,10)){$q=tval($q); fail("invalid SQL, query used:\n`$q`\n"); exit;};
-         signal::dump("running SQLite query: $q");
+         // signal::dump("running SQLite query: $q");
          $a=strtoupper(stub($q,' ')[0]); $l=(($this->link===null)?0:1);
          $c=($l?$this->link:$this->vivify());
 
