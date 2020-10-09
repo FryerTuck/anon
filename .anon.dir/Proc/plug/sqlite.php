@@ -166,10 +166,11 @@ namespace Anon;
 
       function descry($x='*')
       {
+         $y=(!$this->link?1:0);
          if(isWord($x))
          {
             $this->mean->tabl=$x;
-            $y=(!$this->link?1:0); $this->vivify(); $i=$this->adjure("PRAGMA table_info('$x')"); if(count($i)<1){$this->pacify(); return;};
+            $this->vivify(); $i=$this->adjure("PRAGMA table_info('$x')"); if(count($i)<1){$this->pacify(); return;};
             $n=$this->adjure("SELECT COUNT(rowid) AS 'rows' FROM $x"); $n=$n[0]->rows; $c=knob();
             $l=$this->adjure("SELECT rowid AS 'last' FROM $x ORDER BY rowid DESC LIMIT 1"); $l=((count($l)>0)?$l[0]->last:0);
             foreach($i as $k => $v)
@@ -187,7 +188,8 @@ namespace Anon;
          if($x==='*')
          {
             $this->vivify(); $l=$this->adjure("SELECT name AS 'table' FROM sqlite_master WHERE type='table'");
-            $r=knob(); foreach($l as $i){$r->{$i->table}=$this->descry($i->table);}; $this->pacify(); return $r;
+            $r=knob(); foreach($l as $i){$r->{$i->table}=$this->descry($i->table);};
+            if($y){$this->pacify();}; return $r;
          }
       }
 
