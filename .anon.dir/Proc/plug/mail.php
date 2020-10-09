@@ -159,7 +159,7 @@ namespace Anon;
          if($a->debug){$dbug=1;}; if(!isKnob($a->write)){$w=dupe($a); $a=knob(['write'=>$w]);}else{$w=$a->write;};
 
          expect::knob($w); $da=$w->destAddy; $SV=($I->vars?$I->vars->smtp:null);
-         if(isText($SV,3)){$SV=path::info("mail://$SV")}else{$SV=null;};
+         if(isText($SV,3)){$SV=path::info("mail://$SV");}else{$SV=null;};
 
          if(!$da){$da=$w->destAddr;}; $dn=$w->destName; if(!$dn){$dnn=stub($da,'@')[0]; $dn=explode('.',$dn)[0];};
 
