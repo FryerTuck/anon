@@ -415,7 +415,7 @@ namespace Anon;
 
          foreach($rd as $dp)
          {
-             if(isin($om,$dp)){continue;}; // TODO :: has to be `akin`
+             if(isin($om,$dp)){continue;}; // TODO :: <-- this has to be `akin`
              if(arg($dp)->startsWith('$/')){$ap=swap($dp,'$/','.anon.dir/');} // for Anon-core
              else{$ap="$dp";}; // for site
              path::copy("$up/$ap","$tp/$ap",true);
