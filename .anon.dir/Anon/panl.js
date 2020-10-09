@@ -46,7 +46,7 @@ extend(Anon)
    {
       anew:function(cbf)
       {
-          dump("anew"); // testing 4
+          dump("anew"); // testing 5
       },
 
 
