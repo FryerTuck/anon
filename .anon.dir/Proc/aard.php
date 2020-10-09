@@ -316,7 +316,7 @@ namespace Anon;
          foreach($t as $x)
          {
              $p="$h/$x/emit"; if(!isee($p)){path::make("$p/");}; // count items in existing "emit" folder for next name
-             $n=count(pget($p)); $n++; $p="$p/$n"; flog("signal",$p,$d);
+             $n=count(pget($p)); $n++; $p="$p/$n"; //flog("signal",$p,$d);
              path::make($p,$d); $s++; // plain-text file now contains the event data
          };
 

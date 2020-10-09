@@ -838,6 +838,7 @@ namespace Anon;
    {
        if(!isee('$/Proc/temp/sesn/')){pset('$/Proc/temp/sesn/');}; // create if not exist
        if(!isee('$/Proc/temp/lock/')){pset('$/Proc/temp/lock/');}; // create if not exist
+       if(!isee('$/Proc/temp/logs/')){pset('$/Proc/temp/logs/');}; // create if not exist
        $d=depend('RF:$/Proc/base/boot.php','RF:$/Proc/base/dbug.php','WD:$/Proc/temp/sesn'); // get fail message -if any
        if($d){halt(424,"Failed Dependency - $d");}; unset($d); // fail if bootstrapper is compromised
        usleep(1000);
