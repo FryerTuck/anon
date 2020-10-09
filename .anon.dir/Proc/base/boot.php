@@ -295,6 +295,7 @@ namespace Anon;
 
 # dbug :: keep : housekeeping .. run regularly
 # ---------------------------------------------------------------------------------------------------------------------------------------------
+    if(isee("$/Proc/temp/lock/AnonSystemLock")){finish(419); exit;}; // system update in progress
     if(envi('UPKEEPER'))
     {
         require(path('$/Proc/base/keep.php'));

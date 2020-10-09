@@ -317,7 +317,12 @@
       server.listen('done',function(d){if(d!="!"){dump(`\nserver is done with:\n${d}`)}; Busy.done();});
       server.listen('dump',function(d, v){v=(isJson(d)?decode.jso(d):sval(d)); dump(v)});
       server.listen("SoftwareUpdate: sudo,lead,gang",function(d){signal("SoftwareUpdate",d);});
-
+      server.listen("lockAllClients",function(d, el,id)
+      {
+          id="#AnonSystemLock"; el=select(id);
+          if(d=="end"){remove(el); return};
+          if(!el){document.body.insert({div:`${id} .layr`,$:[{div:`.cenmid`,$:`please stand by ...`}]})};
+      });
 
       listen("SoftwareUpdate",function(d)
       {
