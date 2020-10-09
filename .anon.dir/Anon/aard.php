@@ -56,7 +56,8 @@ namespace Anon;
       {
           $ln="checkUpdates"; $fg=isin(NAVIPATH,$ln); $gr=conf("Repo/gitRefer"); // lock-name .. from-gui .. git-refer
           $im="ignored `$ln` .."; if(lock::exists($ln)){signal::dump("$im another process locked it"); return OK;};
-          if(!isee('$/Repo/data/native/fuse')){signal::dump("$im the fuse-repo is not defined yet"); return OK;};
+          if(!isRepo('$/Repo/data/native/fuse')){signal::dump("$im the fuse-repo is not defined yet"); return OK;};
+          if(!isRepo('$/Repo/data/native/anon')){signal::dump("$im the anon-repo is not defined yet"); return OK;}; // race
 
           lock::awaits($ln); // lock it!
 
@@ -64,7 +65,7 @@ namespace Anon;
           if($su){$su->from="Anon"; lock::remove($ln); return $su;}; // run Anon updates first, if any
 
           if(!isPlug($gr->SiteOrigin)){signal::dump("$im the site-repo has no origin yet"); return OK;}; // nothing to do
-          if(!isRepo('$/Repo/data/native/site')){signal::dump("$im the site-repo is not defined yet yet"); return OK;}; // race
+          if(!isRepo('$/Repo/data/native/site')){signal::dump("$im the site-repo is not defined yet"); return OK;}; // race
           $su=Repo::differ('$/Repo/data/native/site','origin',$gr->SiteBranch); // site-diff
           if($su){$su->from="Site"; lock::remove($ln); return $su;}; // run Site updates last, if any
 
