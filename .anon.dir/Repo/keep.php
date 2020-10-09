@@ -66,6 +66,6 @@ namespace Anon;
 
     $stms=pget("/.anon.dir"); foreach($stms as $stem)
     {
-        exec::{"git update-index --skip-worktree ./.anon.dir/$stem/conf/"}('/');
+        exec::{"git update-index --skip-worktree ./.anon.dir/$stem/conf/*"}('/');
     };
 # -----------------------------------------------------------------------------------------------------------------------------
