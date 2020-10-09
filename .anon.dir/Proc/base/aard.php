@@ -840,6 +840,7 @@ namespace Anon;
        if(!isee('$/Proc/temp/lock/')){pset('$/Proc/temp/lock/');}; // create if not exist
        $d=depend('RF:$/Proc/base/boot.php','RF:$/Proc/base/dbug.php','WD:$/Proc/temp/sesn'); // get fail message -if any
        if($d){halt(424,"Failed Dependency - $d");}; unset($d); // fail if bootstrapper is compromised
+       usleep(1000);
    };
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -921,7 +922,7 @@ namespace Anon;
    $vl=array_keys(get_defined_vars());
    foreach($vl as $vn){if(substr($vn,0,1)==="_"){continue;}; unset($$vn);}; unset($vl,$vn);
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-die("HALT!!");
+
 
 
 # info :: proc : here we are out of "the swamp" .. we got rid of BS and identified the interface .. next we boot through "the woods"
