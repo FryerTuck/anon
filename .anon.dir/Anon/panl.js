@@ -46,7 +46,7 @@ extend(Anon)
    {
       anew:function(cbf)
       {
-          dump("anew"); // cherokee
+          dump("anew"); // testing 1
       },
 
 
