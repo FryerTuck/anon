@@ -106,6 +106,7 @@ namespace Anon;
    function isKnob($d,$g=null,$l=null){$r=is_object($d); return (!is_int($g)?$r:spanIs($d,$g,$l));}
 
    function isNumr($d,$g=null,$l=null){$r=is_number($d); return (!is_int($g)?$r:spanIs($d,$g,$l));}
+   function isInum($d,$g=null,$l=null){$r=is_int($d); return (!is_int($g)?$r:spanIs($d,$g,$l));}
 
    function isArra($d,$g=null,$l=null){$r=is_array($d); return (!is_int($g)?$r:spanIs($d,$g,$l));}
    function isAssa($d,$g=null,$l=null){$r=is_assoc_array($d); return (!is_int($g)?$r:spanIs($d,$g,$l));}

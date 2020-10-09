@@ -75,11 +75,12 @@ namespace Anon;
          if(!isVoid($b)&&!isText($b,1)){fail('invalid mailbox specification');};
          if($this->link){return $this->link;}; $i=$this->mean; $h=$i->host; $s=$i->plug; $ca=[];
          $u="$i->user@$h"; $p=$i->pass; $n=$i->port; $y='novalidate-cert';
-         // if(!$b){$b='INBOX';};
-         // if(!$n){$n=993;}elseif(($n!==993)&&($n!==143)){fail('invalid IMAP port');};
+         if(!isInum($n)){$n=993;};
 
-         $ca=array_merge($ca,["{{$s}.$h:993/imap/ssl}$b","{{$s}.$h:993/imap/ssl/$y}$b","{{$s}.$h:993/imap}$b","{{$s}.$h:993/imap/$y}$b"]);
-         $ca=array_merge($ca,["{{$s}.$h:143/imap}$b","{{$s}.$h:143/imap/$y}$b"]);
+         // if(!$b){$b='INBOX';};
+
+         $ca=array_merge($ca,["{{$s}.$h:$n/imap/ssl}$b","{{$s}.$h:$n/imap/ssl}$b","{{$s}.$h:$n/imap/ssl/$y}$b","{{$s}.$h:$n/imap}$b"]);
+         $ca=array_merge($ca,["{{$s}.$h:$n/imap/$y}$b","{{$s}.$h:143/imap}$b","{{$s}.$h:143/imap/$y}$b"]);
 
          $fm=['Certificate failure','Can not authenticate','Retrying PLAIN authentication','IMAP connection broken'];
          $uf="unhandled IMAP connection error.\n\nThis spilled out:\n"; $ff=''; $lf='';
@@ -156,13 +157,13 @@ namespace Anon;
          $oa=dupe($a);
          if(isAssa($a)){$a=knob($a,1);}; expect::knob($a); $I=$this->mean;
          if($a->debug){$dbug=1;}; if(!isKnob($a->write)){$w=dupe($a); $a=knob(['write'=>$w]);}else{$w=$a->write;};
-         expect::knob($w); $da=$w->destAddy;
+         expect::knob($w); $da=$w->destAddy; $SV=(($I->vars&&$I->vars->smtp)?path::info($I->vars->smtp):null);
 
          if(!$da){$da=$w->destAddr;}; $dn=$w->destName; if(!$dn){$dnn=stub($da,'@')[0]; $dn=explode('.',$dn)[0];};
 
          // validEmail($w->destAddy,'destAddy')[0];
-         $host="mail.$I->host"; if($I->vars&&$I->vars->smtp){$host=$I->vars->smtp;};
-         $port=$I->port; if($port!==587){$port=465;};
+         $host=($SV?$SV->host:"mail.$I->host");
+         $port=(($SV&&isInum($SV->port))?$SV->port:$I->port); if(!isInum($port)){$port=587;}; // or 465
          $user="$I->user@$I->host"; $pass=$I->pass;
          $name=($w->fromName?$w->fromName:$I->user); if(isin($name,'.')){$name=stub($name,'.')[0];};
          $from=($w->fromAddr?$w->fromAddr:$w->fromAddy); $html=$w->htmlBody; $text=$w->textBody;

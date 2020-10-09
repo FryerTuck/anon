@@ -119,7 +119,7 @@
                           [
                               {p:`The master password and default mail account needs to be set before this system can be used.`},
                               {input:`#AnonRootPass`, type:`password`, demo:`master password`, style:{marginBottom:10}},
-                              {input:`#AnonAutoMail`, type:`text`, demo:`mail://username:PassW0rd@example.com`},
+                              {input:`#AnonAutoMail`, type:`text`, demo:`mail://username:PassW0rd@example.com:993?smtp=mailhost.me:465`},
                           ]}],
                           foot:
                           [
