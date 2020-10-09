@@ -233,8 +233,10 @@ namespace Anon;
          if((($a===write)&&isin($r,$q))||(($a===erase)&&!isin($r,$q))){return OK;}; // nothing to do
          signal::dump("$a ignore-rule: `$i` in: `$h`");
          if($a===write){$r.=$q;}else{$r=swap($r,$q,'');}; path::make($p,$r); // finish exclude
-         $c=frst($i); $i=lshave($i,'!'); $x=((($a===write)&&($c!=='!'))?"git rm --cached":"git add");
+         $c=frst($i); $i=lshave($i,'!');
+         $x=((($a===write)&&($c!=='!'))?"git update-index --skip-worktree":"git add");
          $i=rshave($i,'*'); try{exec::{"$x $i"}($h);}catch(\Exception $e){}; // update git tracking
+
          return OK;
       }
 
