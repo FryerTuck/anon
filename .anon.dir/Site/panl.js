@@ -35,7 +35,7 @@ extend(Anon)
          if(isPath(this.vars.conf.adminUrl))
          {
              let panl=select(`#SitePanlSlab`);
-             let view=create({iframe:`#SitePanlView .layr`, src:this.vars.conf.adminUrl, onload:function()
+             let view=create({iframe:`#SitePanlView .spanFull`, src:this.vars.conf.adminUrl, onload:function()
              {Busy.edit('/Site/panl.js',100); signal("SiteAppReady");}});
              panl.insert(view);
              return;
