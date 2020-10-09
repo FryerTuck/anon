@@ -46,7 +46,7 @@ extend(Anon)
    {
       anew:function(cbf)
       {
-          dump("anew"); // testicles 1,2
+          dump("anew"); // chowmane
       },
 
 
