@@ -105,7 +105,8 @@ namespace Anon;
             if(isset($a[0])&&(($a[0]==='-h')||($a[0]==='--help'))){self::replHelp($c);return;}; // run help for these options
             $p="$h/$c/host.php"; $f=requires::path($p);
             if(!isFunc($f)){fail('expecting: `$export=function(){};` in: '.$p);};
-            $x=implode(" ",$a); signal::dump("running command: `$x`");
+            $x=''; foreach($a as $ai){$x.=(' '.(is_string($ai)?$ai:implode(' ',$ai)));};
+            $x=trim($x); signal::dump("running command: `$x`");
             $r=call($f,$a); if($r){ekko(($r===true)?OK:$r);}; ekko(FAIL);
          }
          catch(\Exception $e)
