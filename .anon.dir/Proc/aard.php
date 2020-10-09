@@ -406,8 +406,8 @@ namespace Anon;
          // $mp='$/User/data/master/pass';  $pw=pget($mp);
 
          if(lock::exists($ln)){return OK;}; lock::awaits($ln);
-         signal::dump("running software update"); pset("$/Proc/temp/lock/AnonSystemLock",time());
-         signal::lockAllClients('bgn','*'); wait(3000); // lock all front-ends to avoid collision and wait for procs to finish
+         signal::dump("running software update"); signal::lockAllClients('bgn','*'); wait(3000); // wait for procs to finish
+         pset("$/Proc/temp/lock/AnonSystemLock",time()); // lock all front-ends to avoid collision
          try{exec::{'git stash && git stash clear'}('/');}catch(\Exception $e){ }; // ignore any changes made in web-root
          $ht=pget("/.htaccess"); if(isee("$sp/.htaccess")){$ht=pget("/.htaccess");}; // hta may have auto-changed elsewhere
          Repo::update($up,$gr->$cw,'pull','origin');
