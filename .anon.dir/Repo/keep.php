@@ -11,7 +11,7 @@ namespace Anon;
     if(!isFold("$rmt/tank.git")){Repo::create("$rmt/tank.git",BARE,"master");}; // create local BARE tank repo as origin
     if(span(pget("$rmt/tank.git/objects/pack"))<1){$brn=null;}; // no branch yet
     if(!isRepo("$ntv/fuse")){Repo::cloned("file://$rmt/tank.git","$ntv/fuse",$brn,"master");}; // master = user .. not branch
-    Repo::ignore("$ntv/fuse",write,conf('Repo/gitIgnor')); // things to ignore for this repo
+    // Repo::ignore("$ntv/fuse",write,conf('Repo/gitIgnor')); // things to ignore for this repo
 # -----------------------------------------------------------------------------------------------------------------------------
 
 
