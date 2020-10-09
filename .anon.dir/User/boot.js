@@ -58,7 +58,6 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const initPanl = function()
    {
-      window.ANONSHOWBUSY=1;
       if((typeof AnonPanl)!='undefined')
       {
           if(!AnonPanl.actv){AnonPanl.show();return};
@@ -82,7 +81,7 @@
 
                   if(!userDoes('work,sudo,lead'))
                   {
-                        popModal({size:`70x170`,skin:`dark`})
+                        popModal({size:`324x170`,skin:`dark`})
                         ({
                             head:`unlock-alt :: Login`,
                             body:[{panl:
@@ -113,13 +112,14 @@
 
                   if(isin(c,"editRootPass")&&isin(c,"confAutoMail"))
                   {
-                      popModal(`cog :: Base system configuration`)
+                      popModal({size:`500x230`,skin:`dark`})
                       ({
+                          head:`cog :: System Configuration`,
                           body:[{panl:
                           [
                               {p:`The master password and default mail account needs to be set before this system can be used.`},
                               {input:`#AnonRootPass`, type:`password`, demo:`master password`, style:{marginBottom:10}},
-                              {input:`#AnonAutoMail`, type:`text`, demo:`mail://username:PassW0rd@example.com:993?smtp=mailhost.me:465`},
+                              {input:`#AnonAutoMail`, type:`text`, demo:`mail://username:PassW0rd@example.com:993/?smtp=mailhost.me:465`},
                           ]}],
                           foot:
                           [

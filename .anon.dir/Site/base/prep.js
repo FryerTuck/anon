@@ -49,6 +49,7 @@ window.AnonBusy=setInterval(function(snth)
     script(AnonBusy,(s,c)=>
     {
         delete window.AnonBusy; snth.parentNode.removeChild(snth);
+        if(sesn('CLAN').indexOf('work')>-1){window.ANONSHOWBUSY=1;};
 
         if((~denyDomainSpoofs~))
         {
