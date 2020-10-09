@@ -1497,7 +1497,7 @@
          if((obj.info!=VOID)&&!isText(obj.info,1)&&!isList(obj.info,1)&&!isKnob(obj.info,1)){fail('invalid modal info');};
 
          if(!atr){atr={}}; var mid,thm,box,inf,rsl; mid=('MDL'+hash()); if(!atr.class){atr.class='';}; atr.class=atr.class.trim().split(' ');
-         ladd(atr.class,'modalBox'); ladd(atr.class,'cenmid'); thm=(atr.theme||atr.skin); if(!thm){thm=(userDoes("work")?"dark":"lite")};
+         ladd(atr.class,'modalBox'); ladd(atr.class,'cenmid'); thm=(atr.theme||atr.skin); if(!thm){thm=(userDoes("work,sudo")?"dark":"lite")};
          if(thm){radd(atr.class,thm)}; atr.class=atr.class.join(' ');  let ti,tv; ti=`info`;
 
          if(isText(obj.head)){tv=stub(obj.head," :: "); if(tv){ti=tv[0];obj.head=tv[2]}; obj.head={span:obj.head}};
