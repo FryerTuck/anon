@@ -428,7 +428,7 @@ namespace Anon;
          Repo::commit($tp,"$uw update",true); // add all & commit changes & push to tank-repo
          chmod(ROOTPATH."/.htaccess",0644); // make htaccess writable for now
          try{exec::{'git stash && git stash clear'}('/');}catch(\Exception $e){ }; // clear changes made in web-root since last
-         Repo::update('/','pull'); // update web-root .. any `gitIgnor` should be respected
+         Repo::update('/','pull'); // update web-root by pulling from tank .. any `gitIgnor` should be respected
          chmod(ROOTPATH."/.htaccess",0444); // make htaccess read-only
          void("$/Proc/temp/lock/AnonSystemLock"); lock::remove($ln); signal::lockAllClients('end','*');
          signal::ClientReboot("new updates from $cw","*");
