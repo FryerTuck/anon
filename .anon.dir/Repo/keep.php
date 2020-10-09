@@ -8,7 +8,12 @@ namespace Anon;
     $hta=pget("/.htaccess"); if($hta){chmod((ROOTPATH."/.htaccess"),0644);};  // make web-root htaccess writable for now
     $ntv="$/Repo/data/native"; $rmt="$/Repo/data/remote";
 
-    if(!isFold("$rmt/tank.git")){Repo::create("$rmt/tank.git",BARE,"master");}; // create local BARE tank repo as origin
+    if(!isFold("$rmt/tank.git"))
+    {
+        exec::{'git config --global pack.windowMemory "32m"'}('/'); // make sure git can handle it
+        Repo::create("$rmt/tank.git",BARE,"master"); // create local BARE tank repo as origin
+    };
+
     if(span(pget("$rmt/tank.git/objects/pack"))<1){$brn=null;}; // no branch yet
     if(!isRepo("$ntv/fuse")){Repo::cloned("file://$rmt/tank.git","$ntv/fuse",$brn,"master");}; // master = user .. not branch
     Repo::ignore("$ntv/fuse",write,conf('Repo/gitIgnor')); // things to ignore for this repo
