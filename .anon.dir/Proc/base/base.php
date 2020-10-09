@@ -757,6 +757,7 @@ namespace Anon;
       if((($x->type==='git')&&($o==='http'))||(($o==='file')&&($x->type==='fold')&&isee("$p/.git"))){$o='git';}
       elseif($o==='https'){$o='http';}elseif($o==='imap'){$o='mail';}; $c="Anon\\{$o}_plug";
       if(!is_class($c)){$p="/Proc/plug/$o.php"; requires::path($p); if(!is_class($c)){fail("expecting class `$c` in: `$p`");}};
+      signal::dump("running plug: $d");
       $i=(new $c($x)); return $i;
    }
 

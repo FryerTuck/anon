@@ -9,13 +9,14 @@ namespace Anon;
       public $info=null;
       public $mean=null;
       private $link=null;
+      private $vars=null;
 
 
       function __construct($x)
       {
          $p=$x->path; if(!isee($p)){$tp=((fext($p)==='sdb')?twig($p):$p); if(!isee($tp)){path::make("$tp/");}};
          $t=path::type($p); $fm="database folder specified, but no `base.sdb file nor `defn.php` file in:";
-         if($t==='none'){$p="$p.sdb";}elseif($t==='fold')
+         $this->vars=knob(["deja"=>["?"=>0]]); if($t==='none'){$p="$p.sdb";}elseif($t==='fold')
          {$p="$p/base.sdb"; if(!isee($p)&&!isee("$x->path/defn.php")){fail::sqlite("$fm `$x->path`"); exit;}};
          $this->mean=$x; $this->mean->mime='application/sql'; $m=$this->mean->meta;
          $this->info=knob(['maxLevel'=>2,'levlType'=>$x]); $bp=$m->base;
@@ -51,9 +52,9 @@ namespace Anon;
       }
 
 
-      function vivify($p=null)
+      function vivify()
       {
-         if($this->link){return $this->link;}; $p=$this->mean->meta->base;
+         if($this->link!==null){return $this->link;}; $p=$this->mean->meta->base;
          if(!isFile($p)||(path::size($p)<1)){$this->create();};
          if(isFold($p)&&isFile("$p/base.sdb")){$p="$p/base.sdb";};
          // $this->link=(new \SQLite3($p, SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE));
@@ -69,7 +70,8 @@ namespace Anon;
 
       function pacify()
       {
-         if(!$this->link){return true;}; $this->link->close(); lock::remove($this->mean->meta->base);
+         if($this->link===null){return true;}; $this->link->close(); $p=$this->mean->meta->base;
+         lock::remove($p); //unset($this->vars->deja->$p);
          $this->link=null; return true;
       }
 
@@ -79,7 +81,9 @@ namespace Anon;
          $i=$this->mean; $p=$i->meta->base; if(isFile($p)&&(path::size($p)>0)){return;};
          if(fext($p)!=="sdb"){if(!isee($p)){path::make("$p/");}; $p="$p/base.sdb";};
          $h=path::twig($p); if(!isFold($h)){path::make("$h/");}; $this->mean->meta->base=$p;
+         if($this->vars->deja->$p){fail::recursion("deja-vu"); exit;}; $this->vars->deja->$p=1;
          if(!lock::exists($p)){lock::awaits($p);}; // lock it .. just incase
+         signal::dump("creating new SQLite database: $p");
          try{$l=(new \SQLite3(path($p), SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE));}
          catch(\Exception $e){$m=$e->getMessage(); lock::remove($p); fail::plug("$m .. `$p`"); exit;};
          if(!isee($p)){$l->close(); lock::remove($p); fail::database("unable to create file: `$p`"); exit;};
@@ -87,6 +91,7 @@ namespace Anon;
          $l->close(); wait(10); lock::remove($p); if(!isKnob($d,1)){return true;};
          $this->link=(new \SQLite3(path($p), SQLITE3_OPEN_READWRITE));
          $l=$this->link; $tl=keys($this->descry('*'));
+         signal::dump("populating new SQLite database: $p");
 
          foreach($d as $tn => $td)
          {
@@ -97,7 +102,7 @@ namespace Anon;
                 if(!isWord($cn)){$this->pacify(); fail::database("invalid column name `$cn`"); exit;};
                 radd($cl,"$cn $cd");
             };
-            $cl=implode($cl,', '); $q="CREATE TABLE $tn ($cl);\n"; $this->adjure($q); if(!$td->rows){continue;};
+            $cl=implode($cl,', '); $l->exec("CREATE TABLE $tn ($cl);\n"); if(!$td->rows){continue;};
             if(!isNuma($td->rows)){$this->pacify(); fail::database('invalid rows definition .. expecting `rows` as numeric-key-array .. or not-defined at all');};
             $this->insert([using=>$tn,write=>$td->rows]);
             // todo::{'sqlite plug'}("upon `create`, if `rows` are defined, insert them",FAIL);
@@ -111,7 +116,9 @@ namespace Anon;
       {
          if(is_string($q)){$q=trim($q); $q=trim($q,';'); $q.=';';};
          if(!isText($q,10)){$q=tval($q); fail("invalid SQL, query used:\n`$q`\n"); exit;};
-         $a=strtoupper(stub($q,' ')[0]); $l=(!$this->link?0:1); $c=$this->vivify();
+         signal::dump("running SQLite query: $q");
+         $a=strtoupper(stub($q,' ')[0]); $l=(($this->link===null)?0:1);
+         $c=($l?$this->link:$this->vivify());
 
          if(isin(['SELECT','INSERT','UPDATE','DELETE','PRAGMA'],$a))
          {
