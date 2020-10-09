@@ -58,6 +58,7 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const initPanl = function()
    {
+      window.ANONSHOWBUSY=1;
       if((typeof AnonPanl)!='undefined')
       {
           if(!AnonPanl.actv){AnonPanl.show();return};
