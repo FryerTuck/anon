@@ -64,8 +64,9 @@ namespace Anon;
         path::make("$/User/data/$usr/pass",$mpw); chmod(ROOTPATH."/.htaccess",0444); // restore master password & harden hta
     };
 
-    $stms=pget("/.anon.dir"); foreach($stms as $stem)
+    $stms=pget("$"); foreach($stms as $stem)
     {
-        exec::{"git update-index --skip-worktree ./.anon.dir/$stem/conf/*"}('/');
+        $list=pget("$/$stem/conf"); foreach($list as $file)
+        {exec::{"git update-index --skip-worktree ./.anon.dir/$stem/conf/$file"}('/');};
     };
 # -----------------------------------------------------------------------------------------------------------------------------
