@@ -332,7 +332,7 @@ namespace Anon;
 
 
 
-# func :: scan : shorthand for xume .. used for uniformity and compatibility ubiquitous path-search expressions
+# func :: scan : shorthand for xume .. used for uniformity in path-search expressions
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function scan($q,$o=null)
    {
