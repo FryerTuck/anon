@@ -301,6 +301,21 @@ namespace Anon;
 
 
 
+# func :: pick : look in haystack and return the first item found in needle
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   function pick($h,$n)
+   {
+      if(!$h){return;}; expect::flat($n,1);
+      foreach($n as $i)
+      {
+          if(strpos($i,'*')!==false){if(span(akin($h,$i))>0){return $i;};continue;};
+          if(isin($h,$i)){return $i;};
+      };
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 # func :: akin : check if needle is similar to hastack .. as in: "begins-with", "ends-with" or "contains" .. marked with `*`
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function akin($h,$n)
@@ -317,23 +332,15 @@ namespace Anon;
 
 
 
-# func :: scan :
+# func :: scan : shorthand for xume .. used for uniformity and compatibility ubiquitous path-search expressions
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function scan($q,$o=null)
    {
-      if(!is_string($q)){return;}; $q=trim($q); if(!isText($q,1)){return;};
+      if(!is_string($q)){return;}; $q=trim($q); if(strlen($q)<1){return;};
       $c=frst($q); $h=path(isin('~$',$c)?$c:'/'); $q=shaved($q,'/');
       $q=swap($q,'//','/'); $q=swap($q,['/**/','/.*/','/*.*/'],'/*/');
-      if(!isFlat($o)){$o=(isText($o,1)?[$o]:[]);}; $l=explode('/',$q); $r=[];
-      $RP=ROOTPATH; $DP=swap(path($h),"$RP/",''); $BL=0;
-
-      foreach($l as $x => $i)
-      {
-          if($BL){break;}; if(strlen($x)<1){$x='*';}; $a=akin(pget($DP),$x); foreach($a as $n)
-          {
-              radd($r,"$DP/$n");
-          };
-      };
+      if(!isFlat($o)){$o=(isText($o,1)?[$o]:[]);}; $r=path::xume($h,$q,$o);
+      return (is_array($r)?$r:[]);
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -1037,6 +1044,29 @@ namespace Anon;
          if($o->host){$r.="@$o->host";}; if($o->path){$p=$o->path; if($fp&&$o->plug==='file'){$p=path($p);}; $r.="$p";};
          if($o->vars){$v=[]; foreach($o->vars as $k => $v){$v[]="$k=$v";}; $v=fuse($v,'&'); $r.="?$v";};
          if($o->frag){$r.="#$o->frag";}; return $r;
+      }
+
+
+      static function xume($pth,$fnd=null,$omt=null,$lvl=null,$dja=null)
+      {
+          if(!$dja)
+          {
+              if(!isFold($pth)){return;}; if($fnd===null){$fnd='*';};
+              if(is_string($fnd)){$fnd=explode('/',shaved($fnd,'/'));};
+              if(!is_array($omt)){$omt=[];}; if(!is_int($lvl)){$lvl=0;};
+              $rpn=ROOTPATH; $pth=swap(path($pth),"$rpn/",'');
+          };
+
+          if(!isset($fnd[$lvl])){return;}; // safety first
+          $lst=pget("/$pth"); $rsl=[]; foreach($lst as $itm)
+          {
+              if(!akin("$pth/$itm",$fnd[$lvl])){continue;}; // not matching find
+              if(pick("$pth/$itm",$omt)!==null){continue;}; // omitted explicitly
+              radd($rsl,"$pth/$itm"); if(!isFold("$pth/$itm")){continue;};
+              $sub=path::xume("$pth/$itm",$fnd,$omt,($lvl+1),true);
+              if(is_array($sub)){$rsl=array_merge($rsl,$sub);};
+          };
+          return $rsl;
       }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------

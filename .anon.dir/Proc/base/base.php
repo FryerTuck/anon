@@ -708,22 +708,6 @@ namespace Anon;
 
 
 
-# func :: pick : look in haystack and return the first item found in needle
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-   function pick($h,$n)
-   {
-      if(!$h){return;}; expect::flat($n,1);
-      foreach($n as $i)
-      {
-          if((last($i)==='*')||(frst($i)==='*')){if(akin($h,$i)){return $i;};continue;};
-          if(isin($h,$i)){return $i;};
-      };
-   }
-# ---------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-
 # func :: clanOf : returns the clan(s) text of a given nick & mail .. if given user-creds mismatch then `surf` is returned .. fails if invalid
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function clanOf($n,$m)

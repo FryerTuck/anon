@@ -234,7 +234,8 @@ namespace Anon;
          signal::dump("$a ignore-rule: `$i` in: `$h`");
          if($a===write){$r.=$q;}else{$r=swap($r,$q,'');}; path::make($p,$r); // finish exclude
          $c=frst($i); $i=lshave($i,'!'); $x=((($a===write)&&($c!=='!'))?"git rm --cached":"git add");
-         $i=rshave($i,'*'); try{exec::{"$x $i"}($h);}catch(\Exception $e){}; // update git tracking
+         $l=scan($i); unset($p); foreach($l as $p){try{exec::{"$x $p"}($h);}catch(\Exception $e){}}; // update git tracking
+         exec::{"git add ."}($h); exec::{"git commit -m \"updated ignored files\""}($h);
          return OK;
       }
 
@@ -242,7 +243,7 @@ namespace Anon;
       static function commit($dir,$msg,$psh=null,$brn=null)
       {
          expect::repo($dir); if(isText($msg)){$msg=trim($msg);}; expect::text($msg,1); $msg=swap($msg,'"',"`");
-         exec::{'git add --all'}($dir); exec::{"git commit --allow-empty -am \"$msg\""}($dir); if(!$psh){return true;};
+         exec::{'git add --all'}($dir); exec::{"git commit --allow-empty -m \"$msg\""}($dir); if(!$psh){return true;};
          exec::{"git fsck && git gc"}($dir); // repair if needed
          if(!$brn){$brn=self::branch($dir);}elseif(!is_funnic($brn)){fail('invalid branch name');};
          signal::dump("repo update: `$dir` .. push origin $brn");
@@ -256,7 +257,7 @@ namespace Anon;
          expect::repo($dir); if(isin($brn,['pull','push'])){$run="$brn"; $brn=null;};
          if(!$brn){$brn=self::branch($dir);}elseif(!is_funnic($brn)){fail::reference('invalid branch name');};
          signal::dump("repo update: `$dir` .. $run $nic $brn");
-         exec::{'git add --all'}($dir); exec::{"git commit --allow-empty -am \"$run $nic\""}($dir);
+         exec::{'git add --all'}($dir); exec::{"git commit --allow-empty -m \"$run $nic\""}($dir);
          exec::{"git fsck && git gc"}($dir); // repair if needed
          if($run==='push'){exec::{"git pull origin $brn"}($dir);};
          exec::{"git $run $nic $brn"}($dir); $ph=md5($dir); $ch=self::status($dir,':HASH:');
