@@ -18,12 +18,13 @@ namespace Anon;
    {
       $p='/Proc/temp/file/robots.txt'; $a=aged($p); if(!$a){$a=10;}; if($a<10){return pget($p);}; $w="\nDisallow: ";
 
-      $b=(pget('$/Proc/conf/crawlers').$w.conf('Proc/badRobot')->lure); $l=scan('$',FOLD); foreach($l as $i){$b.="$w/$i/*";};
+      $b=(pget('$/Proc/conf/crawlers').$w.conf('Proc/badRobot')->lure); $l=pget('$'); foreach($l as $i){$b.="$w/$i/*";};
       if(isee('/robots.txt')){$c=pget('/robots.txt'); if($c){$b.="\n\n$c";};} // typical/classic bot config
       else{$c=path::conf('/'); if($c){$c=pica("$c/crawlers","$c/robots.txt");}; if($c){$c=pget($c);}; if($c){$b.="\n\n$c";};}; // for if root is stem
 
-      $l=scan('/',FOLD); foreach($l as $i) // assemble crawler config from all stems
+      $l=pget('/'); foreach($l as $i) // assemble crawler config from all stems
       {
+         if(!isFold("/$i")){continue;};
          $c=path::conf("/$i"); if($c){$c=path::pick("$c/crawlers","$c/bots","$c/robots.txt","$c/bots.cfg");};
          if($c){$c=pget($c);}; if($c){$b.="\n\n$c";}
       };

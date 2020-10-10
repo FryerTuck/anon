@@ -697,7 +697,7 @@ namespace Anon;
 
    function flog()
    {
-       $lp=flog::$path; $pt='$/Proc/temp/logs'; $ol=pget($pt); 
+       $lp=flog::$path; $pt='$/Proc/temp/logs'; $ol=pget($pt);
        foreach($ol as $fn){$tp="$pt/$fn"; if($tp !== $lp){path::void($tp);}}; // get rid of old logs
        flog::{"$lp"}(func_get_args());
    }

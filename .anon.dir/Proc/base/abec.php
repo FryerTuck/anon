@@ -305,6 +305,7 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function akin($h,$n)
    {
+      if(isFlat($h)){$r=[]; foreach($h as $i){if(akin($i,$n)){radd($r,$i);}}; return $r;};
       if(!is_string($h)||!is_string($n)){return;}; if((strlen($h)<1)||(strlen($n)<1)){return;}; if(strpos($n,'*')===false){return ($h===$n);};
       if(strpos($n,'**')!==false){if((substr($n,0,2)==='**')||(substr($n,-2,2)==='**')){return;}};
       if($n==='*'){return true;};if((strlen($n)<2)||($n==='**')){return;}; if(wrapOf($n)==='**'){$n=unwrap($n);return (strpos($h,$n)!==false);};
@@ -316,37 +317,23 @@ namespace Anon;
 
 
 
-# func :: scan : get contents of file or fold .. for fold it returns an array in which `$o` matches what to omit
+# func :: scan :
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   function scan($p,$o=null)
+   function scan($q,$o=null)
    {
-      $p=isee($p); if(!$p){return;}; if(is_string($o)){$o=[$o];};
-      if(is_dir($p)){$r=pget($p); if($o){$r=array_diff($r,$o);}}
-      else{$r=(is_file($p)?file_get_contents($p):(is_link($p)?readlink($p):null));}
+      if(!is_string($q)){return;}; $q=trim($q); if(!isText($q,1)){return;};
+      $c=frst($q); $h=path(isin('~$',$c)?$c:'/'); $q=shaved($q,'/');
+      $q=swap($q,'//','/'); $q=swap($q,['/**/','/.*/','/*.*/'],'/*/');
+      if(!isFlat($o)){$o=(isText($o,1)?[$o]:[]);}; $l=explode('/',$q); $r=[];
+      $RP=ROOTPATH; $DP=swap(path($h),"$RP/",''); $BL=0;
 
-      if(!is_array($o)){return $r;}; if(!is_array($r)){return $r;}; $z=[]; ladd($o,VOID);
-
-      $sh=xpop($o,HIDN); $se=xpop($o,EMPT); $sl=xpop($o,LINK); $sd=xpop($o,FOLD); $sf=xpop($o,FILE); xpop($o,VOID); $sa=rpop($o);
-      if($sa==='*'){$sh=1;};
-      foreach($r as $i)
+      foreach($l as $x => $i)
       {
-         $ih=($i[0]==='.'); if($ih&&!$sh){continue;};
-         if($se)
-         {
-            $ie=0; if(is_link("$p/$i")){$d=trim(readlink("$p/$i"));if($d!==''){$ie=1;};}
-            elseif(is_dir("$p/$i")){$d=pget("$p/$i");if(count($d)<1){$ie=1;}}
-            else{$s=filesize("$p/$i");if($s<1){$ie=1;}elseif($s<3){$d=trim(pget("$p/$i"));if($d===''){$ie=1;}}};
-         };
-         if($sl){$il=is_link("$p/$i");}; if($sd){$id=is_dir("$p/$i");}; if($sf){$if=is_file("$p/$i");};
-         if($sa){$ia=akin($i,$sa);};
-         if
-         (
-            (!$sh||($sh&&($ih||($sa==='*')))) && (!$se||($se&&$ie)) && (!$sl||($sl&&$il)) &&
-            (!$sd||($sd&&$id)) && (!$sf||($sf&&$if)) && (!$sa||($sa&&$ia))
-         )
-         {$z[]=$i;};
+          if($BL){break;}; if(strlen($x)<1){$x='*';}; $a=akin(pget($DP),$x); foreach($a as $n)
+          {
+              radd($r,"$DP/$n");
+          };
       };
-      return $z;
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
