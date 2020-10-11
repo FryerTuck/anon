@@ -27,7 +27,7 @@ namespace Anon;
         $lst=pget("/",false); xpop($lst,".git"); $omt=[".anon.dir",".git",".anon.php",".htaccess"]; // web-root contents
         foreach($lst as $itm){if(!isin($omt,$itm)){path::copy("/$itm","$ntv/fuse/$itm",true);}}; // copied web-root to fuse
         unset($lst,$itm); Repo::commit("$ntv/fuse","cloned Anon",true); // track & commit & push fuse-repo-changes to tank
-        // Repo::ignore("$ntv/anon",write,conf('Repo/gitIgnor')); // things to ignore for this repo
+        Repo::ignore("$ntv/fuse",write,conf('Repo/gitIgnor')); // things to ignore for this repo
     };
 # -----------------------------------------------------------------------------------------------------------------------------
 
