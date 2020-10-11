@@ -237,14 +237,9 @@ namespace Anon;
          foreach($l as $p) // update git tracking
          {
              $x=("git update-index ".($ig?"--skip-worktree":"--add")." $p");
-             signal::dump("running: `$x` in: `$h`"); wait(150);
+             // signal::dump("running: `$x` in: `$h`"); wait(150);
              try{exec::{$x}($h);}catch(\Exception $e){};
          };
-
-         // if($ig){};
-
-         // exec::{"git add ."}($h); exec::{"git commit -m \"updated ignored files\""}($h);
-         // $b=self::branch($h); exec::{"git push origin $b"}($h);
          return OK;
       }
 

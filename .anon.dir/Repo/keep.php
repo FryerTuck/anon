@@ -60,8 +60,14 @@ namespace Anon;
         exec::{'git config --local pack.windowMemory 10m'}('/'); // memory handling
         exec::{'git config --local pack.packSizeLimit 20m'}('/'); // memory handling
         exec::{"git config --local user.name \"$usr\""}("/"); exec::{"git config --local user.email \"$eml\""}("/"); // Git ID
-        Repo::commit("/","cloned web-root",true); Repo::update('/','pull'); wait(50);
-        Repo::ignore("/",write,conf('Repo/gitIgnor')); path::make("$/User/data/$usr/pass",$mpw);
-        chmod(ROOTPATH."/.htaccess",0444); // restore master password & harden hta
+        Repo::commit("/","cloned web-root",true); Repo::update('/','pull');
+        path::make("$/User/data/$usr/pass",$mpw); chmod(ROOTPATH."/.htaccess",0444); // restore master password & harden hta
     };
+# -----------------------------------------------------------------------------------------------------------------------------
+
+
+
+# exec :: keep : run this every time on upkeep
+# -----------------------------------------------------------------------------------------------------------------------------
+    Repo::ignore("/",write,conf('Repo/gitIgnor'));
 # -----------------------------------------------------------------------------------------------------------------------------
