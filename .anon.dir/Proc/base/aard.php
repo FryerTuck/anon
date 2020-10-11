@@ -262,7 +262,7 @@ namespace Anon;
          fclose($x[0]);
          $o=trim(stream_get_contents($x[1])); fclose($x[1]); $e=trim(stream_get_contents($x[2])); fclose($x[2]);
          $z=trim(proc_close($r)); if($z){$z=(($e&&$o)?"$e ..\n$o":($e?$e:$o));};
-         wait(10); if(!$z){return $o;}; // success! .. take a breather to wait for git-locks, etc.
+         if(!$z){return $o;}; // success! .. take a breather to wait for git-locks, etc.
 
          $f=1; $db=self::$dbug;
          foreach($db as $ends){if(arg($z)->endsWith($ends)){$f=0;break;}}; // look for msgs to shut up about
