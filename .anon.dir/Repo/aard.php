@@ -202,8 +202,8 @@ namespace Anon;
          signal::dump("cloning repo `$orgn` into: $trgt");
          $q="git clone $orgn ."; if($bran){$q="git clone -b $bran --single-branch $orgn .";};
          exec::{"$q"}($trgt); $t=path($trgt); $cb=self::branch($trgt,$bran,1); if(!$cb){expect::repo($trgt);};
-         exec::{'git config --local pack.windowMemory 10m'}($trgt); // memory handling
-         exec::{'git config --local pack.packSizeLimit 20m'}($trgt); // memory handling
+         exec::{'git config --local pack.windowMemory "10m"'}($trgt); // memory handling
+         exec::{'git config --local pack.packSizeLimit "20m"'}($trgt); // memory handling
          exec::{"git config --local user.name \"$u\""}($t); exec::{"git config --local user.email \"$m\""}($t);
          $nb=(!$cb?"master":$cb);
 
@@ -260,7 +260,7 @@ namespace Anon;
       {
          expect::repo($dir); if(isText($msg)){$msg=trim($msg);}; expect::text($msg,1); $msg=swap($msg,'"',"`");
          exec::{'git add --all'}($dir); exec::{"git commit --allow-empty -m \"$msg\""}($dir); if(!$psh){return true;};
-         exec::{"git fsck && git gc"}($dir); // repair if needed
+         exec::{"git repack -a -d -f --window=0 && git fsck && git gc"}($dir); // repair if needed
          if(!$brn){$brn=self::branch($dir);}elseif(!is_funnic($brn)){fail('invalid branch name');};
          signal::dump("repo update: `$dir` .. push origin $brn");
          exec::{"git pull origin $brn"}($dir);
@@ -274,7 +274,7 @@ namespace Anon;
          if(!$brn){$brn=self::branch($dir);}elseif(!is_funnic($brn)){fail::reference('invalid branch name');};
          signal::dump("repo update: `$dir` .. $run $nic $brn");
          exec::{'git add --all'}($dir); exec::{"git commit --allow-empty -m \"$run $nic\""}($dir);
-         exec::{"git fsck && git gc"}($dir); // repair if needed
+         exec::{"git repack -a -d -f --window=0 && git fsck && git gc"}($dir); // repair if needed
          if($run==='push'){exec::{"git pull origin $brn"}($dir);};
          exec::{"git $run $nic $brn"}($dir); $ph=md5($dir); $ch=self::status($dir,':HASH:');
          if(!$ch){fail::repo("could not get hash-reference from: $dir");exit;};
