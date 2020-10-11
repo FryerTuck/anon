@@ -260,7 +260,7 @@ namespace Anon;
                $utla=pget("$sesn/TIME"); if(!$utla){$utla=0;}; $usfn=(($tnow-$utla)>=($utmx-($fade*2)-$lost)); // User-Session-Fades-Now (bool)
                if($usfn){$fint--;}; if($fint<1){$utxs=$utmx; $fint=$fade; if($work){$ping=0; self::emit('sesnFade',$sxed);}};
 
-               if(userDoes("sudo lead gang"))
+               if(userDoes("sudo lead gang")&&!siteLocked())
                {
                    $updt=pget('$/Proc/vars/lastUpdt','0'); $updt*=1; if(($tnow-$updt)>$keep)
                    {
