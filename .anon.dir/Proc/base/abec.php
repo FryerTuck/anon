@@ -1050,12 +1050,12 @@ namespace Anon;
 
       static function xume($pth,$fnd=null,$omt=null,$lvl=null,$dja=null)
       {
-          if(!$dja)
+          $rpn=ROOTPATH; if(!$dja)
           {
               if(!isFold($pth)){return;}; if($fnd===null){$fnd='*';};
               if(is_string($fnd)){$fnd=explode('/',shaved($fnd,'/'));};
               if(!is_array($omt)){$omt=[];}; if(!is_int($lvl)){$lvl=0;};
-              $rpn=ROOTPATH; $pth=swap(path($pth),"$rpn/",'');
+              $pth=swap(path($pth),"$rpn/",'');
           };
 
           if(!isset($fnd[$lvl])){return;}; // safety first
@@ -1066,7 +1066,7 @@ namespace Anon;
           {
               $tps="$pth/$itm"; if(pick($tps,$omt)!==null){continue;}; // omitted explicitly
               if(!akin($tps,$akn)&&!akin($tps,$wss)){continue;}; // not matching find
-              if($lvl===$end){radd($rsl,$tps);};
+              if($lvl===$end){radd($rsl,swap($tps,"$rpn/",''));};
               if(!isFold("/$tps")){continue;};
               $sub=path::xume($tps,$fnd,$omt,($lvl+1),true);
               if(is_array($sub)){$rsl=array_merge($rsl,$sub);};

@@ -237,7 +237,7 @@ namespace Anon;
          foreach($l as $p) // update git tracking
          {
              $x=("git update-index ".($ig?"--skip-worktree":"--add")." $p");
-             signal::dump("running: `$x` in: `$h`"); exec::{$x}($h);
+             signal::dump("running: `$x` in: `$h`"); wait(150); exec::{$x}($h);
          };
 
          // if($ig){};
