@@ -236,6 +236,7 @@
 
      listen("beforeunload",function(ev)
      {
+        cookie.delete("RECEIVER");
         fixCookies(); // prevent 431 error
         // cookie.delete("INTRFACE");
         server.stream.close();

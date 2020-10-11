@@ -35,7 +35,7 @@ namespace Anon;
         $v->busyGear=base64_encode(import("$/Site/tmpl/$t/base/busy.htm",["showBusy"=>$o]));
         $v->botHoney=conf('Proc/badRobot')->lure;
         $v=fuse($v,conf('Site/identity')); $r=import('$/Site/base/aard.htm',$v);
-        kuki($h,'...'); if(envi("ALTHANDLER")){kuki("ALTHANDLER","yes");};
+        kuki($h,'...'); kuki("RECEIVER",envi("RECEIVER"));
         echo($r); done(); // send BootStrap GUI keeping headers intact
      };
 
@@ -53,7 +53,7 @@ namespace Anon;
         $c=pget('$/Proc/conf/autoMail'); if(!isin($c,'mail://')||!isin($c,'@')||!isin($c,'.')){$d[]='confAutoMail';}; // debug automail
         $v->badCfg=base64_encode(tval($d));
 
-        if(!kuki("INTRFACE")&&MADEFUBU&&envi("ALTHANDLER")){$v->INTRFACE="ALT";};
+        if(!kuki("INTRFACE")&&MADEFUBU&&(envi("RECEIVER")==='nona')){$v->INTRFACE="ALT";};
         finish(NAVIPATH,$v,FORGET);
     };
 # ---------------------------------------------------------------------------------------------------------------------------------------------

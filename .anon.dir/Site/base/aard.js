@@ -55,14 +55,14 @@ window.bootAnon=function(gate)
 window.isModern.t=setInterval(function(gate)
 {
     gate=document.getElementById('AnonGate'); if(!gate){return;}; clearInterval(window.isModern.t); // wait until ready
-    if('(~ALTHANDLER~)'=='yes'){document.body.style.backgroundColor="(~conf('Site/bootSkin/handlrBG'~)"} // blend althandler
+    if('(~RECEIVER~)'=='nona'){document.body.style.backgroundColor="(~conf('Site/bootSkin/handlrBG'~)"} // blend althandler
     else if(window.self!==window.top){document.body.style.backgroundColor="(~conf('Site/bootSkin/parentBG'~)"};// blend parent
 
     setTimeout(function(){isModern(function(really) // wait for evasive snth to misbehave
     {
         if(pageGone){return}; // gotcha bitch .. smart-bot
         if(!really){userView('(~DBUGPATH~)?#lcjs'); return};  // bad browser goes to graceful fail
-        if('(~ALTHANDLER~)'!='yes'){bootAnon(gate); return}; // no other framework detected
+        if('(~RECEIVER~)'=='anon'){bootAnon(gate); return}; // no other framework detected
         userView('(~NAVIPURL~)',function(){bootAnon(gate)}); // boot handler first -if present
     })},250);
 },10);

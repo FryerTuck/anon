@@ -48,19 +48,19 @@ namespace Anon;
 
 
 
-# cond :: ALTHANDLER : check if an alternative handler is defined .. best attempt
+# cond :: RECEIVER : check if an alternative handler is defined .. best attempt
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-   $ah=''; if(kuki("ALTHANDLER")){$ah='yes';}elseif(isee("/index.php")){$ah='yes';}else
+   $ah=kuki("RECEIVER"); if(!$ah&&isee("/index.php")){$ah='nona';}else
    {
        $ht=explode('# === ANONDONE === #',pget('/.htaccess')); $ht=array_pop($ht);
        $tl=['^(.*)$','.*','.','^']; $ht=explode("\n",$ht); foreach($ht as $hl)
        {
            if($ah){break;}; $hl=trim($hl);
            if((strlen($hl)<1)||($hl[0]==='#')||(strpos($hl,'RewriteRule')===false)){continue;};
-           foreach($tl as $ti){if(strpos($hl,"RewriteRule $ti ")!==false){$ah='yes'; break;}};
+           foreach($tl as $ti){if(strpos($hl,"RewriteRule $ti ")!==false){$ah='nona'; break;}};
        };
    };
-   $_SERVER["ALTHANDLER"]="$ah"; unset($ah,$ht,$tl,$hl,$ti);
+   $_SERVER["RECEIVER"]=($ah?$ah:'anon'); unset($ah,$ht,$tl,$hl,$ti);
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 
