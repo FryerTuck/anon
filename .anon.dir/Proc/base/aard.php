@@ -255,6 +255,7 @@ namespace Anon;
          $v=(isset($a[1])?$a[1]:null); // TODO security check
          $i=(isset($a[2])?$a[2]:''); if(!is_string($i)){return;}; $p=isee($p); if(!$p){return;};
          if(($v!==null)&&!is_assoc_array($v)){return;}; $q=[0=>["pipe","r"], 1=>["pipe","w"], 2=>["pipe","w"]];
+         if(is_class('signal')){signal::dump("running bash: $c");};
          $r=proc_open($c,$q,$x,$p,$v);
          if(!is_resource($r)){return;};
          //if($i&&($i!==NOFAIL)){wait(1000); fwrite($x[0],$i);};
