@@ -274,7 +274,9 @@ namespace Anon;
          if(!$brn){$brn=self::branch($dir);}elseif(!is_funnic($brn)){fail::reference('invalid branch name');};
          signal::dump("repo update: `$dir` .. $run $nic $brn");
          exec::{'git add --all'}($dir); exec::{"git commit --allow-empty -m \"$run $nic\""}($dir);
-         exec::{"git repack -a -d -f --window=0 && git fsck && git gc"}($dir); // repair if needed
+         exec::{"git repack -a -d -f --window=0"}($dir); // repair if needed
+         exec::{"git fsck"}($dir); // repair if needed
+         exec::{"git gc --aggressive"}($dir); // repair if needed
          if($run==='push'){exec::{"git pull origin $brn"}($dir);};
          exec::{"git $run $nic $brn"}($dir); $ph=md5($dir); $ch=self::status($dir,':HASH:');
          if(!$ch){fail::repo("could not get hash-reference from: $dir");exit;};
