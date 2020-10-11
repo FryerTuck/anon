@@ -255,7 +255,7 @@ namespace Anon;
          $v=(isset($a[1])?$a[1]:null); // TODO security check
          $i=(isset($a[2])?$a[2]:''); if(!is_string($i)){return;}; $p=isee($p); if(!$p){return;};
          if(($v!==null)&&!is_assoc_array($v)){return;}; $q=[0=>["pipe","r"], 1=>["pipe","w"], 2=>["pipe","w"]];
-         if(is_class('signal')){signal::dump("running bash: $c");};
+         // if(is_class('signal')){signal::dump("running bash: $c");};
          $r=proc_open($c,$q,$x,$p,$v);
          if(!is_resource($r)){return;};
          //if($i&&($i!==NOFAIL)){wait(1000); fwrite($x[0],$i);};
@@ -435,14 +435,26 @@ namespace Anon;
 
 
 
+# func :: runlevel : syntax sugar .. sorthand for: $_SERVER['RUNLEVEL']===$n
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+   function runlevel($n)
+   {
+      if(!is_int($n)||!isset($_SERVER['RUNLEVEL'])){return;};
+      return ($n===$_SERVER['RUNLEVEL']);
+   }
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
 # func :: mksesn : generates a new session key and creates a session folder for a specified user .. returns the key
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function mksesn($u)
    {
-      if(!is_string($u)||(strlen($u)<1)){harakiri('invalid username');}; // YOU HAVE DIED
+      if(!is_funnic($u)){harakiri('invalid username');}; // YOU HAVE DIED
       $k=sha1(random(9).microtime(true).envi('USERADDR').getmypid().random(9)); // if this is not unique then bite me
       if(!isee("/User/data/$u")){harakiri("user `$u` is undefined");}; // YOU HAVE DIED
-      pset("$/Proc/temp/sesn/$k/USER",$u); return $k; // all is well
+      pset("$/Proc/temp/sesn/$k/USER",$u);
+      return $k; // all is well
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 

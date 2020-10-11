@@ -31,6 +31,7 @@ namespace Anon;
         $v->SESNUSER=$u; $v->SESNCLAN=pget("$/User/data/$u/clan"); $v->SESNMAIL=user('mail');
         $v->denyDomainSpoofs=tval(conf("Proc/antiHack")->denyDomainSpoofs);
         //ekko::head(['Referrer-Policy'=>'origin','cache'=>false,'cookies'=>true]); // send bootStrap headers
+
         $v->busyGear=base64_encode(import("$/Site/tmpl/$t/base/busy.htm",["showBusy"=>$o]));
         $v->botHoney=conf('Proc/badRobot')->lure;
         $v=fuse($v,conf('Site/identity')); $r=import('$/Site/base/aard.htm',$v);

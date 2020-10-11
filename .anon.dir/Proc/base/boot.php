@@ -235,7 +235,6 @@ namespace Anon;
       $h=envi('SESNHASH'); $u=envi('SESNUSER'); $c=envi('SESNCLAN');
       if(($a==='HASH')&&$h){return $h;}; if(($a==='USER')&&$u){return $u;}; if(($a==='CLAN')&&$c){return $c;};
       $d="/Proc/temp/sesn"; $t=time();
-
       if($h){$p="$d/$h";} // current session
       else // new -r resume session
       {
@@ -319,6 +318,7 @@ namespace Anon;
 
 # proc :: init : boot
 # ---------------------------------------------------------------------------------------------------------------------------------------------
+   $_SERVER['RUNLEVEL']=1;
    allStemRun("boot.php",A,"$/Site"); // boot all bootable stems
 
    Proc::init(); // initialize Proc
