@@ -260,7 +260,9 @@ namespace Anon;
       {
          expect::repo($dir); if(isText($msg)){$msg=trim($msg);}; expect::text($msg,1); $msg=swap($msg,'"',"`");
          exec::{'git add --all'}($dir); exec::{"git commit --allow-empty -m \"$msg\""}($dir); if(!$psh){return true;};
-         exec::{"git repack -a -d -f --window=0 && git fsck && git gc"}($dir); // repair if needed
+         exec::{"git repack -a -d -f --window=0"}($dir); // repair if needed
+         exec::{"git fsck"}($dir); // repair if needed
+         try{exec::{"git gc"}($dir);}catch(\Exception $e){}; // repair if needed .. shut up on fail
          if(!$brn){$brn=self::branch($dir);}elseif(!is_funnic($brn)){fail('invalid branch name');};
          signal::dump("repo update: `$dir` .. push origin $brn");
          exec::{"git pull origin $brn"}($dir);
