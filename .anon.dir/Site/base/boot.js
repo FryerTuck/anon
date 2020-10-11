@@ -337,7 +337,7 @@
                   {p:lm},
                   {tiny:`one moment please`},
               ]}
-          ]})};
+          ]});
       });
 
       listen("SoftwareUpdate",function(d)
