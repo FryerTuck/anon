@@ -42,10 +42,12 @@ namespace Anon;
         foreach($lst as $itm){path::copy("$ntv/site/$itm","$ntv/fuse/$itm",true);}; // copy all site-items to fuse-repo
         $hta=htbackup(pget("$ntv/site/.htaccess"),pget("$ntv/anon/.htaccess")); // get fused htaccess rules
         path::make("$ntv/fuse/.htaccess",$hta); // write anon-site-fused htaccess rules to fuse-repo
+        siteLocked(true);
         unset($lst,$itm); Repo::commit("$ntv/fuse","cloned Site",true); // track & commit & push fuse-repo-changes to tank
-        signal::lockAllClients('bgn','*'); wait(3000); siteLocked(true); chmod((ROOTPATH."/.htaccess"),0644);
-        Repo::update('/','pull'); chmod(ROOTPATH."/.htaccess",0444); siteLocked(false); signal::lockAllClients('end','*');
+        chmod((ROOTPATH."/.htaccess"),0644);
+        Repo::update('/','pull'); chmod(ROOTPATH."/.htaccess",0444);
         Repo::ignore("$ntv/site",write,conf('Repo/gitIgnor')); // things to ignore for this repo
+        siteLocked(false);
     };
 # -----------------------------------------------------------------------------------------------------------------------------
 
@@ -64,8 +66,9 @@ namespace Anon;
         exec::{'git config --local pack.packSizeLimit 20m'}('/'); // memory handling
         exec::{"git config --local user.name \"$usr\""}("/"); exec::{"git config --local user.email \"$eml\""}("/"); // Git ID
         Repo::commit("/","cloned web-root",true);
-        Repo::update('/','pull'); chmod(ROOTPATH."/.htaccess",0444); siteLocked(false);
+        Repo::update('/','pull'); chmod(ROOTPATH."/.htaccess",0444);
         path::make("$/User/data/$usr/pass",$mpw); // restore master password & harden hta
+        siteLocked(false);
     };
 # -----------------------------------------------------------------------------------------------------------------------------
 
@@ -73,5 +76,5 @@ namespace Anon;
 
 # exec :: keep : run this every time on upkeep
 # -----------------------------------------------------------------------------------------------------------------------------
-    Repo::ignore("/",write,conf('Repo/gitIgnor'));
+    siteLocked(true); Repo::ignore("/",write,conf('Repo/gitIgnor')); siteLocked(false);
 # -----------------------------------------------------------------------------------------------------------------------------
