@@ -326,15 +326,16 @@
       server.listen("SoftwareUpdate: sudo,lead,gang",function(d){signal("SoftwareUpdate",d);});
       server.listen("lockAllClients",function(d, pt,lm,el,id)
       {
+          dump(`event: lockAllClients .. argVal: `+sval(d));
           pt=stub(d,":"); lm=pt[2]; d=pt[0];
           id="#AnonSystemLock"; el=select(id);
           if(d=="end"){remove(el); return}; if(!!el){dump(`AnonSystemLock already applied .. ignoring ${lm}`); return};
           document.body.insert({div:`${id} .layr`,$:
           [
-              {div:`.cenmid`,$:
+              {div:`.cenmid .cntrChld`, style:{marginBottom:50}, $:
               [
                   {icon:`lock1`, size:40},
-                  {p:lm},
+                  {p:``, style:{marginTop:10}, $:lm},
                   {tiny:`one moment please`},
               ]}
           ]});
