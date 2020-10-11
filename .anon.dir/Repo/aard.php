@@ -276,7 +276,7 @@ namespace Anon;
          exec::{'git add --all'}($dir); exec::{"git commit --allow-empty -m \"$run $nic\""}($dir);
          exec::{"git repack -a -d -f --window=0"}($dir); // repair if needed
          exec::{"git fsck"}($dir); // repair if needed
-         exec::{"git gc --aggressive"}($dir); // repair if needed
+         try{exec::{"git gc"}($dir);}catch(\Exception $e){}; // repair if needed .. shut up on fail
          if($run==='push'){exec::{"git pull origin $brn"}($dir);};
          exec::{"git $run $nic $brn"}($dir); $ph=md5($dir); $ch=self::status($dir,':HASH:');
          if(!$ch){fail::repo("could not get hash-reference from: $dir");exit;};
