@@ -326,9 +326,8 @@
       server.listen("SoftwareUpdate: sudo,lead,gang",function(d){signal("SoftwareUpdate",d);});
       server.listen("lockAllClients",function(d, pt,lm,el,id)
       {
-          id="#AnonSystemLock"; el=select(id);
+          id="#AnonSystemLock"; el=select(id); if(d=="end"){remove(el); return};
           if(!!el){dump(`AnonSystemLock already applied .. ignoring ${lm}`); return};
-          if(d=="end"){remove(el); return};
           if(!isin(d,":")){d=(d+':system locked')}; pt=stub(d,":"); lm=pt[2]; d=pt[0];
           document.body.insert({div:`${id} .layr`,$:
           [
