@@ -507,7 +507,6 @@
                tick.after(6100,()=>
                {
                   if(server.sensor.live){server.status="open"; return};
-                  if(select("#AnonSystemLock")){return;};
                   // prevent reconnect flood for in case the server disconnects upon connect
                   // debug this issue by visiting the event emitter via API interface
                   purl
@@ -523,7 +522,7 @@
                         loadend:function(rsp, cde,dne,stb)
                         {
                            rsp=rsp.body; cde=this.status; dne=(!rsp&&((cde<1)||(cde==503)));
-                           if(server.sensor.live||(server.status=="gone")||(cde==200)){return}; // all is well
+                           if(server.sensor.live||(server.status=="gone")||(cde==200)||(cde==419)){return}; // all is well
                            if(cde!=200){server.stream.close(); console.error("SSE issue, checking health with XHR splilled this:\n"+rsp);}
                            if(dne){server.stream.close(); console.error('SSE stopped');};
                            if(!rsp&&(cde<1)){popAlert("link :: Connection : Unable to connect; refreshing now."); tick.after(6,()=>{repl.exit();}); return};
