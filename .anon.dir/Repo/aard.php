@@ -233,10 +233,10 @@ namespace Anon;
          if((($a===write)&&isin($r,$q))||(($a===erase)&&!isin($r,$q))){return OK;}; // nothing to do
          signal::dump("$a ignore-rule: `$i` in: `$h`");
          if($a===write){$r.=$q;}else{$r=swap($r,$q,'');}; path::make($p,$r); // finish exclude
-         $c=frst($i); $i=lshave($i,'!'); $x=((($a===write)&&($c!=='!'))?"git rm --cached":"git add");
+         $c=frst($i); $i=lshave($i,'!'); $x=((($a===write)&&($c!=='!'))?"git update-index --assume-unchanged":"git add");
          $l=scan($i); unset($p); foreach($l as $p){try{exec::{"$x $p"}($h);}catch(\Exception $e){}}; // update git tracking
-         exec::{"git add ."}($h); exec::{"git commit -m \"updated ignored files\""}($h);
-         $b=self::branch($h); exec::{"git push origin $b"}($h);
+         exec::{"git commit --allow-empty -m \"updated ignore rule\""}($h);
+         // $b=self::branch($h); exec::{"git push origin $b"}($h);
          return OK;
       }
 
