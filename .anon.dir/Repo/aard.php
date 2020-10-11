@@ -250,7 +250,7 @@ namespace Anon;
              // signal::dump("running: `$x` in: `$h`"); wait(150);
              try{exec::{$x}($h);}catch(\Exception $e){};
          };
-         exec::{"git add ."}($h); exec::{"git commit -m \"updated ignore rule: $i\""}($h);
+         exec::{"git add ."}($h); exec::{"git --allow-empty commit -m \"updated ignore rule: $i\""}($h);
          $b=self::branch($h); exec::{"git push origin $b"}($h);
          return OK;
       }
