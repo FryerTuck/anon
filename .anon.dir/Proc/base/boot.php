@@ -211,9 +211,7 @@ namespace Anon;
       static function awaits($p,$m=true)
       {
          if(!is_string($p)){return;}; $h=sha1($p); $d=self::$dir; $t="$d/$h";
-         $s=0; if(runlevel(1)){$s++;};
-         while(self::exists($p)){if($s===1){$s++; signal::dump("waiting for `$p` to unlock");}; wait(1);};
-         $r=false; if($m){$r=self::create($t,1);}; return $r;
+         while(self::exists($p)){wait(1);}; $r=false; if($m){$r=self::create($t,1);}; return $r;
       }
 
 
