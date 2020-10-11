@@ -1062,7 +1062,7 @@ namespace Anon;
           $end=(count($fnd)-1); $akn=$fnd[$lvl];
           $akn=((strpos($akn,'*')===false)?"*/$akn":$akn);
           $wss=implode('/',$fnd); if((wrapOf($wss)!=='**')||(span($wss,'*')!==2)){$wss=null;};
-          $lst=pget("/$pth"); $rsl=[]; foreach($lst as $itm)
+          $lst=pget("/$pth",false); $rsl=[]; foreach($lst as $itm)
           {
               $tps="$pth/$itm"; if(pick($tps,$omt)!==null){continue;}; // omitted explicitly
               if(!akin($tps,$akn)&&!akin($tps,$wss)){continue;}; // not matching find
