@@ -517,6 +517,7 @@
                      {
                         error:function(e)
                         {
+                           let cde=this.status; if(cde==419){return;};
                            console.error(e);
                         },
                         loadend:function(rsp, cde,dne,stb)
