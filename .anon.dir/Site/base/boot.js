@@ -49,7 +49,7 @@
        {
           let j={"[Intervention] Slow network":`Fallback font will be used`}; // junk
           let a,i; a=listOf(arguments); a.forEach((s)=>{j.each((v,k)=>{if(isin(s,k)&&isin(s,v)){i=1;return STOP}})});
-          if(i||!userDoes(`geek sudo`)){return}; // .. sweet screams
+          if(i||!userDoes(`geek sudo`)){tick.after(5,()=>{console.clear()});return}; // .. sweet screams
           return a;
        });
    };
