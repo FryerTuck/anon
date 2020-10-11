@@ -236,6 +236,7 @@ namespace Anon;
          $c=frst($i); $i=lshave($i,'!'); $x=((($a===write)&&($c!=='!'))?"git rm --cached":"git add");
          $l=scan($i); unset($p); foreach($l as $p){try{exec::{"$x $p"}($h);}catch(\Exception $e){}}; // update git tracking
          exec::{"git add ."}($h); exec::{"git commit -m \"updated ignored files\""}($h);
+         $b=self::branch($h); exec::{"git push origin $b"}($h);
          return OK;
       }
 
