@@ -248,10 +248,9 @@ namespace Anon;
                  else{$x="git add $p";};
              };
              // signal::dump("running: `$x` in: `$h`"); wait(150);
-             try{exec::{$x}($h);}catch(\Exception $e){};
+             try{exec::{$x}($h);}catch(\Exception $e){}; wait(10);
          };
-         exec::{"git add ."}($h); exec::{"git commit --allow-empty -m \"updated ignore rule: $i\""}($h);
-         $b=self::branch($h); exec::{"git push origin $b"}($h);
+         self::commit($h,"updated ignore rule: $i");
          return OK;
       }
 
