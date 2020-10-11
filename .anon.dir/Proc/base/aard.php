@@ -440,7 +440,7 @@ namespace Anon;
    function runlevel($n)
    {
       if(!is_int($n)||!isset($_SERVER['RUNLEVEL'])){return;};
-      return ($n===$_SERVER['RUNLEVEL']);
+      return ($n<=$_SERVER['RUNLEVEL']);
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 

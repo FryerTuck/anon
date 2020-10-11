@@ -932,3 +932,28 @@ namespace Anon;
         return (new img($p));
     };
 # ---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+# func :: siteLocked : lock domain for when important stuff must not be disturbed .. true writes .. false releases .. null returns bool
+# ---------------------------------------------------------------------------------------------------------------------------------------------
+    function siteLocked($b=null,$m=null)
+    {
+        $p="$/Proc/temp/lock/AnonSystemLock"; $x=pget($p);
+        if($b===null){return ($x?true:false);};
+
+        if($b===true)
+        {
+            if($x){return OK;};
+            signal::lockAllClients('bgn','*'); wait(3000);
+            return path::make($p,PROCHASH);
+        };
+
+        if($b===false)
+        {
+            if($x!==PROCHASH){signal::dump("siteLocked by another process"); return;};
+            path::void($p); signal::lockAllClients('end','*');
+            return true;
+        };
+    }
+# ---------------------------------------------------------------------------------------------------------------------------------------------

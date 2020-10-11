@@ -6,7 +6,6 @@ namespace Anon;
 # -----------------------------------------------------------------------------------------------------------------------------
     $ref=conf("Repo/gitRefer"); $wro=(isRepo('/')?Repo::getURL('/','origin',false):''); // $wro = web-root-origin
     $hta=pget("/.htaccess"); $ntv="$/Repo/data/native"; $rmt="$/Repo/data/remote";
-    $asl="$/Proc/temp/lock/AnonSystemLock";
 
     if(!isFold("$rmt/tank.git")){Repo::create("$rmt/tank.git",BARE,"master");}; // create local BARE tank repo as origin
     if(span(pget("$rmt/tank.git/objects/pack"))<1){$brn=null;}; // no branch yet
@@ -44,8 +43,8 @@ namespace Anon;
         $hta=htbackup(pget("$ntv/site/.htaccess"),pget("$ntv/anon/.htaccess")); // get fused htaccess rules
         path::make("$ntv/fuse/.htaccess",$hta); // write anon-site-fused htaccess rules to fuse-repo
         unset($lst,$itm); Repo::commit("$ntv/fuse","cloned Site",true); // track & commit & push fuse-repo-changes to tank
-        signal::lockAllClients('bgn','*'); wait(3000); pset($asl,time()); chmod((ROOTPATH."/.htaccess"),0644);
-        Repo::update('/','pull'); chmod(ROOTPATH."/.htaccess",0444); void($asl); signal::lockAllClients('end','*');
+        signal::lockAllClients('bgn','*'); wait(3000); siteLocked(true); chmod((ROOTPATH."/.htaccess"),0644);
+        Repo::update('/','pull'); chmod(ROOTPATH."/.htaccess",0444); siteLocked(false); signal::lockAllClients('end','*');
         Repo::ignore("$ntv/site",write,conf('Repo/gitIgnor')); // things to ignore for this repo
     };
 # -----------------------------------------------------------------------------------------------------------------------------
@@ -58,14 +57,14 @@ namespace Anon;
 
     if($wro!==$tko)
     {
-        pset($asl,time()); chmod((ROOTPATH."/.htaccess"),0644);
+        siteLocked(true); chmod((ROOTPATH."/.htaccess"),0644);
         $hsh=PROCHASH; $usr="master"; $eml=simp(pget("$/User/data/$usr/mail")); $mpw=pget("$/User/data/$usr/pass"); // vars
         exec::{"rm -r ./.git && mkdir $hsh && git clone $tko ./$hsh && cp -r ./$hsh/.git . && rm -rf ./$hsh"}("/"); // copy git
         exec::{'git config --local pack.windowMemory 10m'}('/'); // memory handling
         exec::{'git config --local pack.packSizeLimit 20m'}('/'); // memory handling
         exec::{"git config --local user.name \"$usr\""}("/"); exec::{"git config --local user.email \"$eml\""}("/"); // Git ID
         Repo::commit("/","cloned web-root",true);
-        Repo::update('/','pull'); chmod(ROOTPATH."/.htaccess",0444); void($asl);
+        Repo::update('/','pull'); chmod(ROOTPATH."/.htaccess",0444); siteLocked(false);
         path::make("$/User/data/$usr/pass",$mpw); // restore master password & harden hta
     };
 # -----------------------------------------------------------------------------------------------------------------------------

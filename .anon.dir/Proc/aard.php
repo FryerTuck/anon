@@ -405,10 +405,10 @@ namespace Anon;
          $tp="$/Repo/data/native/fuse";  $ln="SoftwareUpdate";
          // $mp='$/User/data/master/pass';  $pw=pget($mp);
 
-         if(isee("$/Proc/temp/lock/AnonSystemLock")){signal::dump("update denied .. AnonSystemLock is active"); return OK;};
+         if(siteLocked()){signal::dump("update denied .. AnonSystemLock is active"); return OK;};
          if(lock::exists($ln)){return OK;}; lock::awaits($ln);
-         signal::dump("running software update"); signal::lockAllClients('bgn','*'); wait(3000); // wait for procs to finish
-         pset("$/Proc/temp/lock/AnonSystemLock",time()); // lock all front-ends to avoid collision
+         signal::dump("running software update"); // wait for procs to finish
+         siteLocked(true); // lock all front-ends to avoid collision
          try{exec::{'git stash && git stash clear'}('/');}catch(\Exception $e){ }; // ignore any changes made in web-root
          $ht=pget("/.htaccess"); if(isee("$sp/.htaccess")){$ht=pget("/.htaccess");}; // hta may have auto-changed elsewhere
          Repo::update($up,$gr->$cw,'pull','origin');
@@ -433,7 +433,7 @@ namespace Anon;
          wait(150); exec::{"git push origin master"}($tp);
          wait(150); exec::{"git pull origin master"}('/');
          chmod(ROOTPATH."/.htaccess",0444); // make htaccess read-only
-         void("$/Proc/temp/lock/AnonSystemLock"); lock::remove($ln); signal::lockAllClients('end','*');
+         siteLocked(false); lock::remove($ln);
          signal::ClientReboot("new updates from $cw","*");
          return OK;
       }
