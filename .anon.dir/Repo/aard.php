@@ -236,10 +236,22 @@ namespace Anon;
          $c=frst($i); $i=lshave($i,'!'); $ig=((($a===write)&&($c!=='!'))?1:0); $l=scan($i); unset($p);
          foreach($l as $p) // update git tracking
          {
-             $x=("git update-index ".($ig?"--skip-worktree":"--add")." $p");
+             if(!isee("$h/$p")){continue;};
+             if($ig)
+             {
+                 if(isFold("$h/$p")){$x="git rm -r --cached $p";}
+                 else{$x="git rm --cached $p";};
+             }
+             else
+             {
+                 if(isFold("$h/$p")){$x="git add $p/*";}
+                 else{$x="git add $p";};
+             };
              // signal::dump("running: `$x` in: `$h`"); wait(150);
              try{exec::{$x}($h);}catch(\Exception $e){};
          };
+         exec::{"git add ."}($h); exec::{"git commit -m \"updated ignore rule: $i\""}($h);
+         $b=self::branch($h); exec::{"git push origin $b"}($h);
          return OK;
       }
 
