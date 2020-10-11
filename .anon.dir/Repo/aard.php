@@ -236,9 +236,12 @@ namespace Anon;
          $c=frst($i); $i=lshave($i,'!'); $ig=((($a===write)&&($c!=='!'))?1:0); $l=scan($i); unset($p);
          foreach($l as $p) // update git tracking
          {
-             if($ig){$x="--skip-worktree";}else{$x="--add";};
-             try{exec::{"git update-index $x $p"}($h);}catch(\Exception $e){}
+             $x=("git update-index ".($ig?"--skip-worktree":"--add")." $p");
+             signal::dump("running: `$x` in: `$h`"); exec::{$x}($h);
          };
+
+         // if($ig){};
+
          // exec::{"git add ."}($h); exec::{"git commit -m \"updated ignored files\""}($h);
          // $b=self::branch($h); exec::{"git push origin $b"}($h);
          return OK;
