@@ -25,7 +25,7 @@ select('#AnonAppsView').insert
                      {row:[{col:'.panlHorzLine', contents:[{hdiv:''}]}]},
                      {row:[{col:'#NaviTreeView', contents:[{panl:'#NaviTreePanl', contents:
                      [
-                        {treeview:'', source:'/User/treeMenu', uproot:true, listen:
+                        {treeview:'', source:'/User/foldMenu', uproot:true, listen:
                         {
                            'LeftClick':function(evnt)
                            {

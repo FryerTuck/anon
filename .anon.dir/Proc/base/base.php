@@ -939,20 +939,21 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
     function siteLocked($b=null,$m=null)
     {
-        $p="$/Proc/temp/lock/AnonSystemLock"; $x=pget($p);
-        if($b===null){return ($x?true:false);};
+        $p="$/Proc/temp/lock/AnonSystemLock";
+        if(!isText($m,1)){$m='system locked';};
+        $x=pget($p); if($b===null){return ($x?true:false);};
 
         if($b===true)
         {
             if($x){return OK;};
-            signal::lockAllClients('bgn','*'); wait(3000);
+            signal::lockAllClients("bgn:$m",'*'); wait(3000);
             return path::make($p,PROCHASH);
         };
 
         if($b===false)
         {
             if($x!==PROCHASH){signal::dump("siteLocked by another process"); return;};
-            path::void($p); signal::lockAllClients('end','*');
+            wait(250); path::void($p); signal::lockAllClients('end','*');
             return true;
         };
     }

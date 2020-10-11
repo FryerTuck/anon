@@ -12,6 +12,15 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
+// func :: siteLocked
+// --------------------------------------------------------------------------------------------------------------------------------------------
+    const siteLocked = function()
+    {
+        return (select("#AnonSystemLock")?true:false);
+    };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
 
 // defn :: conf : front-end configuration
 // --------------------------------------------------------------------------------------------------------------------------------------------
@@ -315,11 +324,20 @@
       server.listen('done',function(d){if(d!="!"){dump(`\nserver is done with:\n${d}`)}; Busy.done();});
       server.listen('dump',function(d, v){v=(isJson(d)?decode.jso(d):sval(d)); dump(v)});
       server.listen("SoftwareUpdate: sudo,lead,gang",function(d){signal("SoftwareUpdate",d);});
-      server.listen("lockAllClients",function(d, el,id)
+      server.listen("lockAllClients",function(d, pt,lm,el,id)
       {
+          pt=stub(d,":"); lm=pt[2]; d=pt[0];
           id="#AnonSystemLock"; el=select(id);
-          if(d=="end"){remove(el); return};
-          if(!el){document.body.insert({div:`${id} .layr`,$:[{div:`.cenmid`,$:`please stand by ...`}]})};
+          if(d=="end"){remove(el); return}; if(!!el){dump(`AnonSystemLock already applied .. ignoring ${lm}`); return};
+          document.body.insert({div:`${id} .layr`,$:
+          [
+              {div:`.cenmid`,$:
+              [
+                  {icon:`lock1`, size:40},
+                  {p:lm},
+                  {tiny:`one moment please`},
+              ]}
+          ]})};
       });
 
       listen("SoftwareUpdate",function(d)
