@@ -327,8 +327,7 @@
       server.listen("lockAllClients",function(d, pt,lm,el,id)
       {
           dump(`event: lockAllClients .. argVal: `+sval(d));
-          pt=stub(d,":"); lm=pt[2]; d=pt[0];
-          id="#AnonSystemLock"; el=select(id);
+          pt=stub(d,":"); if(pt){lm=pt[2]; d=pt[0]};
           if(d=="end"){remove(el); return}; if(!!el){dump(`AnonSystemLock already applied .. ignoring ${lm}`); return};
           document.body.insert({div:`${id} .layr`,$:
           [
