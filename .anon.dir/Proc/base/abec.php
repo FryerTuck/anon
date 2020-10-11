@@ -23,8 +23,9 @@ namespace Anon;
 
    function isFlat($d,$g=null,$l=null)
    {
-      if(!is_nokey_array($d)){return false;}; $l=['null','bool','numr','text']; $r=true;
-      foreach($d as $i){if(!in_array(type($i),$l)){$r=false;break;};}; return (!is_int($g)?$r:spanIs($d,$g,$l));
+      if(!is_nokey_array($d)){return false;}; if(count($d)<1){return true;}; $l=['null','bool','numr','text'];
+      $r=true; foreach($d as $i){if(!in_array(type($i),$l)){$r=false;break;};};
+      return (!is_int($g)?$r:spanIs($d,$g,$l));
    }
 
    function isDeep($d){return (is_array($d)&&!isFlat($d));}
@@ -337,8 +338,8 @@ namespace Anon;
    function scan($q,$o=null)
    {
       if(!is_string($q)){return;}; $q=trim($q); if(strlen($q)<1){return;};
-      $c=frst($q); $h=path(isin('~$',$c)?$c:'/'); $q=shaved($q,'/');
-      $q=swap($q,'//','/'); $q=swap($q,['/**/','/.*/','/*.*/'],'/*/');
+      $c=frst($q); $h=path(isin('~$',$c)?$c:'/'); $q=lshave($q,'$'); $q=shaved($q,'/');
+      $q=swap($q,'//','/'); $q=swap($q,'**','*'); $q=swap($q,['/.*/','/*.*/'],'/*/');
       if(!isFlat($o)){$o=(isText($o,1)?[$o]:[]);}; $r=path::xume($h,$q,$o);
       return (is_array($r)?$r:[]);
    }
@@ -1058,12 +1059,16 @@ namespace Anon;
           };
 
           if(!isset($fnd[$lvl])){return;}; // safety first
+          $end=(count($fnd)-1); $akn=$fnd[$lvl];
+          $akn=((strpos($akn,'*')===false)?"*/$akn":$akn);
+          $wss=implode('/',$fnd); if((wrapOf($wss)!=='**')||(span($wss,'*')!==2)){$wss=null;};
           $lst=pget("/$pth"); $rsl=[]; foreach($lst as $itm)
           {
-              if(!akin("$pth/$itm",$fnd[$lvl])){continue;}; // not matching find
-              if(pick("$pth/$itm",$omt)!==null){continue;}; // omitted explicitly
-              radd($rsl,"$pth/$itm"); if(!isFold("$pth/$itm")){continue;};
-              $sub=path::xume("$pth/$itm",$fnd,$omt,($lvl+1),true);
+              $tps="$pth/$itm"; if(pick($tps,$omt)!==null){continue;}; // omitted explicitly
+              if(!akin($tps,$akn)&&!akin($tps,$wss)){continue;}; // not matching find
+              if($lvl===$end){radd($rsl,$tps);};
+              if(!isFold("/$tps")){continue;};
+              $sub=path::xume($tps,$fnd,$omt,($lvl+1),true);
               if(is_array($sub)){$rsl=array_merge($rsl,$sub);};
           };
           return $rsl;

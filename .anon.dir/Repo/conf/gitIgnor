@@ -1,6 +1,6 @@
-$/**/conf/**/*
-$/**/data/**/*
-$/**/temp/**/*
-$/**/vars/**/*
+$/**/conf/*
+$/**/data/*
+$/**/temp/*
+$/**/vars/*
 
 !$/**/data/**/defn.php
