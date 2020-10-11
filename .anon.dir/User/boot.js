@@ -193,35 +193,6 @@
       }.bind({incr:0}));
 
 
-      // server.listen("mailTime",function mailTime(obj)
-      // {
-      //    if(!server.stream||globVars(`mailBusy`)){return}; globVars({mailBusy:1});
-      //    // dump("mail init");
-      //    purl
-      //    ({
-      //       target:`/Proc/xenoCall`,
-      //       silent:true,
-      //       convey:{func:`xena::fetchNewAutoMail`,deps:`Mail`},
-      //       listen:
-      //       {
-      //          error:function pingMail(r)
-      //          {
-      //             globVars({mailBusy:0});
-      //             if(isJson(r)){fail(decode.jso(r));return};
-      //             if(isin(r,"Network :: 503 Connection Failure")){return};
-      //             dump("pingMail error:\n"+r);
-      //          },
-      //          loadend:function pingMail(r)
-      //          {
-      //             r=r.body; globVars({mailBusy:0}); if(r==OK){return;};
-      //             if(isin(r,":BUSY:")){return};
-      //             dump(`mail fail:\n${r}\n\n`);
-      //          },
-      //       }
-      //    });
-      // });
-
-
       server.listen("newEmail",function()
       {
          dump("new email!");
