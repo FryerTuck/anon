@@ -482,18 +482,8 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
     function htbackup($nt,$at)
     {
-        $dl="# === ANONDONE === #"; if(!is_string($nt)){$nt="";};
-        if(strpos($nt,$dl)){$nt=explode($dl,$nt); $nt=array_pop($nt);};
-        $nt=trim($nt); $at=trim($at);
-
-        $ha=explode("\n",$nt); foreach($ha as $hx => $hl)
-        {
-            $tl=trim($hl); if($tl&&($tl[0]==="#")){continue;}; $lc=strtolower($hl);
-            if(strpos($lc,"rewriteengine on")===0){$ha[$hx]="# $tl .. dejavu";};
-            if(strpos($lc,"rewritebase /")===0){$ha[$hx]="# $tl .. dejavu";};
-        };
-
-        $nt=implode($ha,"\n"); $rt=trim($at."\n\n\n".$nt);
+        if(!is_string($nt)){$nt="";}; $nt=trim($nt); $at=trim($at);
+        $rt=impose($at,'#~','~#',['IMPOSE'=>$nt]);
         return $rt;
     }
 # ---------------------------------------------------------------------------------------------------------------------------------------------

@@ -1,5 +1,3 @@
-# === ANONINIT === #
-
 
 # init :: flow : initialize rewrite engine and force subdomain as `www` .. this must be here 1st, at the top
 # -----------------------------------------------------------------------------------------------------------------------------
@@ -92,4 +90,20 @@
 # -----------------------------------------------------------------------------------------------------------------------------
 
 
-# === ANONDONE === #
+
+# cond :: other : for testing the fuse repo .. any other handler is imposed into `Else`
+# -----------------------------------------------------------------------------------------------------------------------------
+<If "%{QUERY_STRING} =~ /(^|&)ANONFUSETEST($|&)/">
+    RewriteCond %{REQUEST_URI} !/.anon.dir/Repo/data/native/fuse/
+    RewriteRule ^(.*)$ /.anon.dir/Repo/data/native/fuse/ [L,QSA]
+</If>
+<ElseIf "%{HTTP_COOKIE} =~ /ANONFUSETEST=yes/">
+    RewriteCond %{REQUEST_URI} !/.anon.dir/Repo/data/native/fuse/
+    RewriteRule ^(.*)$ /.anon.dir/Repo/data/native/fuse/ [L,QSA]
+</ElseIf>
+<Else>
+
+#~ IMPOSE ~#
+
+</Else>
+# -----------------------------------------------------------------------------------------------------------------------------
