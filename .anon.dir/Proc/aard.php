@@ -411,6 +411,7 @@ namespace Anon;
          siteLocked(true); // lock all front-ends to avoid collision
          try{exec::{'git stash && git stash clear'}('/');}catch(\Exception $e){ }; // ignore any changes made in web-root
          $hsh=Repo::commit($tp,"restore point"); // create a restore commit
+         signal::dump("created restore point .. commit hash: $hsh");
          $ht=pget("/.htaccess"); if(isee("$sp/.htaccess")){$ht=pget("/.htaccess");}; // hta may have auto-changed elsewhere
          Repo::update($up,$gr->$cw,'pull','origin');
          $om=conf('Repo/gitIgnor'); // TODO :: stuff to omit
@@ -431,12 +432,19 @@ namespace Anon;
 
          $testFP=conf('Proc/unitTest/siteFuse'); if(isee($testFP)&&(fext($testFP)==='php'))
          {
-             $testFN=requires::path($testFP); $tested=$testFN();
-             if($tested!==OK)
+             $testFN=requires::path($testFP); if(!isFunc($testFN)){};
+             if(isFunc($tested))
              {
-                 exec::{"git revert --no-commit $hsh..HEAD && git commit"}($tp); // restore
-                 fail::UnitTest($tested); exit;
-             };
+                 signal::dump("running UnitTest: `$testFP`");
+                 $tested=$testFN(); if($tested!==OK)
+                 {
+                     if(!isText($tested,1)){$tested=tval($tested,DUMP);};
+                     exec::{"git revert --no-commit $hsh..HEAD && git commit"}($tp); // restore
+                     fail::UnitTest("Test `$testFP` did not return :OK:\nThis is what spilled out:\n\n$tested"); exit;
+                 }
+             }
+             else
+             {signal::dump("ignored UnitTest: `$testFP` .. expected it to export a function");};
          };
 
          chmod(ROOTPATH."/.htaccess",0644); // make htaccess writable for now
