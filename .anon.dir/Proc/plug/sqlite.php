@@ -15,12 +15,12 @@ namespace Anon;
       function __construct($x)
       {
          $this->vars=knob(); $this->info=knob(['maxLevel'=>2]); $m=$x->meta;
-         $s=stub($m->path,".sdb"); if($s){$m->path=($s[2]); $m->base=($m->base.$s[0].'.sdb');}; unset($s);
+         $s=stub($m->path,'.sdb'); if($s){$m->path=($s[2]); $m->base=($m->base.$s[0].'.sdb');}; unset($s);
 
          if(!isee($m->base)||fext($m->base)!=='sdb')
          {
-             $n=(isFold($m->base)?"base.sdb":".sdb");
-             $m->base="$m->base/$n"; $x->meta=$m;
+             $m->base=($m->base.(isFold($m->base)?'/base.sdb':((fext($m->base)!=='sdb')?'.sdb':'')));
+             $x->meta=$m;
          };
 
          $h=path::twig($m->base); if(!isee($h)){path::make("$h/");}; $x->mime='application/sql'; $x->path=$m->path;
