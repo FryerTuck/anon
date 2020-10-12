@@ -23,7 +23,8 @@
 
 .DataViewPanl
 {
-    overflow:auto;
+    position:absolute !important;
+    overflow:auto !important;
 }
 
 datagrid.darkSide
