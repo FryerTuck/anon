@@ -15,8 +15,15 @@ namespace Anon;
       function __construct($x)
       {
          $this->vars=knob(); $this->info=knob(['maxLevel'=>2]); $m=$x->meta;
-         if(!isee($m->base)&&fext($m->base)!=='sdb'){$m->base="$m->base/base.sdb"; $x->meta=$m;};
-         $h=path::twig($m->base); if(!isee($h)){path::make("$h/");}; $x->mime='application/sql';
+         $s=stub($m->path,".sdb"); if($s){$m->path=($s[2]); $m->base=($m->base.$s[0].'.sdb');}; unset($s);
+
+         if(!isee($m->base)||fext($m->base)!=='sdb')
+         {
+             $n=(isFile($m->base)?".sdb":"base.sdb");
+             $m->base="$m->base/$n"; $x->meta=$m;
+         };
+
+         $h=path::twig($m->base); if(!isee($h)){path::make("$h/");}; $x->mime='application/sql'; $x->path=$m->path;
          $this->mean=$x; if(!isee($m->base)||(path::size($m->base)<1)){$this->create();}; unset($x);
 
          $x=['table','field']; $l=$m->levl;
@@ -73,7 +80,7 @@ namespace Anon;
       {
          $i=$this->mean; $p=$i->meta->base; if(isFile($p)&&(path::size($p)>0)){return;};
          if(!lock::exists($p)){lock::awaits($p);}; // lock it .. just incase
-         signal::dump("creating new SQLite database: $p");
+         $h=path::twig($p); signal::dump("creating new SQLite database: $p");
          try{$l=(new \SQLite3(path($p), SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE));}
          catch(\Exception $e){$m=$e->getMessage(); lock::remove($p); fail::plug("$m .. `$p`"); exit;};
          if(!isee($p)){$l->close(); lock::remove($p); fail::database("unable to create file: `$p`"); exit;};
