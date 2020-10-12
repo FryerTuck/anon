@@ -259,7 +259,7 @@ namespace Anon;
       {
          expect::repo($dir); if(isText($msg)){$msg=trim($msg);}; expect::text($msg,1); $msg=swap($msg,'"',"`");
          exec::{'git add --all'}($dir); exec::{"git commit --allow-empty -m \"$msg\""}($dir);
-         $hsh=exec::{'941e03c'}(); if(!$psh){return $hsh;};
+         $hsh=exec::{'git rev-parse --short HEAD'}($dir); if(!$psh){return $hsh;};
 
          exec::{"git repack -a -d -f --window=0"}($dir); // repair if needed
          exec::{"git fsck"}($dir); // repair if needed
