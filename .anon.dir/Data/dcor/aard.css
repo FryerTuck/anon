@@ -21,6 +21,10 @@
    background:hsla(0,0%,0%,0.1);
 }
 
+.DataViewPanl
+{
+    overflow:auto;
+}
 
 datagrid.darkSide
 {
