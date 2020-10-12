@@ -14,25 +14,18 @@ namespace Anon;
 
       function __construct($x)
       {
-         $p=$x->path; if(!isee($p)){$tp=((fext($p)==='sdb')?twig($p):$p); if(!isee($tp)){path::make("$tp/");}};
-         $t=path::type($p); $fm="database folder specified, but no `base.sdb file nor `defn.php` file in:";
-         $this->vars=knob(["deja"=>["?"=>0]]); if($t==='none'){$p="$p.sdb";}elseif($t==='fold')
-         {$p="$p/base.sdb"; if(!isee($p)&&!isee("$x->path/defn.php")){fail::sqlite("$fm `$x->path`"); exit;}};
-         $this->mean=$x; $this->mean->mime='application/sql'; $m=$this->mean->meta;
-         $this->info=knob(['maxLevel'=>2,'levlType'=>$x]); $bp=$m->base;
+         $this->vars=knob(); $this->info=knob(['maxLevel'=>2]); $m=$x->meta;
+         if(!isee($m->base)&&fext($m->base)!=='sdb'){$m->base="$m->base/base.sdb"; $x->meta=$m;};
+         $h=path::twig($m->base); if(!isee($h)){path::make("$h/");}; $x->mime='application/sql';
+         $this->mean=$x; if(!isee($m->base)||(path::size($m->base)<1)){$this->create();}; unset($x);
 
-         if(isPath($m->base,[D,W])&&!isee($p)){$bp=($m->base.$m->path); $m->base=$bp; $m->path=''; $this->mean->meta=$m;};
-         if(!isFile($bp)||(path::size($bp)<1))
-         {$this->create();};
-
-         if(!$p){$p=[];}; $x=['table','field'];
-         $l=($m?$m->levl:0); if($l>$this->info->maxLevel){fail('path-depth unreachable');exit;};
-         $this->mean->levl=$l; $p=($m&&$m->path?shaved($m->path,'/'):''); $r=knob();
+         $x=['table','field']; $l=$m->levl;
+         if($l>$this->info->maxLevel){fail::database('path-depth unreachable');exit;};
+         $this->mean->levl=$l; $p=shaved($m->path,'/'); $r=knob();
          if(!$p){$r->basis="dbase"; $r->dbase=path::leaf($m->base);}
          else{$p=frag($p,'/'); foreach($p as $k => $v){$r->{$x[$k]}=$v; $r->basis=$x[$k];}};
 
          $this->mean->refs=$r; if($l<2){return;};
-
 
          // $b=$r->dbase; $t="$r->table"; $q="STATUS where Db = '$b' AND Name = '$t'"; $sp=$this->adjure("SHOW PROCEDURE $q");
          // if(span($sp<1)){$sp=0;}; $fn=$this->adjure("SHOW FUNCTION $q"); if(span($fn<1)){$fn=0;}; if(!$sp&&!$fn){return;};
@@ -79,9 +72,6 @@ namespace Anon;
       function create($d=null)
       {
          $i=$this->mean; $p=$i->meta->base; if(isFile($p)&&(path::size($p)>0)){return;};
-         if(fext($p)!=="sdb"){if(!isee($p)){path::make("$p/");}; $p="$p/base.sdb";};
-         $h=path::twig($p); if(!isFold($h)){path::make("$h/");}; $this->mean->meta->base=$p;
-         if($this->vars->deja->$p){fail::recursion("deja-vu"); exit;}; $this->vars->deja->$p=1;
          if(!lock::exists($p)){lock::awaits($p);}; // lock it .. just incase
          signal::dump("creating new SQLite database: $p");
          try{$l=(new \SQLite3(path($p), SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE));}

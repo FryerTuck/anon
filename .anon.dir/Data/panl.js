@@ -68,7 +68,7 @@ extend(Anon)
       {
          select('#DataTreePanl').insert
          ([
-            {treeview:'', source:'/User/foldMenu', uproot:true, filter:{fext:"sdb,url"}, listen:
+            {treeview:'', source:'/Data/treeMenu', boring:'/User/treeMenu', uproot:true, filter:{fext:"sdb,url"}, listen:
             {
                'LeftClick':function(evnt)
                {

@@ -133,7 +133,7 @@ namespace Anon;
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    function info($p)
    {
-      if(!is_string($p)){return;}; if(strpos($p,'/')===false){return;}; $p=isee($p); if(!$p){return;};
+      if(!is_string($p)){return;}; $p=isee($p); if(!$p){return;};
       $s=(is_link($p)?lstat($p):stat($p)); clearstatcache(true); if(!$s){return;}; $r=knob($s);
       if(!$r->ctime){$r->ctime=($r->mtime?$r->mtime:0);}; if(!$r->mtime){$r->mtime=$r->ctime;};
       return $r;

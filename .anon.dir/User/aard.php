@@ -203,7 +203,7 @@ namespace Anon;
          $v=knob($_POST); $h=$v->root; if(!$h){$h='~';};
          if(arg($h)->startsWith('~')){$u=user('name'); $h="/User/data/$u/home";};
 
-         $r=path::tree($h); ekko($r);
+         $r=path::tree($h,3); ekko($r);
       }
 
 

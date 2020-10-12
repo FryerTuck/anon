@@ -988,10 +988,11 @@ namespace Anon;
 
          foreach($l as $x => $i)
          {
-            $p=crop("$h/$i"); if(isin($p,$omit)){continue;}
+            $p=crop("$h/$i"); if(isin($p,$omit)||!isee($p)){continue;}
             // $p=crop(('/'.lshave("$h/$i",'//')));
             // $p=crop("$h/$i");
-            $t=(isFile($p)?'file':(isFold($p)?'fold':'link')); $fx=self::type($p); $fs=self::size($p); $mt=mime($p);
+            $t=(isFile($p)?'file':(isFold($p)?'fold':'link'));
+            $fx=self::type($p); $fs=self::size($p); $mt=mime($p);
             if(isKnob($q->limit)&&$q->limit->type&&!isin($q->limit->type,$t)){continue;};
             $xp=isee($p); $pm=($xp?substr(sprintf('%o',fileperms($xp)),-4):null);
             $o=knob(['repo'=>null,'path'=>$p,'name'=>$i,'mime'=>$mt,'type'=>$t,'size'=>$fs,'time'=>info($p)->mtime,'mode'=>$pm,'levl'=>$levl,'data'=>null]);
@@ -1006,7 +1007,7 @@ namespace Anon;
             }
             elseif(($t==='fold')&&$q&&$q->fetch&&isin($q->fetch,'data'))
             {
-               if($rpo&&(span($repo)<1)){$repo=Repo::status($p); $o->repo=knob(['host'=>$repo->host,'head'=>$repo->head]); $repo=$repo->body;};
+               if($rpo&&(span($repo)<1)){$repo=Repo::status($p); if(isKnob($repo)){$o->repo=knob(['host'=>$repo->host,'head'=>$repo->head]); $repo=$repo->body;}};
                if(isKnob($q->limit)&&is_int($q->limit->levl)&&($levl>$q->limit->levl)){$o->data=null;}
                else{$o->data=self::ogle($p,$q,$repo,($levl+1));};
             }
@@ -1031,7 +1032,7 @@ namespace Anon;
          ([
             using => $h,
             fetch => self::cols(),
-            limit => "data: fold",
+            limit => "data: fold\nlevl: $l",
          ]);
 
          return $z;

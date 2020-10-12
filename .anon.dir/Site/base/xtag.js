@@ -355,9 +355,9 @@ extend(custom.domtag)
             if(s!='open'){return};
 
             l=itm.info.levl; d=(!!itm.draggable); e=(!!itm.info.root.feedable); r=itm.info.repo; if(r){r=r.fork};
-            f=itm.select('>'); f.innerHTML='';
+            f=itm.select('>'); //f.innerHTML='';
 
-            if(itm.info.type=="fold"){purl('/User/foldMenu',{path:itm.info.path},(r)=>
+            if((itm.info.type=="fold")&&(f.childNodes.length<1)){purl('/User/foldMenu',{path:itm.info.path},(r)=>
             {
                if(!isJson(r.body))
                {dump(r.body); alert("got non-json response, see console"); return};
@@ -410,11 +410,13 @@ extend(custom.domtag)
 
       n.sprout = function(into,levl,drgs,eats,fork)
       {
+
          if(isNode(into)||!isKnob(into)){return}; if(!into.type){into.type="file"}; if(!into.mime){into.mime="auto/undefined"};
          let slf = this; let pth=into.path; let lib=slf.status.mime; levl+=1; let ext = into.mime.split('/')[0];
          let val=into.name; let tpe=into.type; let kds=((tpe=='fold')?into.data:(isin(['plug','dbase','table'],tpe)?[]:VOID));
 
-         if(tpe=='fold'){delete into.data}; if(!!kds&&!slf.status.fold[pth]){slf.status.fold[pth]='shut'};
+         if(tpe=='fold'){delete into.data};
+         if(!!kds&&!slf.status.fold[pth]){slf.status.fold[pth]='shut'};
 
          let aro = (!kds?VOID:('chevron-'+((slf.status.fold[pth]=='shut')?'right':'down')));
              aro = {i:('.icon-'+(kds?aro:"primitive-dot"))}; if(!kds){aro.style={opacity:0.2}};

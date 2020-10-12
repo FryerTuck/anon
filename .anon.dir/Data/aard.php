@@ -10,13 +10,14 @@ class Data
 
    private static function dataTree($lnk,$flt=null,$lvl=0)
    {
+      if($lvl>3){return;};
       if(isFold($lnk))
       {
-         $rsl=listOf(path::ogle([using=>$lnk,fetch=>'name,path,mime,type',limit=>['levl'=>0]]));
+         $rsl=listOf(path::ogle([using=>$lnk,fetch=>'name,path,mime,type',limit=>['levl'=>1]]));
          foreach($rsl as $idx => $obj)
          {
             $p=$obj->path; $x=fext($p);
-            if(isFold($p)){$rsl[$idx]->data=listOf(self::dataTree($p,$flt,0));continue;};
+            if(isFold($p)){$rsl[$idx]->data=listOf(self::dataTree($p,$flt,($lvl+1)));continue;};
             if($x!=="sdb"){continue;};
             $rsl[$idx]->type="dbase"; $rsl[$idx]->mime="application/database"; $rsl[$idx]->path="sqlite::$p";
          };
@@ -57,8 +58,9 @@ class Data
 
    static function treeMenu()
    {
-      permit::fubu("clan:mind,sudo");
-      $cn='name,path,mime,type'; $al=path::ogle([using=>'$',fetch=>$cn,limit=>['type'=>'fold','levl'=>0]]);
+      permit::fubu("clan:mind,sudo"); $cn='name,path,mime,type';
+
+      $al=path::ogle([using=>'$',fetch=>$cn,limit=>['type'=>'fold','levl'=>0]]);
       $ul=path::ogle([using=>'/',fetch=>$cn,limit=>['type'=>'fold','levl'=>0]]);
 
       $sl=array_merge($al,$ul); $rl=[]; foreach($sl as $so)
