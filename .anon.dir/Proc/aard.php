@@ -483,7 +483,7 @@ namespace Anon;
     function htbackup($nt,$at)
     {
         if(!is_string($nt)){$nt="";}; $nt=trim($nt); $at=trim($at);
-        $rt=impose($at,'#~','~#',['IMPOSE'=>$nt]);
+        $rt=impose($at,'#~','~#',['innate_rules'=>$nt]);
         return $rt;
     }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
