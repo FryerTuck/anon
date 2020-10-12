@@ -86,7 +86,7 @@ namespace Anon;
          if(!isee($p)){$l->close(); lock::remove($p); fail::database("unable to create file: `$p`"); exit;};
          if(!$d&&isee("$h/defn.php")){$d=import("$h/defn.php");}; if(isAssa($d)){$d=knob($d);};
          $l->close(); wait(10); lock::remove($p);
-         if(!isKnob($d,1)){signal::dump("no database definition specified for: $p"); return true;};
+         if(!isKnob($d,1)){signal::dump("no database definition specified for: $p"); wait(150); return true;};
          $this->link=(new \SQLite3(path($p), SQLITE3_OPEN_READWRITE));
          $l=$this->link; $tl=keys($this->descry('*'));
          signal::dump("populating new SQLite database: $p"); wait(150);
