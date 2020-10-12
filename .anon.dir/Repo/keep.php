@@ -76,5 +76,5 @@ namespace Anon;
 
 # exec :: keep : run this every time on upkeep
 # -----------------------------------------------------------------------------------------------------------------------------
-    siteLocked(true); Repo::ignore("/",write,conf('Repo/gitIgnor')); siteLocked(false);
+    Repo::ignore("/",write,conf('Repo/gitIgnor'));
 # -----------------------------------------------------------------------------------------------------------------------------
