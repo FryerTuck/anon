@@ -440,7 +440,7 @@ namespace Anon;
                  {
                      if(!isText($tested,1)){$tested=tval($tested,DUMP);};
                      exec::{"git revert --no-commit $hsh..HEAD && git commit"}($tp); // restore
-                     fail::UnitTest("Test `$testFP` did not return :OK:\nThis is what spilled out:\n\n$tested"); exit;
+                     fail::UnitTest("Test `$testFP` did not return `:OK:` .. backup restored.\nThis is what spilled out:\n\n$tested"); exit;
                  }
              }
              else
