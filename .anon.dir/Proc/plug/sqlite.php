@@ -19,7 +19,7 @@ namespace Anon;
 
          if(!isee($m->base)||fext($m->base)!=='sdb')
          {
-             $n=(isFile($m->base)?".sdb":"base.sdb");
+             $n=((isFile($m->base)&&(fext($m->base)!=='sdb'))?".sdb":"base.sdb");
              $m->base="$m->base/$n"; $x->meta=$m;
          };
 
