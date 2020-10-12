@@ -410,6 +410,7 @@ namespace Anon;
          signal::dump("running software update"); // wait for procs to finish
          siteLocked(true); // lock all front-ends to avoid collision
          try{exec::{'git stash && git stash clear'}('/');}catch(\Exception $e){ }; // ignore any changes made in web-root
+         $hsh=Repo::commit($tp,"restore point"); // create a restore commit
          $ht=pget("/.htaccess"); if(isee("$sp/.htaccess")){$ht=pget("/.htaccess");}; // hta may have auto-changed elsewhere
          Repo::update($up,$gr->$cw,'pull','origin');
          $om=conf('Repo/gitIgnor'); // TODO :: stuff to omit
@@ -427,6 +428,17 @@ namespace Anon;
          $ht=htbackup($ht,pget("$/Repo/data/native/anon/.htaccess"));
          path::make("$tp/.htaccess",$ht); // write fused htaccess to test-repo
          Repo::commit($tp,"$uw update",true); // add all & commit changes & push to tank-repo
+
+         $testFP=conf('Proc/unitTest/siteFuse'); if(isee($testFP)&&(fext($testFP)==='php'))
+         {
+             $testFN=requires::path($testFP); $tested=$testFN();
+             if($tested!==OK)
+             {
+                 exec::{"git revert --no-commit $hsh..HEAD && git commit"}($tp); // restore
+                 fail::UnitTest($tested); exit;
+             };
+         };
+
          chmod(ROOTPATH."/.htaccess",0644); // make htaccess writable for now
          try{exec::{'git stash && git stash clear'}('/');}catch(\Exception $e){ }; // clear changes made in web-root since last
          Repo::update('/','pull'); // update web-root by pulling from tank .. any `gitIgnor` should be respected
