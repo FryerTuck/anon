@@ -7,7 +7,7 @@
 
 This is some cheesy introduction pitch to grab your attention; if it's not working yet, grab your favorite beverage, [here's some music](https://youtu.be/LLPoZGX0qZk?t=665) that goes well with what Anon is about, so you can experience a proper introduction.
 
-If you already know about Anon and just want to install, see the [Installation](#Installation) section below. The rest of this introduction is sectioned for 2 demographics: for [non-geeks](#intro-for-non-geeks) and .. the [rest of us](#intro-for-geeks) -but reading both may grant you super-powers, you never know ;-)
+If you already know about Anon and just want to install, see the [Installation](#Installation) section below. The rest of this introduction is sectioned as 2 demographics: for [non-geeks](#intro-for-non-geeks) and .. the [rest of us](#intro-for-geeks) -but reading both may grant you super-powers, you never know ;-)
 
 ![Anon Draw - screenshot](https://i.imgur.com/wr7Ete2.png)
 >*screenshot of Anon's built-in Draw app*
@@ -22,14 +22,14 @@ By design, Anon runs with whatever you have on your website, no need to change y
 With that out the way, here's what Anon brings to the table:
 - **front-end security** -ever heard of [XSS attacks](https://youtu.be/9kaihe5m3Lk)? .. not going into any depth here, but there are many ways to hack website servers -coming in by the front door .. Anon will dismiss such attempts immediately
 - **role-based access** -for authors of your website contents, to **draw**, **code**, and **mind** your graphics, logic and database(s) separately .. the actual names of these "groups" (called: clans) -are exactly that which is in bold .. so now you know Anon is based on the KISS principle, actually CAN-DRY-KIS, but let's leave your cousin out of this .. for now
-- **kanban-based task management** -organized in "tickets" you can drag in columns, it also auto-escalates to the next responsible group in production pipeline when dragged to "done"; tickets come in via email
+- **kanban-based task management** -organized in "tickets" -which come in via email and you can drag/drop these between columns .. Anon auto-escalates tickets to the next responsible group in your (configurable) production pipeline when dropped in "done"
 - **auto-time-tracking** -for anyone authorized to login to your Anon system and do some work, making billing for separate tasks accurate and effortless for the participants
 - **git version control** -for keeping track of changes to your website and automating updates to Anon and your website, though it won't install without confirmation ;-)
 - **authoring tools** -built-in graphics-editor, code-editor and database-management
 
 Now that you know all that, you don't have to stress about *yet another new framework to learn* -because even if you don't "use" it, you still get benefits from installing it.
 
-So even if you're already running [WordPress](https://wordpress.org/) -or [CodeIgniter](https://codeigniter.com/) -or anything really -even your own hand-rolled creation, Anon has your back ;-)
+So even if you're already running [WordPress](https://wordpress.org/), [CodeIgniter](https://codeigniter.com/), (and friends) -or your own hand-rolled creation, Anon has your back ;-)
 
 ![Anon Panel](https://i.imgur.com/WBBouH8.png)
 >*screenshot of Anon's web-overlay panel once logged in .. users can prettify their own private Anon workspace -or customize with JavaScript .. the terminal is drag-resize-able .. or you can hide it in your Custom style css ;-)*
