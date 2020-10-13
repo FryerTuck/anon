@@ -7,7 +7,7 @@
 
 This is some cheesy introduction pitch to grab your attention; if it's not working yet, grab your favorite beverage, [here's some music](https://youtu.be/LLPoZGX0qZk?t=665) that goes well with what Anon is about, so you can experience a proper introduction.
 
-If you already know about Anon and just want to install, see the [Installation](#Installation) section below. The rest of this introduction is sectioned for 2 demographics: for [non-geeks](#intro-for-non--geeks) and .. the [rest of us](#intro-for-non--geeks) -but reading both may grant you super-powers, you never know ;-)
+If you already know about Anon and just want to install, see the [Installation](#Installation) section below. The rest of this introduction is sectioned for 2 demographics: for [non-geeks](#intro-for-geeks) and .. the [rest of us](#intro-for-non-geeks) -but reading both may grant you super-powers, you never know ;-)
 
 ![Anon Draw - screenshot](https://i.imgur.com/wr7Ete2.png)
 >*screenshot of Anon's built-in Draw app*
@@ -36,7 +36,7 @@ So even if you're already running [WordPress](https://wordpress.org/) -or [CodeI
 
 <br>
 
-### Intro for us by us ~ geeks
+### Intro for geeks
 To make a multipurpose framework that doesn't [suck](https://youtu.be/DuB6UjEsY_Y?t=10) is quite a challenge, because everybody has different needs, though also need a framework of some sort, for reasons of conformity in a work-group, project, etc. -although there are trade-offs to consider, like: dependencies, learning-curve, development-time, complexity, developer-experience, user-experience, security, extensibility, scalability, portability, etc.
 
 There will always be some trade-off with any framework, but, if "speed-of-code" is the main concern, pitch a server-upgrade to your client, or project-manager; the things you can do with Anon -and the tools it provides are worth it, you will see why in a bit .. hold onto your seat, sh!t's about to get [blown out](https://youtu.be/wwvcp8gkR0M) the airlock!
