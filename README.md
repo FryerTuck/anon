@@ -41,6 +41,9 @@ To make a multipurpose framework that doesn't [suck](https://youtu.be/DuB6UjEsY_
 
 There will always be some trade-off with any framework, but, if "runtime-speed" is the main concern, pitch a server-upgrade to your client, or project-manager, but Anon is fast enough, however, you can always collaborate and make Anon better. The things you can do with Anon -and the tools it provides are worth it, you will see why in a bit .. hold onto your keyboard, it's about to get [freaky](https://youtu.be/wwvcp8gkR0M)!
 
+![Anon Code](https://i.imgur.com/Kx7lJgt.png)
+>*screenshot of Anon's Code app .. if you read the code in there you'd see that the tilde refers to the current logged in user's home folder, same in the terminal*
+
 ***
 <br><br>
 
