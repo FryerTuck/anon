@@ -53,7 +53,7 @@ namespace Anon;
             $p="/$m/pack.inf"; $p=(isee(COREPATH.$p)?(COREPATH.$p):(isee(ROOTPATH.$p)?(ROOTPATH.$p):null));
             if(!$p){continue;}; $d=knob(dval(pget($p)));
             if(!$d->forClans||!$d->panlIcon||$d->isHidden||$d->ethereal){continue;};
-            if(($d->forClans==='*')||isin($d->forClans,$c)||isin($c,$d->forClans)){$r->$m=$d->panlIcon;};
+            if(($d->forClans==='*')||isin($d->forClans,$c)||isin($c,'sudo')){$r->$m=$d->panlIcon;};
 
          };
          finish('/User/panl.js',['mods'=>$r]);

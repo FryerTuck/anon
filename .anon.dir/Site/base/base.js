@@ -594,6 +594,13 @@
                if(r.body!=OK){fail(r.body)};
             });
          },
+
+
+         pacify:function()
+         {
+             dump("closing SSE listener");
+             server.stream.close(); server.opened=0;
+         },
       },
    });
 
