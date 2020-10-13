@@ -7,7 +7,7 @@
 
 This is some cheesy introduction pitch to grab your attention; if it's not working yet, grab your favorite beverage, [here's some music](https://youtu.be/LLPoZGX0qZk?t=665) that goes well with what Anon is about, so you can experience a proper introduction.
 
-If you already know about Anon and just want to install, see the [Installation](#Installation) section below. The rest of this introduction is sectioned for 2 demographics: for [non-geeks](#intro-for-geeks) and .. the [rest of us](#intro-for-non-geeks) -but reading both may grant you super-powers, you never know ;-)
+If you already know about Anon and just want to install, see the [Installation](#Installation) section below. The rest of this introduction is sectioned for 2 demographics: for [non-geeks](#intro-for-non-geeks) and .. the [rest of us](#intro-for-geeks) -but reading both may grant you super-powers, you never know ;-)
 
 ![Anon Draw - screenshot](https://i.imgur.com/wr7Ete2.png)
 >*screenshot of Anon's built-in Draw app*
@@ -22,7 +22,7 @@ By design, Anon runs with whatever you have on your website, no need to change y
 With that out the way, here's what Anon brings to the table:
 - **front-end security** -ever heard of [XSS attacks](https://youtu.be/9kaihe5m3Lk)? .. not going into any depth here, but there are many ways to hack website servers -coming in by the front door .. Anon will dismiss such attempts immediately
 - **role-based access** -for authors of your website contents, to **draw**, **code**, and **mind** your graphics, logic and database(s) separately .. the actual names of these "groups" (called: clans) -are exactly that which is in bold .. so now you know Anon is based on the KISS principle, actually CAN-DRY-KIS, but let's leave your cousin out of this .. for now
-- **kanban-based task management** -organized in "tickets" you can drag in columns and aut-escalates to the next responsible group in production pipeline; tickets come in via email
+- **kanban-based task management** -organized in "tickets" you can drag in columns, it also auto-escalates to the next responsible group in production pipeline when dragged to "done"; tickets come in via email
 - **auto-time-tracking** -for anyone authorized to login to your Anon system and do some work, making billing for separate tasks accurate and effortless for the participants
 - **git version control** -for keeping track of changes to your website and automating updates to Anon and your website, though it won't install without confirmation ;-)
 - **authoring tools** -built-in graphics-editor, code-editor and database-management
@@ -37,10 +37,9 @@ So even if you're already running [WordPress](https://wordpress.org/) -or [CodeI
 <br>
 
 ### Intro for geeks
-To make a multipurpose framework that doesn't [suck](https://youtu.be/DuB6UjEsY_Y?t=10) is quite a challenge, because everybody has different needs, though also need a framework of some sort, for reasons of conformity in a work-group, project, etc. -although there are trade-offs to consider, like: dependencies, learning-curve, development-time, complexity, developer-experience, user-experience, security, extensibility, scalability, portability, etc.
+To make a multipurpose framework that doesn't [suck](https://youtu.be/DuB6UjEsY_Y?t=10) is quite a challenge, because everybody has different needs, though also need a framework of some sort, for reasons of conformity in a work-group, project, etc. -although there are trade-offs to consider, like: dependencies, learning-curve, development-time, complexity, developer-experience, server/client-machine-workload, user-experience, security, extensibility, scalability, portability, etc.
 
-There will always be some trade-off with any framework, but, if "speed-of-code" is the main concern, pitch a server-upgrade to your client, or project-manager; the things you can do with Anon -and the tools it provides are worth it, you will see why in a bit .. hold onto your seat, sh!t's about to get [blown out](https://youtu.be/wwvcp8gkR0M) the airlock!
-
+There will always be some trade-off with any framework, but, if "runtime-speed" is the main concern, pitch a server-upgrade to your client, or project-manager, but Anon is fast enough, however, you can always collaborate and make Anon better. The things you can do with Anon -and the tools it provides are worth it, you will see why in a bit .. hold onto your keyboard, it's about to get [freaky](https://youtu.be/wwvcp8gkR0M)!
 
 ***
 <br><br>

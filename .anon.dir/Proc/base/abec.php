@@ -1096,8 +1096,8 @@ namespace Anon;
    function durl($d,$m=null)
    {
       if(isText($m,3)&&isin($m,'/')&&is_string($d)){$r=base64_encode($d); return "data:$m;base64,$r";};
-      $p=isee($d); $m=mime($p); if(!$p||!$m){return;}; // invalid path or invalid mime
-      $r=base64_encode(isFold($p)?json_encode(pget($p)):import($p,vars(crop($p))));
+      $p=crop(isee($d)); $m=mime($p); if(!$p||!$m){return;}; // invalid path or invalid mime
+      $r=base64_encode(isFold($p)?json_encode(pget($p)):import($p,vars($p)));
       return "data:$m;base64,$r"; // you get access to ENV variables related to any path ref ;)
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
@@ -1230,9 +1230,9 @@ namespace Anon;
    function import($a,$v=null,$ni=null)
    {
       if(!is_string($a)){return;}; $p=isee((is_funnic($a)?"/$a":$a)); if(!$p){return;}; if(!is_object($v)){$v=knob($v);};
-      if(is_dir($p)){$i=path::indx($p); if($i){$p="$p/$i";}else{return;}}; $x=fext($p); if(!$x){return;}; unset($i);
+      if(is_dir($p)){$i=path::indx($p); if($i){$p="$p/$i";}else{return;}}; $x=fext($p); if(!$x){return pget($p);}; unset($i);
 
-      if(!in_array($x,['php','htm','js','md','css','txt','html','json'])){return;};
+      if(!in_array($x,['php','htm','js','md','css','txt','html','json'])){return pget($p);};
       if(!defn('CTRLKEYS')){$y=conf('User/viewConf'); defn(['CTRLKEYS'=>$y->toggleUserPanl]);};
       if($x!=='php') // htm js md txt json
       {
