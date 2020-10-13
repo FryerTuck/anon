@@ -57,7 +57,7 @@
          delete:function(b,a){return Cookies.remove(b,{path:a||this.config.path,domain:this.config.domain})},
          select:function(b, r,v,t)
          {
-            if(b=='*'){b=VOID}; r=Cookies.get(b); if(isVoid(r)){return}; if((b==VOID)){try{v=JSON.parse(atob(r))}catch(e){v=r}; return v};
+            if(b=='*'){b=VOID}; r=Cookies.get(b); if(isVoid(r)){return}; if((b!=VOID)){try{v=JSON.parse(atob(r))}catch(e){v=r}; return v};
             r.each((v,k)=>{try{t=JSON.parse(atob(v))}catch(e){t=v}; r[k]=t;}); return r;
          },
       }
