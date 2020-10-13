@@ -45,7 +45,10 @@ namespace Anon;
 
       unset($ul,$un); $ul=pget('$/User/data'); foreach($ul as $un)
       {
-          if(!isee("$/User/data/$un/home")){path::make("$/User/data/$un/home/");};
+          if(isee("$/User/data/$un/home")){continue;}; // home exists
+          path::make("$/User/data/$un/home/");
+          path::make("$/User/data/$un/home/Custom/");
+          path::make("$/User/data/$un/home/Shared/");
       };
 
       if(lock::exists("upkeep")||!userDoes("lead sudo gang")){return;}; // .. less is more ;)
