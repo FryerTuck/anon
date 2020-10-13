@@ -20,9 +20,19 @@ Whether you are a business owner, CEO, project-manager, or just want to know wha
 By design, Anon runs with whatever you have on your website, no need to change your existing site -or framework at all. Anon does not require any database access and runs without the visitor knowing about it.
 
 With that out the way, here's what Anon brings to the table:
-- **front-end security** -ever heard of [XSS attacks](https://youtu.be/9kaihe5m3Lk)? .. not going into any depth here, but there are many ways to hack website servers -coming in by the front door .. Anon will dismiss such attempts immediately
+
+
+#### Front-end Security
+Ever heard of [XSS attacks](https://youtu.be/9kaihe5m3Lk)? .. short video, but it covers this topic very basically. Even though you may be under the impression that you only need to worry about the back-end; there are many frameworks that work in real-time client-server communication -and the server expects this to be secure if, e.g a file was requested by itself -serving a web-page; but this is simply not true as the "Referrer" can be spoofed.  , but there are many ways to hack website servers -coming in by the front door .. Anon will dismiss such attempts immediately
+
+
 - **role-based access** -for authors of your website contents, to **draw**, **code**, and **mind** your graphics, logic and database(s) separately .. the actual names of these "groups" (called: clans) -are exactly that which is in bold .. so now you know Anon is based on the KISS principle, actually CAN-DRY-KIS, but let's leave your cousin out of this .. for now
-- **kanban-based task management** -organized in "tickets" -which come in via email and you can drag/drop these between columns .. Anon auto-escalates tickets to the next responsible group in your (configurable) production pipeline when dropped in "done"
+
+
+
+#### Kan-ban -based Task Management
+- **** -organized in "tickets" with 4 simple columns: TODO, BUSY, HOLD, DONE; and even though this may seem little; your incoming-job-handling in your business has to have a handling pile-line in staff, or prosess-flow of how you want to serve your customers; from basic "Handy-Man", through to T-Shirt printing and software development alike; now you have it on you everywhere you go; Anon locks itself out when the user is not responding -and logs the time, for whichever billing you may have in mind;
+- **simplified billing** -
 - **auto-time-tracking** -for anyone authorized to login to your Anon system and do some work, making billing for separate tasks accurate and effortless for the participants
 - **git version control** -for keeping track of changes to your website and automating updates to Anon and your website, though it won't install without confirmation ;-)
 - **authoring tools** -built-in graphics-editor, code-editor and database-management

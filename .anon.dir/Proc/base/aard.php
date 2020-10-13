@@ -757,7 +757,7 @@ namespace Anon;
    if(envi('ROOTPATH DBUGPATH HOST SCHEME BOTMATCH')!==1){header("HTTP/1.1 424 Failed Dependency - server vars"); die();}; // bad vars
    $d=envi('ROOTPATH'); $s=skey(); $u=''; $c=envi('COREPATH'); //$c=explode('/',envi('COREPATH')); $c=array_pop($c);
    $g=envi('DBUGPATH'); $b=envi('HREFBASE'); $_SERVER['BASEPATH']=($b?$b:$d);
-   $_SERVER['DBUGPATH']=("$".($b?lshave($g,"$b/.anon.dir"):lshave($g,".anon.dir"))); unset($g);
+   $_SERVER['DBUGPATH']=($b?lshave($g,"$b/.anon.dir"):lshave($g,".anon.dir")); unset($g);
    if($s){$s="$c/Proc/temp/sesn/$s/USER"; if(file_exists($s)){$u=file_get_contents($s);}};
    if(!$u){$u='anonymous';}; $_SERVER['USERNAME']=$u; $_SERVER['USERPATH']="$c/User/data/$u/home";
    if(!envi('ACCEPT')){$_SERVER['ACCEPT']=envi('CONTENT_TYPE');};
