@@ -48,7 +48,11 @@ namespace Anon;
       {
       # cond :: init : protect the framework core and limit browsing freedom according to config
       # ---------------------------------------------------------------------------------------------------------------------------------------
-         if(NAVIPATH===DBUGPATH){done(import(DBUGPATH));}; // failing gracefully .. server vars available in dbug
+         if(NAVIPATH===DBUGPATH)
+         {
+             if(facing("BOT API SSE")){finish(503);};
+             done(import(DBUGPATH));
+         }; // failing gracefully .. server vars available in dbug
 
          self::$vars=knob(['faceList'=>['API','BOT','DPR','GUI','SSE']]);
 
