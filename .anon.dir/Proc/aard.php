@@ -432,8 +432,8 @@ namespace Anon;
 
          $testFP=conf('Proc/unitTest/siteFuse'); if(isee($testFP)&&(fext($testFP)==='php'))
          {
-             $testFN=requires::path($testFP); if(!isFunc($testFN)){};
-             if(isFunc($tested))
+             $testFN=requires::path($testFP);
+             if(isFunc($testFN))
              {
                  signal::dump("running UnitTest: `$testFP`");
                  $tested=$testFN(); if($tested!==OK)
