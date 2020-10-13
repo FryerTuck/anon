@@ -48,12 +48,12 @@ namespace Anon;
 
 
 
-# cond :: RECEIVER : check if an alternative handler is defined .. best attempt
+# cond :: RECEIVER : check if an alternative handler is defined .. best attempt .. `nona` = "non-anon"
 # ---------------------------------------------------------------------------------------------------------------------------------------------
    $ah=kuki("RECEIVER"); if(!$ah&&isee("/index.php")){$ah='nona';}else
    {
-       $ht=explode('# === ANONDONE === #',pget('/.htaccess')); $ht=array_pop($ht);
-       $tl=['^(.*)$','.*','.','^']; $ht=explode("\n",$ht); foreach($ht as $hl)
+       $ht=explode('# ((̲̅ ̲̅(̲̅C̲̅r̲̅a̲̅y̲̅o̲̅l̲̲̅̅a̲̅( ̲̅((>',pget('/.htaccess')); $ht=array_pop($ht);
+       $tl=['^(.*)$','(.*)','^.*$','.*','.','^']; $ht=explode("\n",$ht); foreach($ht as $hl)
        {
            if($ah){break;}; $hl=trim($hl);
            if((strlen($hl)<1)||($hl[0]==='#')||(strpos($hl,'RewriteRule')===false)){continue;};
