@@ -9,6 +9,11 @@ This is some cheesy introduction pitch to grab your attention; if it's not worki
 
 If you already know about Anon and just want to install, see the [Installation](#Installation) section below. The rest of this introduction is sectioned for 2 demographics: for [non-geeks](#for-non-geeks) and .. the [rest of us](for-us-by-us) -but reading both may grant you super-powers, you never know ;-)
 
+
+![Anonymous](https://i.imgur.com/HLGKcTT.jpg)
+>*as a white-label product, you can name Anon anything you want .. it's yours*
+
+
 <br>
 
 ### For non-geeks
@@ -25,7 +30,7 @@ With that out the way, here's what Anon brings to the table:
 - **authoring tools** -built-in graphics-editor, code-editor and database-management
 
 
-![Anon Draw - screenshot](https://imgur.com/a/x9EV8Fg)
+![Anon Draw - screenshot](https://i.imgur.com/wr7Ete2.png)
 >*screenshot of Anon's built-in Draw app*
 
 

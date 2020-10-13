@@ -192,7 +192,7 @@ namespace Anon;
          };
 
          if(!isee("$p/$a")){ekko::head(['Content-Type'=>mime("$p/$a")]); die('/* one love */');};
-         finish($p);
+         finish("$p/$a");
       }
 
 
