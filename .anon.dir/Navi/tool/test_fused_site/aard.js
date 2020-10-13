@@ -8,11 +8,11 @@ extend(Anon.Navi.tool)
     test_fused_site:function(tab, panl)
     {
         // Anon.Navi.vars.RECEIVER=cookie.select(`RECEIVER`); cookie.update(`RECEIVER`,`anon`);
-        cookie.create(`FUSETEST`,`yes`);
+        cookie.create(`ANONFUSETEST`,`yes`);
         select('#NaviTabber').listen('close',function()
         {
             // cookie.update(`RECEIVER`,Anon.Navi.vars.RECEIVER);
-            cookie.delete(`FUSETEST`);
+            cookie.delete(`ANONFUSETEST`);
         });
 
         panl=tab.body.select(`.NaviViewPanl`)[0];
