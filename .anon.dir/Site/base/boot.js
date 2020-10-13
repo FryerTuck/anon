@@ -296,7 +296,8 @@
          (select(".modalBox")||[]).forEach((n)=>
          {
             if(n.reposi){return};
-            let r,x,y; r=rectOf(n); x=r.x; y=r.y; n.reclan("cenmid:posAbs");
+            let r,x,y; r=rectOf(n); x=r.x; y=r.y;
+            if(!isFrac((x/2))){x++;}; n.reclan("cenmid:posAbs");
             x=Math.floor(x); y=Math.floor(y); n.style.left=`${x}px`; n.style.top=`${y}px`;
             n.reposi=1;
          });
