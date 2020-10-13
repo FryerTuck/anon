@@ -63,8 +63,8 @@ extend(Anon)
 ({
    Navi:
    {
-      vars:{}.
-      
+      vars:{},
+
       anew:function(cbf)
       {
       },
