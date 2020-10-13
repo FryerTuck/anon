@@ -43,9 +43,14 @@ namespace Anon;
          // if(!path::indx('/')){path::copy('$/Site/dcor/README.md','/README.md');};
       };
 
+      unset($ul,$un); $ul=pget('$/User/data'); foreach($ul as $un)
+      {
+          if(!isee("$/User/data/$un/home")){path::make("$/User/data/$un/home/");};
+      };
+
       if(lock::exists("upkeep")||!userDoes("lead sudo gang")){return;}; // .. less is more ;)
       lock::create("upkeep");
-      signal::dump("running upkeep"); allStemRun("keep.php"); 
+      signal::dump("running upkeep"); allStemRun("keep.php");
       lock::remove("upkeep"); // lock upkeep and run keep for all stems
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
