@@ -48,6 +48,8 @@ namespace Anon;
       {
       # cond :: init : protect the framework core and limit browsing freedom according to config
       # ---------------------------------------------------------------------------------------------------------------------------------------
+         if(NAVIPATH===DBUGPATH){done(import(DBUGPATH));}; // failing gracefully .. server vars available in dbug
+
          self::$vars=knob(['faceList'=>['API','BOT','DPR','GUI','SSE']]);
 
          if((getted('ANONFUSETEST')!==null)&&!userdoes('work,lead,sudo')){finish(403);};
