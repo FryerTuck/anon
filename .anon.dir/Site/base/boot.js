@@ -292,24 +292,11 @@
    {
       listen("tick",function()
       {
-         if(MAIN.guiResizing.busy){return};
-         (select(".modalBox")||[]).forEach((n)=>
-         {
-            if(n.reposi){return};
-            let r,x,y; r=rectOf(n); x=r.x; y=r.y;
-            if(!isFrac((x/2))){x-=0.5;}; n.reclan("cenmid:posAbs");
-            n.style.left=`${x}px`; n.style.top=`${y}px`;
-            n.reposi=1;
-         });
       });
 
 
       listen("resizeInit",function()
       {
-         (select(".modalBox")||[]).forEach((n)=>
-         {
-            n.reclan("posAbs:cenmid");
-         });
       });
 
 
