@@ -14,7 +14,7 @@ extend(Anon.Navi.tool)
             cookie.update(`RECEIVER`,Anon.Navi.vars.RECEIVER);
             cookie.delete(`FUSETEST`);
         });
-
+dump("-- YOHOO ~~ !!");
         panl=tab.body.select(`.NaviViewPanl`)[0];
         panl.insert({panl:`.posAbs`
         [
