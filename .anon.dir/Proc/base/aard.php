@@ -86,6 +86,7 @@ namespace Anon;
    function done($sb=true)
    {
       defn(['HALT'=>1]); if($sb===true){bufrSend(); die();}; if(($sb===null)||($sb===false)||($sb==='')){bufrVoid(); die();};
+      $pt=0; if(!is_string($sb)){$sb=tval($sb); $pt=1;};
 
       if(!headers_sent())
       {
@@ -95,10 +96,10 @@ namespace Anon;
          header("Expires: Sat, 26 Jul 1997 05:00:00 GMT");
          header("Pragma: no-cache"); // HTTP/1.0
          header("Last-Modified: ".gmdate("D, d M Y H:i:s")." GMT");
-         header('Content-Type: text/plain');
+         if($pt){header('Content-Type: text/plain');};
       };
 
-      if(!is_string($sb)){$sb=tval($sb);}; bufrVoid(); echo $sb; bufrSend(); die();
+      bufrVoid(); echo $sb; bufrSend(); die();
    };
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
