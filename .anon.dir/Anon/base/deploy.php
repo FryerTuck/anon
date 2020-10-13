@@ -163,8 +163,8 @@ $html=ob_get_clean();
 
     function hbkp($nt,$at)
     {
-        if(!is_string($nt)){$nt="";}; $nt=trim($nt); $at=trim($at);
-        $rt=explode('#~ innate_rules ~#',$at); $rt=implode($nt,$rt);
+        if(!is_string($nt)){$nt="";}; $nt=trim($nt); $at=trim($at); $dl="# ((̲̅ ̲̅(̲̅C̲̅r̲̅a̲̅y̲̅o̲̅l̲̲̅̅a̲̅( ̲̅((>";
+        $pt=explode($dl,$nt); $nt=array_pop($pt); $rt=($at."\n".trim($nt));
         return $rt;
     }
 
