@@ -356,7 +356,7 @@
               body:[{panl:
               [
                   {h2:`${d.from} Updates available`},
-                  {b:`d.mesg<br><br>`},
+                  {b:`${d.mesg}<br><br>`},
                   {pre:d.diff},
                   {p:`<br>Would you like to install now?`},
               ]}],
