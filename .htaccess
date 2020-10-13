@@ -67,8 +67,8 @@
     RewriteRule ^(.*)$ - [R=404,L]
 
     RewriteCond %{ENV:ANONINDX} !^$
-    RewriteCond %{HTTP_COOKIE} !RECEIVER=anon
-    RewriteCond %{HTTP_COOKIE} !RECEIVER=nona
+    RewriteCond %{HTTP_COOKIE} !RECEIVER=anon;?
+    RewriteCond %{HTTP_COOKIE} !RECEIVER=nona;?
     RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
 
     RewriteCond %{ENV:ANONINDX} !^$
@@ -94,7 +94,7 @@
     RewriteRule ^(.*)$ /.anon.dir/Repo/data/native/fuse/ [L,QSA]
 
     RewriteCond %{ENV:ANONINDX} !^$
-    RewriteCond %{HTTP_COOKIE} ANONFUSETEST=yes
+    RewriteCond %{HTTP_COOKIE} ANONFUSETEST=yes;?
     RewriteCond %{REQUEST_URI} !/.anon.dir/Repo/data/native/fuse/
     RewriteRule ^(.*)$ /.anon.dir/Repo/data/native/fuse/ [L,QSA]
 # -----------------------------------------------------------------------------------------------------------------------------
