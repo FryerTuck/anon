@@ -92,11 +92,6 @@
     RewriteCond %{QUERY_STRING} (^|&)ANONFUSETEST($|&)
     RewriteCond %{REQUEST_URI} !/.anon.dir/Repo/data/native/fuse/
     RewriteRule ^(.*)$ /.anon.dir/Repo/data/native/fuse/ [L,QSA]
-
-    RewriteCond %{ENV:ANONINDX} !^$
-    RewriteCond %{HTTP_COOKIE} ANONFUSETEST=yes;?
-    RewriteCond %{REQUEST_URI} !/.anon.dir/Repo/data/native/fuse/
-    RewriteRule ^(.*)$ /.anon.dir/Repo/data/native/fuse/ [L,QSA]
 # -----------------------------------------------------------------------------------------------------------------------------
 
 

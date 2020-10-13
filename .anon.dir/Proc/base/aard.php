@@ -421,6 +421,11 @@ namespace Anon;
    {
       if(!is_string($n)||(strlen($n)<1)){return;}; if(!isset($_POST[$n])){return;}; return $_POST[$n];
    };
+
+   function getted($n)
+   {
+      if(!is_string($n)||(strlen($n)<1)){return;}; if(!isset($_GET[$n])){return;}; return $_POST[$n];
+   };
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
 

@@ -50,6 +50,8 @@ namespace Anon;
       # ---------------------------------------------------------------------------------------------------------------------------------------
          self::$vars=knob(['faceList'=>['API','BOT','DPR','GUI','SSE']]);
 
+         if((getted('ANONFUSETEST')!==null)&&!userdoes('work,lead,sudo')){finish(403);};
+
          $s=test::{NAVIPATH}(conf('Proc/redirect')); // get redirect config for the current web URL
          if(is_int($s)&&($s!==200)){finish($s);}; // explicitly configured to echo status
          if($s&&!is_int($s)){finish($s);}; // explicitly configured to bypass any stem/module controllers
