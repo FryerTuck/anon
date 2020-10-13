@@ -424,7 +424,7 @@ namespace Anon;
 
    function getted($n)
    {
-      if(!is_string($n)||(strlen($n)<1)){return;}; if(!isset($_GET[$n])){return;}; return $_POST[$n];
+      if(!is_string($n)||(strlen($n)<1)){return;}; if(!isset($_GET[$n])){return;}; return $_GET[$n];
    };
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
