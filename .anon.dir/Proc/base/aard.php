@@ -931,7 +931,7 @@ namespace Anon;
    };
 
    $_SERVER['INTRFACE']=$i; defn(['USERSKEY'=>$k]);
-   if(!(envi("MADEFUBU")&&facing('API'))||!$MM){$_SERVER['UPKEEPER']='';};
+   if(!(envi("MADEFUBU")&&facing('API SSE'))||!$MM){$_SERVER['UPKEEPER']='';};
    // upkeep is only available for API-calls made FUBU -and when autoMail has been set
 
    $vl=array_keys(get_defined_vars());

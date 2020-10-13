@@ -329,12 +329,12 @@
           id="#AnonSystemLock"; el=select(id);
           if(d=="end")
           {
-              server.vivify();
+              // server.vivify();
               remove(el); return
           };
 
           if(!!el){dump(`AnonSystemLock already applied .. ignoring ${lm}`); return};
-          server.pacify();
+          // server.pacify();
           if(!isin(d,":")){d=(d+':system locked')}; pt=stub(d,":"); lm=pt[2]; d=pt[0];
           document.body.insert({div:`${id} .layr`,$:
           [

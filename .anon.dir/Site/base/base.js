@@ -598,8 +598,8 @@
 
          pacify:function()
          {
-             dump("closing SSE listener");
              server.stream.close(); server.opened=0;
+             dump("SSE pacified");
          },
       },
    });
