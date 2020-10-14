@@ -164,7 +164,8 @@ After installing Anon in a clean `web-root`, there should be 1 visible item, and
 - `.anon.dir` - the directory holding all of Anon's ***Stems*** (we'll get to those in a bit) -though the `Proc` folder (stem) in there holds Anon's core libraries.
 - `.git` - local web-root repository .. if it already existed before Anon was deployed in your web-root, no sweat, this is actually grand because Anon then uses that repository's `origin` as origin of your native ***Site*** repo, so you don't have to configure it, it happens automatically upon deploy, before Anon deletes the .git, but all your files and folders remain intact.
 
-
+![AnonClean](https://i.imgur.com/gSkCe6s.png)
+>*screenshot - after clean install .. on the right-hand view: "hidden" files are not visible, both views show the same folder .. this makes it easy to manually manage your structure without the fear of deleting any Anon files by accident, just keep "show-hidden-files" off and you'll be fine*
 
 <br>
 
