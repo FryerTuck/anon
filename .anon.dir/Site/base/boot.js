@@ -370,6 +370,7 @@
                           Busy.edit("SoftwareUpdate",100); r=r.body;
                           if(r==OK){fail("SoftwareUpdate: "+r); s.root.exit(); return;};
                           popAlert(`thumbs-up :: web-root repo updated : New updates are installed and running live.`);
+                          s.root.exit();
                       });
                   }},
                   {butn:`.auto`, text:"Maybe Later", onclick:function()
