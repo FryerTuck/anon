@@ -407,7 +407,7 @@ namespace Anon;
 
          if(siteLocked()){signal::dump("update denied .. AnonSystemLock is active"); return OK;};
          if(lock::exists($ln)){return OK;}; lock::awaits($ln);
-         signal::dump("running software update"); // wait for procs to finish
+         signal::dump("running $pv->type software update"); // wait for procs to finish
          siteLocked(true); // lock all front-ends to avoid collision
          try{exec::{'git stash && git stash clear'}('/');}catch(\Exception $e){ }; // ignore any changes made in web-root
          $hsh=Repo::commit($tp,"restore point"); // create a restore commit
@@ -427,7 +427,7 @@ namespace Anon;
 
          // path::make($mp,$pw);
          $ht=htbackup($ht,pget("$/Repo/data/native/anon/.htaccess"));
-         path::make("$tp/.htaccess",$ht); // write fused htaccess to test-repo
+         path::make("$tp/.htaccess",$ht); // write fused htaccess to fuse-repo
          Repo::commit($tp,"$uw update",true); // add all & commit changes & push to tank-repo
 
          $testFP=conf('Proc/unitTest/siteFuse'); if(isee($testFP)&&(fext($testFP)==='php'))
@@ -445,6 +445,12 @@ namespace Anon;
              }
              else
              {signal::dump("ignored UnitTest: `$testFP` .. expected it to export a function");};
+         };
+
+         if($pv->type==='test')
+         {
+             siteLocked(false); lock::remove($ln);
+             return OK;
          };
 
          chmod(ROOTPATH."/.htaccess",0644); // make htaccess writable for now

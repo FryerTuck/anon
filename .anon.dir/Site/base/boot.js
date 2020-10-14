@@ -338,7 +338,8 @@
       listen("SoftwareUpdate",function(d)
       {
           d=d.detail; if(d==OK){return};
-          if(!isJson(d)){console.error(`SoftwareUpdate fail: ${d}`); return}; d=decode.jso(d);
+          if(!isJson(d)){console.error(`SoftwareUpdate fail: ${d}`); return};
+          d=decode.jso(d);
           popModal(`cog :: New Updates`)
           ({
               body:[{panl:
@@ -346,18 +347,29 @@
                   {h2:`${d.from} Updates available`},
                   {b:`${d.mesg}<br><br>`},
                   {pre:d.diff},
-                  {p:`<br>Would you like to install now?`},
+                  {p:`<br>You can merge this for testing, or install now.`},
               ]}],
               foot:
               [
-                  {butn:`.cool`, text:"Update Now", onclick:function(e,s)
+                  {butn:`.good`, text:"Merge", onclick:function(e,s)
                   {
-                      Busy.edit("SoftwareUpdate",0); s=this;
+                      Busy.edit("SoftwareUpdate",0); s=this; d.type="test";
                       purl("/Proc/update",d,(r)=>
                       {
                           Busy.edit("SoftwareUpdate",100); r=r.body;
-                          if(r==OK){s.root.exit(); return};
-                          fail("SoftwareUpdate: "+r); s.root.exit();
+                          if(r==OK){fail("SoftwareUpdate: "+r); s.root.exit(); return;};
+                          popAlert(`thumbs-up :: fuse-repo updated : New updates are available for testing, not live.`);
+                          s.root.exit();
+                      });
+                  }},
+                  {butn:`.warn`, text:"Update Now", onclick:function(e,s)
+                  {
+                      Busy.edit("SoftwareUpdate",0); s=this; d.type="full";
+                      purl("/Proc/update",d,(r)=>
+                      {
+                          Busy.edit("SoftwareUpdate",100); r=r.body;
+                          if(r==OK){fail("SoftwareUpdate: "+r); s.root.exit(); return;};
+                          popAlert(`thumbs-up :: web-root repo updated : New updates are installed and running live.`);
                       });
                   }},
                   {butn:`.auto`, text:"Maybe Later", onclick:function()
