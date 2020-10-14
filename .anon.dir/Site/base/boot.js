@@ -357,18 +357,18 @@
                       purl("/Proc/update",d,(r)=>
                       {
                           Busy.edit("SoftwareUpdate",100); r=r.body;
-                          if(r==OK){fail("SoftwareUpdate: "+r); s.root.exit(); return;};
+                          if(r!=OK){fail("SoftwareUpdate: "+r); s.root.exit(); return;};
                           popAlert(`thumbs-up :: fuse-repo updated : New updates are available for testing, not live.`);
                           s.root.exit();
                       });
                   }},
-                  {butn:`.warn`, text:"Update Now", onclick:function(e,s)
+                  {butn:`.warn`, text:"Install", onclick:function(e,s)
                   {
                       Busy.edit("SoftwareUpdate",0); s=this; d.type="full";
                       purl("/Proc/update",d,(r)=>
                       {
                           Busy.edit("SoftwareUpdate",100); r=r.body;
-                          if(r==OK){fail("SoftwareUpdate: "+r); s.root.exit(); return;};
+                          if(r!=OK){fail("SoftwareUpdate: "+r); s.root.exit(); return;};
                           popAlert(`thumbs-up :: web-root repo updated : New updates are installed and running live.`);
                           s.root.exit();
                       });
