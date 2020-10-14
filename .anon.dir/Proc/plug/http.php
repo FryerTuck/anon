@@ -64,7 +64,8 @@ namespace Anon;
           $ha=[]; foreach($ho as $hk => $hv){$ha[]="$hk: $hv";}; curl_setopt($L,CURLOPT_HTTPHEADER,$ha);
 
 
-          $r=curl_exec($L); $e=null; if(!$r){$x=curl_error($L); if($x){$e=$x;}}; if($e){fail::http($e);return;};
+          $r=curl_exec($L); $e=null; if(!$r){$x=curl_error($L); if($x){$e=$x;}};
+          if($e){$this->pacify(); fail::http($e);return;};
           $i=curl_getinfo($L); $this->pacify(); $d="\r\n\r\n"; $s=stub($r,$d);
           if($s&&isin($s[0],'100 Continue')){$s=stub($s[2],$d);};
           $b=$s[2]; $l=frag(trim($s[0]),"\n"); $h=knob(); $pf=$co->POSTFIELDS;
@@ -89,7 +90,7 @@ namespace Anon;
 
       function pacify()
       {
-          if(!$this->link){return;}; curl_close($this->link); unset($this->link);
+          if(!$this->link){return;}; curl_close($this->link); $this->link=null;
       }
 
 
@@ -124,7 +125,7 @@ namespace Anon;
           $pd=json_decode(json_encode($a->write),true); unset($a->write); $qp=$a->param; $mt='application/json';
           if(isDeep($pd)){$pd=((isKnob($qp)&&($qp->{'Content-Type'}===$mt))?json_encode($pd):http_build_query($pd));};
           $a->using->POSTFIELDS=$pd; $r=$this->adjure($a);
-          return $r;
+          $this->pacify(); return $r;
       }
 
 

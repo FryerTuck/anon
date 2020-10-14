@@ -52,8 +52,11 @@ namespace Anon;
          ]);
          // dump("sent:\n",[$fn,$al],"\n\nreceived:\n",$r,"\n\n");
 
+         $i=$r->info; if(($i->http_code===419)&&($rt<=36))
+         {wait(2000); $r=$this->adjure($fn,$al, $rt); return $r;};
+
          $r=$r->body; if((!$r||isin($r,["503 Service Unavailable"]))&&($rt<3))
-         {wait(250); $r=$this->adjure($fn,$al, $rt); return $r;};
+         {wait(1000); $r=$this->adjure($fn,$al, $rt); return $r;};
 
          return $r;
       }
