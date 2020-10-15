@@ -108,8 +108,8 @@
    {
       padding:5px; overflow:auto !important;
       font-family:'hack';
-      font-size:10px;
-      line-height:16px;
+      font-size:11px;
+      line-height:14px;
       background:hsla(0,0%,3%,0.9);
    }
 
@@ -153,8 +153,8 @@
       display:block !important;
       font-family:'hack' !important;
       text-align:left !important;
-      font-size:10px !important;
-      line-height:16px !important;
+      font-size:11px !important;
+      line-height:14px !important;
       color:#BBB !important;
       padding:0px !important;
       margin:0px !important;
@@ -169,8 +169,8 @@
    {
       display:inline-block !important;
       font-family:'hack' !important;
-      font-size:10px !important;
-      line-height:16px !important;
+      font-size:11px !important;
+      line-height:14px !important;
       color:#777;
       padding:0px !important;
       margin:0px !important;
@@ -184,8 +184,8 @@
       background:transparent !important;
       color:#CCC;
       text-align:left;
-      font-size:10px !important;
-      line-height:16px !important;
+      font-size:11px !important;
+      line-height:14px !important;
       outline:none;
       font-family:'hack';
       margin:0px !important;

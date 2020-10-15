@@ -30,7 +30,7 @@
 datagrid.darkSide
 {
    font-family:'hack';
-   font-size:10px;
+   font-size:11px;
    line-height:14px;
    border:1px solid hsla(0,0%,90%,0.2);
    border-radius:2px;
@@ -75,7 +75,7 @@ datagrid.darkSide input
    max-width:120px !important;
    background:transparent !important;
    font-family:'hack';
-   font-size:10px;
+   font-size:11px;
    line-height:14px;
    border:none !important;
    color:inherit;

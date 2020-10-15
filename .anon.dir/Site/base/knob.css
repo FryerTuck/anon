@@ -677,7 +677,7 @@
       width:100% !important;
       background:transparent !important;
       font-family:'hack';
-      font-size:10px !important;
+      font-size:11px !important;
       padding:none !important;
       border:none !important;
       color:inherit !important;
@@ -857,7 +857,7 @@
    modal .modalBox .body pre
    {
       font-family:'hack';
-      font-size:10px; line-height:16px;
+      font-size:11px; line-height:14px;
       padding:2px;
       background:hsla(0,0%,98%,1);
    }
@@ -869,7 +869,7 @@
       width:100%;
       display:block;
       font-family:'hack';
-      font-size:10px !important; line-height:16px !important;
+      font-size:11px !important; line-height:14px !important;
       padding:4px;
       background:hsla(0,0%,98%,1);
       border:1px solid hsla(0,0%,80%,1);
@@ -883,7 +883,7 @@
       width:100%;
       display:block;
       font-family:'hack';
-      font-size:10px !important; line-height:16px !important;
+      font-size:11px !important; line-height:14px !important;
       padding:4px;
       background:hsla(0,0%,98%,1);
       border:1px solid hsla(0,0%,80%,1);
@@ -1054,8 +1054,8 @@
    .AnonPopAlert .bodymesg .markdown-body pre code
    {
       font-family:'hack' !important;
-      font-size:10px !important;
-      line-height:16px !important;
+      font-size:11px !important;
+      line-height:14px !important;
    }
 /* ----------------------------------------------------------------------------------------------- */
 
@@ -1207,7 +1207,7 @@
       width:100%;
       display:block;
       font-family:'hack';
-      font-size:10px !important; line-height:16px !important;
+      font-size:11px !important; line-height:14px !important;
       padding:4px;
       background:none;
       border:1px solid hsla(0,0%,80%,1);
@@ -1235,7 +1235,7 @@
       width:100%;
       height:100%;
       font-family:'hack';
-      font-size:10px !important; line-height:16px !important;
+      font-size:11px !important; line-height:14px !important;
       padding:4px;
       padding-top:2px;
       background:none;

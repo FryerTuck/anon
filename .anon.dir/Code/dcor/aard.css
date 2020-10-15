@@ -139,7 +139,7 @@
 #CodeInfoPanl col>div
 {
    font-family:'hack' !important;
-   font-size:10px !important;
+   font-size:11px !important;
    color:hsla(0,0%,60%,1);
    line-height:19px !important;
 }
@@ -163,7 +163,7 @@
 #CodeBulkPanl .link
 {
    font-family:'hack';
-   font-size:10px;
-   line-height:16px !important;
+   font-size:11px;
+   line-height:14px !important;
    margin-top:2px;
 }
