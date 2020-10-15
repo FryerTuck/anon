@@ -379,7 +379,7 @@ Installing Anon is quick, but you can do this the easy way, or the way of the Je
 
 ### Manual installation
 
-1. click <a href="https://raw.githubusercontent.com/FryerTuck/anon/master/.anon.dir/Anon/base/deploy.php">here</a> to see the Anon's [deploy.php](https://github.com/FryerTuck/anon/blob/master/.anon.dir/Anon/base/deploy.php) file as plain text; copy all that by pressing: `Ctrl a` on your keyboard, then create a new file on your local computer and name it e.g: `anonDeploy.php` and paste that text inside and save it.
+1. click <a href="https://raw.githubusercontent.com/FryerTuck/anon/master/.anon.dir/Anon/base/deploy.php">here</a> to see Anon's [deploy.php](https://github.com/FryerTuck/anon/blob/master/.anon.dir/Anon/base/deploy.php) file as plain text; copy all that by pressing: `Ctrl a` on your keyboard, then create a new file on your local computer and name it e.g: `anonDeploy.php` and paste that text inside and save it.
 2. copy that `anonDeploy.php` file to the target website's web-root folder, like `public_html` -via any means, like FTP, or mounted via sshfs
 3. visit the target URL in your web-browser e.g: `example.com/anonDeploy.php`
 
