@@ -82,7 +82,7 @@
 
                   if(!userDoes('work,sudo,lead'))
                   {
-                        popModal({size:`324x176`,skin:`dark`})
+                        popModal({size:`324x174`,skin:`dark`})
                         ({
                             head:`unlock-alt :: Login`,
                             body:[{panl:
