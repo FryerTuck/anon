@@ -107,8 +107,8 @@
    #AnonReplPanl
    {
       padding:5px; overflow:auto !important;
-      font-family:"hack";
-      font-size:16px;
+      font-family:'hack';
+      font-size:9px;
       line-height:16px;
       background:hsla(0,0%,3%,0.9);
    }
@@ -151,9 +151,9 @@
    #AnonReplFlog
    {
       display:block !important;
-      font-family:"hack" !important;
+      font-family:'hack' !important;
       text-align:left !important;
-      font-size:16px !important;
+      font-size:9px !important;
       line-height:16px !important;
       color:#BBB !important;
       padding:0px !important;
@@ -168,8 +168,8 @@
    #AnonReplProm
    {
       display:inline-block !important;
-      font-family:"hack" !important;
-      font-size:16px !important;
+      font-family:'hack' !important;
+      font-size:9px !important;
       line-height:16px !important;
       color:#777;
       padding:0px !important;
