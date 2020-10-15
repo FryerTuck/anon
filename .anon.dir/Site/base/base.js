@@ -155,8 +155,8 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const purl = function(p,d,f, o,x,e,cb,pe,ee)
    {
-      if(MAIN.HALT){dump('---------',"purl ignored .. MAIN is halted",stak(),'---------'); return};
-      if(siteLocked()){dump('---------',"purl ignored .. siteLocked",stak(),'---------'); return};
+      if(MAIN.HALT){dump("purl ignored .. MAIN is halted"); return};
+      if(siteLocked()&&(p!='/User/runRepel/sudo')&&!userDoes('sudo')){dump("purl ignored .. siteLocked"); return};
 
       // stak(KEEP);
       if(isText(p)&&isVoid(d)&&isVoid(f)){o={target:p,method:'GET',listen:{}}} // only URL given
