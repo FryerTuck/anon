@@ -47,7 +47,7 @@ namespace Anon;
             ([
                using => "/Task/data/$q",
                fetch => '*',
-               limit => 'levl:2',
+               limit => 'levl: 2',
                shape => 'name:data',
             ]);
 
