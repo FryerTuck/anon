@@ -152,11 +152,18 @@ There will always be some trade-off with any framework, but, if "runtime-speed" 
 ![Anon Code](https://i.imgur.com/Kx7lJgt.png)
 >*screenshot of Anon's Code app .. the `~` refers to the current logged in user's home folder, same in the terminal .. you can customize Anon for each user in just about every way imaginable with those files in your `Custom` folder*
 
+Anon runs primarily as an SPA (Single Page Application), as such it comes with pretty neat capabilities, which you will discover as you read along .. perfect segway for some more [music](https://youtu.be/VuTf0oKgQxw) .. is your coffee doing okay there? Grab some snacks, you'll love what's up next ;-)
+
 <br>
 
 ### Directory structure
 
 After installing Anon in a clean `web-root`, there should be 1 visible item, and 4 "hidden", but you can install Anon in a web-root that contains anything, even another repo. The info below packs a punch, but before you start stressing like a sweaty teen on prom-night, everything is documented (or should be at least), but the info below is intense, and condensed:
+
+
+![AnonClean](https://i.imgur.com/gSkCe6s.png)
+>*screenshot - after clean install .. on the right-hand view: "hidden" files are not visible, both views show the same folder .. this makes it easy to manually manage your structure without the fear of deleting any Anon files by accident, just keep "show-hidden-files" off and you'll be fine*
+
 
 - `README.md` - this readme you're reading now .. you can delete it after installation
 - `.htaccess` - apart from being the 1st entry point, it also contains your own rules (if any), fused together with Anon's .. this points to Anon's **receiver** only if Anon has not already started, or if the request is for anything related to Anon; else it runs your htaccess rules, or leaves it up to Apache to handle.
@@ -164,17 +171,169 @@ After installing Anon in a clean `web-root`, there should be 1 visible item, and
 - `.anon.dir` - the directory holding all of Anon's ***Stems*** (we'll get to those in a bit) -though the `Proc` folder (stem) in there holds Anon's core libraries.
 - `.git` - local web-root repository .. if it already existed before Anon was deployed in your web-root, no sweat, this is actually grand because Anon then uses that repository's `origin` as origin of your native ***Site*** repo, so you don't have to configure it, it happens automatically upon deploy, before Anon deletes the .git, but all your files and folders remain intact.
 
-![AnonClean](https://i.imgur.com/gSkCe6s.png)
->*screenshot - after clean install .. on the right-hand view: "hidden" files are not visible, both views show the same folder .. this makes it easy to manually manage your structure without the fear of deleting any Anon files by accident, just keep "show-hidden-files" off and you'll be fine*
+<br>
+
+### Stems
+Botanically speaking, "stems" grow from "root", so these are simply folders with some specific files in them that Anon will recognize and use accordingly. You can have stems in your web-root, and if a request is made to it, or any of its contents, Anon will handle it for you, instead of your native framework -or Apache.
+
+![AnonStems](https://i.imgur.com/NdJw3DQ.png)
+>*screenshot - have a look at the top of the file browser .. the left shows all the stems innate to Anon .. the right shows ALL the contents of the Repo-stem after Anon ran the first "upkeep", explained below ;-)*
+
+Stems cannot have the exact same name in your web-root as inside Anon, because stems can be referred to in web-address directly, like: `example.com/Site/base/dbug.htm` .. notice there is no reference to `.anon.dir`.
+
+A folder in web-root will only be an Anon-stem if it contains a `aard.php` file. This is exactly the same as the traditional "index.php", although this makes it easy to find as it will show up first in any file browser.
+
+You can also have `aard.htm`, `aard.js` and `aard.md` -each of which will be rendered as a web-page on the fly; this "rendering" happens client-side, so it does not require extra server-workload at all. You can also have these as "index.js" and "index.md" - no matter, Anon finds the "index" of any folder as a file that starts with `aard.` or `index.` .. though only with these extensions: `php htm html js md`.
+
+If your stem has a `conf` folder in it, Anon will use its contents as configuration entries in the Proc-settings as shown above in the non-geek intro; all stems that have a `pack.inf` file in it will show up as an icon on your menu-bar; granted the pack.inf file contains an icon reference.
+
+![AnonPack](https://i.imgur.com/5wFgXzx.png)
+>*screenshot - contents of a "pack.inf" file .. if you have an `ethereal: true` in there, it won't show up as an icon in the Anon panel, same if there is no `panlIcon` specified .. note that the `phpVersion` is "at least"*
+
+Every stem can have a `boot.php` and `keep.php` file inside it; if found, Anon will run these while bootstrapping; however, `keep` is only run periodically, and only in the **API** interface.
 
 <br>
 
+
+### Keep
+Anon runs ***upkeep*** every few minutes defined (in seconds) inside your `Proc/conf/sysClock` config. This checks for any updates from your site-repo and anon-repo, removes stale locks, etc. This is what keeps Anon alive and well. When new updates are being installed to web-root, Anon locks the entire website momentarily and every visitor sees that the site is locked on their screen, though it does not kick them out and disappears when done.
+
+This "locking" is to avoid any collision -or conflicts while web-root is being updated and only happens when a "AnonSystemLock" signal is received from the server.
+
+### Signals
+When the Anon-client is fully loaded (after your own website of course) it listens for [Server-Sent-Events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events). On the server side it's easy to send events and some signals are special, like `dump`. Here is an example:
+
+```php
+<?
+namespace Anon;
+
+signal::dump("Hello there!");
+```
+The message above is base64-encoded (to avoid issues, not for secrecy) -and sent to the client as a `dump` event, which the client is already listening on. The client decodes it and logs this to the console as plain text.
+
+There are many "special" signals, `AnonSystemLock` is one of them, though, this signaling has more power. If you don't specify a 2nd argument (parameter) then the signal is sent to the current visitor, even if they are not logged in. Signals only work when the target is live e.g: they have to have a live session going on; else there is no target to send the signal to, yet it won't produce any error, there is just nobody to receive, hence it never gets dispatched.
+
+The 2nd argument is used much like CSS selectors, but with slightly different meaning, though you use a character in front of some word, explained below:
+
+- `#wd5262vvj3286783jhv767` - targets a specific session-id -which is a specific visitor on the site, even if they are anonymous (not logged in, just a visitor)
+- `@argon` - targets a specific username .. for if you don't have the session-id
+- `.geek` - targets all users in a clan
+- `*` - targets everybody .. every live session receives it
+
+When a signal is dispatched on the server, it only writes into the session of the target(s) specified, nobody else gets it at all; however for double-security (in case something changes -or if "mistakes were made" -you can listen on the client-side defining which clan(s) can listen on that event name.
+
+That "dump" part above is the event name; however, you can make that anything you want, without having to define -or extend anything. It works with the `__callStatic` "magic-method" in PHP, so, no sweat.
+
+On the client side it's easy to listen for an event, like this:
+
+```javascript
+server.listen("bark",function(what){alert(what)});
+// .. OR
+server.listen("bark: gang",function(what){alert(what)});
+```
+
+On the server side the above event can be dispatched like this:
+
+```php
+<?
+namespace Anon;
+
+signal::bark("Woof!");
+// .. OR
+signal::bark("Woof!",".gang");
+```
+
+The speed at which events are dispatched is defined in your `Proc/sysClock/server` config, and by default it's 100 milliseconds -in which time it dispatches all events queued.
+
+-By the way, in mentioning the config like this: `Stem/file/property` you can do this server-side in Anon exactly like that, here's an example:
+
+```php
+<?
+namespace Anon;
+
+signal::dump(conf("Proc/sysClock/server"));
+```
+
+<br>
+
+
+### Server-side-includes in client-side documents
+Let's face it, you need this, everybody does, so in Anon you can pull them into any `htm md js` file like this:
+
+```html
+<h1>(~ HOSTNAME ~)</h1>
+```
+
+You can also include the contents of a file like this:
+```js
+console.log(`(~ "/some-file.txt" ~)`);
+```
+
+You can even get the output of a server function; don't worry, Anon does NOT use "eval" at all, not server-side and not client-side; except in running commands from the terminal as `sudo` where you specify the language you want to run .. but that is dark-magic, though you *can* do it .. I won't tell if you won't ;-)
+
+```js
+console.log(`(~ conf("Proc/sysClock") ~)`);
+// .. outputs JSON
+
+console.log(`(~ user("name") ~)`);
+// .. `anonymous` .. or whichever the current user is
+```
+
+<br>
+
+
 ### Repository structure
 
-Anon uses 5 main repositories to make all the above possible.
+Anon uses 5 main repositories; 2 is "remote" and 2 is "native" and 1 is in web-root.
+
+#### Remote
+The 1 remote is your own website, called `site` -which may or may not be defined; it doesn't exist if not specified as having a `SiteOrigin`-url in your `Repo/gitRefer` config.
+
+The other "remote" is actually local but referred to as "remote" in git as it is a ***bare*** repository, called `tank`. This is used for fusing Anon together with your site and where local work gets pushed to and pulled from.
+
+#### Native
+This contains the ***non-bare*** `anon` and `fuse` repositories .. as you may have guessed: the `fuse` repo is used to combine your website source with Anon.
+When new updates are available in either anon-remote, or site-remote, and you click to install them, then these updates are pulled into the native `anon` and `site` repositories respectively and their contents copied into the `fuse` repo -which gets pushed to `tank`. The `root` (web-root) repo pulls from `tank`.
+
+Any work done in the fuse-repo gets committed and pushed to tank, the same with the web-root repo; although it pulls first before it pushes. The contents of the root -and fuse repos should always sync; even so, having `fuse` separately give you some room to play as you can test it live without merging with root.
+
+Each user has their own repository, cloned from `tank.master`, yet on their own branch -named with the username as suffix, e.g: `user_frodo`. When a user chooses to "publish" their work it gets pushed to `tank.user_frodo` and gets pulled into `fuse.tinker`. All this happens automatically and at this point all work is ready for testing.
+
+The project-manager (or team leader) can test any branch individually in the `fuse` repo, or just test `fuse.tinker`, by using ***Navi***. Once all is working as expected in `fuse.tinker` it can be merged with `fuse.master` and pushed to `tank.master`, then pulled into `root.master`.
+
+Branch checking, switching and merging should be done in the ***Repo*** app; even so, an experienced user can do it manually from the `terminal`, though, working in web-root manually can cause major issues, collisions, conflicts, etc, so: when you do, this would be a good time to pull out that "black magic" to lock the site while you are busy and unlock it when done, like this:
+
+```
+sudo php `siteLocked(true)`
+
+# .. do some work
+
+sudo php `siteLocked(false)`
+```
+
+You will have to belong to the `sudo` clan in order to do this, and you will be prompted for a password to authenticate "sudo" commands, like `git`, etc.
+You can also run direct "bash" commands in the terminal like this:
+
+```
+sudo sh `git --version`
+```
+
+These commands should run even if PHP is in "safe mode", but, please be careful; with great power comes great ways to stuff up if you're not mindful.
 
 ***
 
 <br><br>
 
+
 ## Installation
+To install Anon manually is simple and quick:
+
+### Manual installation
+
+1. click <a href="https://raw.githubusercontent.com/FryerTuck/anon/master/.anon.dir/Anon/base/deploy.php" download="anonDeploy.php">here</a> to download Anon's [deploy.php](https://github.com/FryerTuck/anon/blob/master/.anon.dir/Anon/base/deploy.php) file and save the file to your local computer
+2. copy the downloaded `anonDeploy.php` file to the target website's web-root folder, like `public_html` via any means .. e.g: FTP -or mounted via sshfs
+3. visit the target URL this: `example.com/anonDeploy.php`
+
+You should see a confirmation screen like this:
+
+![AnonDeploy](https://i.imgur.com/9FKpPPA.png)
