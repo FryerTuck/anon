@@ -562,10 +562,10 @@
 
 /* clan :: alignment
 /* ------------------------------------------------------------------------------------------------------------- */
-   .center {position:absolute !important; left:50%; transform:translate(-50%,0%);}
+   .center {position:absolute !important; left:49%; transform:translate(-49%,0%);}
    .middle {position:absolute !important; top:50%; transform:translate(0%,-50%);}
-   .cenmid {position:absolute !important; left:50% !important; top:50% !important; transform:translate(-50%,-50%) !important;}
-   .midcen {position:absolute !important; left:50% !important; top:50% !important; transform:translate(-50%,-50%) !important;}
+   .cenmid {position:absolute !important; left:49% !important; top:50% !important; transform:translate(-49%,-50%) !important;}
+   .midcen {position:absolute !important; left:49% !important; top:50% !important; transform:translate(-49%,-50%) !important;}
 
    .cntrChld {text-align:center !important;}
    .midlChld {vertical-align:middle !important;}
