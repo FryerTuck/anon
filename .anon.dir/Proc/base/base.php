@@ -953,7 +953,7 @@ namespace Anon;
 
         if($b===false)
         {
-            if(($x!==$ph)&&($m!==$ph)){signal::dump("siteLocked by another process"); return;};
+            if(($x!==$ph)&&($m!==$ph)){signal::dump("siteLocked by another process .. $m"); return;};
             wait(250); path::void($p); signal::lockAllClients('end','*');
             return OK;
         };
