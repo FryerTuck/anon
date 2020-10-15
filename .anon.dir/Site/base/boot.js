@@ -328,7 +328,7 @@
           if(!!el){dump(`AnonSystemLock already applied .. ignoring ${lm}`); return};
           // server.pacify();
           if(!isin(d,":")){d=(d+':system locked')}; pt=stub(d,":"); lm=pt[2]; d=pt[0];
-          et=(userDoes("sudo")?select("#MainGridCol1"):document.body);
+          et=(userDoes("sudo")?select("#AnonMainPanl"):document.body);
           et.insert({div:`${id} .layr`,$:
           [
               {div:`.cenmid .cntrChld`, style:{marginBottom:50}, $:

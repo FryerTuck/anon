@@ -10,7 +10,7 @@
       select('#anonPanlView').enclan((userDoes('work')?'full':'part'));
       select('#anonPanlView').insert
       ([
-         {grid:'#AnonMainGrid', contents:
+         {grid:'#AnonMainGrid .layr', contents:
          [
             {row:'#MainGridRow1', forClans:'work', contents:
             [
