@@ -61,7 +61,12 @@
 
     RewriteCond %{ENV:ANONFOLD} !^$
     RewriteRule ^(.*)$ - [E=DBUGPATH:%{ENV:ANONFOLD}/Site/base/dbug.htm]
+
+    RewriteCond %{ENV:ANONFOLD} !^$
     RewriteRule ^(.*)$ - [E=BOTMATCH:bot|crawl|fetch|find|grab|scan|search|site|slurp|spider|wget|curl]
+
+    RewriteCond %{ENV:ANONFOLD} !^$
+    RewriteRule ^(.*)$ - [E=FUSEPATH:%{ENV:ANONFOLD}/Repo/data/native/fuse]
 # -----------------------------------------------------------------------------------------------------------------------------
 
 
@@ -86,6 +91,11 @@
     RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
 
     RewriteCond %{ENV:ANONINDX} !^$
+    RewriteCond %{ENV:PATHSTEM} !^$
+    RewriteCond %{ENV:ROOTPATH}/%{ENV:PATHSTEM}/aard.php -f
+    RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
+
+    RewriteCond %{ENV:ANONINDX} !^$
     RewriteCond %{ENV:PATHSTEM} ^/?~
     RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
 
@@ -94,9 +104,15 @@
     RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
 
     RewriteCond %{ENV:ANONINDX} !^$
-    RewriteCond %{QUERY_STRING} (^|&)ANONFUSETEST($|&)
-    RewriteCond %{REQUEST_URI} !/.anon.dir/Repo/data/native/fuse/
-    RewriteRule ^(.*)$ /.anon.dir/Repo/data/native/fuse/ [L,QSA]
+    RewriteCond %{ENV:HREFPATH} (\.jpg|\.jpeg|\.png|\.gif|\.webp)$ [NC]
+    RewriteCond %{ENV:ROOTPATH}/%{ENV:HREFPATH} -f
+    RewriteCond %{ENV:ROOTPATH}/%{ENV:ANONFOLD}/Proc/vars/stainImg -f
+    RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
+
+    RewriteCond %{ENV:ANONINDX} !^$
+    RewriteCond %{QUERY_STRING} (^|&)ANONREPOTEST($|&)
+    RewriteCond %{REQUEST_URI} !/%{ENV:FUSEPATH}/
+    RewriteRule ^(.*)$ /%{ENV:FUSEPATH}/ [L,QSA]
 
     RewriteCond %{ENV:ANONINDX} !^$
     RewriteCond %{ENV:HOSTINDX} ^$

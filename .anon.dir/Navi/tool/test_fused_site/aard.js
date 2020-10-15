@@ -10,7 +10,7 @@ extend(Anon.Navi.tool)
         panl=tab.body.select(`.NaviViewPanl`)[0];
         panl.insert({layr:
         [
-            {iframe:`.spanFull`, src:(HOSTPURL+'/?ANONFUSETEST')}
+            {iframe:`.spanFull`, src:(HOSTPURL+'/?ANONREPOTEST')}
         ]});
     },
 });

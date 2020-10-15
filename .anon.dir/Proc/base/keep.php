@@ -51,6 +51,11 @@ namespace Anon;
           path::make("$/User/data/$un/home/Shared/");
       };
 
+      if(conf("Proc/antiHack/stainLargeImages")&&!isee("$/Proc/vars/stainImg"))
+      {path::make("$/Proc/vars/stainImg",1);} // for htaccess to let Anon handle it
+      elseif(!conf("Proc/antiHack/stainLargeImages")&&isee("$/Proc/vars/stainImg"))
+      {path::void("$/Proc/vars/stainImg");}; // for htaccess to ignore it
+
       if(lock::exists("upkeep")||!userDoes("lead sudo gang")){return;}; // .. less is more ;)
       lock::create("upkeep");
       signal::dump("running upkeep"); allStemRun("keep.php");

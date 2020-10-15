@@ -3,6 +3,6 @@ denyScriptInject: true
 seeConsoleOutput: false
 stainLargeImages: true
 stainWhenExceeds: 1280,720
-stainIgnoreThese: /Proc/dcor/*,/User/dcor/*
-stainImageSource: /Proc/dcor/mark.svg
+stainIgnoreThese: /Site/dcor/*,/User/dcor/*
+stainImageSource: /Site/dcor/mark.svg
 stainBaseOpacity: 0.2

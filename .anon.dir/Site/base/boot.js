@@ -40,7 +40,11 @@
 
    globVars({jack:
    {
-       main:['eval','alert','Element.prototype.appendChild','Element.prototype.setAttribute','Element.prototype.addEventListener','XMLHttpRequest.prototype.open'],
+       main:
+       [
+           'eval','alert','Element.prototype.appendChild','Element.prototype.setAttribute',
+           'Element.prototype.addEventListener','EventTarget.prototype.addEventListener','XMLHttpRequest.prototype.open'
+       ],
        info:[`console.log`,`console.error`,`console.debug`,`console.warn`,`console.info`],
    }});
 
