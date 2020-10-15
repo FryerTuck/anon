@@ -389,7 +389,7 @@ You should see a confirmation screen like this:
 
 When it's done installing it will remove this `anonDeploy.php` file automatically and redirect to your website.
 
-- if you already had a website running with an `index.php` in web-root, you should see it now; with no change at all.
+- if you already had a website running with an `index.php` -or `index.html` in web-root, you should see it now; with no change at all.
 - if this was a clean Anon install, you should see a "UNDER CONSTRUCTION" page
 
 <br>
