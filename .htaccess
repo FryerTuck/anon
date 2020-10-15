@@ -54,6 +54,11 @@
     RewriteCond %{ENV:ROOTPATH}/index.php -f
     RewriteRule ^(.*)$ - [E=HOSTINDX:index.php]
 
+    RewriteCond %{ENV:HOSTINDX} ^$
+    RewriteCond %{ENV:ROOTPATH}/index.html -f
+    RewriteRule ^(.*)$ - [E=HOSTINDX:index.html]
+
+
     RewriteCond %{ENV:ANONFOLD} !^$
     RewriteRule ^(.*)$ - [E=DBUGPATH:%{ENV:ANONFOLD}/Site/base/dbug.htm]
     RewriteRule ^(.*)$ - [E=BOTMATCH:bot|crawl|fetch|find|grab|scan|search|site|slurp|spider|wget|curl]
@@ -92,6 +97,10 @@
     RewriteCond %{QUERY_STRING} (^|&)ANONFUSETEST($|&)
     RewriteCond %{REQUEST_URI} !/.anon.dir/Repo/data/native/fuse/
     RewriteRule ^(.*)$ /.anon.dir/Repo/data/native/fuse/ [L,QSA]
+
+    RewriteCond %{ENV:ANONINDX} !^$
+    RewriteCond %{ENV:HOSTINDX} ^$
+    RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
 # -----------------------------------------------------------------------------------------------------------------------------
 
 

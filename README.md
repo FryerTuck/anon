@@ -369,7 +369,14 @@ These commands should run even if PHP is in "safe mode", but, please be careful;
 
 
 ## Installation
-To install Anon manually is simple and quick:
+Installing Anon is quick, but you can do this the easy way, or the way of the Jedi :D
+
+### The easy way
+1. copy this link: `https://github.com/FryerTuck/anon#manual-installation`
+2. contact your hosting provider and ask them to install it for you
+3. they will need the link you've copied above, it looks like [this](https://github.com/FryerTuck/anon#manual-installation)
+
+<br>
 
 ### Manual installation
 
