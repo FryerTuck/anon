@@ -320,6 +320,9 @@ The documentation covers all of this, explained below.
 ### Help
 In order to get help with anything when logged in, just click on the ***Help*** menu button, Anon has a stem dedicated to "help", and, each stem (even your own) can have a `docs` folder in it and the contents are expected to be plain markdown files.
 
+![AnonHelp](https://i.imgur.com/jmMa5Le.png)
+>*screenshot - Help with front-end coding in Anon .. shows how to create dialogue boxes*
+
 All the stems with a `docs` folder are listed in Help, so it's easy to find help related to any stem. You should find most of the info you need in these help-docs, though it may require some TLC.
 
 <br>
