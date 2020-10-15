@@ -294,7 +294,8 @@ namespace Anon;
 
 # dbug :: keep : housekeeping .. run regularly
 # ---------------------------------------------------------------------------------------------------------------------------------------------
-    if(siteLocked()){finish(419); exit;}; // system update in progress
+    if(siteLocked()&&!isin(NAVIPATH,'User/runRepel')&&!userDoes('sudo')){finish(419); exit;}; // system update in progress
+
     if(envi('UPKEEPER'))
     {
         require(path('$/Proc/base/keep.php'));
