@@ -398,7 +398,7 @@ When it's done installing it will remove this `anonDeploy.php` file automaticall
 In order to login, click 4 times on your website, even if it's the "under construction" page, you should now see a login dialogue box.
 
 Anon comes with 2 innate users: `anonymous` and `master`. The **anonymous** user belongs to the `surf` clan, and **master** belongs to the `sudo` clan.
-To login with **master** the first time, the password is: `0m1cron!` .. you need to change this immediately, so the first thing you will see is a prompt to change the master password, and to provide an email "plug" for Anon to use for sending email to e.g. new users added, etc.
+To login with **master** the first time, the password is: `0m1cron!` .. you need to change this immediately, so the first thing you will see is a prompt to change the master password, and to provide an email [plug](#plugs) for Anon to use for sending email to e.g. new users added, etc.
 
 The login dialogue is for general users that are afraid of the terminal, but I know you're not afraid of anything, so just hit `Esc`, or close that; you will find the terminal very handy ;-)
 
