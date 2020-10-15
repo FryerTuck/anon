@@ -412,13 +412,42 @@ To get started with the terminal, even if you are not logged in, just type: `hel
 
 You can hide the Anon-panel any time by just clicking on the screen 4 times .. to show it again just click 4 times.
 
-<br>
-
 ***
+
+<br><br>
+
 
 ## Documentation
 All the **Help** docs are written in markdown and you can browse them [here](https://github.com/FryerTuck/anon/tree/master/.anon.dir) by opening the `docs` folder inside each of those folders listed; here's an [example](https://github.com/FryerTuck/anon/blob/master/.anon.dir/Code/docs/back-end/errors.md).
 
-These help-docs are not complete (yet) but this Readme -together with the Help should get you up to speed quickly. Anon is built to be simple-yet powerful for developers.
+These help-docs are not complete (yet) but this Readme -together with the Help should get you up to speed quickly. Anon is built to be simple, yet powerful for developers.
 
->*if it's not simple to use, then it should change*
+>*if it's not easy to use, then it should change*
+
+***
+
+<br><br>
+
+## License
+
+>MIT License
+>
+>Copyright (c) 2020 AnonClan
+>
+>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+>
+>The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+>
+>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
