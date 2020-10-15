@@ -886,7 +886,12 @@ namespace Anon;
             $y=rshave(stub($x,['aard.php','index.php','auto.php'])[0],'/'); $a=trim(str_replace($y,'',$p),'/'); // filter arguments
             $a=((strlen($a)<1)?[]:explode('/',$a)); // make arguments array
          };
-         $r=import($x); if(is_closure($r)){return call($r,$a);}; if(!isset($a[0])){return $r;}; // load controller
+
+         if(strpos($x,'//')===0){$x=crop($x);};
+         if(($x==='/index.php')&&(envi('RECEIVER')==='nona')){return;};
+         $r=import($x);
+
+         if(is_closure($r)){return call($r,$a);}; if(!isset($a[0])){return $r;}; // load controller
          $f=lpop($a); if(is_class($r)&&is_method("$r::$f")){return call("$r::$f",$a);}; // call controller method
          if(is_object($r)&&is_closure($r->$f)){return call($r->$f,$a);}; $o[]=$x; $r=self::call($p,$o,$a); // call closure
          return (($r===null)?true:$r);

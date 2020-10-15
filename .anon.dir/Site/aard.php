@@ -19,10 +19,10 @@ namespace Anon;
 
       static function handle($p)
       {
-        $np="$p"; $ps=path::stem($np); if(!isWord($ps)||!isFold("$/$ps")){$ps=null;};
+        $np="$p"; $fc=null; $ps=path::stem($np); if(!isWord($ps)||!isFold("$/$ps")){$ps=null;};
         if($ps&&($np==="/$ps/panl.js")){$fc=knob("$/$ps/pack.inf")->forClans;
-        if(($fc!=='*')&&!userDoes($fc)&&!userDoes('sudo')){finish(403);exit;}};
-        if($ps&&facing("DPR")&&isee($np)){finish($np);}; // system request .. handle quick
+        if($fc&&($fc!=='*')&&!userDoes($fc)&&!userDoes('sudo')){finish(403);exit;}};
+        if(($ps||(envi('RECEIVER')==='nona'))&&facing("DPR")&&isee($np)){finish($np);}; // file request .. handle quick
         if(isFold($np)){$ix=path::indx($np,'aard.php'); if($ix){$np=(rshave($np,'/')."/$ix");}}; // get index-file
         $tn=conf("Site/autoConf")->template; if(!isWord($tn)||!isee("$/Site/tmpl/$tn")){$tn="Anon";};
         $uc=sesn("CLAN"); $tp="$/Site/tmpl/$tn"; $tc=knob("$tp/conf"); $cv=$tc->clanView; $rc=null; $rp=null;
