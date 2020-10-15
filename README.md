@@ -373,8 +373,7 @@ Installing Anon is quick, but you can do this the easy way, or the way of the Je
 
 ### The easy way
 1. copy this link: `https://github.com/FryerTuck/anon#manual-installation`
-2. contact your hosting provider and ask them to install it for you
-3. they will need the link you've copied above, it looks like [this](https://github.com/FryerTuck/anon#manual-installation)
+2. contact your hosting provider and ask them to install it for you, send them the copied link
 
 <br>
 
