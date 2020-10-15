@@ -282,6 +282,49 @@ console.log(`(~ user("name") ~)`);
 <br>
 
 
+### Plugs
+Anon provides a pretty neat way of performing "crud-like" actions on different remote interfaces, like email, ftp, mysql, etc. A "plug" in Anon is a line of text that specifies the "schema" (protocol), user, password, port, etc -and they all work via an ORM called: "plug". These different schemas (plugs) exist as libraries in `Proc/plug` as "adapters", so you can even make your own, or improve on the ones provided.
+
+Here are some examples, each line is a separate plug:
+```
+ftp://mickey:m0us3@example.com/public_html
+mysql://mickey:m0us3@example.com:3600/mainDB
+mail://mickey:m0us3@example.com
+mail://mickey:m0us3@example.com:993/?smtp=pluto.me:25
+```
+
+If you save this in a plain text file with extension `.url`, Anon will use it as a plug to open the resource, like a "hyper-conduit". These are NOT accessible to the general public at all and can only be seen and edited by users that belong to the `sudo` and `lead` clans.
+
+Plugs can only be used server-side, and is really simple, yet also uniform, like this:
+
+```php
+namespace Anon;
+
+plug("/myStuff.url")->select("*");
+
+plug("mysql://mickey:m0us3@example.com:3600/mainDB")->insert
+([
+    using => "users",
+    write => ["Frodo","Baggins","frodo@theshire.tv"]
+]);
+
+```
+
+The `using` and `write` are defined constants in Anon (there are many) -and each are exactly 5 letters long. All this is only possible if you are actually running a PHP file via Anon and inside the `Anon` name-space like in the example above.
+
+The documentation covers all of this, explained below.
+
+<br>
+
+
+### Help
+In order to get help with anything when logged in, just click on the ***Help*** menu button, Anon has a stem dedicated to "help", and, each stem (even your own) can have a `docs` folder in it and the contents are expected to be plain markdown files.
+
+You will find all the info you need in these help-docs ;-)
+
+<br>
+
+
 ### Repository structure
 
 Anon uses 5 main repositories; 2 is "remote" and 2 is "native" and 1 is in web-root.
@@ -330,10 +373,43 @@ To install Anon manually is simple and quick:
 
 ### Manual installation
 
-1. click <a href="https://raw.githubusercontent.com/FryerTuck/anon/master/.anon.dir/Anon/base/deploy.php" download="anonDeploy.php">here</a> to download Anon's [deploy.php](https://github.com/FryerTuck/anon/blob/master/.anon.dir/Anon/base/deploy.php) file and save the file to your local computer
-2. copy the downloaded `anonDeploy.php` file to the target website's web-root folder, like `public_html` via any means .. e.g: FTP -or mounted via sshfs
+1. click <a href="https://raw.githubusercontent.com/FryerTuck/anon/master/.anon.dir/Anon/base/deploy.php">here</a> to see the Anon's [deploy.php](https://github.com/FryerTuck/anon/blob/master/.anon.dir/Anon/base/deploy.php) file as plain text; copy all that by pressing: `Ctrl a` on your keyboard, then create a new file on your local computer and name it e.g: `anonDeploy.php` and paste that text inside and save it.
+2. copy that `anonDeploy.php` file to the target website's web-root folder, like `public_html` -via any means, like FTP, or mounted via sshfs
 3. visit the target URL this: `example.com/anonDeploy.php`
 
 You should see a confirmation screen like this:
 
 ![AnonDeploy](https://i.imgur.com/9FKpPPA.png)
+
+When it's done installing it will remove this `anonDeploy.php` file automatically and redirect to your website.
+
+- if you already had a website running with an `index.php` in web-root, you should see it now; with no change at all.
+- if this was a clean Anon install, you should see a "UNDER CONSTRUCTION" page
+
+<br>
+
+### After installation
+In order to login, click 4 times on your website, even if it's the "under construction" page, you should now see a login dialogue box.
+
+Anon comes with 2 innate users: `anonymous` and `master`. The **anonymous** user belongs to the `surf` clan, and **master** belongs to the `sudo` clan.
+To login with **master** the first time, the password is: `0m1cron!` .. you need to change this immediately, so the first thing you will see is a prompt to change the master password, and to provide an email "plug" for Anon to use for sending email to e.g. new users added, etc.
+
+The login dialogue is for general users that are afraid of the terminal, but I know you're not afraid of anything, so just hit `Esc`, or close that; you will find the terminal very handy ;-)
+
+To get started with the terminal, even if you are not logged in, just type: `help` and hit enter on your keyboard.
+
+![AnonRepl](https://i.imgur.com/5aTl4nN.png)
+>*screenshot - Anon's terminal*
+
+You can hide the Anon-panel any time by just clicking on the screen 4 times .. to show it again just click 4 times.
+
+<br>
+
+***
+
+## Documentation
+All the **Help** docs are written in markdown and you can browse them [here](https://github.com/FryerTuck/anon/tree/master/.anon.dir) by opening the `docs` folder inside each of those folders listed; here's an [example](https://github.com/FryerTuck/anon/blob/master/.anon.dir/Code/docs/back-end/errors.md).
+
+These help-docs are not complete (yet) but this Readme -together with the Help should get you up to speed quickly. Anon is built to be simple-yet powerful for developers.
+
+>*if it's not simple to use, then it should change*
