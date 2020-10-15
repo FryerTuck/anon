@@ -316,7 +316,7 @@
       server.listen('done',function(d){if(d!="!"){dump(`\nserver is done with:\n${d}`)}; Busy.done();});
       server.listen('dump',function(d, v){v=(isJson(d)?decode.jso(d):sval(d)); dump(v)});
       server.listen("SoftwareUpdate: sudo,lead,gang",function(d){signal("SoftwareUpdate",d);});
-      server.listen("lockAllClients",function(d, pt,lm,el,id)
+      server.listen("lockAllClients",function(d, pt,lm,el,id,et)
       {
           id="#AnonSystemLock"; el=select(id);
           if(d=="end")
@@ -328,7 +328,8 @@
           if(!!el){dump(`AnonSystemLock already applied .. ignoring ${lm}`); return};
           // server.pacify();
           if(!isin(d,":")){d=(d+':system locked')}; pt=stub(d,":"); lm=pt[2]; d=pt[0];
-          document.body.insert({div:`${id} .layr`,$:
+          et=(userDoes("sudo")?select("#MainGridRow1"):document.body);
+          et.insert({div:`${id} .layr`,$:
           [
               {div:`.cenmid .cntrChld`, style:{marginBottom:50}, $:
               [
@@ -337,9 +338,6 @@
                   {tiny:`one moment please`},
               ]}
           ]});
-
-          if(!userDoes("sudo")){return};
-          select("#AnonReplPanl").style.zIndex=99999999;
       });
 
       listen("SoftwareUpdate",function(d)
