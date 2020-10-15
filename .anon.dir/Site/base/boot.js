@@ -337,6 +337,9 @@
                   {tiny:`one moment please`},
               ]}
           ]});
+
+          if(!userDoes("sudo")){return};
+          select("#AnonReplPanl").style.zIndex=99999999;
       });
 
       listen("SoftwareUpdate",function(d)

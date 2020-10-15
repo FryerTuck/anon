@@ -298,6 +298,7 @@ If you save this in a plain text file with extension `.url`, Anon will use it as
 Plugs can only be used server-side, and is really simple, yet also uniform, like this:
 
 ```php
+<?
 namespace Anon;
 
 plug("/myStuff.url")->select("*");
@@ -307,7 +308,6 @@ plug("mysql://mickey:m0us3@example.com:3600/mainDB")->insert
     using => "users",
     write => ["Frodo","Baggins","frodo@theshire.tv"]
 ]);
-
 ```
 
 The `using` and `write` are defined constants in Anon (there are many) -and each are exactly 5 letters long. All this is only possible if you are actually running a PHP file via Anon and inside the `Anon` name-space like in the example above.
@@ -347,7 +347,7 @@ Each user has their own repository, cloned from `tank.master`, yet on their own 
 
 The project-manager (or team leader) can test any branch individually in the `fuse` repo, or just test `fuse.tinker`, by using ***Navi***. Once all is working as expected in `fuse.tinker` it can be merged with `fuse.master` and pushed to `tank.master`, then pulled into `root.master`.
 
-Branch checking, switching and merging should be done in the ***Repo*** app; even so, an experienced user can do it manually from the `terminal`, though, working in web-root manually can cause major issues, collisions, conflicts, etc, so: when you do, this would be a good time to pull out that "black magic" to lock the site while you are busy and unlock it when done, like this:
+Branch checking, switching and merging should be done in the ***Repo*** app; even so, an experienced user can do it manually from the `terminal`, though, working in web-root manually can cause major issues as collisions, conflicts, etc, so: when you do, this would be a good time to pull out that "black magic" to lock the site while you are busy and unlock it when done, like this:
 
 ```
 sudo php `siteLocked(true)`
