@@ -107,7 +107,7 @@
    #AnonReplPanl
    {
       padding:5px; overflow:auto !important;
-      font-family:"code";
+      font-family:"hack";
       font-size:16px;
       line-height:16px;
       background:hsla(0,0%,3%,0.9);
@@ -151,7 +151,7 @@
    #AnonReplFlog
    {
       display:block !important;
-      font-family:"code" !important;
+      font-family:"hack" !important;
       text-align:left !important;
       font-size:16px !important;
       line-height:16px !important;
@@ -168,7 +168,7 @@
    #AnonReplProm
    {
       display:inline-block !important;
-      font-family:"code" !important;
+      font-family:"hack" !important;
       font-size:16px !important;
       line-height:16px !important;
       color:#777;
