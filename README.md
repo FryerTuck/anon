@@ -350,11 +350,12 @@ The project-manager (or team leader) can test any branch individually in the `fu
 Branch checking, switching and merging should be done in the ***Repo*** app; even so, an experienced user can do it manually from the `terminal`, though, working in web-root manually can cause major issues as collisions, conflicts, etc, so: when you do, this would be a good time to pull out that "black magic" to lock the site while you are busy and unlock it when done, like this:
 
 ```
-sudo php `siteLocked(true)`
+sudo php `siteLocked(true,"Hold on peeps")`
+0b8d61bd7dc6cd9d81852c5b5189891e3f444358
 
 # .. do some work
 
-sudo php `siteLocked(false)`
+sudo php `siteLocked(false,"0b8d61bd7dc6cd9d81852c5b5189891e3f444358")`
 ```
 
 You will have to belong to the `sudo` clan in order to do this, and you will be prompted for a password to authenticate "sudo" commands, like `git`, etc.
