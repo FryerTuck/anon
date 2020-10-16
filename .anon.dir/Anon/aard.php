@@ -66,8 +66,8 @@ namespace Anon;
           $su=Repo::differ('$/Repo/data/native/anon','origin',$gr->AnonBranch); // anon-diff
           if($su){$su->from="Anon"; lock::remove($ln); return $su;}; // run Anon updates first, if any
 
-          if(!isPlug($gr->SiteOrigin)){signal::dump("$im the site-repo has no origin yet"); return OK;}; // nothing to do
-          if(!isRepo('$/Repo/data/native/site')){signal::dump("$im the site-repo is not defined yet"); return OK;}; // race
+          if(!isPlug($gr->SiteOrigin)){lock::remove($ln); signal::dump("$im the site-repo has no origin yet"); return OK;}; // nothing to do
+          if(!isRepo('$/Repo/data/native/site')){lock::remove($ln); signal::dump("$im the site-repo is not defined yet"); return OK;}; // race
           $su=Repo::differ('$/Repo/data/native/site','origin',$gr->SiteBranch); // site-diff
           if($su){$su->from="Site"; lock::remove($ln); return $su;}; // run Site updates last, if any
 

@@ -57,8 +57,8 @@ namespace Anon;
       {path::void("$/Proc/vars/stainImg");}; // for htaccess to ignore it
 
       if(lock::exists("upkeep")||!userDoes("lead sudo gang")){return;}; // .. less is more ;)
-      lock::create("upkeep");
-      signal::dump("running upkeep"); allStemRun("keep.php"); signal::dump("upkeep done"); 
-      lock::remove("upkeep"); // lock upkeep and run keep for all stems
+      lock::create("upkeep"); signal::dump("running upkeep");
+      allStemRun("keep.php"); // run keep for all stems
+      lock::remove("upkeep"); signal::dump("upkeep done");
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
