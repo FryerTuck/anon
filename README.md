@@ -120,12 +120,15 @@ With all the above in mind, essentially it means you can spend less time on admi
 <br>
 
 
-### Git version control
+### Automated updates and Git version control
 You've probably heard about Git, but [here](https://youtu.be/w3jLJU7DT5E) is a short video which illustrates why it makes sense to use it. Git is free, there are many alternatives to GitHub, like GitLab and BitBucket; you can also host your own, for free.
 
-Anon is fully integrated with git and depends on it for updates. When new updates are available, any user that belongs to a power-user-clan, like **lead**, or **sudo** gets notified on-screen when logged into Anon. This also applies if your website is on a repository and you've configured Anon to pull your site's source from there.
+Anon is fully integrated with git and depends on it for Anon-related updates -as well as updates made to your website from an external repository. When new updates are available, any user that belongs to a power-user-clan, like **lead**, or **sudo** gets notified on-screen when logged into Anon. Your own site updates apply if you've configured Anon to pull your site's source from an external repository origin-URL.
 
-When new software updates are available you can merge them to "test" or install them to your live website. If you choose to test it first, then you can take it for a spin in Anon's **Navi** app (navigation).
+When new software updates are available you can merge them to "test" or install them to your live website. If you choose to test it first, then you can take it for a spin in Anon's **Navi** app .. "Navi" is short for "navigation".
+
+![AnonUpdate](https://i.imgur.com/H9peL56.png)
+>*screenshot - you can see what's happening in the back-end by viewing the web-console in your browser's "developer tools", but Anon shows progress on-screen anyway; you don't have to see the details, though you can ;-)
 
 <br>
 
