@@ -269,7 +269,7 @@ signal::busy(['with'=>"SoftwareUpdate",'done'=>50]);
 // the `50` is "percent"
 ```
 
-Anon's `Busy` mechanism is unified and you can tell it to indicate as many different jobs as you want, each with their own percentage, and it will add it all up together -while it's running and update progress altogether, even if new job-indications are added.
+Anon's `Busy` mechanism is unified and you can tell it to indicate as many different jobs as you want, each with their own percentage, and it will add it all up together and show overall progress, even if new job-indications are added while it's running. When all "jobs" in its queue are 100% it disappears automatically.
 
 ![AnonBusy](https://i.imgur.com/eDOamcp.png)
 
