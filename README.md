@@ -273,7 +273,7 @@ Anon's `Busy` mechanism is unified and you can tell it to indicate as many diffe
 
 ![AnonBusy](https://i.imgur.com/eDOamcp.png)
 
-This indication is essential at times, because it covers all "clickable" things that could make life difficult for a database administrator (duplicates) -or anything else that could go horribly wrong if a user keeps clicking away at a non-responsive thing. Yes, one can mitigate that in the back-end, but thinking of ***everything*** while you're on a deadline is not always possible, we're only human (for now) -and things get out of hand; so could also save you "egg on the face" moments during live-demos ;-)
+This indication is essential at times, because it covers all "clickable" things that could make life difficult for a database administrator (duplicates) -or anything else that could go horribly wrong if a user keeps clicking away at a non-responsive thing. Yes, one can mitigate that in the back-end, but thinking of ***everything*** while you're on a deadline is not always possible, we're only human (for now) -and things get out of hand; so this could save you "egg on the face" -moments during live-demos ;-)
 
 One can also make it go away by pressing `Esc` (escape) on your keyboard .. the same with dismissing "modals" (dialogue boxes) .. neat hack, now you know :D
 
