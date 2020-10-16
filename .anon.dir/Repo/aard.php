@@ -230,9 +230,11 @@ namespace Anon;
          $i=trim($i); if(!isText($i,1)){return;}; $n=$i[0]; if($n==='!'){$i=substr($i,1);}else{$n='';}; // negated
          $i=lshave($i,'/'); if(arg($i)->startsWith('$/')){$i=stub($i,'/')[2]; $i=".anon.dir/$i";};
          $i=trim($i); if(!isText($i,1)){return;}; $i=($n.$i); $r=pget($p); $q="\n$i";
-         if((($a===write)&&isin($r,$q))||(($a===erase)&&!isin($r,$q))){return OK;}; // nothing to do
-         signal::dump("$a ignore-rule: `$i` in: `$h`");
-         if($a===write){$r.=$q;}else{$r=swap($r,$q,'');}; path::make($p,$r); // finish exclude
+         if((($a===write)&&!isin($r,$q))||(($a===erase)&&isin($r,$q)))
+         {
+             signal::dump("$a ignore-rule: `$i` in: `$h`");
+             if($a===write){$r.=$q;}else{$r=swap($r,$q,'');}; path::make($p,$r); // finish exclude
+         };
          $c=frst($i); $i=lshave($i,'!'); $ig=((($a===write)&&($c!=='!'))?1:0); $l=scan($i); unset($p);
          foreach($l as $p) // update git tracking
          {
