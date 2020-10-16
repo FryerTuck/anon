@@ -653,6 +653,7 @@
    {
       width:12px !important;
       font-size:12px !important;
+      line-height:18px !important;
       text-align:center !important;
       color:inherit !important;
       user-select:none;
@@ -663,6 +664,7 @@
    {
       width:16px !important;
       font-size:16px !important;
+      line-height:18px !important;
       padding-left:6px !important;
       padding-right:4px !important;
       color:inherit !important;
@@ -678,6 +680,7 @@
       background:transparent !important;
       font-family:'hack';
       font-size:11px !important;
+      line-height:18px !important;
       padding:none !important;
       border:none !important;
       color:inherit !important;
