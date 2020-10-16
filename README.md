@@ -328,7 +328,7 @@ All the stems with a `docs` folder are listed in Help, so it's easy to find help
 <br>
 
 
-### Repository structure
+### Repository structure and CI-CD
 
 Anon uses 5 main repositories; 2 is "remote" and 2 is "native" and 1 is in web-root.
 
@@ -346,6 +346,8 @@ Any work done in the fuse-repo gets committed and pushed to tank, the same with 
 Each user has their own repository, cloned from `tank.master`, yet on their own branch -named with the username as suffix, e.g: `user_frodo`. When a user chooses to "publish" their work it gets pushed to `tank.user_frodo` and gets pulled into `fuse.tinker`. All this happens automatically and at this point all work is ready for testing.
 
 The project-manager (or team leader) can test any branch individually in the `fuse` repo, or just test `fuse.tinker`, by using ***Navi***. Once all is working as expected in `fuse.tinker` it can be merged with `fuse.master` and pushed to `tank.master`, then pulled into `root.master`.
+
+When running a full software update, Anon commits a "restore-point" in the fuse-repo, then performs **unit-tests** -before merging with `root`; if the testing fails it reverts to the restore-point and fails with whichever messages came from the unit-tests. You can define any unit-tests to run in the `Proc/unitTest` config. You can also define **unit tests for the front-end** as JavaScript files -which will be run when using **Navi** to test the fuse-repo; so both the back-end (database incl) -and front-end can be tested to make sure everything runs according to the expected business-rules.
 
 Branch checking, switching and merging should be done in the ***Repo*** app; even so, an experienced user can do it manually from the `terminal`, though, working in web-root manually can cause major issues as collisions, conflicts, etc, so: when you do, this would be a good time to pull out that "black magic" to lock the site while you are busy and unlock it when done, like this:
 
