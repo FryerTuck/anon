@@ -33,6 +33,7 @@ $export=function($a,$u,$d)
       signal::dump("user created: $u");
 
       Repo::cloned(conf('Repo/gitRefer/UserOrigin'),"$h/home/MyRepo",conf('Repo/gitRefer/UserBranch'),$u);
+      exec::{"git checkout -b user_$u"}("$h/home/MyRepo");
       Proc::signal('madeUser',['nick'=>$u,'mail'=>$m,'clan'=>$cl]);
 
       signal::busy(['with'=>"mail",'done'=>50]);
