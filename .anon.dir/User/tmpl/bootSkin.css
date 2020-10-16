@@ -20,4 +20,20 @@
    {
       background:hsla(210,3%,16%,0.95);
    }
+
+   #CodeBodyView
+   {
+      /* background:url('/~/sci-fi-android.jpg'); */
+      background-size:cover;
+   }
+
+   #CodeBodyPanl
+   {
+      background:hsla(220,3%,15%,0.95);
+   }
+
+   .CodeEditWrap
+   {
+       background:hsla(220,3%,16%,0);
+   }
 /* ---------------------------------------------------------------------------- */
