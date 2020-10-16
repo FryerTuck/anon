@@ -256,6 +256,28 @@ namespace Anon;
 
 signal::dump(conf("Proc/sysClock/server"));
 ```
+<br>
+
+#### Progress indication
+Often you would just sit and watch as nothing happens on the screen, think the web-app is stuck and just hit refresh? Well, this can cause a whole lot of problems, like duplicate data-inserts, process collisions, conflicts, lock-picking, it's just terrible, but, with Anon's signaling you can easily tell the visitor "hang on I'm thinking" -AND show progress of how far it's done, like this:
+
+```php
+<?
+namespace Anon;
+
+signal::busy(['with'=>"SoftwareUpdate",'done'=>50]);
+// the `50` is "percent"
+```
+
+Anon's `Busy` mechanism is unified and you can tell it to indicate as many different jobs as you want, each with their own percentage, and it will add it all up together -while it's running and update progress altogether, even if new job-indications are added.
+
+![AnonBusy](https://i.imgur.com/eDOamcp.png)
+
+This indication is essential at time, because it covers all "clickable" things that could make life difficult for a database administrator (duplicates) -or anything else that could go horribly wrong if a user keeps clicking away at a non-responsive thing. Yes, one can mitigate that in the back-end, but thinking of ***everything*** while you're on a deadline is not always possible, we're only human (for now) -and things get out of hand; so could also save you "egg on the face" moments during live-demos ;-)
+
+One can also make it go away by pressing `Esc` (escape) on your keyboard .. the same with dismissing "modals" (dialogue boxes) .. neat hack, now you know :D
+
+By default Anon does not show this indication on your own site, though you can enable it, but beware: some peeps hate it, because it nullifies their "instant gratification"; they just want to dismiss it if they have to "wait" -doesn't matter if it's half-a-second or 1 minute .. interesting phenomenon, but it is what it is.
 
 <br>
 
