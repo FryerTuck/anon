@@ -17,7 +17,7 @@ If you already know about Anon and just want to install, see the [Installation](
 ## Intro for non-geeks
 Whether you are a business owner, CEO, project-manager, or just want to know what Anon can do for you; the following is brief, but intense, so strap on your thinking cap, it's about to get real.
 
-By design, Anon has ***no third-party service dependencies*** and it runs with whatever you have on your website, no need to change your existing site -or framework at all. Anon does not require any database access and runs without the visitor knowing about it.
+By design Anon has ***no third-party service dependencies*** and it runs with whatever you have on your website, no need to change your existing site -or framework at all. Anon does not require any database access and runs without the visitor knowing about it.
 
 With that out the way, here's what Anon brings to the table:
 
