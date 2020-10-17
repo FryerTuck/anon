@@ -31,51 +31,53 @@ extend(custom.domtag)
 
    icon:function(n,a,c)
    {
-      if(!c){c='bug'}; if(!isText(a.face,1)){a.face=c}; if(!isText(a.font,1)){a.font='icon'};
-      a.size=(isInum(a.size)?(a.size+'px'):(isNumr(a.size)?(a.size+'rem'):(isText(a.size,3)?a.size:'16px')));
-      let fce,fnt,sze,rot,clp; fce=a.face; fnt=a.font; sze=(a.size+""); clp=a.clip; delete a.face; delete a.font; delete a.size; delete a.clip;
-      c=VOID; if(a.text){c=a.text; delete a.text}; rot=stub(fce,'@'); if(rot){fce=rot[0]; rot=(rot[2]*1); rot=(isNumr(rot)?round(rot,0):0)};
-      modify(n,a); if(!clp){n.enclan(('.'+fnt+'-'+fce))}; n.setStyle({height:sze, fontSize:sze});
-      if(!c){n.setStyle({width:sze,transform:`rotate(${rot}deg)`})};
+        if(!c){c='bug'}; if(!isText(a.face,1)){a.face=c}; if(!isText(a.font,1)){a.font='icon'};
+        a.size=(isInum(a.size)?(a.size+'px'):(isNumr(a.size)?(a.size+'rem'):(isText(a.size,3)?a.size:'16px')));
+        let fce,fnt,sze,rot,clp; fce=a.face; fnt=a.font; sze=(a.size+""); clp=a.clip; delete a.face; delete a.font; delete a.size; delete a.clip;
+        c=VOID; if(a.text){c=a.text; delete a.text}; rot=stub(fce,'@'); if(rot){fce=rot[0]; rot=(rot[2]*1); rot=(isNumr(rot)?round(rot,0):0)};
+        modify(n,a); if(!clp){n.enclan(('.'+fnt+'-'+fce))}; n.setStyle({height:sze, fontSize:sze});
+        if(!c){n.setStyle({width:sze,transform:`rotate(${rot}deg)`})};
 
-      if(c){n.insert({div:c})}
-      else if(clp)
-      {
-         n.size=sze; n.icon=fce; n.clip=clp;
-         n.listen("ready",function()
-         {
+        if(c){n.insert({div:c}); return DONE;};
+        if(!clp){return DONE;};
+
+        n.size=sze; n.icon=fce; n.clip=clp;
+        n.listen("ready",function()
+        {
             let box=rectOf(this); let osz=this.size; let unt=(pick(osz,["px","rem","em"])||"px"); let nmr=(rtrim(osz,unt)*1);
-            let cid=fash(); let rad=Math.ceil(nmr/2.2); let cxy=Math.ceil(rad/2); let cpx=0; let cpy=0; let mcl=[]; let itl=[];
-            let bxw=box.width; let bxh=box.height; let ico=this.icon; let clp=this.clip; let par=n.parentNode; par.removeChild(n);
-            let sis=Math.ceil(nmr/2.8); let lst=styleSheet('/Site/dcor/icon.woff'); let uni=lst[`.icon-${ico}::before`].content;
-            let tnt=cStyle(par,"color"); let crd={Tl:(0+cxy), Tr:(bxw-cxy)};
-            dump(this.clip);
+            let cid=fash(); let clp=this.clip; let rad=Math.ceil(nmr/3); let cxy=rad; let cpn=keys(clp)[0]; let cpi=clp[cpn];
+            let bxw=box.width; let bxh=box.height; let ico=this.icon; let par=n.parentNode; par.removeChild(n); let qr=(rad/4);
+            let crd=
+            {
+                Tl:{cx:(cxy-qr),cy:(cxy-qr)},
+                Tr:{cx:((bxw-cxy)+qr),cy:(cxy-qr)},
+                Bl:{cx:(cxy-qr),cy:((bxh-cxy)+qr)},
+                Br:{cx:((bxw-cxy)+qr),cy:((bxh-cxy)+qr)},
+            };
 
-            par.innerHTML=`<div style="position:absolute; width:${bxw}px; height:${bxh}px; overflow:hidden">
-                              <svg width="${bxw}" height="${bxh}" viewbox="0 0 ${bxw} ${bxh}">
-                                 <mask id="IconMask${cid}">
-                                    <rect x="0" y="0" width="100%" height="100%" fill="white" />
-                                    <circle cx="${cxy}" cy="${cxy}" r="${rad}" fill="black" />
-                                 </mask>
-                                 <text x="0" y="${(bxh-2)}" font-family="icon" fill="${tnt}" stroke="none" style="webkit-font-smoothing:greyscale" mask="url(#IconMask${cid})">${uni}</text>
-                              </svg>
-                           </div>`;
-         });
+            let lst=styleSheet('/Site/dcor/icon.woff'); let uni=lst[`.icon-${ico}::before`].content; let bip=crd[cpn];
+            let tnt=cStyle(par,"color"); let htm=''; let tiu=lst[`.icon-${cpi}::before`].content;
+            let stl=`fill="${tnt}" font-family="icon" stroke="none" style="webkit-font-smoothing:greyscale"`; let tfs=(nmr/2);
+            let tic=
+            {
+                Tl:{cx:0,cy:(tfs-2)},
+                Tr:{cx:(bxw-tfs),cy:(tfs-2)},
+                Bl:{cx:0,cy:(bxh-2)},
+                Br:{cx:(bxw-tfs),cy:(bxh-2)},
+            };
+            let tip=tic[cpn];
 
-         // n.insert({grid:
-         // [
-         //    {row:
-         //    [
-         //       {col:(il.tl?[{icon:".tl", face:il.tl, size:cs;}]:[])},
-         //       {col:(il.tr?[{icon:".tr", face:il.tr, size:cs;}]:[])},
-         //    ]},
-         //    {row:
-         //    [
-         //       {col:(il.bl?[{icon:"bl", face:il.bl, size:cs;}]:[])},
-         //       {col:(il.br?[{icon:"br", face:il.br, size:cs;}]:[])},
-         //    ]},
-         // ]});
-      };
+            htm=`<svg width="${bxw}" height="${bxh}" viewbox="0 0 ${bxw} ${bxh}" class="cenmid">
+                    <mask id="IconMask${cid}">
+                        <rect x="0" y="0" width="100%" height="100%" fill="white" />
+                        <circle cx="${bip.cx}" cy="${bip.cy}" r="${rad}" fill="black" />
+                    </mask>
+                    <text x="2" y="${(bxh-3)}" ${stl} font-size="${nmr}${unt}" mask="url(#IconMask${cid})">${uni}</text>
+                    <text x="${tip.cx}" y="${tip.cy}" ${stl} font-size="${tfs}${unt}">${tiu}</text>
+                 </svg>`;
+
+            par.insert({grid:[{row:[{col:[{wrap:htm}]}]}]});
+        });
 
       return DONE;
    },
