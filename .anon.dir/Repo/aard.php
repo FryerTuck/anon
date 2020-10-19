@@ -169,6 +169,7 @@ namespace Anon;
          $w=(($whr===NATIVE)?'N':'R');
 
          $d='<|>'; $x="git log{$wht}--name-status --date=raw --pretty=tformat:\"{$d}%H{$d}%ct{$d}%cn{$d}%ce{$d}%s{$d}\"";
+         signal::dump("running command: `$x`"); wait(150); // show what's going on
          $k=['hash','time','user','mail','mesg']; $y=exec::{$x}($dir); $y="\n$y"; $y=swap($y,"\n$d","\n\n$d"); $y=swap($y,"$d\n\n","$d\n");
          $y=trim($y); $x=[]; $y=frag($y,"\n"); foreach($y as $yx => $yi)
          {
