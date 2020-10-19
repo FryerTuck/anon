@@ -324,8 +324,9 @@ namespace Anon;
 
    if(userDoes('work'))
    {
-       $un=sesn('USER'); $sp="$/User/data/$un/home/Custom";
-       if(isee($sp)){$op=requires::path($sp); if($op!==null){signal::dump("~/server.php output:\n".tval($op));}}; 
+       $un=sesn('USER'); $sp="$/User/data/$un/home/Custom"; $op=null;
+       $op=null; if(isee($sp)){$op=requires::path($sp);};
+       if(($op!==null)&&($op!==true)){signal::dump("~/server.php output:\n".tval($op));};
        unset($un,$sp,$op);
    };
 
