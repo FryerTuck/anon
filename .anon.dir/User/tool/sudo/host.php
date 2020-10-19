@@ -7,6 +7,7 @@ $export=function($c,$a,$h)
    if(!isText($a,1)){ekko('nothing to do');};
 
 
+
    if($c==='php')
    {
       $x=stub($a,['(','::']); if($x&&(is_funnic($x[0]))){$a=('$_RSL'." = $a");};
@@ -20,11 +21,13 @@ $export=function($c,$a,$h)
    };
 
 
+
    if($c==='sh')
    {
       $f=0; try{$r=exec::{"$a"}($h);}catch(\Exception $e){$f=1; $r=$e->getMessage();};
       if(!$r){$r=($f?FAIL:OK);}; ekko($r);
    };
+
 
 
    if($c==='purge')
@@ -63,6 +66,15 @@ $export=function($c,$a,$h)
            signal::href(NAVIHOST."/deploy.php");
            return OK;
        };
+   };
+
+
+
+   if($c==='upkeep')
+   {
+        if(!isFunc('upkeep')){require(path('$/Proc/base/keep.php'));};
+        upkeep($_SERVER['SYSCLOCK']->upkeep,1,time(),knob($_GET)->upkeep);
+        path::make('$/Proc/vars/lastDbug',(time().''));
    };
 
    fail("command `$c` is not supported, yet");

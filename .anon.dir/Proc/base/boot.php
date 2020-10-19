@@ -300,7 +300,7 @@ namespace Anon;
     {
         require(path('$/Proc/base/keep.php'));
         upkeep($_SERVER['SYSCLOCK']->upkeep,($_SERVER['UPKEEPER']*1),time(),knob($_GET)->upkeep);
-        if(sesn('USER')!='master'){path::make('$/Proc/vars/lastDbug',(time().''));}; // always run upkeep for master
+        path::make('$/Proc/vars/lastDbug',(time().''));
     };
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 
