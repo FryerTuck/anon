@@ -3,13 +3,14 @@ namespace Anon;
 
 $export=function($c,$a,$h)
 {
-   if(!userDoes('sudo')){ekko(wack());};  $a=trim(unwrap(trim($a)));
-   if(!isText($a,1)){ekko('nothing to do');};
+   if(!userDoes('sudo')){ekko(wack());};  // security!! yelp!!
+   if(isText($a)){$a=trim(unwrap(trim($a)));};
 
 
 
    if($c==='php')
    {
+      if(!isText($a,1)){ekko('nothing to do');};
       $x=stub($a,['(','::']); if($x&&(is_funnic($x[0]))){$a=('$_RSL'." = $a");};
       if(substr($a,-1,1)!==';'){$a="$a;";};
       $r=call(function($_CMD)
@@ -24,6 +25,7 @@ $export=function($c,$a,$h)
 
    if($c==='sh')
    {
+      if(!isText($a,1)){ekko('nothing to do');};
       $f=0; try{$r=exec::{"$a"}($h);}catch(\Exception $e){$f=1; $r=$e->getMessage();};
       if(!$r){$r=($f?FAIL:OK);}; ekko($r);
    };
@@ -66,6 +68,9 @@ $export=function($c,$a,$h)
            signal::href(NAVIHOST."/deploy.php");
            return OK;
        };
+
+
+       fail("invalid purge command .. use `data` or `anon`");
    };
 
 
@@ -78,6 +83,8 @@ $export=function($c,$a,$h)
         path::make('$/Proc/vars/lastDbug',(time().''));
         return OK;
    };
+
+
 
    fail("command `$c` is not supported, yet");
 };
