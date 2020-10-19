@@ -213,7 +213,7 @@ In the above:
 In addition to the above "ordain", you can define an entire web page with JavaScript and you don't have to hack JavaScript inside a string inside the `onWhatever` attribute of an element; you can define both the element AND events in JavaScript and the debugger will be happy about it, like this:
 
 ```javascript
-document.body.insert({view:`#myView`, contents:
+render({view:`#myView`, contents:
 [
     {title:`My awesome Tab Title`},
     {h1:`Big heading`},
@@ -224,6 +224,12 @@ document.body.insert({view:`#myView`, contents:
     }},
 ]});
 ```
+
+The function `render` above operates in 2 ways:
+- if no "callback" is given, it replaces the `document.body` with content given
+- if a callback function is given it renders the content and calls the callback with the rendered node
+
+If you give it a path to a file e.g. markdown, it will fetch it first, then render it as mentioned.
 
 Anon has several "special tags" .. `view` is styled to span the entire window as `position:fixed` .. There is also `layr` -which covers its parent, but is `position:absolute` instead.
 

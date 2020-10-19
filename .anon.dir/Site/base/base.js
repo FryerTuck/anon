@@ -1143,6 +1143,14 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const render = function(p,f, s)
    {
+      if(isKnob(p)||isNode(p))
+      {
+          let n=(isNode(p)?p:create(p));
+          document.body.innerHTML="";
+          document.body.insert(n);
+          if(!isFunc(f)){return n};
+          n.listen("ready",f);
+      };
       // if(MAIN.HALT){return};
       if(!p){p='/'};
       // expect({path:p,func:f});
@@ -1150,11 +1158,12 @@
       {
          let m,q,t,x; m=r.head.ContentType.split(';')[0].split('/x-').join('/');
          q=m.split('/'); t=trim(q[0]); x=trim(q[1]); if(!isin(keys(parser),t)){t=x};
-         if(!trim(r.body)){f("");};
+         if(!trim(r.body)){if(!isFunc(f)){document.body.innerHTML="";}else{f("")}; return};
          parsed(r,t,(z)=>
          {
             if(t=='markdown'){z=create({div:'.markdown-page',contents:[z]})};
-            f(z);
+            if(isFunc(f)){f(z); return};
+            document.body.innerHTML=""; document.body.insert(z);
          });
       });
    }
