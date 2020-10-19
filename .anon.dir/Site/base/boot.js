@@ -356,9 +356,9 @@
               ]}],
               foot:
               [
-                  {butn:`.good`, text:"Merge", onclick:function(e,s)
+                  {butn:`.good`, text:"Just Fuse", onclick:function(e,s)
                   {
-                      Busy.edit("SoftwareUpdate",0); s=this; d.type="test";
+                      Busy.edit("SoftwareUpdate",0); s=this; d.type="fuse";
                       purl("/Proc/update",d,(r)=>
                       {
                           Busy.edit("SoftwareUpdate",100); r=r.body;
@@ -374,7 +374,7 @@
                       {
                           Busy.edit("SoftwareUpdate",100); r=r.body;
                           if(r!=OK){fail("SoftwareUpdate: "+r); s.root.exit(); return;};
-                          popAlert(`thumbs-up :: web-root repo updated : New updates are installed and running live.`);
+                          // popAlert(`thumbs-up :: web-root repo updated : New updates are installed and running live.`);
                           s.root.exit();
                       });
                   }},

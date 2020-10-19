@@ -409,17 +409,28 @@ namespace Anon;
          if(lock::exists($ln)){return OK;};
 
          Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>1]);  lock::awaits($ln);
-         signal::dump("running $pv->type software update"); // wait for procs to finish
+         signal::dump("running $pv->type software update"); wait(150); // wait for procs to finish
          siteLocked(true); // lock all front-ends to avoid collision
          Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>10]); wait(150);
 
-         signal::dump("creating restore point");
+         signal::dump("creating restore point"); wait(150);
          $hsh=Repo::commit($tp,"restore point",true); // backup web-root as a restore commit & push to tank
-         signal::dump("created restore point .. commit hash: $hsh");
+         signal::dump("created restore point .. commit hash: $hsh"); wait(150);
          Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>20]); wait(150);
          Repo::update($tp,'pull','--all'); // sync fuse with root to avoid conflicts
-         signal::dump("synched fuse with root");
+         signal::dump("synched fuse with root"); wait(150);
          Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>30]); wait(150);
+
+         signal::dump("merging user-branches in fuse"); wait(150);
+         $ul=array_diff(pget("$/User/data"),["anonymous","master"]);
+         foreach($ul as $un)
+         {
+             $bx=dval(exec::{"git rev-parse --verify --quiet user_$un"}($tp)); // check if branch exists
+             if(!$bx){signal::dump("fuse branch `user_$un` is undefined .. moving on"); wait(150); continue;};
+             signal::dump("merging fuse branches `master:user_$un`"); wait(150);
+             exec::{"git merge user_$un"}($tp);
+         };
+         signal::dump("done merging user-branches"); wait(150);
 
          $ht=pget("/.htaccess"); $th=pget("$sp/.htaccess"); if($th){$ht="$th";}; // hta may have auto-changed elsewhere
          Repo::update($up,$gr->$cw,'pull','origin');
@@ -431,7 +442,7 @@ namespace Anon;
              if(isin($om,$dp)){continue;}; // TODO :: <-- this has to be `akin`
              if(arg($dp)->startsWith('$/')){$ap=swap($dp,'$/','.anon.dir/');} // for Anon-core
              else{$ap="$dp";}; // for site
-             signal::dump("copying: `$up/$ap` to: $tp/$ap");
+             signal::dump("copying: `$up/$ap` to: $tp/$ap"); wait(150);
              path::copy("$up/$ap","$tp/$ap",true);
          };
 
@@ -460,7 +471,7 @@ namespace Anon;
          };
 
          Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>70]); wait(150);
-         if($pv->type==='test')
+         if($pv->type==='fuse')
          {
              siteLocked(false); lock::remove($ln);
              return OK;
