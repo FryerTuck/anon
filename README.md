@@ -431,11 +431,17 @@ plug("mysql://mickey:m0us3@example.com:3600/mainDB")->insert
     using => "users",
     write => ["Frodo","Baggins","frodo@theshire.tv"]
 ]);
+
+plug("mysql://mickey:m0us3@example.com:3600/mainDB/users")->insert
+(["Frodo","Baggins","frodo@theshire.tv"]);
 ```
 
 The `using` and `write` are defined constants in Anon (there are many) -and each are exactly 5 letters long. All this is only possible if you are actually running a PHP file via Anon and inside the `Anon` name-space like in the example above.
 
-The documentation covers all of this, explained below.
+Plug adapters are path-level-aware, so the last `insert` above should work as implied.
+Many functions and methods in Anon work on by what is "implied" directly (implicit in context) -which makes things simple flexible so you can express your logic the way you want to; so these inserts above will use the database fields as implied by order, though you can also define inserts by `key => value` and it will use it like that; for both Sqlite and MySql.
+
+The **Help** documentation covers more about this (explained below), although you can always define a new plug-adapter and contribute it to Anon; making it better for everybody -including yourself.
 
 <br>
 
