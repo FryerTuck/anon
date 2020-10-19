@@ -111,16 +111,21 @@ namespace Anon;
       }
 
 
-      static function status($dir,$hsh=null)
+      static function status($dir,$opt=null)
       {
-         $dir=repoOf($dir); if(!$dir){return;}; $brn=isRepo($dir); $src=self::origin($dir,1); $hst=HOSTNAME; $bdy=knob();
+         $dir=repoOf($dir); if(!$dir){return;}; $src=self::origin($dir,1); $hst=HOSTNAME; $bdy=knob();
+         if(!$opt){$opt=[NATIVE=>"master",REMOTE=>'master'];};
 
-         if($hsh===':HASH:')
+         if($opt===':HASH:')
          {
+            $brn=isRepo($dir);
             $gl=exec::{"git log -1 --oneline --decorate origin/$brn"}($dir); $ch=null; // git-log .. fetch last line
             $lp=stub($gl,"("); if($lp){$ch=trim($lp[0]);};
             return $ch;
          };
+
+         $optk=keys($opt); if(!isin($optk,NATIVE)||!isin($optk,REMOTE))
+         {fail::options("expecting 2nd argument as assoc-array with keys: :NATIVE: and :REMOTE: for branches");exit;};
 
          if(isin($src,['https://','http://']))
          {
@@ -131,8 +136,8 @@ namespace Anon;
             if($w){fail::repo("Repository at: $src is $w".$x);};
          };
 
-         $nps=self::survey($dir,$brn,NATIVE,0,0); exec::{"git fetch origin $brn"}($dir);
-         $rps=self::survey($dir,$brn,ORIGIN,0,0); $ldr=null;
+         $nps=self::survey($dir,$opt[NATIVE],NATIVE,0,0); exec::{"git fetch origin $brn"}($dir);
+         $rps=self::survey($dir,$opt[REMOTE],REMOTE,0,0); $ldr=null;
 
          foreach($nps as $npk => $npv)
          {
@@ -164,12 +169,11 @@ namespace Anon;
 
       static function survey($dir,$brn=null,$whr=NATIVE,$all=null,$raw=null)
       {
-         if(!$brn||($raw===null)){$dir=repoOf($dir); if(!$dir){return;}; if(!$brn){$brn='master';}};
-         if(($whr!==NATIVE)&&($whr!==ORIGIN)){fail('invalid arguments');}; $wht=(($whr===NATIVE)?' ':" origin/$brn ");
+         if(!$brn||($raw===null)){$dir=repoOf($dir); if(!$dir){return;}; if(!$brn){$brn=isRepo($dir);}};
+         if(($whr!==NATIVE)&&($whr!==REMOTE)){fail('invalid arguments');}; $wht=(($whr===NATIVE)?' ':" origin/$brn ");
          $w=(($whr===NATIVE)?'N':'R');
 
          $d='<|>'; $x="git log{$wht}--name-status --date=raw --pretty=tformat:\"{$d}%H{$d}%ct{$d}%cn{$d}%ce{$d}%s{$d}\"";
-         signal::dump("running command: `$x`"); wait(150); // show what's going on
          $k=['hash','time','user','mail','mesg']; $y=exec::{$x}($dir); $y="\n$y"; $y=swap($y,"\n$d","\n\n$d"); $y=swap($y,"$d\n\n","$d\n");
          $y=trim($y); $x=[]; $y=frag($y,"\n"); foreach($y as $yx => $yi)
          {

@@ -982,7 +982,7 @@ namespace Anon;
          if(isAssa($h)){$h=knob($h,U);}; if(isKnob($h)){$q=$h; $h=$q->using;};
          expect::path($h,[R,D]); $h=crop($h); $l=pget($h); $d=[]; $f=[]; if(!is_int($levl)||($levl<0)){$levl=0;}; $usr=user();
          if($q==='*'){$q=knob(['fetch'=>self::cols()]);}elseif(isAssa($q)){$q=knob($q,U);}elseif(!isKnob($q)){$q=null;};
-         if(!isKnob($repo)){if(!$repo){$repo=knob();}elseif(isPath($repo)){$repo=Repo::status($repo);}else{$repo=Repo::status($h);}};
+         if(!isKnob($repo)){if(!$repo){$repo=knob();}elseif(isPath($repo)){$repo=Repo::status($repo,$q->param);}else{$repo=Repo::status($h,$q->param);}};
          $shp=null; if($levl===0){$shp=$q->shape; unset($q->shape);}; if(isin($q->limit,':')){$q->limit=knob(dval($q->limit));};
          if(isKnob($q)&&($q->fetch==='*')){$q->fetch=self::cols();};
          if(isKnob($q->limit)&&$q->limit->name&&!is_array($q->limit->name)){$q->limit->name=explode(',',swap($q->limit->name,' ',''));};
@@ -1012,7 +1012,7 @@ namespace Anon;
             }
             elseif(($t==='fold')&&$q&&$q->fetch&&isin($q->fetch,'data'))
             {
-               if($rpo&&(span($repo)<1)){$repo=Repo::status($p); if(isKnob($repo)){$o->repo=knob(['host'=>$repo->host,'head'=>$repo->head]); $repo=$repo->body;}};
+               if($rpo&&(span($repo)<1)){$repo=Repo::status($p,$q->param); if(isKnob($repo)){$o->repo=knob(['host'=>$repo->host,'head'=>$repo->head]); $repo=$repo->body;}};
                if(isKnob($q->limit)&&is_int($q->limit->levl)&&($levl>$q->limit->levl)){$o->data=null;}
                else{$o->data=self::ogle($p,$q,$repo,($levl+1));};
             }
