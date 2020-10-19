@@ -175,14 +175,9 @@
       globVars({mailBusy:0},[`Object.mailTime /User/boot.js`,`XMLHttpRequest.pingMail /User/boot.js`]);
 
 
-      listen("SSEReady",function()
-      {
-          if(!userDoes("work")){return};
-          purl("/User/initBoot/server",function()
-          {
-              dump("ran: ~/server.php upon `SSEReady` event");
-          });
-      });
+      // listen("SSEReady",function()
+      // {
+      // });
 
 
       listen("clockSec",function()
@@ -193,10 +188,10 @@
       }.bind({incr:0}));
 
 
-      server.listen("newEmail",function()
-      {
-         dump("new email!");
-      });
+      // server.listen("newEmail",function()
+      // {
+      //    dump("new email!");
+      // });
 
 
       server.listen("sesnFade",function(obj)

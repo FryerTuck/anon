@@ -322,5 +322,11 @@ namespace Anon;
    $_SERVER['RUNLEVEL']=1;
    allStemRun("boot.php",A,"$/Site"); // boot all bootable stems
 
+   if(userDoes('work'))
+   {
+       $un=sesn('USER'); $sp="$/User/data/$un/home/Custom";
+       if(isee($sp)){requires::path($sp);}; unset($un,$sp);
+   };
+
    Proc::init(); // initialize Proc
 # ---------------------------------------------------------------------------------------------------------------------------------------------

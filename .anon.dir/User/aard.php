@@ -186,13 +186,6 @@ namespace Anon;
          $u=sesn('USER'); $p="$/User/data/$u/home/Custom";
          permit::fubu();
 
-         if($a==='server')
-         {
-             permit::clan('work');
-             if(!isee("$p/$a.php")){ekko(FAIL);}; $r=requires::path("$p/$a.php");
-             ekko((span($r)>0)?$r:OK); exit;
-         };
-
          if(!isee("$p/$a")){ekko::head(['Content-Type'=>mime("$p/$a")]); die('/* one love */');};
          finish("$p/$a");
       }
