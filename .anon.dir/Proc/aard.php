@@ -408,18 +408,18 @@ namespace Anon;
          if(siteLocked()){signal::dump("update denied .. AnonSystemLock is active"); return OK;};
          if(lock::exists($ln)){return OK;};
 
-         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>1]);  lock::awaits($ln);
+         signal::busy(['with'=>"SoftwareUpdate",'done'=>1]);  lock::awaits($ln);
          signal::dump("running $pv->type software update"); wait(150); // wait for procs to finish
          siteLocked(true); // lock all front-ends to avoid collision
-         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>10]); wait(150);
+         signal::busy(['with'=>"SoftwareUpdate",'done'=>10]); wait(150);
 
          signal::dump("creating restore point"); wait(150);
          $hsh=Repo::commit($tp,"restore point",true); // backup web-root as a restore commit & push to tank
          signal::dump("created restore point .. commit hash: $hsh"); wait(150);
-         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>20]); wait(150);
+         signal::busy(['with'=>"SoftwareUpdate",'done'=>20]); wait(150);
          exec::{"git pull --all"}($tp); // pull all refs
          signal::dump("synched fuse with root"); wait(150);
-         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>30]); wait(150);
+         signal::busy(['with'=>"SoftwareUpdate",'done'=>30]); wait(150);
 
          signal::dump("merging user-branches in fuse"); wait(150);
          $ul=array_diff(pget("$/User/data"),["anonymous","master"]);
@@ -431,11 +431,11 @@ namespace Anon;
              exec::{"git merge user_$un"}($tp); // merger user's branch with fuse:master
          };
          signal::dump("done merging user-branches"); wait(150);
-         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>40]); wait(150);
+         signal::busy(['with'=>"SoftwareUpdate",'done'=>40]); wait(150);
 
          $ht=pget("/.htaccess"); $th=pget("$sp/.htaccess"); if($th){$ht="$th";}; // hta may have auto-changed elsewhere
          Repo::update($up,$gr->$cw,'pull','origin');
-         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>50]); wait(150);
+         signal::busy(['with'=>"SoftwareUpdate",'done'=>50]); wait(150);
          $om=conf('Repo/gitIgnor'); // TODO :: stuff to omit
 
          foreach($rd as $dp)
@@ -451,7 +451,7 @@ namespace Anon;
          $ht=htbackup($ht,pget("$/Repo/data/native/anon/.htaccess"));
          path::make("$tp/.htaccess",$ht); // write fused htaccess to fuse-repo
          Repo::commit($tp,"$uw update",true); // add all & commit changes & push to tank-repo
-         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>60]); wait(150);
+         signal::busy(['with'=>"SoftwareUpdate",'done'=>60]); wait(150);
 
          $testFP=conf('Proc/unitTest/siteFuse'); if(isee($testFP)&&(fext($testFP)==='php'))
          {
@@ -470,7 +470,7 @@ namespace Anon;
              {signal::dump("ignored UnitTest: `$testFP` .. expected it to export a function");};
          };
 
-         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>70]); wait(150);
+         signal::busy(['with'=>"SoftwareUpdate",'done'=>70]); wait(150);
          if($pv->type==='fuse')
          {
              siteLocked(false); lock::remove($ln);
@@ -480,13 +480,13 @@ namespace Anon;
          chmod(ROOTPATH."/.htaccess",0644); // make htaccess writable for now
          // try{exec::{'git stash && git stash clear'}('/');}catch(\Exception $e){ }; // clear changes made in web-root since last
          Repo::update('/','pull'); // update web-root by pulling from tank .. any `gitIgnor` should be respected
-         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>80]); wait(150);
+         signal::busy(['with'=>"SoftwareUpdate",'done'=>80]); wait(150);
          exec::{"git push origin master"}($tp);
-         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>90]); wait(150);
+         signal::busy(['with'=>"SoftwareUpdate",'done'=>90]); wait(150);
          exec::{"git pull origin master"}('/');
          chmod(ROOTPATH."/.htaccess",0444); // make htaccess read-only
          siteLocked(false); lock::remove($ln);
-         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>100]); wait(150);
+         signal::busy(['with'=>"SoftwareUpdate",'done'=>100]); wait(150);
          signal::ClientReboot("new updates from $cw","*");
          return OK;
       }

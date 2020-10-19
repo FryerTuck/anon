@@ -152,7 +152,7 @@ namespace Anon;
             if($rpv->time<$bdy->$rpk->time){continue;}; $bdy->$rpk->flag='XX';
          };
 
-         $chk=exec::{"git merge-tree `git merge-base FETCH_HEAD $brn` FETCH_HEAD $brn"}($dir);
+         $chk=exec::{"git merge-tree `git merge-base FETCH_HEAD $opt->NATIVE` FETCH_HEAD $opt->REMOTE"}($dir);
          $lst=expose($chk,"changed in both\n","\n+>>>>>>> .their");
 
          if($lst){foreach($lst as $i)
@@ -162,7 +162,7 @@ namespace Anon;
             $l=($b+$x); $bdy->$p->fail=$l; $bdy->$p->flag='GC';
          }};
 
-         $rsl=knob(['host'=>$src,'head'=>['purl'=>$dir,'fork'=>$brn,'diff'=>self::strife($dir),'lead'=>$ldr],'body'=>$bdy]);
+         $rsl=knob(['host'=>$src,'head'=>['purl'=>$dir,'fork'=>$opt->NATIVE,'diff'=>self::strife($dir),'lead'=>$ldr],'body'=>$bdy]);
          return $rsl;
       }
 
