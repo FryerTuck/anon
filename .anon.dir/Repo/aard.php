@@ -129,14 +129,14 @@ namespace Anon;
 
          if(isin($src,['https://','http://']))
          {
-            if(!online()){fail("`$hst` is offline");}; try{$x=exec::{"git ls-remote $src"}();}catch(\Exception $e){$x=$e->getMessage();};
+            if(!online()){fail("`$hst` is offline");}; try{$x=exec::{"git ls-remote $src"}($dir);}catch(\Exception $e){$x=$e->getMessage();};
             $w=0; $eg="https://USER:PASS@example.com/repoName.git"; if(arg($x)->startsWith('fatal: '))
             {$w=(isin($x,['not read Username','not read Password'])?'forbidden':(isin($x,' not found')?'undefined':'missing'));};
             if($w){$x=''; if($w=='forbidden'){$x="\n\n>TIP :: set the username and password inside the origin URL like this: $eg";}};
             if($w){fail::repo("Repository at: $src is $w".$x);};
          };
 
-         $nps=self::survey($dir,$opt->NATIVE,NATIVE,0,0); exec::{"git fetch origin $brn"}($dir);
+         $nps=self::survey($dir,$opt->NATIVE,NATIVE,0,0); exec::{"git fetch origin $opt->REMOTE"}($dir);
          $rps=self::survey($dir,$opt->REMOTE,REMOTE,0,0); $ldr=null;
 
          foreach($nps as $npk => $npv)
