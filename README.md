@@ -261,7 +261,7 @@ After installing Anon in a clean `web-root`, there should be 1 visible item, and
 <br>
 
 ### Stems
-Botanically speaking, "stems" grow from "root", so these are simply folders with some specific files in them that Anon will recognize and use accordingly. You can have stems in your web-root, and if a request is made to it, or any of its contents, Anon will handle it for you, instead of your native framework -or Apache.
+Botanically speaking, "stems" grow from "root", so these are simply folders in your web-root with some specific files in them that Anon will recognize and use accordingly. You can have stems in your web-root, and if a request is made to it, or any of its contents, Anon will handle it for you, instead of your native framework -or Apache.
 
 ![AnonStems](https://i.imgur.com/NdJw3DQ.png)
 >*screenshot - have a look at the top of the file browser .. the left shows all the stems innate to Anon .. the right shows ALL the contents of the Repo-stem after Anon ran the first "upkeep", explained below ;-)*
