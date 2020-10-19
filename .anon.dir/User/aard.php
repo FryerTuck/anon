@@ -75,7 +75,9 @@ namespace Anon;
          $r=''; $h='/User/tool'; $l=pget($h); $uc=explode(',',sesn('CLAN')); foreach($l as $i)
          {
             $d="$h/$i"; $p=knob(dval(pget("$d/pack.inf"))); $pc=$p->forClans; if($pc==='*'){$pc=null;};
-            if(is_array($pc)){$pc=implode(' ',$pc);}; if($pc&&!isin($pc,$uc)){continue;}; $c=pget("$d/view.js"); if($c){$r.=$c;};
+            if(is_array($pc)){$pc=implode(' ',$pc);};
+            if($pc&&!isin($pc,$uc)&&!userDoes('sudo')){continue;};
+            $c=pget("$d/view.js"); if($c){$r.=$c;};
          };
 
          $un=sesn('USER'); $lp="$/User/data/$un/logs/repl.log"; $cl=pget($lp); $xl=[]; $rl=[];
