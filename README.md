@@ -438,7 +438,7 @@ plug("mysql://mickey:m0us3@example.com:3600/mainDB/users")->insert
 
 The `using` and `write` are defined constants in Anon (there are many) -and each are exactly 5 letters long. All this is only possible if you are actually running a PHP file via Anon and inside the `Anon` name-space like in the example above.
 
-Plug adapters are path-level-aware, so the last `insert` above should work as implied.
+Plug adapters are path-level-aware, so the last `insert` above should work as implied by "path".
 Many functions and methods in Anon work on by what is "implied" directly (implicit in context) -which makes things simple and flexible so you can express your logic the way you want to; so these inserts above will use the table-fields as "implied" in order, though you can also define inserts by `key => value` and it will use the keys as field-names.
 
 The **Help** documentation covers more about this (explained below), although you can always define a new plug-adapter and contribute it to Anon; making it better for everybody -including yourself.
