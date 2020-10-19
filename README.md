@@ -231,7 +231,20 @@ The function `render` above operates in 2 ways:
 
 If you give it a path to a file e.g. markdown, it will fetch it first, then render it as mentioned; so you can refer some "htm" contents (partial hyper-text-markup, as apposed to an entire HTML document) -or anything else.
 
-Anon has several "special tags" .. `view` is styled to span the entire window as `position:fixed` .. There is also `layr` -which covers only its parent, but is `position:absolute` instead.
+The `render` function uses the `insert` method in Anon to "append" contents to a node; though, `render` replaces the contents, where `insert` only appends. There are several "crud-like" functions in the Anon front-end and most of them extend any Element (node), but can also be used directly, like this:
+
+```javascript
+let foo = create(`div`);
+foo.insert(`<span>hello!</span>`);
+document.body.insert(foo);
+remove(foo);
+
+render({div:`#boo .moo`, $:`Hello!`});
+select(`#boo`).modify({id:`gone`});
+remove(`#gone`);
+```
+
+Anon has several "special tags" .. in the "render" example above: `view` is styled to span the entire window as `position:fixed` .. There is also `layr` -which covers only its parent, but is `position:absolute` instead.
 
 Apart from the structure above being rather self-explanatory, the `evnt.hijack` is built into Anon and it does: `event.preventDefault(); event.stopPropagation();` .. if `true` is also does: `event.stopImmediatePropagation();` -which as you know, prevents any other listeners from doing anything .. All this really means is "short-hand", and it makes coding easy to remember and cleaner to look at.
 

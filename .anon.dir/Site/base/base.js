@@ -834,6 +834,15 @@
          if(isin("style,script,pre,span,h1,h2,h3,h4,h5,h6,p,a,i,b",t)){this.innerHTML=v; return this}; // insert as HTML
          let n=document.createElement('span'); n.innerHTML=v; this.appendChild(n); return this; // append text as span-node
       },
+
+      render:function(d,f, s)
+      {
+          s=this; render(d,(r)=>
+          {
+              s.innerHTML=""; s.insert(r);
+              if(isFunc(f)){f(r)};
+          });
+      },
    });
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
