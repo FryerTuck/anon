@@ -233,7 +233,7 @@ If you give it a path to a file e.g. markdown, it will fetch it first, then rend
 
 Anon has several "special tags" .. `view` is styled to span the entire window as `position:fixed` .. There is also `layr` -which covers only its parent, but is `position:absolute` instead.
 
-Apart from the structure above being rather self-explanatory, the `evnt.hijack` is built into Anon and it does: `this.preventDefault(); this.stopPropagation();` .. if `true` is also does: `this.stopImmediatePropagation();` -which as you know, prevents any other listeners from doing anything .. All this really means is "short-hand", and it makes coding easy to remember and cleaner to look at.
+Apart from the structure above being rather self-explanatory, the `evnt.hijack` is built into Anon and it does: `event.preventDefault(); event.stopPropagation();` .. if `true` is also does: `event.stopImmediatePropagation();` -which as you know, prevents any other listeners from doing anything .. All this really means is "short-hand", and it makes coding easy to remember and cleaner to look at.
 
 You can also ***hijack*** existing events in your own site, or if you're making some quick hack-job for a client as "proof of concept" to some requirement, you can tell Anon to "hijack" which-ever events you want in the sub-DOM structure.
 
