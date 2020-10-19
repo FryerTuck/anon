@@ -434,6 +434,16 @@ plug("mysql://mickey:m0us3@example.com:3600/mainDB")->insert
 
 plug("mysql://mickey:m0us3@example.com:3600/mainDB/users")->insert
 (["Frodo","Baggins","frodo@theshire.tv"]);
+
+plug("ftp://mickey:m0us3@example.com/public_html")->insert
+([
+    "new-file.txt" => "Hello there!"
+])
+
+plug("ftp://mickey:m0us3@example.com/public_html")->delete
+([
+    where => "name = new-file.txt"
+])
 ```
 
 The `using` and `write` are defined constants in Anon (there are many) -and each are exactly 5 letters long. All this is only possible if you are actually running a PHP file via Anon and inside the `Anon` name-space like in the example above.
