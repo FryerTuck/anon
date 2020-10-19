@@ -237,6 +237,7 @@ The `render` function uses the `insert` method in Anon to "append" contents to a
 let foo = create(`div`);
 foo.insert(`<span>hello!</span>`);
 document.body.insert(foo);
+let kids = foo.select(`span`);
 remove(foo);
 
 render({div:`#boo .moo`, $:`Hello!`});
