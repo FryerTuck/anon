@@ -486,6 +486,7 @@ namespace Anon;
          exec::{"git pull origin master"}('/');
          chmod(ROOTPATH."/.htaccess",0444); // make htaccess read-only
          siteLocked(false); lock::remove($ln);
+         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>100]); wait(150);
          signal::ClientReboot("new updates from $cw","*");
          return OK;
       }
