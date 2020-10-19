@@ -178,7 +178,7 @@ You can either define some component with the 3 general front-end languages sepa
 
 This does not mean everything could end up as a "hack-job", quite the contrary; although it will require looking at things in a different way; here's an example:
 
-You can have a JavaScript file as "index" of a folder, even web-root; inside it you can `ordain` some CSS-class to look and behave a certain way ad it will apply to all of them, even new ones added to the DOM on-the-fly; like this:
+You can have a JavaScript file as "index" of a folder, even web-root; inside it you can `ordain` some CSS-class to look and behave a certain way and it will automatically apply to all of them -even new elements with the same class added to the DOM on-the-fly; like this:
 
 ```javascript
 ordain('.someCSSclass')
