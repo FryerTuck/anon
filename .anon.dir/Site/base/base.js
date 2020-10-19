@@ -898,6 +898,9 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const remove = function(q, x,d)
    {
+      let a=listOf(arguments); if(a.length>1){q=a;}; if(isList(q,1,1)){q=q[0];};
+      if(isList(q)){q.forEach((i)=>{remove(i);}); return true};
+
       if(isText(q))
       {
          try{x=select(q);if(!x){return}}catch(e){return;}; d=VOID;

@@ -238,11 +238,11 @@ let foo = create(`div`);
 foo.insert(`<span>hello!</span>`);
 document.body.insert(foo);
 let kids = foo.select(`span`);
-remove(foo);
 
 render({div:`#boo .moo`, $:`Hello!`});
 select(`#boo`).modify({id:`gone`});
-remove(`#gone`);
+
+remove(foo,`#gone`);
 ```
 
 Anon has several "special tags" .. in the "render" example above: `view` is styled to span the entire window as `position:fixed` .. There is also `layr` -which covers only its parent, but is `position:absolute` instead.
