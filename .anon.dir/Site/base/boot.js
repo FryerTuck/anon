@@ -413,6 +413,12 @@
       });
 
 
+      server.listen("href",function(d)
+      {
+          window.location.href=d;
+      });
+
+
       listen("AnonSiteViewUnload",function(evnt){});
       listen("AnonSiteViewLoaded",function(evnt){});
 
