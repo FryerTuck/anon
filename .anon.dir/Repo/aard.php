@@ -114,8 +114,7 @@ namespace Anon;
       static function status($dir,$opt=null)
       {
          $dir=repoOf($dir); if(!$dir){return;}; $src=self::origin($dir,1); $hst=HOSTNAME; $bdy=knob();
-signal::dump($opt); wait(150);
-         if(!$opt){$opt=[NATIVE=>"master",REMOTE=>'master'];};
+         if(!$opt){$opt=[NATIVE=>"master",REMOTE=>'master'];}; if(isAsso($opt)){$opt=knob($opt,U);};
 
          if($opt===':HASH:')
          {
@@ -125,8 +124,8 @@ signal::dump($opt); wait(150);
             return $ch;
          };
 
-         $optk=keys($opt); if(!isin($optk,NATIVE)||!isin($optk,REMOTE))
-         {fail::options("expecting 2nd argument as assoc-array with keys: :NATIVE: and :REMOTE: for branches");exit;};
+         $optk=keys($opt); if(!isin($optk,'NATIVE')||!isin($optk,'REMOTE'))
+         {fail::options("expecting 2nd argument as :asso: or :knob: with keys: NATIVE and REMOTE .. for branches");exit;};
 
          if(isin($src,['https://','http://']))
          {
