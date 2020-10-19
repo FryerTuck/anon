@@ -208,7 +208,7 @@ ordain('.someCSSclass')
 
 In the above:
 - `isWord` will check if the value contain only characters that looks like a "word" altogether, and additionally (optional) -that it is at least 6 characters long .. there are many `isWhatever` functions in Anon, like: `isVoid isText isBool isNumr isPath isFunc` etc. -and these are available in the back-end too -which work as expected
-- `NEED` is a constant in Anon that refers to `.need` as a CSS-class -which is purple. Buttons are styled the same way and there are 5 different "tones" like this: `good cool need warn fail`. All this is used by Anon itself to make pretty UI components that "mean" something
+- `NEED` is a constant in Anon and can be used in any way as it contants the exact text: `:NEED:`; however, in this context it refers to `.need` as a CSS-class -which is purple. Buttons are styled the same way and there are 5 different "tones" like this: `good cool need warn fail`. All this is used by Anon itself to make pretty UI components that "mean" something
 
 In addition to the above "ordain", you can define an entire web page with JavaScript and you don't have to hack JavaScript inside a string inside the `onWhatever` attribute of an element; you can define both the element AND events in JavaScript and the debugger will be happy about it, like this:
 
