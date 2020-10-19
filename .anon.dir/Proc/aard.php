@@ -413,6 +413,7 @@ namespace Anon;
          siteLocked(true); // lock all front-ends to avoid collision
          Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>10]);
 
+         signal::dump("creating restore point");
          $hsh=Repo::commit($tp,"restore point",true); // backup web-root as a restore commit & push to tank
          signal::dump("created restore point .. commit hash: $hsh");
          Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>20]);

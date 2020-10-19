@@ -17,7 +17,7 @@ If you already know about Anon and just want to install, see the [Installation](
 ## Intro for non-geeks
 Whether you are a business owner, CEO, project-manager, or just want to know what Anon can do for you; the following is brief, but intense, so strap on your thinking cap, it's about to get real.
 
-By design Anon has ***no third-party service dependencies*** and it runs with whatever you have on your website, no need to change your existing site -or framework at all. Anon does not require any database access and runs without the visitor knowing about it.
+By design Anon has ***no third-party service dependencies*** and it runs with whatever you have on your website, no need to change your existing site -or framework at all. Anon does not require any database access and runs without the visitor knowing about it; however, your team can use Anon to build your website -or web-application from scratch also and it's quick, because Anon is made to be developer-friendly for any **custom applications** you need.
 
 With that out the way, here's what Anon brings to the table:
 
@@ -74,10 +74,10 @@ This is configurable and by default it redirects bots away from your site to sav
 
 In a "real-world" scenario, even though one would expect a visitor's web-browser to be **modern** and has JavaScript enabled, this is not guaranteed -and could cause your website to show up broken.
 
-Anon tests this for you automatically with every visitor -and if all is ***not well*** it informs the visitor to either upgrade to a modern browser, or enable JavaScript -before your website is shown. This guarantees your website will show as advertised, so you don't have to worry about that. This whole process takes a fraction of a second, but solves a lot of issues regarding delivery and security -right from the start; and of course, "good-bots" are not exposed to this at all.
+Anon tests browser-compatibility for you automatically with every visitor -and if all is ***not well*** it informs the visitor to either upgrade to a modern browser, or enable JavaScript -before your website is shown. This guarantees your website will show as advertised, so you don't have to worry about that. This whole process takes a fraction of a second, but solves a lot of issues regarding delivery and security -right from the start; and of course, "good-bots" are not exposed to this at all.
 
 ![NoJavaScript](https://i.imgur.com/C67pGAP.png)
->*screenshot - a human visitor's JavaScript is turned off .. yes it's not pretty, you can customize it if you want to*
+>*screenshot - a human visitor's JavaScript is turned off .. yes it's not "pretty", but you can customize it*
 
 I can almost hear you thinking "but what about web services and API's?"<br>
 Anon detects several "interfaces". If a visitor shows up as one who expects an "API-like" response, then it is treated as an API and gets a response accordingly, though Anon has built-in API support, so you can generate API-keys and either give (or sell) these to your clients. There is more to this, but this intro-demographic is supposed to be "non-technical", keep going, you're doing great!
@@ -150,12 +150,90 @@ If you've skipped straight ahead to this section, consider reading the "non-geek
 
 To make a multipurpose framework that doesn't [suck](https://youtu.be/DuB6UjEsY_Y?t=10) is hard (pun intented) -because every business has different needs, though also need a framework of some sort, for reasons of conformity in a work-group, project, etc. -although there are trade-offs to consider, like: dependencies, learning-curve, development-time, complexity, developer-experience, server/client-machine-workload, user-experience, security, extensibility, scalability, portability, etc.
 
-There will always be some trade-off with any framework, but, if "runtime-speed" is the main concern, pitch a server-upgrade to your client, or project-manager, but Anon is fast enough, however, you can always collaborate and make Anon better. The things you can do with Anon -and the tools it provides are worth it, you will see why in a bit .. hold onto your keyboard, it's about to get [freaky](https://youtu.be/wwvcp8gkR0M)!
+As mentioned in the non-geek-intro: you don't have use Anon's innate functionality; as a matter of fact, if you already have a website running by means of having an `index.html` -or `index.php` file in your web-root, Anon runs your site in a separate DOM (document object model) -and does not interfere with it at all; unless you code it to do so explicitly.
+
+If you decide to use Anon, remember: there will always be some trade-off with any framework, but, if "runtime-speed" is the main concern, pitch a server-upgrade to your client, or project-manager, but Anon is fast enough, however, you can always collaborate and make Anon better. The things you can do with Anon -and the tools it provides are worth it, you will see why in a bit .. hold onto your keyboard, it's about to get [freaky](https://youtu.be/wwvcp8gkR0M)!
 
 ![Anon Code](https://i.imgur.com/Kx7lJgt.png)
 >*screenshot of Anon's Code app .. the `~` refers to the current logged in user's home folder, same in the terminal .. you can customize Anon for each user in just about every way imaginable with those files in your `Custom` folder*
 
 Anon runs primarily as an SPA (Single Page Application), as such it comes with pretty neat capabilities, which you will discover as you read along .. perfect segway for some more [music](https://youtu.be/VuTf0oKgQxw) .. is your coffee doing okay there? Grab some snacks, you'll love what's up next ;-)
+
+<br>
+
+### Rapid development
+Anon is designed to be easy to use for developers; it's back-end and front-end functionality "feels" more or less the same; so if you are a full-stack developer, you should find this trait rather pleasing.
+
+Let's face it: in "the real world" most apps are sold as if they already exist, then developers are told to make it reality -and be quick about it; this is where things could get nasty real quick as deadlines approach .. security issues and bugs creep in, etc.
+
+To mitigate all this, Anon has some rather interesting ways to deal with it as you can quickly "hack" something to look -and function as expected -then do it properly after. This does not mean everything will just be a "hack-job" though; it's up to you -and up to the task at hand.
+
+#### Words have meaning
+The provided functions, objects and methods in Anon are designed to flow well in a sentence, making code easy to read, though keep in mind: English is not really "functional" -so best-effort is applied in both front-end and back-end.
+
+#### Front-end tools
+From ***modals*** through to live-data-tables, Anon has it covered, but if there is some tool you need, it's very quick to implement.
+
+You can either define some component with the 3 general front-end languages separately (HTML, CSS, JavaScript) -or you can create it on-the-fly in one go with JavaScript; you can even "take over" (hijack) some existing events.
+
+This does not mean everything could end up as a "hack-job", quite the contrary; although it will require looking at things in a different way; here's an example:
+
+You can have a JavaScript file as "index" of a folder, even web-root; inside it you can `ordain` some CSS-class to look and behave a certain way ad it will apply to all of them, even new ones added to the DOM on-the-fly; like this:
+
+```javascript
+ordain('.someCSSclass')
+({
+   style:
+   {
+       background:`#BADA55`,
+   },
+
+   listen:
+   {
+      focus:function()
+      {
+          this.notify(`type your name here`,COOL);
+      },
+
+      blur:function()
+      {
+          if(!isWord(this.value,6))
+          {
+              this.notify(`I need a word`,NEED);
+          };
+      },
+   }
+});
+```
+
+In the above:
+- `isWord` will check if the value contain only characters that looks like a "word" altogether, and additionally (optional) -that it is at least 6 characters long .. there are many `isWhatever` functions in Anon, like: `isVoid isText isBool isNumr isPath isFunc` etc. -and these are available in the back-end too -which work as expected
+- `NEED` is a constant in Anon that refers to `.need` as a CSS-class -which is purple. Buttons are styled the same way and there are 5 different "tones" like this: `good cool need warn fail`. All this is used by Anon itself to make pretty UI components that "mean" something
+
+In addition to the above "ordain", you can define an entire web page with JavaScript and you don't have to hack JavaScript inside a string inside the `onWhatever` attribute of an element; you can define both the element AND events in JavaScript and the debugger will be happy about it, like this:
+
+```javascript
+document.body.insert({view:`#myView`, contents:
+[
+    {title:`My awesome Tab Title`},
+    {h1:`Big heading`},
+    {a:`Click Me!`, href:`/some/link`, onclick:function(evnt)
+    {
+        evnt.hijack(true); // lay off -this is mine!
+        this.notify(`i was clicked, yet i did nothing`);
+    }},
+]});
+```
+
+Anon has several "special tags" .. `view` is styled to span the entire window as `position:fixed` .. There is also `layr` -which covers its parent, but is `position:absolute` instead.
+
+Apart from the structure above being rather self-explanatory, the `evnt.hijack` is built into Anon and it does: `this.preventDefault(); this.stopPropagation();` .. if `true` is also does: `this.stopImmediatePropagation();` -which as you know, prevents any other listeners from doing anything .. All this really means is "short-hand", and it makes coding easy to remember and cleaner to look at.
+
+You can also ***hijack*** existing events in your own site, or if you're making some quick hack-job for a client as "proof of concept" to some requirement, you can tell Anon to "hijack" which-ever events you want in the sub-DOM structure.
+
+You can see how all the above makes your life easy; there's a LOT more of this magic in Anon, stay tuned ;-)
+
+>*info - Anon uses its `hijack` in front-end to protect against script injections -but you pass in a `function` (not bool); although, as you've probably noticed: Anon uses "hacking methods" to provide security .. front-end and back-end .. obviously this can be (miss)-used to your advantage and block any other listeners from interfering .. don't get ideas .. #WasntMe ;-)*
 
 <br>
 
