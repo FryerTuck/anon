@@ -226,12 +226,12 @@ render({view:`#myView`, contents:
 ```
 
 The function `render` above operates in 2 ways:
-- if no "callback" is given, it replaces the `document.body` with content given
+- if no "callback" is given, it replaces the `#anonMainView` contents with contents given
 - if a callback function is given it renders the content and calls the callback with the rendered node
 
-If you give it a path to a file e.g. markdown, it will fetch it first, then render it as mentioned; so you can some "htm" contents (partial hyper-text-markup, as apposed to an entire HTML document) -or anything else.
+If you give it a path to a file e.g. markdown, it will fetch it first, then render it as mentioned; so you can refer some "htm" contents (partial hyper-text-markup, as apposed to an entire HTML document) -or anything else.
 
-Anon has several "special tags" .. `view` is styled to span the entire window as `position:fixed` .. There is also `layr` -which covers its parent, but is `position:absolute` instead.
+Anon has several "special tags" .. `view` is styled to span the entire window as `position:fixed` .. There is also `layr` -which covers only its parent, but is `position:absolute` instead.
 
 Apart from the structure above being rather self-explanatory, the `evnt.hijack` is built into Anon and it does: `this.preventDefault(); this.stopPropagation();` .. if `true` is also does: `this.stopImmediatePropagation();` -which as you know, prevents any other listeners from doing anything .. All this really means is "short-hand", and it makes coding easy to remember and cleaner to look at.
 

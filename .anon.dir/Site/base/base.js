@@ -1146,8 +1146,8 @@
       if(isKnob(p)||isNode(p))
       {
           let n=(isNode(p)?p:create(p));
-          document.body.innerHTML="";
-          document.body.insert(n);
+          select("#anonMainView").innerHTML="";
+          select("#anonMainView").insert(n);
           if(!isFunc(f)){return n};
           n.listen("ready",f);
       };
@@ -1158,12 +1158,13 @@
       {
          let m,q,t,x; m=r.head.ContentType.split(';')[0].split('/x-').join('/');
          q=m.split('/'); t=trim(q[0]); x=trim(q[1]); if(!isin(keys(parser),t)){t=x};
-         if(!trim(r.body)){if(!isFunc(f)){document.body.innerHTML="";}else{f("")}; return};
+         if(!trim(r.body)){if(!isFunc(f)){select("#anonMainView").innerHTML="";}else{f("")}; return};
          parsed(r,t,(z)=>
          {
             if(t=='markdown'){z=create({div:'.markdown-page',contents:[z]})};
             if(isFunc(f)){f(z); return};
-            document.body.innerHTML=""; document.body.insert(z);
+            select("#anonMainView").innerHTML="";
+            select("#anonMainView").insert(z);
          });
       });
    }
