@@ -136,8 +136,8 @@ namespace Anon;
             if($w){fail::repo("Repository at: $src is $w".$x);};
          };
 
-         $nps=self::survey($dir,$opt[NATIVE],NATIVE,0,0); exec::{"git fetch origin $brn"}($dir);
-         $rps=self::survey($dir,$opt[REMOTE],REMOTE,0,0); $ldr=null;
+         $nps=self::survey($dir,$opt->NATIVE,NATIVE,0,0); exec::{"git fetch origin $brn"}($dir);
+         $rps=self::survey($dir,$opt->REMOTE,REMOTE,0,0); $ldr=null;
 
          foreach($nps as $npk => $npv)
          {

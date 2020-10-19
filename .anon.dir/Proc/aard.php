@@ -431,10 +431,11 @@ namespace Anon;
              exec::{"git merge user_$un"}($tp); // merger user's branch with fuse:master
          };
          signal::dump("done merging user-branches"); wait(150);
+         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>40]); wait(150);
 
          $ht=pget("/.htaccess"); $th=pget("$sp/.htaccess"); if($th){$ht="$th";}; // hta may have auto-changed elsewhere
          Repo::update($up,$gr->$cw,'pull','origin');
-         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>40]); wait(150);
+         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>50]); wait(150);
          $om=conf('Repo/gitIgnor'); // TODO :: stuff to omit
 
          foreach($rd as $dp)
@@ -448,7 +449,6 @@ namespace Anon;
 
          // path::make($mp,$pw);
          $ht=htbackup($ht,pget("$/Repo/data/native/anon/.htaccess"));
-         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>50]); wait(150);
          path::make("$tp/.htaccess",$ht); // write fused htaccess to fuse-repo
          Repo::commit($tp,"$uw update",true); // add all & commit changes & push to tank-repo
          Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>60]); wait(150);
