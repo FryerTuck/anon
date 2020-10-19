@@ -72,9 +72,11 @@ $export=function($c,$a,$h)
 
    if($c==='upkeep')
    {
-        if(!isFunc('upkeep')){require(path('$/Proc/base/keep.php'));};
+        if(isFunc('upkeep')){return "upkeep ran a few seconds ago, try again if you really want to";};
+        require(path('$/Proc/base/keep.php'));
         upkeep($_SERVER['SYSCLOCK']->upkeep,1,time(),knob($_GET)->upkeep);
         path::make('$/Proc/vars/lastDbug',(time().''));
+        return OK;
    };
 
    fail("command `$c` is not supported, yet");
