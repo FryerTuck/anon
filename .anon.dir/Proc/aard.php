@@ -417,7 +417,7 @@ namespace Anon;
          $hsh=Repo::commit($tp,"restore point",true); // backup web-root as a restore commit & push to tank
          signal::dump("created restore point .. commit hash: $hsh"); wait(150);
          signal::busy(['with'=>"SoftwareUpdate",'done'=>20]); wait(150);
-         exec::{"git pull --all"}($tp); // pull all refs
+         exec::{"git pull --all"}($tp); wait(150); // pull all refs
          signal::dump("synched fuse with root"); wait(150);
          signal::busy(['with'=>"SoftwareUpdate",'done'=>30]); wait(150);
 
@@ -434,7 +434,7 @@ namespace Anon;
          signal::busy(['with'=>"SoftwareUpdate",'done'=>40]); wait(150);
 
          $ht=pget("/.htaccess"); $th=pget("$sp/.htaccess"); if($th){$ht="$th";}; // hta may have auto-changed elsewhere
-         Repo::update($up,$gr->$cw,'pull','origin');
+         Repo::update($up,$gr->$cw,'pull','origin'); wait(150);
          signal::busy(['with'=>"SoftwareUpdate",'done'=>50]); wait(150);
          $om=conf('Repo/gitIgnor'); // TODO :: stuff to omit
 
@@ -450,7 +450,7 @@ namespace Anon;
          // path::make($mp,$pw);
          $ht=htbackup($ht,pget("$/Repo/data/native/anon/.htaccess"));
          path::make("$tp/.htaccess",$ht); // write fused htaccess to fuse-repo
-         Repo::commit($tp,"$uw update",true); // add all & commit changes & push to tank-repo
+         Repo::commit($tp,"$uw update",true); wait(150); // add all & commit changes & push to tank-repo
          signal::busy(['with'=>"SoftwareUpdate",'done'=>60]); wait(150);
 
          $testFP=conf('Proc/unitTest/siteFuse'); if(isee($testFP)&&(fext($testFP)==='php'))
@@ -479,7 +479,7 @@ namespace Anon;
 
          chmod(ROOTPATH."/.htaccess",0644); // make htaccess writable for now
          // try{exec::{'git stash && git stash clear'}('/');}catch(\Exception $e){ }; // clear changes made in web-root since last
-         Repo::update('/','pull'); // update web-root by pulling from tank .. any `gitIgnor` should be respected
+         Repo::update('/','pull'); wait(150); // update web-root by pulling from tank .. any `gitIgnor` should be respected
          signal::busy(['with'=>"SoftwareUpdate",'done'=>80]); wait(150);
          exec::{"git push origin master"}($tp);
          signal::busy(['with'=>"SoftwareUpdate",'done'=>90]); wait(150);
