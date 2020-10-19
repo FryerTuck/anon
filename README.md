@@ -226,8 +226,8 @@ render({view:`#myView`, contents:
 ```
 
 The function `render` above operates in 2 ways:
-- if no "callback" is given, it replaces the `#anonMainView` contents with contents given
-- if a callback function is given it renders the content and calls the callback with the rendered node
+- if no "callback function" is given, it replaces the `#anonMainView` contents with contents given
+- if a callback is given it renders the content and calls the callback with the rendered node
 
 If you give it a path to a file e.g. markdown, it will fetch it first, then render it as mentioned; so you can refer some "htm" contents (partial hyper-text-markup, as apposed to an entire HTML document) -or anything else.
 
