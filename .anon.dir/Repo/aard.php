@@ -278,7 +278,7 @@ namespace Anon;
       static function update($dir,$brn=null,$run='pull',$nic='origin')
       {
          expect::repo($dir); if(isin($brn,['pull','push'])){$run="$brn"; $brn=null;};
-         if(!$brn){$brn=self::branch($dir);}elseif(!is_funnic($brn)){fail::reference('invalid branch name');};
+         if(!$brn){$brn=self::branch($dir);};
          signal::dump("repo update: `$dir` .. $run $nic $brn");
          exec::{'git add --all'}($dir); exec::{"git commit --allow-empty -m \"$run $nic\""}($dir);
          exec::{"git repack -a -d -f --window=0"}($dir); // repair if needed

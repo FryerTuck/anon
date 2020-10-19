@@ -411,19 +411,19 @@ namespace Anon;
          Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>1]);  lock::awaits($ln);
          signal::dump("running $pv->type software update"); // wait for procs to finish
          siteLocked(true); // lock all front-ends to avoid collision
-         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>10]);
+         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>10]); wait(150);
 
          signal::dump("creating restore point");
          $hsh=Repo::commit($tp,"restore point",true); // backup web-root as a restore commit & push to tank
          signal::dump("created restore point .. commit hash: $hsh");
-         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>20]);
-         Repo::update($tp,'pull'); // sync fuse with root to avoid conflicts
+         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>20]); wait(150);
+         Repo::update($tp,'pull','--all'); // sync fuse with root to avoid conflicts
          signal::dump("synched fuse with root");
-         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>30]);
+         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>30]); wait(150);
 
          $ht=pget("/.htaccess"); $th=pget("$sp/.htaccess"); if($th){$ht="$th";}; // hta may have auto-changed elsewhere
          Repo::update($up,$gr->$cw,'pull','origin');
-         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>40]);
+         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>40]); wait(150);
          $om=conf('Repo/gitIgnor'); // TODO :: stuff to omit
 
          foreach($rd as $dp)
@@ -437,10 +437,10 @@ namespace Anon;
 
          // path::make($mp,$pw);
          $ht=htbackup($ht,pget("$/Repo/data/native/anon/.htaccess"));
-         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>50]);
+         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>50]); wait(150);
          path::make("$tp/.htaccess",$ht); // write fused htaccess to fuse-repo
          Repo::commit($tp,"$uw update",true); // add all & commit changes & push to tank-repo
-         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>60]);
+         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>60]); wait(150);
 
          $testFP=conf('Proc/unitTest/siteFuse'); if(isee($testFP)&&(fext($testFP)==='php'))
          {
@@ -459,7 +459,7 @@ namespace Anon;
              {signal::dump("ignored UnitTest: `$testFP` .. expected it to export a function");};
          };
 
-         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>70]);
+         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>70]); wait(150);
          if($pv->type==='test')
          {
              siteLocked(false); lock::remove($ln);
@@ -469,10 +469,10 @@ namespace Anon;
          chmod(ROOTPATH."/.htaccess",0644); // make htaccess writable for now
          // try{exec::{'git stash && git stash clear'}('/');}catch(\Exception $e){ }; // clear changes made in web-root since last
          Repo::update('/','pull'); // update web-root by pulling from tank .. any `gitIgnor` should be respected
-         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>80]);
-         wait(150); exec::{"git push origin master"}($tp);
-         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>90]);
-         wait(150); exec::{"git pull origin master"}('/');
+         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>80]); wait(150);
+         exec::{"git push origin master"}($tp);
+         Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>90]); wait(150);
+         exec::{"git pull origin master"}('/');
          chmod(ROOTPATH."/.htaccess",0444); // make htaccess read-only
          siteLocked(false); lock::remove($ln);
          signal::ClientReboot("new updates from $cw","*");
