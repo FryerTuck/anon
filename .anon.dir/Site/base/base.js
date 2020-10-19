@@ -1143,7 +1143,7 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const render = function(p,f, s)
    {
-      if(isKnob(p)||isNode(p))
+      if(isKnob(p)||isList(p)||isNode(p))
       {
           let n=(isNode(p)?p:create(p));
           select("#anonMainView").innerHTML="";

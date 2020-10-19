@@ -207,14 +207,14 @@ ordain('.someCSSclass')
 ```
 
 In the above:
-- `isWord` will check if the value contain only characters that looks like a "word" altogether, and additionally (optional) -that it is at least 6 characters long .. there are many `isWhatever` functions in Anon, like: `isVoid isText isBool isNumr isPath isFunc` etc. -and these are available in the back-end too -which work as expected
+- `isWord` will check if the value contain only characters that looks like a "word" altogether, and additionally (optional) -that it is at least 6 characters long .. there are many `isWhatever` functions in Anon, like: `isVoid isText isBool isNumr isPath isList isKnob isFunc` etc. -and these are available in the back-end too -which work as expected .. `knob` is for "key-notation object"
 - `NEED` is a constant in Anon and can be used in any way as it contains the exact text: `:NEED:`; however, in this context it refers to `.need` as a CSS-class -which is purple. Buttons are styled the same way and there are 5 different "tones" like this: `good cool need warn fail`. All this is used by Anon itself to make pretty UI components that "mean" something
 
 In addition to the above "ordain", you can define an entire web page with JavaScript and you don't have to hack JavaScript inside a string inside the `onWhatever` attribute of an element; you can define both the element AND events in JavaScript and the debugger will be happy about it, like this:
 
 ```javascript
-render({view:`#myView`, contents:
-[
+render
+([
     {title:`My awesome Tab Title`},
     {h1:`Big heading`},
     {a:`Click Me!`, href:`/some/link`, onclick:function(evnt)
@@ -222,7 +222,7 @@ render({view:`#myView`, contents:
         evnt.hijack(true); // lay off -this is mine!
         this.notify(`i was clicked, yet i did nothing`);
     }},
-]});
+]);
 ```
 
 The function `render` above operates in 2 ways:
