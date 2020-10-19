@@ -240,7 +240,7 @@ document.body.insert(foo);
 let kids = foo.select(`span`);
 
 render({div:`#boo .moo`, $:`Hello!`});
-select(`#boo`).modify({id:`gone`});
+select(`#boo`).modify({id:`gone`, class:`noodles`, onclick:function(){}});
 
 remove(foo,`#gone`);
 ```
