@@ -417,7 +417,7 @@ namespace Anon;
          $hsh=Repo::commit($tp,"restore point",true); // backup web-root as a restore commit & push to tank
          signal::dump("created restore point .. commit hash: $hsh"); wait(150);
          Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>20]); wait(150);
-         Repo::update($tp,'pull','--all'); // sync fuse with root to avoid conflicts
+         exec::{"git pull --all"}($tp); // pull all refs
          signal::dump("synched fuse with root"); wait(150);
          Proc::signal('busy',['with'=>"SoftwareUpdate",'done'=>30]); wait(150);
 
@@ -425,10 +425,10 @@ namespace Anon;
          $ul=array_diff(pget("$/User/data"),["anonymous","master"]);
          foreach($ul as $un)
          {
-             $bx=dval(exec::{"git rev-parse --verify --quiet user_$un"}($tp)); // check if branch exists
-             if(!$bx){signal::dump("fuse branch `user_$un` is undefined .. moving on"); wait(150); continue;};
+             $bx=dval(exec::{"git rev-parse --verify --quiet user_$un"}($tp)); // check if user's branch exists
+             if(!$bx){exec::{"git checkout user_$un && git checkout master"}($tp);}; // make sure the user's branch exists
              signal::dump("merging fuse branches `master:user_$un`"); wait(150);
-             exec::{"git merge user_$un"}($tp);
+             exec::{"git merge user_$un"}($tp); // merger user's branch with fuse:master
          };
          signal::dump("done merging user-branches"); wait(150);
 
