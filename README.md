@@ -229,7 +229,7 @@ The function `render` above operates in 2 ways:
 - if no "callback" is given, it replaces the `document.body` with content given
 - if a callback function is given it renders the content and calls the callback with the rendered node
 
-If you give it a path to a file e.g. markdown, it will fetch it first, then render it as mentioned.
+If you give it a path to a file e.g. markdown, it will fetch it first, then render it as mentioned; so you can some "htm" contents (partial hyper-text-markup, as apposed to an entire HTML document) -or anything else.
 
 Anon has several "special tags" .. `view` is styled to span the entire window as `position:fixed` .. There is also `layr` -which covers its parent, but is `position:absolute` instead.
 
