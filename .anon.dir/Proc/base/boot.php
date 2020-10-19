@@ -325,7 +325,8 @@ namespace Anon;
    if(userDoes('work'))
    {
        $un=sesn('USER'); $sp="$/User/data/$un/home/Custom";
-       if(isee($sp)){requires::path($sp);}; unset($un,$sp);
+       if(isee($sp)){$op=requires::path($sp); if($op!==null){signal::dump("~/server.php output:\n".tval($op));}}; 
+       unset($un,$sp,$op);
    };
 
    Proc::init(); // initialize Proc
