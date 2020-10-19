@@ -231,7 +231,7 @@ The function `render` above operates in 2 ways:
 
 If you give it a path to a file e.g. markdown, it will fetch it first, then render it as mentioned; so you can refer some "htm" contents (partial hyper-text-markup, as apposed to an entire HTML document) -or anything else.
 
-The `render` function uses the `insert` method in Anon to "append" contents to a node; though, `render` replaces the contents, where `insert` only appends. There are several "crud-like" functions in the Anon front-end and most of them extend any Element (node), but can also be used directly, like this:
+The `render` function uses the `insert` method in Anon to `create` and "append" contents to a node; though, `render` replaces the contents, where `insert` only appends. There are several "crud-like" functions in the Anon front-end and most of them extend any Element (node), but can also be used directly, like this:
 
 ```javascript
 let foo = create(`div`);
