@@ -114,6 +114,7 @@ namespace Anon;
       static function status($dir,$opt=null)
       {
          $dir=repoOf($dir); if(!$dir){return;}; $src=self::origin($dir,1); $hst=HOSTNAME; $bdy=knob();
+signal::dump($opt); wait(150);
          if(!$opt){$opt=[NATIVE=>"master",REMOTE=>'master'];};
 
          if($opt===':HASH:')
