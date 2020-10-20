@@ -111,7 +111,7 @@ If a comment starts with a hash-tag -followed by an email address, then the comm
 
 Anon is tablet-friendly, so you can have it with you everywhere you go on construction/maintenance sites, assembly lines, etc. Anon locks itself when the user is not responding.
 
-Every action a logged-in user makes is recorded on the server. All these action-stamps have the date & time -to the second and is added up together as time the user spent on the system while logged in. A task can have a `WorkPath` assigned to it, so if digital work is done on a task it can be automatically billed per task, or per company. Email addresses are kept in the **Bill** app's contacts, so it all comes together well and you can invoice your clients accordingly; if it's physical work, the time between BUSY & DONE (for each user) is used anyway, so it's okay.
+Every action a logged-in user makes is recorded on the server. All these action-stamps have the date & time -to the second and is added up together as time the user spent on the system while logged in. A task can have a `WorkPath` assigned to it, so if digital work is done on a task it can be automatically billed per task, or per company. Business names are associated with email addresses in the **Bill** app's contacts, though you can assign a business-name to an email address in a docket; so it all comes together well and you can invoice your clients accordingly. If it's physical work, the time is recorded when you drag dockets between columns anyway, so it's okay.
 
 In the docket, you can assign a company-name to any new email address that comes in, this is automatically used in Billing and Anon remembers to which company belongs what.
 
