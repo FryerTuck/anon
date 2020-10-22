@@ -6,4 +6,4 @@ stainWhenExceeds: 1280,720
 stainIgnoreThese: /Site/dcor/*,/User/dcor/*
 stainImageSource: /Site/dcor/mark.svg
 stainCoverSizing: auto
-stainBaseOpacity: 0.2
+stainBaseOpacity: 0.1
