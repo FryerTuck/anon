@@ -362,8 +362,9 @@ extend(custom.domtag)
             if((itm.info.type=="fold")&&(f.childNodes.length<1)){purl('/User/foldMenu',{path:itm.info.path},(r)=>
             {
                if(!isJson(r.body))
-               {dump(r.body); alert("got non-json response, see console"); return};
-               r=decode.jso(r.body,1); if(!r){return}; r.each((v)=>
+               {dump(r.body); fail("got non-json response, see console"); return};
+               r=decode.jso(r.body,1); if(r&&isList(r.data)){r=r.data}; if(!r){return}; 
+               r.each((v)=>
                {
                   v.path=(itm.info.path+"/"+v.name); v.root=itm.info.root;
                   f.insert(itm.info.root.sprout(v,l,d,e,r));
