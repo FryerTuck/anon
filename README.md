@@ -51,7 +51,7 @@ Anon will dismiss any code-injection attempt -from various angles, even from the
 
 If you have a website that sells digital photos/designs for artists, you most probably do not want people (or web-crawlers) to steal their work.
 
-In Anon's configuration settings you can enable to "stain" (watermark) your images automatically with your logo (or anything) -even before they get to the visitor's web-browser, by setting a resolution-limit and choosing an image to stain them with. This happens on-the-fly, so you don't have to spend 100's of hours in watermarking your images -or pay someone to do it, but now you don't have to worry about that anymore:
+In Anon's configuration settings you can enable to "stain" (watermark) your images automatically with your logo (or anything) -even before they get to the visitor's web-browser, by setting a resolution-limit and choosing an image to stain them with. You can also set the stain opacity in your configuration. This "staining" happens on-the-fly, so you don't have to spend hours in watermarking your images.
 
 ![AnonStain](https://i.imgur.com/tSOVD1b.png)
 >*screenshot - an image watermarked with Anon's logo .. this "stain" can be SVG as well, so it scales well with very large images*

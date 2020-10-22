@@ -80,5 +80,10 @@ namespace Anon;
 
 # exec :: keep : run this every time on upkeep
 # -----------------------------------------------------------------------------------------------------------------------------
-    Repo::ignore("/",write,conf('Repo/gitIgnor'));
+    $tolu=(pget('$/Proc/vars/lastUpdt','0') * 1); $tnow=time();
+    if(($tnow-$tolu)<=conf("Proc/sysClock/upkeep"))
+    {
+        signal::dump("checking repo-ignore-rules after update"); wait(150);
+        Repo::ignore("/",write,conf('Repo/gitIgnor'));
+    };
 # -----------------------------------------------------------------------------------------------------------------------------
