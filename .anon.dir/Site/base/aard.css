@@ -82,7 +82,7 @@
       padding:0px;
       vertical-align:top;
    }
-   table.show{display:table !important;}
+   table.show{display:table;}
 
    iframe,object
    {
@@ -190,11 +190,11 @@
 
    col
    {
-      display:table-cell !important; box-sizing:border-box !important;
+      display:table-cell; box-sizing:border-box !important;
       width:unset; height:unset;
       vertical-align:top; text-align:left;
    }
-   col.show{display:table-cell !important;}
+   col.show{display:table-cell;}
    col.tiny
    {
       width:1px; height:1px;
@@ -203,7 +203,7 @@
 
    datagrid
    {
-      display:table !important; box-sizing:border-box;
+      display:table; box-sizing:border-box;
       border-width:0px; border:none;
       margin:0px; padding:0px;
    }
