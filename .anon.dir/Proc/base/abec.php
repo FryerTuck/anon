@@ -1033,6 +1033,8 @@ namespace Anon;
          $h=crop($h); $r=(isRepo($h)?Repo::status($h):null); if($r){unset($r->body);}; $n=self::leaf($h); $s=self::size($h);
 
          $z=knob(['repo'=>$r,'path'=>$h,'name'=>$n,'mime'=>mime($h),'type'=>'fold','size'=>$s,'time'=>$i->mtime,'data'=>null]);
+         if(!$l){return $z;};
+
          $z->data=self::ogle
          ([
             using => $h,

@@ -209,7 +209,8 @@ namespace Anon;
          $v=knob($_POST); $h=$v->root; if(!$h){$h=$v->path;}; if(!$h){$h='~';}; expect::path($h,[R,D]);
          // if(arg($h)->startsWith('~')){$u=user('name'); $h="/User/data/$u/home";};
 
-         $r=path::ogle
+         $r=path::tree($h,0);
+         $r->data=path::ogle
          ([
             using => $h,
             fetch => path::cols(),
