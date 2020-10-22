@@ -54,7 +54,7 @@ If you have a website that sells digital photos/designs for artists, you most pr
 In Anon's configuration settings you can enable to "stain" (watermark) your images automatically with your logo (or anything) -even before they get to the visitor's web-browser, by setting a resolution-limit and choosing an image to stain them with. You can also set the stain opacity in your configuration. This "staining" happens on-the-fly, so you don't have to spend hours in watermarking your images.
 
 ![AnonStain](https://i.imgur.com/tSOVD1b.png)
->*screenshot - an image watermarked with Anon's logo .. this "stain" can be SVG as well, so it scales well with very large images*
+>*screenshot - an image watermarked with Anon's logo .. this "stain" can be SVG as well, so it scales well with very large images .. you can also set the "stainCoverSizing" to better suit your needs; by default it adapts to the image dimensions*
 
 <br>
 
