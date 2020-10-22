@@ -561,7 +561,12 @@ namespace Anon;
                  if(($d[0]>=$s[0])||($d[1]>=$s[1]))
                  {
                      $cvr=$c->stainCoverSizing;
-                     if(isin($cvr,['high','tall'])){$d[0]=0;}else{$d[1]=0;};
+
+                     if(isin(['high','tall','height'],$cvr)){$d[0]=0;}
+                     elseif(isin(['wide','flat','width'],$cvr)){$d[1]=0;}
+                     elseif(isin(['auto','cover'],$cvr)){if($d[0]>=$d[1]){$d[1]=0;}else{$d[0]=0;}}
+                     // else $cvr is `stretch`, or `span`
+
                      $h['cache']=false; ekko::head($h);
                      $i->impose($c->stainImageSource,$d,null,$c->stainBaseOpacity);
                      if($t){echo (durl($i->raster(),$m));}else{echo $i->raster();};
