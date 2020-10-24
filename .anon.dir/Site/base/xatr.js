@@ -41,7 +41,7 @@ extend(custom.attrib)
             let c=n.innerHTML; n.innerHTML='';
             let r=[{col:'.butnIcon',contents:[{icon:'', face:v, size:fs}]}];
             if(c){r.radd({col:'.butnLine',contents:[{vdiv:''}]}); r.radd({col:'.butnText',contents:c})};
-            n.insert({grid:`.iconGrid`,$:[{row:r}]});
+            n.insert({grid:'.iconGrid',$:[{row:r}]});
             return;
          };
 

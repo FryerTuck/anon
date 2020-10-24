@@ -55,8 +55,6 @@ extend(custom.domtag)
                 Br:{cx:((bxw-cxy)+qr),cy:((bxh-cxy)+qr)},
             };
 
-dump(`>>${cpi}<<`);
-
             let lst=styleSheet('/Site/dcor/icon.woff'); let uni=lst[`.icon-${ico}::before`].content; let bip=crd[cpn];
             let tnt=cStyle(par,"color"); let htm=''; let tiu=(isText(cpi,2)?lst[`.icon-${cpi}::before`].content:cpi);
             let stl=`fill="${tnt}" stroke="none" style="webkit-font-smoothing:greyscale"`; let tfs=(nmr/2);
@@ -79,7 +77,7 @@ dump(`>>${cpi}<<`);
                     <text class="smlIcoTxt" x="${tip.cx}" y="${tip.cy}" font-family="${fnt}" ${stl} font-size="${tfs}${unt}">${tiu}</text>
                  </svg>`;
 
-            par.insert({grid:[{row:[{col:[{wrap:htm}]}]}]});
+            par.insert({grid:'.iconGrid',$:[{row:[{col:[{wrap:htm}]}]}]});
         });
 
       return DONE;
