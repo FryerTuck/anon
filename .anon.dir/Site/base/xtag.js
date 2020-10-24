@@ -54,8 +54,6 @@ extend(custom.domtag)
                 Bl:{cx:(cxy-qr),cy:((bxh-cxy)+qr)},
                 Br:{cx:((bxw-cxy)+qr),cy:((bxh-cxy)+qr)},
             };
-            
-dump(`>>${cpi}<<`);
 
             let lst=styleSheet('/Site/dcor/icon.woff'); let uni=lst[`.icon-${ico}::before`].content; let bip=crd[cpn];
             let tnt=cStyle(par,"color"); let htm=''; let tiu=(isText(cpi,2)?lst[`.icon-${cpi}::before`].content:cpi);
