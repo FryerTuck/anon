@@ -344,7 +344,15 @@
       {
           d=d.detail; if(d==OK){return};
           if(!isJson(d)){console.error(`SoftwareUpdate fail: ${d}`); return};
-          d=decode.jso(d);
+          d=decode.jso(d); dump("SoftwareUpdate signal handler triggered");
+
+          if(!select("#AnonPanlSlab"))
+          {
+              let mbtn,bico,uspn; mbtn=select("#AnonMenuKnob"); bico=mbtn.icon; uspn=d.diff.split("\n").length;
+              mbtn.innerHTML=""; mbtn.modify({icon:`${bico} tr:${uspn}`});
+              return;
+          };
+
           popModal(`cog :: New Updates`)
           ({
               body:[{panl:
