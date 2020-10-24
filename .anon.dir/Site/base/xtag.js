@@ -54,7 +54,7 @@ extend(custom.domtag)
                 Bl:{cx:(cxy-qr),cy:((bxh-cxy)+qr)},
                 Br:{cx:((bxw-cxy)+qr),cy:((bxh-cxy)+qr)},
             };
-
+dump(`>>${cpi}<<`);
             let lst=styleSheet('/Site/dcor/icon.woff'); let uni=lst[`.icon-${ico}::before`].content; let bip=crd[cpn];
             let tnt=cStyle(par,"color"); let htm=''; let tiu=(isText(cpi,2)?lst[`.icon-${cpi}::before`].content:cpi);
             let stl=`fill="${tnt}" stroke="none" style="webkit-font-smoothing:greyscale"`; let tfs=(nmr/2);
@@ -72,6 +72,7 @@ extend(custom.domtag)
                         <rect x="0" y="0" width="100%" height="100%" fill="white" />
                         <circle cx="${bip.cx}" cy="${bip.cy}" r="${rad}" fill="black" />
                     </mask>
+                    <circle cx="${bip.cx}" cy="${bip.cy}" r="${rad}" stroke="${tnt}" />
                     <text class="bigIcoTxt" x="2" y="${(bxh-3)}" ${stl} font-family="icon" font-size="${nmr}${unt}" mask="url(#IconMask${cid})">${uni}</text>
                     <text class="smlIcoTxt" x="${tip.cx}" y="${tip.cy}" font-family="${fnt}" ${stl} font-size="${tfs}${unt}">${tiu}</text>
                  </svg>`;
@@ -363,7 +364,7 @@ extend(custom.domtag)
             {
                if(!isJson(r.body))
                {dump(r.body); fail("got non-json response, see console"); return};
-               r=decode.jso(r.body,1); if(r&&isList(r.data)){r=r.data}; if(!r){return}; 
+               r=decode.jso(r.body,1); if(r&&isList(r.data)){r=r.data}; if(!r){return};
                r.each((v)=>
                {
                   v.path=(itm.info.path+"/"+v.name); v.root=itm.info.root;
