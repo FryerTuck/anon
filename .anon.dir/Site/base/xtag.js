@@ -65,6 +65,7 @@ extend(custom.domtag)
                 Bl:{cx:0,cy:(bxh-2)},
                 Br:{cx:(bxw-tfs),cy:(bxh-2)},
             };
+
             let tip=tic[cpn]; let fnt=(isText(cpi,2)?"icon":"hack");
 
             htm=`<svg width="${bxw}" height="${bxh}" viewbox="0 0 ${bxw} ${bxh}" class="cenmid">
