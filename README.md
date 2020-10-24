@@ -523,9 +523,18 @@ Installing Anon is quick, but you can do this the easy way, or the way of the Je
 <br>
 
 ### Manual installation
+It's important to check that your target host (server) configuration meets the basic requirements before you install.
 
-1. click <a href="https://raw.githubusercontent.com/FryerTuck/anon/master/.anon.dir/Anon/base/deploy.php">here</a> to see Anon's [deploy.php](https://github.com/FryerTuck/anon/blob/master/.anon.dir/Anon/base/deploy.php) file as plain text; copy all that by pressing: `Ctrl a` then `Ctrl c` on your keyboard, then create a new file on your local computer and name it e.g: `anonDeploy.php` and paste all that text inside it and save.
-2. copy that `anonDeploy.php` file to the target website's web-root folder, like `public_html` -via any means, e.g. FTP, or mounted via sshfs
+#### Dependencies
+The following is what Anon requires ***at least***
+- Operating System: **Linux** .. if you intend to run this on a Mac -or on Windows, you can run Linux in a Virtual-Machine, like [VirtualBox](https://www.virtualbox.org/).
+- Web Server: **Apache** .. at least v2.2 -although **v2.4** is expected .. make sure `AllowOverrides` is `on` in the Apache config, or vHost conf.
+- Handler: **PHP** .. at least v5.6 -although **v7.2** is expected .. if any extensions are missing Anon will inform you.
+- Permission: make sure your Apache-user can write inside its own web-root directory.
+
+#### Installation procedure
+1. click <a href="https://raw.githubusercontent.com/FryerTuck/anon/master/.anon.dir/Anon/base/deploy.php">here</a> to see Anon's [deploy.php](https://github.com/FryerTuck/anon/blob/master/.anon.dir/Anon/base/deploy.php) file in plain text; copy all that by pressing: `Ctrl a` then `Ctrl c` on your keyboard, then create a new file on your local computer and name it e.g: `anonDeploy.php` and paste all that text inside it and save.
+2. copy that `anonDeploy.php` file to the target website's web-root folder, like `public_html` -via any means, e.g. FTP -or if mounted via sshfs then just use the terminal, or your file-browser
 3. visit the target URL in your web-browser e.g: `example.com/anonDeploy.php`
 
 You should see a confirmation screen like this:
