@@ -39,6 +39,7 @@ extend(custom.domtag)
         if(!clp&&(fnt!='hack')){n.enclan(('.'+fnt+'-'+fce))}; modify(n,a); n.setStyle({height:sze, fontSize:sze});
         if(!c){n.setStyle({width:sze,transform:`rotate(${rot}deg)`})};
 
+
         if(c){n.insert({div:c}); return DONE;};
         if(!clp){return DONE;};
 
