@@ -58,6 +58,7 @@ extend(custom.domtag)
             let lst=styleSheet('/Site/dcor/icon.woff'); let uni=lst[`.icon-${ico}::before`].content; let bip=crd[cpn];
             let tnt=cStyle(par,"color"); let htm=''; let tiu=(isText(cpi,2)?lst[`.icon-${cpi}::before`].content:cpi);
             let stl=`fill="${tnt}" stroke="none" style="webkit-font-smoothing:greyscale"`; let tfs=(nmr/2);
+            if(isText(cpi,1)){tfs*=0.8;};
             let tic=
             {
                 Tl:{cx:0,cy:(tfs-2)},
@@ -65,7 +66,6 @@ extend(custom.domtag)
                 Bl:{cx:0,cy:(bxh-2)},
                 Br:{cx:(bxw-tfs),cy:(bxh-2)},
             };
-
             let tip=tic[cpn]; let fnt=(isText(cpi,2)?"icon":"hack");
 
             htm=`<svg width="${bxw}" height="${bxh}" viewbox="0 0 ${bxw} ${bxh}" class="cenmid">
@@ -73,7 +73,6 @@ extend(custom.domtag)
                         <rect x="0" y="0" width="100%" height="100%" fill="white" />
                         <circle cx="${bip.cx}" cy="${bip.cy}" r="${rad}" fill="black" />
                     </mask>
-                    <circle cx="${bip.cx}" cy="${bip.cy}" r="${rad}" stroke="${tnt}" />
                     <text class="bigIcoTxt" x="2" y="${(bxh-3)}" ${stl} font-family="icon" font-size="${nmr}${unt}" mask="url(#IconMask${cid})">${uni}</text>
                     <text class="smlIcoTxt" x="${tip.cx}" y="${tip.cy}" font-family="${fnt}" ${stl} font-size="${tfs}${unt}">${tiu}</text>
                  </svg>`;
