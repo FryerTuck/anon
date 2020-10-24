@@ -1121,11 +1121,10 @@
       padding:6px;
    }
 
-
    noteicon
    {
       display:inline-block; position:absolute; box-sizing:border-box;
-      z-index:9999;
+      z-index:999;
       background-color:#2e3133;
       text-align:center; color:#FFF;
       padding:1px;
