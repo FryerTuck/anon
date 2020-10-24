@@ -18,11 +18,17 @@ extend(custom.attrib)
 
    icon:function(v,n,a, t,p,pb,nb,ml,mt,pr,pt,fs,fc,bw,so,il)
    {
+      if(isin(v," ")){il=v.split(" "); v=lpop(il); il=rpop(il); v=(v+" "+il); il=VOID;};
+      n.setAttribute('icon',v); n.icon=v;
+
       wait.until(()=>{return (!!n.parentNode)},()=>
       {
          t=nodeName(n); p=n.parentNode; pb=rectOf(p); nb=rectOf(n); mt=cStyle(n,'margin-top'); ml=cStyle(n,'margin-left');
          pr=cStyle(n,'padding-right'); pt=cStyle(n,'padding-top'); fs=cStyle(n,'font-size'); fc=cStyle(n,'color'); bw=cStyle(n,'border-width');
          il=stub(v," "); if(il){v=il[0]; il=dval(il[2]);};
+
+         let lico=n.select(".iconGrid"); if(!lico){lico=n.select("icon");};
+         if(lico){remove(lico[0])};
 
          if(t=='butn')
          {
@@ -36,7 +42,7 @@ extend(custom.attrib)
             let r=[{col:'.butnIcon',contents:[{icon:'', face:v, size:fs}]}];
             if(c)
             {r.radd({col:'.butnLine',contents:[{vdiv:''}]}); r.radd({col:'.butnText',contents:c})};
-            n.insert({grid:[{row:r}]});
+            n.insert({grid:`.iconGrid`,$:[{row:r}]});
             return;
          };
 
@@ -48,6 +54,8 @@ extend(custom.attrib)
             return;
          };
       });
+
+      return TRUE;
    },
 
 
