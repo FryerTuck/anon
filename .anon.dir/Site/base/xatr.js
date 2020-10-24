@@ -28,7 +28,7 @@ extend(custom.attrib)
          il=stub(v," "); if(il){v=il[0]; il=dval(il[2]);};
 
          let lico=n.select(".iconGrid"); if(!lico){lico=n.select("icon");};
-         if(lico){remove(lico[0])};
+         remove(lico);
 
          if(t=='butn')
          {
@@ -40,8 +40,7 @@ extend(custom.attrib)
 
             let c=n.innerHTML; n.innerHTML='';
             let r=[{col:'.butnIcon',contents:[{icon:'', face:v, size:fs}]}];
-            if(c)
-            {r.radd({col:'.butnLine',contents:[{vdiv:''}]}); r.radd({col:'.butnText',contents:c})};
+            if(c){r.radd({col:'.butnLine',contents:[{vdiv:''}]}); r.radd({col:'.butnText',contents:c})};
             n.insert({grid:`.iconGrid`,$:[{row:r}]});
             return;
          };
