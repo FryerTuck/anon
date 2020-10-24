@@ -1791,18 +1791,25 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    extend(MAIN)
    ({
-      notify:function(mesg,tone,arro,attr,tout)
+      notify:function(mesg,tone,arro,attr,tout, note,icon)
       {
 
          if(isText(mesg)){mesg=swap((mesg.trim()||'example mesg'),'\n','<br>')}; if(!isList(mesg)){mesg=[mesg];};
          if(isin(this.arro,tone)){let t=[arro,tone]; tone=VOID;arro=VOID; tone=lpop(t);arro=rpop(t)};
          if(!tone||!isin(this.tone,tone)){tone=LITE};tone=lowerCase(unwrap(tone)); if(!arro||!isin(this.arro,arro)){arro=TM};arro=unwrap(arro);
 
-         let note=create({notedeck:`.${tone}`, canFocus:1, contents:[{noteface:mesg},{notearro:`.${arro}`, contents:[{div:''}]}]});
+         if(isKnob(mesg[0])&&(keys(mesg[0])[0]=='icon'))
+         {
+             tout=0; icon=1;
+             note=create({noteicon:`.${tone}`, $:mesg});
+         }
+         else
+         {note=create({notedeck:`.${tone}`, canFocus:1, contents:[{noteface:mesg},{notearro:`.${arro}`, contents:[{div:''}]}]});};
+
          if(isList(attr)&&isNumr(attr[0])&&isNumr(attr[1])){attr={style:{left:attr[0],top:attr[1]}}}; if(isKnob(attr)){note.modify(attr)};
          if((tout===VOID)||(isNumr(tout)&&(tout>0))){note.expire=tick.after((isInum(tout)?tout:3000),()=>{remove(note)})};
          note.listen('blur',function(){this.signal('close'); tick.after(10,()=>{remove(this)})});
-         if(!note.expire){note.listen('ready',function(){this.focus()})};
+         if(!note.expire&&!icon){note.listen('ready',function(){this.focus()})};
          return note;
       }
       .bind

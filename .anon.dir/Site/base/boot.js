@@ -349,7 +349,7 @@
           if(!select("#AnonPanlSlab"))
           {
               let mbtn,bico,uspn; mbtn=select("#AnonMenuKnob"); bico=mbtn.icon; uspn=d.diff.split("\n").length;
-              mbtn.modify({icon:`${bico} tr:${uspn}`});
+              mbtn.notify({icon:uspn},NEED,TR);
               return;
           };
 

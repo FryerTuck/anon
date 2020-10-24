@@ -31,11 +31,12 @@ extend(custom.domtag)
 
    icon:function(n,a,c)
    {
-        if(!c){c='bug'}; if(!isText(a.face,1)){a.face=c}; if(!isText(a.font,1)){a.font='icon'};
+        if(isNumr(c)){c+=""}; if(!c){c='bug'}; if(isNumr(a.face)){a.face+=""}; if(!isText(a.face,1)){a.face=c};
+        a.face=unwrap(a.face); if(!isText(a.font,1)){a.font=((isUpperCase(a.face)&&(span(a.face)<3))?'hack':'icon')};
         a.size=(isInum(a.size)?(a.size+'px'):(isNumr(a.size)?(a.size+'rem'):(isText(a.size,3)?a.size:'16px')));
         let fce,fnt,sze,rot,clp; fce=a.face; fnt=a.font; sze=(a.size+""); clp=a.clip; delete a.face; delete a.font; delete a.size; delete a.clip;
         c=VOID; if(a.text){c=a.text; delete a.text}; rot=stub(fce,'@'); if(rot){fce=rot[0]; rot=(rot[2]*1); rot=(isNumr(rot)?round(rot,0):0)};
-        modify(n,a); if(!clp){n.enclan(('.'+fnt+'-'+fce))}; n.setStyle({height:sze, fontSize:sze});
+        if(!clp&&(fnt!='hack')){n.enclan(('.'+fnt+'-'+fce))}; modify(n,a); n.setStyle({height:sze, fontSize:sze});
         if(!c){n.setStyle({width:sze,transform:`rotate(${rot}deg)`})};
 
         if(c){n.insert({div:c}); return DONE;};
@@ -55,10 +56,11 @@ extend(custom.domtag)
                 Br:{cx:((bxw-cxy)+qr),cy:((bxh-cxy)+qr)},
             };
 
-            let lst=styleSheet('/Site/dcor/icon.woff'); let uni=lst[`.icon-${ico}::before`].content; let bip=crd[cpn];
-            let tnt=cStyle(par,"color"); let htm=''; let tiu=(isText(cpi,2)?lst[`.icon-${cpi}::before`].content:cpi);
+            let lst=styleSheet('/Site/dcor/icon.woff'); let tnt=cStyle(par,"color"); let htm=''; let bip=crd[cpn];
+            let uni=lst[`.icon-${ico}::before`]; uni=(isWord(ico)?uni.content:((isUpperCase(ico)&&(span(ico)<3))?ico:'?'));
+            let tiu=lst[`.icon-${cpi}::before`]; tiu=(isWord(cpi)?tiu.content:((isUpperCase(cpi)&&(span(cpi)<3))?cpi:'?'));
             let stl=`fill="${tnt}" stroke="none" style="webkit-font-smoothing:greyscale"`; let tfs=(nmr/2);
-            // if(isText(cpi,1)){tfs*=0.8;};
+            if(isText(cpi,1)){tfs*=0.8; tip.y*=1.2;};
             let tic=
             {
                 Tl:{cx:0,cy:(tfs-2)},

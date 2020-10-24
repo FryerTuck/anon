@@ -1121,6 +1121,17 @@
       padding:6px;
    }
 
+   noteicon
+   {
+      display:inline-block; position:absolute; box-sizing:border-box;
+      z-index:9999;
+      background-color:#2e3133;
+      text-align:center; color:#FFF;
+      padding:1px;
+      outline:none;
+      box-shadow:0px 0px 2px hsla(0,0%,0%,0.2);
+   }
+
    notedeck.hintPeek noteface
    {
       padding:0px !important;
