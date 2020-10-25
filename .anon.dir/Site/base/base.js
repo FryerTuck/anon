@@ -1801,7 +1801,7 @@
          if(isKnob(mesg[0])&&(keys(mesg[0])[0]=='icon'))
          {
              tout=0; icon=1; dime=attr.parentRect; if(!attr.style.height){attr.style.height=attr.style.fontSize};
-             if(!attr.style.height){attr.style.height=math.floor(dime.height/3); if(attr.style.height<16){attr.style.height=16}};
+             if(!attr.style.height){attr.style.height=Math.floor(dime.height/3); if(attr.style.height<16){attr.style.height=16}};
              if(!attr.style.borderRadius){attr.style.borderRadius=reckon(`${attr.style.height} / 2`);}; // will work with units
              if(!isKnob(dime)){fail("context :: expecting parentRect object for coordinates"); return};
              delete attr.dime; let dx,dy,dw,dh; dx=dime.x; dy=dime.y; dw=dime.width; dh=dime.height;
