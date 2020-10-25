@@ -1791,23 +1791,35 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    extend(MAIN)
    ({
-      notify:function(mesg,tone,arro,attr,tout, note,icon)
+      notify:function(mesg,tone,arro,attr,tout, note,icon,dime,posi)
       {
          if(isText(mesg)){mesg=swap((mesg.trim()||'example mesg'),'\n','<br>')}; if(!isList(mesg)){mesg=[mesg];};
          if(isin(this.arro,tone)){let t=[arro,tone]; tone=VOID;arro=VOID; tone=lpop(t);arro=rpop(t)};
-         if(!tone||!isin(this.tone,tone)){tone=LITE};tone=lowerCase(unwrap(tone)); if(!arro||!isin(this.arro,arro)){arro=TM};arro=unwrap(arro);
+         if(!tone||!isin(this.tone,tone)){tone=LITE}; tone=lowerCase(unwrap(tone)); if(!isKnob(attr)){attr={}};
+          if(!isKnob(attr.style)){attr.style={}}; if(!arro||!isin(this.arro,arro)){arro=TM}; arro=unwrap(arro);
 
          if(isKnob(mesg[0])&&(keys(mesg[0])[0]=='icon'))
          {
-             tout=0; icon=1;
+             tout=0; icon=1; dime=attr.parentRect; if(!attr.style.height){attr.style.height=attr.style.fontSize};
+             if(!attr.style.height){attr.style.height=math.floor(dime.height/3); if(attr.style.height<16){attr.style.height=16}};
+             if(!attr.style.borderRadius){attr.style.borderRadius=reckon(`${attr.style.height} / 2`);}; // will work with units
+             if(!isKnob(dime)){fail("context :: expecting parentRect object for coordinates"); return};
+             delete attr.dime; let dx,dy,dw,dh; dx=dime.x; dy=dime.y; dw=dime.width; dh=dime.height;
+             posi=//object
+             {
+                 tl:[dx, dy],
+                 tr:[(dx+dw), dy],
+                 bl:[dx, (dy+dh)],
+                 br:[(dx+dw), (dy+dh)],
+             };
              note=create({noteicon:`.${tone}`, $:mesg});
          }
          else
-         {note=create({notedeck:`.${tone}`, canFocus:1, contents:[{noteface:mesg},{notearro:`.${arro}`, contents:[{div:''}]}]});};
+         {note=create({notedeck:`.${tone}`,canFocus:1,contents:[{noteface:mesg},{notearro:`.${arro}`, contents:[{div:''}]}]})};
 
-         if(isList(attr)&&isNumr(attr[0])&&isNumr(attr[1])){attr={style:{left:attr[0],top:attr[1]}}}; if(isKnob(attr)){note.modify(attr)};
+         if(isList(attr)&&isNumr(attr[0])&&isNumr(attr[1])){attr={style:{left:attr[0],top:attr[1]}}}; note.modify(attr);
          if((tout===VOID)||(isNumr(tout)&&(tout>0))){note.expire=tick.after((isInum(tout)?tout:3000),()=>{remove(note)})};
-         note.listen('blur',function(){this.signal('close'); tick.after(10,()=>{remove(this)})});
+         if(!icon){note.listen('blur',function(){this.signal('close'); tick.after(10,()=>{remove(this)})})};
          if(!note.expire&&!icon){note.listen('ready',function(){this.focus()})};
          return note;
       }
@@ -1823,8 +1835,9 @@
       notify:function(mesg,tone,arro,attr,tout)
       {
          let dime=rectOf(this); if(!isKnob(attr)){attr={}}; if(!isKnob(attr.style)){attr.style={}};
+         if(isKnob(mesg)&&isin(keys(mesg),'icon')){attr.parentRect=dime};
          attr.style.left=dime.x; attr.style.top=(dime.y+dime.height);
-         let note=notify(mesg,tone,arro,attr,tout);
+         let note=notify(mesg,tone,arro,attr,tout); if(!note){return};
          document.body.appendChild(note);
          // let trgt=this; let t=nodeName(this);
          // if(isin('input,select,video,audio',t)){trgt=trgt.parentNode};

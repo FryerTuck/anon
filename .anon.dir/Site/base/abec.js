@@ -380,6 +380,7 @@
    defn('TL TM TR RT RM RB BR BM BL LB LM LT');
    defn('A B C D E F G H I J K L M N O P Q R S T U V W X Y Z');
    defn('OK NA ANY ALL');
+   // defn({ALPHABET:'abcdefghijklmnopqrstuvqxyzABCDEFGHIJKLMNOPQRSTUVQXYZ'});
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -743,6 +744,77 @@
       {v=v.trim(); if(n&&v.endsWith('%')){t=rtrim(v,'%'); if(!isNaN(t)){v=((t*1)/100)}}; if(!isNaN(v)){v*=1}; r.radd(v)});
       return r;
    }
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: called : call a function .. or an object -or array of functions .. useful for many things
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const called = function(d,a, r)
+   {
+       if(isText(d,1)){d=MAIN[d]}; // name of function given
+       if(!isList(a)){a=[a];}; // must be args-list
+       if(isFunc(d)){return d.apply(d,a)}; // function given
+       if(!isKnob(d)||!isList(d)){return}; // nohing to do
+
+       r=(isKnob(d)?{}:(isList(d)?[]:VOID)); // set result as empty type-of given bulk operations
+       d.each((v,k)=>{r[k]=(isFunc(v)?v.apply(d,a):v); // called function results now in place .. along with properties
+       return r;
+   };
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: parted : parsing function to separate text into parts according to a set of sub-tools .. use e.g: parted("123Kg").unitPart
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const parted = function(txt,sel,fnc, rsl)
+   {
+       if(!isText(txt,1)){return}; if(isFunc(sel)){fnc=sel;}; // validation
+       return called((isWord(sel)?this[sel]:this),[txt,fnc]); // result
+   }
+   .bind
+   ({
+    // func :: numrUnit : get `numr` and mesurement `unit` from string .. returns object .. use e.g: parted("123Kg","unitPart") .. direct
+    // ----------------------------------------------------------------------------------------------------------------------------------------
+       numrUnit:function(txt,fnc, lst,nmr)
+       {
+           lst=txt.match(/[0-9\.]+|[a-zA-Z]+/g); // separate numbers from text
+           if(span(lst)<2){return}; nmr=(lst[0]*1); if(!isNumr(nmr)||!test(lst[1],/[a-zA-Z]/)){return}; // validation
+           return {numr:nmr,unit:lst[1]};
+       },
+    // ----------------------------------------------------------------------------------------------------------------------------------------
+   });
+// --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+// func :: reckon : calculate simple expressions in text .. works with mesurement-units too
+// --------------------------------------------------------------------------------------------------------------------------------------------
+   const reckon = function(txt, prt,lft,opr,rgt,rsl,pl,pr)
+   {
+       prt=stub(txt,keys(this)); if(!prt){return}; lft=trim(prt[0]); opr=prt[1]; rgt=trim(opr[2]); if(!this[opr]){return};
+       if(!isNaN(lft)){lft*=1}; if(!isNaN(rgt)){rgt*=1}; if(isNumr(lft)&&isNumr(rgt)){return this[opr](lft,rgt)}; // quick
+       if(isText(lft)){parted(lft,"numrUnit");}; if(isText(rgt)){parted(rgt,"numrUnit");}; // get units
+       if(lft.unit&&rgt.unit&&(lft.unit!=rgt.unit)){return}; // cannot calculate different units
+       rsl=this[opr]((lft.unit?lft.numr:lft),(rgt.unit?rgt.numr:rgt)); // get result
+       if(lft.unit){rsl+=lft.unit}else if(rgt.unit){rsl+=rgt.unit}; // add unit to result if any
+       return rsl;
+   }
+   .bind
+   ({
+       '<=':function(l,r){return (l<=r);},
+       '>=':function(l,r){return (l>=r);},
+       '+':function(l,r){return (l+r);},
+       '-':function(l,r){return (l-r);},
+       '*':function(l,r){return (l*r);},
+       '/':function(l,r){return (l/r);},
+       '%':function(l,r){return (l%r);},
+       '~':function(l,r){return (l==r);},
+       '=':function(l,r){return (l===r);},
+       '<':function(l,r){return (l<r);},
+       '>':function(l,r){return (l>r);},
+       '|':function(l,r){return (l||r);},
+   });
 // --------------------------------------------------------------------------------------------------------------------------------------------
 
 
