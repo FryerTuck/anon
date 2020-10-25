@@ -1795,12 +1795,12 @@
       {
          if(isText(mesg)){mesg=swap((mesg.trim()||'example mesg'),'\n','<br>')}; if(!isList(mesg)){mesg=[mesg];};
          if(isin(this.arro,tone)){let t=[arro,tone]; tone=VOID;arro=VOID; tone=lpop(t);arro=rpop(t)};
-         if(!tone||!isin(this.tone,tone)){tone=LITE}; tone=lowerCase(unwrap(tone)); if(!isKnob(attr)){attr={}};
-         if(!isKnob(attr.style)){attr.style={}}; if(!arro||!isin(this.arro,arro)){arro=TM}; arro=unwrap(arro);
+         if(!tone||!isin(this.tone,tone)){tone=LITE}; tone=lowerCase(unwrap(tone));
+         if(!arro||!isin(this.arro,arro)){arro=TM}; arro=unwrap(arro);
 
          if(isKnob(mesg[0])&&(keys(mesg[0])[0]=='icon'))
          {
-             tout=0; icon=1; dime=attr.parentRect;
+             if(!isKnob(attr)){attr={}}; if(!isKnob(attr.style)){attr.style={}}; tout=0; icon=1; dime=attr.parentRect;
              if(!isKnob(dime)){fail("context :: expecting parentRect object for coordinates"); return};
              size=Math.floor(dime.height/3); if(size<12){size=12}; if(!mesg[0].size){mesg[0].size=size};
              if(!attr.style.borderRadius){attr.style.borderRadius=(Math.ceil(size/2)+8);}; // compensate for 2px padding
@@ -1812,6 +1812,7 @@
                  bl:[dx, (dy+dh)],
                  br:[(dx+dw), (dy+dh)],
              };
+             posi=posi[arro]; attr.style.left=posi[0]; attr.style.top=posi[1];
              note=create({noteicon:`.${tone}`, $:mesg});
          }
          else
