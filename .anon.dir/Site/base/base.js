@@ -1807,10 +1807,10 @@
              delete attr.dime; let dx,dy,dw,dh; dx=dime.x; dy=dime.y; dw=dime.width; dh=dime.height;
              posi=//object
              {
-                 tl:[dx, dy],
-                 tr:[(dx+dw), dy],
-                 bl:[dx, (dy+dh)],
-                 br:[(dx+dw), (dy+dh)],
+                 TL:[dx, dy],
+                 TR:[(dx+dw), dy],
+                 BL:[dx, (dy+dh)],
+                 BR:[(dx+dw), (dy+dh)],
              };
              posi=posi[arro]; attr.style.left=posi[0]; attr.style.top=posi[1];
              note=create({noteicon:`.${tone}`, $:mesg});
