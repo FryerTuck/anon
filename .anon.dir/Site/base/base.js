@@ -1802,7 +1802,7 @@
          {
              tout=0; icon=1; dime=attr.parentRect;
              if(!isKnob(dime)){fail("context :: expecting parentRect object for coordinates"); return};
-             size=Math.floor(dime.height/3); if(size<10){size=10}; if(!mesg[0].size){mesg[0].size=size};
+             size=Math.floor(dime.height/3); if(size<12){size=12}; if(!mesg[0].size){mesg[0].size=size};
              if(!attr.style.height){attr.style.height=size};
              if(!attr.style.borderRadius){attr.style.borderRadius=Math.floor(size/2);};
              delete attr.dime; let dx,dy,dw,dh; dx=dime.x; dy=dime.y; dw=dime.width; dh=dime.height;
