@@ -353,7 +353,6 @@
               return;
           };
 
-
           popModal(`cog :: New Updates`)
           ({
               body:[{panl:
