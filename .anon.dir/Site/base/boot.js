@@ -326,7 +326,7 @@
               remove(el); return
           };
 
-          if(!!el){dump(`AnonSystemLock already applied .. ignoring ${lm}`); return};
+          if(!!el){dump(`lockAllClients already applied .. ignoring ${lm}`); return};
           // server.pacify();
           if(!isin(d,":")){d=(d+':system locked')}; pt=stub(d,":"); lm=pt[2]; d=pt[0];
           et=(userDoes("sudo")?select("#AnonMainPanl"):document.body);
@@ -340,6 +340,7 @@
               ]}
           ]});
       });
+
 
       listen("SoftwareUpdate",function(d)
       {
