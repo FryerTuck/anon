@@ -1791,19 +1791,20 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    extend(MAIN)
    ({
-      notify:function(mesg,tone,arro,attr,tout, note,icon,dime,posi)
+      notify:function(mesg,tone,arro,attr,tout, note,icon,dime,posi,size)
       {
          if(isText(mesg)){mesg=swap((mesg.trim()||'example mesg'),'\n','<br>')}; if(!isList(mesg)){mesg=[mesg];};
          if(isin(this.arro,tone)){let t=[arro,tone]; tone=VOID;arro=VOID; tone=lpop(t);arro=rpop(t)};
          if(!tone||!isin(this.tone,tone)){tone=LITE}; tone=lowerCase(unwrap(tone)); if(!isKnob(attr)){attr={}};
-          if(!isKnob(attr.style)){attr.style={}}; if(!arro||!isin(this.arro,arro)){arro=TM}; arro=unwrap(arro);
+         if(!isKnob(attr.style)){attr.style={}}; if(!arro||!isin(this.arro,arro)){arro=TM}; arro=unwrap(arro);
 
          if(isKnob(mesg[0])&&(keys(mesg[0])[0]=='icon'))
          {
-             tout=0; icon=1; dime=attr.parentRect; if(!attr.style.height){attr.style.height=attr.style.fontSize};
-             if(!attr.style.height){attr.style.height=Math.floor(dime.height/3); if(attr.style.height<16){attr.style.height=16}};
-             if(!attr.style.borderRadius){attr.style.borderRadius=reckon(`${attr.style.height} / 2`);}; // will work with units
+             tout=0; icon=1; dime=attr.parentRect;
              if(!isKnob(dime)){fail("context :: expecting parentRect object for coordinates"); return};
+             size=Math.floor(dime.height/3); if(size<10){size=10}; if(!mesg[0].size){mesg[0].size=size};
+             if(!attr.style.height){attr.style.height=size};
+             if(!attr.style.borderRadius){attr.style.borderRadius=Math.floor(size/2);};
              delete attr.dime; let dx,dy,dw,dh; dx=dime.x; dy=dime.y; dw=dime.width; dh=dime.height;
              posi=//object
              {
