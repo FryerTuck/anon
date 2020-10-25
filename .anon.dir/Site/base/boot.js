@@ -318,6 +318,7 @@
       server.listen("SoftwareUpdate: sudo,lead,gang",function(d){signal("SoftwareUpdate",d);});
       server.listen("lockAllClients",function(d, pt,lm,el,id,et)
       {
+          dump(`signal-handler: lockAllClients ${d}`);
           id="#AnonSystemLock"; el=select(id);
           if(d=="end")
           {
