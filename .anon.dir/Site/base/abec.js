@@ -758,7 +758,7 @@
        if(!isKnob(d)||!isList(d)){return}; // nohing to do
 
        r=(isKnob(d)?{}:(isList(d)?[]:VOID)); // set result as empty type-of given bulk operations
-       d.each((v,k)=>{r[k]=(isFunc(v)?v.apply(d,a):v); // called function results now in place .. along with properties
+       d.each((v,k)=>{r[k]=(isFunc(v)?v.apply(d,a):v)}); // called function results now in place .. along with properties
        return r;
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
