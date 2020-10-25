@@ -792,7 +792,7 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const reckon = function(txt, prt,lft,opr,rgt,rsl,pl,pr)
    {
-       prt=stub(txt,keys(this)); if(!prt){return}; lft=trim(prt[0]); opr=prt[1]; rgt=trim(opr[2]); if(!this[opr]){return};
+       prt=stub(txt,keys(this)); if(!prt){return}; lft=trim(prt[0]); opr=prt[1]; rgt=trim(prt[2]); if(!this[opr]){return};
        if(!isNaN(lft)){lft*=1}; if(!isNaN(rgt)){rgt*=1}; if(isNumr(lft)&&isNumr(rgt)){return this[opr](lft,rgt)}; // quick
        if(isText(lft)){parted(lft,"numrUnit");}; if(isText(rgt)){parted(rgt,"numrUnit");}; // get units
        if(lft.unit&&rgt.unit&&(lft.unit!=rgt.unit)){return}; // cannot calculate different units
