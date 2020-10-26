@@ -31,7 +31,7 @@ extend(custom.domtag)
 
    icon:function(n,a,c)
    {
-        if(isNumr(c)){c+=""}; if(!c){c='bug'}; if(isNumr(a.face)){a.face+=""}; if(!isText(a.face,1)){a.face=c};
+        if(isNumr(c)){c+=""}; if(!c){c='bug'}; if(!isText(a.face,1)){a.face=c}; if(isNumr(a.face)){a.face+=""};
         a.face=unwrap(a.face); if(!isText(a.font,1)){a.font=((isUpperCase(a.face)&&(span(a.face)<3))?'hack':'icon')};
         a.size=(isInum(a.size)?(a.size+'px'):(isNumr(a.size)?(a.size+'rem'):(isText(a.size,3)?a.size:'16px')));
         let fce,fnt,sze,rot,clp; fce=a.face; fnt=a.font; sze=(a.size+""); clp=a.clip; delete a.face; delete a.font; delete a.size; delete a.clip;
