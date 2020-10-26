@@ -29,14 +29,16 @@ extend(custom.domtag)
 
 
 
-   icon:function(n,a,c)
+   icon:function(n,a,c, nico)
    {
-        if(isNumr(c)){c+=""}; if(!c){c='bug'}; if(!isText(a.face,1)){a.face=c}; if(isNumr(a.face)){a.face+=""};
-        a.face=unwrap(a.face); if(!isText(a.font,1)){a.font=((isUpperCase(a.face)&&(span(a.face)<3))?'hack':'icon')};
+        nico=VOID; if(isNumr(c)){c+=""}; if(!c){c='bug'}; if(!isText(a.face,1)){a.face=c}; if(isNumr(a.face)){a.face+=""};
+        a.face=unwrap(a.face); nico=((isUpperCase(a.face)&&(span(a.face)<3))?1:0); if(!isText(a.font,1)){a.font=(nico?'hack':'icon')};
         a.size=(isInum(a.size)?(a.size+'px'):(isNumr(a.size)?(a.size+'rem'):(isText(a.size,3)?a.size:'16px')));
         let fce,fnt,sze,rot,clp; fce=a.face; fnt=a.font; sze=(a.size+""); clp=a.clip; delete a.face; delete a.font; delete a.size; delete a.clip;
         c=VOID; if(a.text){c=a.text; delete a.text}; rot=stub(fce,'@'); if(rot){fce=rot[0]; rot=(rot[2]*1); rot=(isNumr(rot)?round(rot,0):0)};
-        if(!clp&&(fnt!='hack')){n.enclan(('.'+fnt+'-'+fce))}; modify(n,a); n.setStyle({height:sze, fontSize:sze});
+        if(!clp&&!nico){n.enclan(('.'+fnt+'-'+fce))};
+        if(nico){if(!a.style){a.style={}}; a.style.fontFamily=fnt; a.style.fontWeight="bold"; a.style.lineHeight=sze; n.innerHTML=fce};
+        modify(n,a); n.setStyle({height:sze, fontSize:sze});
         if(!c){n.setStyle({width:sze,transform:`rotate(${rot}deg)`})};
 
 

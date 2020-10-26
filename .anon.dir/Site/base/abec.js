@@ -284,7 +284,7 @@
       if(isText(v)){if(v==''){return '""'}; let x=v.trim(); if(x!=''){return v}; return swap(v,["\n",' ',"\t"],['↵','␣','⇥']);};
       if((v===VOID)){return 'undefined'}; if(v===null){return 'null';};
       if(isNode(v)){return v.outerHTML}; if(isKnob(v)||(isList(v)&&!isNode(v[0]))){return JSON.stringify(v,serializer())};
-      let r=''; v.forEach((n)=>{r+=(n.outerHTML+'\n')}); return r;
+      let r=''; v.forEach((n)=>{if(!isNode(n)){return}; r+=(n.outerHTML+'\n')}); return r;
    };
 // --------------------------------------------------------------------------------------------------------------------------------------------
 

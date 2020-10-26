@@ -758,7 +758,7 @@
 
       a=t; t=VOID; t=keys(a)[0]; n=document.createElement(t); // new element
       ca=isin(a,["contents","$","children"]);
-      if(isList(a[t])){c=a[t];} // tag value is contents
+      if(isList(a[t])||isNumr(a[t])){c=a[t];} // tag value is contents
       else if(isText(a[t],2)&&((a[t][0]=='#')||(a[t][0]=='.'))&&test(a[t],/^([a-zA-Z0-9- _\.#]){2,432}$/)) // tag value is id and/or classes
       {
          x=a[t]; delete a[t]; if(!a.class){a.class=''}; a.class=a.class.split(' '); // quick id & non/existing classes
@@ -1803,7 +1803,7 @@
              if(!isKnob(attr)){attr={}}; if(!isKnob(attr.style)){attr.style={}}; tout=0; icon=1; dime=attr.parentRect;
              if(!isKnob(dime)){fail("context :: expecting parentRect object for coordinates"); return};
              size=Math.floor(dime.height/3); if(size<12){size=12}; if(!mesg[0].size){mesg[0].size=size};
-             if(!attr.style.borderRadius){attr.style.borderRadius=(Math.ceil(size/2)+8);}; // compensate for 2px padding
+             if(!attr.style.borderRadius){attr.style.borderRadius=(Math.ceil(size/2)+6);}; // compensate for 2px padding
              delete attr.dime; let dx,dy,dw,dh; dx=dime.x; dy=dime.y; dw=dime.width; dh=dime.height;
              posi=//object
              {
