@@ -294,14 +294,14 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    listen("boot",function()
    {
-      listen("tick",function()
-      {
-      });
-
-
-      listen("resizeInit",function()
-      {
-      });
+      // listen("tick",function()
+      // {
+      // });
+      //
+      //
+      // listen("resizeInit",function()
+      // {
+      // });
 
 
       server.listen('busy',function(d,w)
