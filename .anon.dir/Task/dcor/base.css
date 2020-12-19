@@ -521,6 +521,7 @@ modal .modalBox.DoktCmntModl.AtchSavePanl
 .DoktConfButnGrid
 {
     height:unset !important;
+    margin-top:0px;
 }
 
 
