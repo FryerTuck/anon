@@ -324,7 +324,7 @@ extend(Anon)
                   '&nbsp; this tag will not appear in the comment -or in the email message at all.'
                ]}]});
 
-               let c=[{h4:``, style:{marginTop:0}, $[{icon:`cog`},{span:'Docket Config'}]},{div:``,$:`#${i.docketID}`}];
+               let c=[{h4:``, style:{marginTop:0}, $:[{icon:`cog`},{span:'Docket Config'}]},{div:``,$:`#${i.docketID}`}];
                let q=keys(i).sort(); q.forEach((k)=>
                {
                   if(isin(`docketID editTime initTime comments destAddy editLogs tagIcons workflow`,k)){return}; // not for config
