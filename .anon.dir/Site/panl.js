@@ -48,6 +48,7 @@ extend(Anon)
             let tv=select('#ProcTreePanl').select('treeview')[0];
             let ti=tv.locate("$/Site"); tv.status.togl(ti);
             Anon.Proc.open("$/Site/conf/autoConf");
+            Busy.edit('/Site/panl.js',100);
          });
       },
    }
