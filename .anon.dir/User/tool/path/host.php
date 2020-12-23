@@ -19,6 +19,7 @@ $export=function($x,$a,$h)
    {
 signal::dump(["server: ",$x,$a,$h]);
 return "yo bitchez";
+
       if($s<1){return 'missing path';}; $p=path::fuse($h,$a[0]); if(!isPath($p)){return 'invalid path';};
       if(isee($p)&&(($s<2)||is_dir(path($p)))){return 'already exists';};
       $d=(isset($a[1])?$a[1]:null); $r=path::make($p,$d);
