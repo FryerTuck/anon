@@ -20,8 +20,8 @@ $export=function($x,$a,$h)
        if(isArra($a,2)&&($a[0]==="stem"))
        {
            $a=proprCase($a[1]); if(!isWord($a)){return "expecting word as stem name";};
-           $sp="/$a"; if(!isee($sp)){path::make($sp);};
-           path::copy("$/Proc/tmpl/AnonStem/","$sp/");
+           if(isee("/$a")||isee("/$a")){return "stem `$a` already exists";};
+           path::copy("$/Proc/tmpl/AnonStem","/$a");
            return OK;
        };
 
