@@ -1081,6 +1081,15 @@ namespace Anon;
           };
           return $rsl;
       }
+
+
+      static function swap($p,$f,$r)
+      {
+          expect::path($p); expect::text($f); expect::text($r); $p=crop($p); $d=pget($p);
+          if(isArra($d)){foreach($d as $i){self::swap("$p/$i", $r);}; return true;};
+          if(!isFile($p)){return;}; $d=swap($d,$f,$r); path::make($p,$d);
+          return true;
+      }
    }
 # ---------------------------------------------------------------------------------------------------------------------------------------------
 

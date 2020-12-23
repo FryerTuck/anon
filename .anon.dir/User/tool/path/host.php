@@ -19,9 +19,10 @@ $export=function($x,$a,$h)
    {
        if(isArra($a,2)&&($a[0]==="stem"))
        {
-           $a=proprCase($a[1]); if(!isWord($a)){return "expecting word as stem name";};
+           $a=proprCase($a[1]); if(!is_funnic($a)){return "expecting stem-name as plain word";};
            if(isee("/$a")||isee("/$a")){return "stem `$a` already exists";};
            path::copy("$/Proc/tmpl/AnonStem/","/$a/");
+           path::swap("/$a","AnonStem",$a);
            return OK;
        };
 
