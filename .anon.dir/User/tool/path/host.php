@@ -17,8 +17,13 @@ $export=function($x,$a,$h)
 
    if($x==='make')
    {
-signal::dump(["server: ",$x,$a,$h]);
-return "yo bitchez";
+       if(isArra($a,2)&&($a[0]==="stem"))
+       {
+           $a=camelCase($a[1]); if(!isWord($a)){return "expecting word as stem name";};
+           $sp="/$a"; if(!isee($sp)){path::make($sp);};
+           path::copy("$/Proc/tmpl/AnonStem/","$sp/");
+           return OK;
+       };
 
       if($s<1){return 'missing path';}; $p=path::fuse($h,$a[0]); if(!isPath($p)){return 'invalid path';};
       if(isee($p)&&(($s<2)||is_dir(path($p)))){return 'already exists';};
