@@ -21,7 +21,7 @@ $export=function($x,$a,$h)
        {
            $a=proprCase($a[1]); if(!isWord($a)){return "expecting word as stem name";};
            if(isee("/$a")||isee("/$a")){return "stem `$a` already exists";};
-           path::copy("$/Proc/tmpl/AnonStem","/$a");
+           path::copy("$/Proc/tmpl/AnonStem/","/$a/");
            return OK;
        };
 
