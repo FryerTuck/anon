@@ -49,4 +49,10 @@ extend(repl)
 
    rm:function(a,b)
    {repl.path('void',a,b);},
+
+   create:function(a,b)
+   {
+       dump(["client: ",a,b]);
+       // repl.path('make',a,b);
+   },
 });
