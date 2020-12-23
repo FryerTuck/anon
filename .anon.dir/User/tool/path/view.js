@@ -52,7 +52,6 @@ extend(repl)
 
    create:function(a,b)
    {
-       dump(["client: ",a,b]);
-       // repl.path('make',a,b);
+       repl.path('make','stem',b);
    },
 });
