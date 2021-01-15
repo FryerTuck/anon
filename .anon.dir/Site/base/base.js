@@ -948,7 +948,7 @@
 // --------------------------------------------------------------------------------------------------------------------------------------------
    const furl = function(x,f, p,d,m,r)
    {
-      if(!isDurl(x)){fail("expecting data-URL");return};
+      if(!isDurl(x)){dump(x); fail("expecting data-URL");return};
       p=stub(x,';base64,'); d=p[2]; m=stub(p[0],'data:')[2]; x=VOID; p=VOID;
       r={mime:m,data:decode.b64(d)}; d=VOID; if(!isFunc(f)){return r}; f(r);
    };
