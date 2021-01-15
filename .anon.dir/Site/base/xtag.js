@@ -105,7 +105,8 @@ extend(custom.domtag)
       n=create('holder');
       purl(src,function(r)
       {
-         r=furl(r.body).data;
+         // r=furl(r.body).data; // ?
+         r=r.body;
          if(!isin(r,'<svg')||!isin(r,'</svg>')){r=`<svg><text>?</text></svg>`}; let t=create('div'); t.innerHTML=r;
          let f=document.createDocumentFragment(); r=t.select('svg')[0]; r.modify(a); f.appendChild(r); t=VOID; n.replaceWith(r);
       });
