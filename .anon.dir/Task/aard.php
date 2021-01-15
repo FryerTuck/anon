@@ -64,7 +64,7 @@ namespace Anon;
             $f=$td->flagTags; if(!$f){$f='';}; $f=frag($f,','); foreach($f as $x => $n)
             {$i=pget("/Task/tags/$n"); if(!$i){fail("undefined task-tag `$n`");}; $f[$x]=$i;}; $td->tagIcons=$f; unset($f,$x,$n,$i);
 
-            unset($cl,$cn,$cd); $cl=keys($td->comments); $cn=rpop($cl); $cd=dupe($td->comments->$cn); unset($td->comments);
+            unset($cl,$cn,$cd); $cl=keys($td->comments); $cn=rpop($cl); $cd=($cn?dupe($td->comments->$cn):knob()); unset($td->comments);
             $cd->user=knob(['rate'=>User::ratingOf($cd->mail)]); $f=$cd->tags; if(!$f){$f='';};
             $f=frag($f,','); foreach($f as $x => $n){$i=pget("/Task/tags/$n"); if(!$i){fail("undefined task-tag `$n`");}; $f[$x]=$i;};
             $cd->mesg=encode::b64($cd->mesg); $cd->tico=$f; $td->comments=knob([$cn=>$cd]); $r->$q=$td; $done++;
