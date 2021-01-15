@@ -165,6 +165,7 @@ namespace Anon;
 
       static function ratingOf($m)
       {
+signal::dump(["TOORALOOORALOORAAA!!!---",$m]);
          expect::mail($m,1); $p="/User/vars/vote/$m"; $r=pget($p); if(span($r)<1){path::make($p,'0'); $r='0';};
          $r=($r*1); return $r;
       }
