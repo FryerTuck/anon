@@ -186,6 +186,7 @@ extend(Anon)
          create:function(o,jcid,jico,cmnt,lane)
          {
             cmnt=keys(o.comments)[0]; cmnt=o.comments[cmnt]; jico=((o.tagIcons||[])[0]||'note'); lane=select('#'+o.inColumn+'TaskList');
+            if(!cmnt||!cmnt.info){console.log("no comment .. ticket skipped"); return};
 
             lane.insert
             ({
