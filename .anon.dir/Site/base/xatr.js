@@ -47,7 +47,6 @@ extend(custom.attrib)
 
          if(t=='input')
          {
-             dump([`yoooo==>`,v]);
             so={marginLeft:(ml+pr+(bw*2)),marginTop:(mt+pt+(bw*2)),color:fc};
             p.insert({icon:'.absTop .absLft', face:v, size:(fs-2), style:so});
             n.setStyle({paddingLeft:round((fs*1.6),0)});
