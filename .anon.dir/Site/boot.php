@@ -35,6 +35,7 @@ namespace Anon;
         $v->busyGear=base64_encode(import("$/Site/tmpl/$t/base/busy.htm",["showBusy"=>$o]));
         $v->botHoney=conf('Proc/badRobot')->lure;
         $v=fuse($v,conf('Site/identity')); $r=import('$/Site/base/aard.htm',$v);
+        if(userDoes(keys(conf('Site/clanView')))){$_SERVER['RECEIVER']='anon';};
         kuki($h,'...'); kuki("RECEIVER",envi("RECEIVER"));
         echo($r); done(); // send BootStrap GUI keeping headers intact
      };

@@ -1,4 +1,17 @@
 
+# note :: important : read this
+# -----------------------------------------------------------------------------------------------------------------------------
+# the directives expressed in this file are compatible with shared hosting and crucial to security and Anon framework integrity
+# the objective is to provide a fast/solid/stable runtime environment that compliments the designated PHP framework.. elegantly
+# ...
+# THE METAPHORICAL CHRONICLE
+# these are the memoirs of Anon "the legendary server", who lives and dies to serve others and yet always manages to stay alive
+# waking up, finding yourself trapped inside dark muddy pit, with only a few options available to survive .. but i won't flinch
+# here we are in "the pit" .. we don't even know if we can get out of here, keep calm, let's see if PHP is available, may it be
+# -----------------------------------------------------------------------------------------------------------------------------
+
+
+
 # init :: flow : initialize rewrite engine and force subdomain as `www` .. this must be here 1st, at the top
 # -----------------------------------------------------------------------------------------------------------------------------
     RewriteEngine on
