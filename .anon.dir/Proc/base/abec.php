@@ -755,7 +755,7 @@ namespace Anon;
          if(is_file($p)){$r=filesize($p); return round(($r/1024),3);}; if(!is_dir($p)){return;};
          $rp=ROOTPATH; $cp=COREPATH; $t=self::twig($p); $f=self::twig($p); $f=self::leaf($p);
          $r=exec::{"du -sb ./$f"}($t); $x=stub($r,[' ',"\t"]); if($x){$r=$x[0];}; $h=('/'.lshave("$t/$f",'/'));
-         if(isNumr($r,1)){$r=($r*1); return round(($r/1024),3);}; fail("failed to get byte-size of: `$h`");
+         if(isNumr($r,1)){$r=($r*1); return round(($r/1024),3);}; fail("failed to get size of: `$h`");
       }
 
 

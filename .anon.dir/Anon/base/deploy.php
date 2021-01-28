@@ -65,7 +65,7 @@
     <body>
         <div id="pane">
             <h1>Anon Installation</h1>
-            <p>Please backup any important files before confirming.</p>
+            <p>(~message~)</p>
             (~confirm~)
         </div>
     </body>
@@ -179,10 +179,45 @@ $html=ob_get_clean();
     };
 
 
+    function stub($t,$d,$r=0)
+    {
+        if(is_array($d))
+        {$l=array_values($d);$d=null;foreach($l as $i){if(is_string($i)&&(strlen($i)>0)&&(strpos($t,$i)!==false)){$d=$i;break;}}};
+        if(!is_string($t)||!is_string($d)||(strlen($t)<2)||(strlen($d)<1)){return;}; $p=(!$r?mb_strpos($t,$d):mb_strrpos($t,$d));
+        if($p!==false){return [mb_substr($t,0,$p),$d,mb_substr($t,($p+mb_strlen($d)))];};
+    }
+
+
+    function free($m=null)
+    {
+        $p=(base()."/.spacer"); $f=0; $w=''; $k=0; $mb=(1024*1024);
+        $m=($m?(($m/1024)/1024));
+        if(!$m){$m=((1024*1024)*1024);}; // max 1Gb if no max
+        for ($i=0; $i<$mb; $i++){$w.="A";};
+        do
+        {
+            try{usleep(1); $d=file_put_contents($p,$w,FILE_APPEND); $k++; if(!$d||($k>=$m)){$f=1; break;}}
+            catch(Exception $e){$f=1; unlink($p);};
+        }
+        while(!$f);
+
+        return ($k*1024);
+    }
+
+
     class DeleteOnExit
     {
        function __destruct(){unlink(__FILE__);}
     }
+
+
+
+    set_error_handler(function()
+    {
+      $b=''; while(ob_get_level()){$b.=("\n".ob_get_clean());}; $b=trim($b); $e=func_get_args();
+      if(strpos($b,'out of free disk space')){die("no free space!!"); return;};
+      print_r($b); exit;
+    });
 # -----------------------------------------------------------------------------------------------------------------------------
 
 
@@ -195,6 +230,26 @@ $html=ob_get_clean();
     $ck = '(~ck~)';
     $hn = $hn=envi('HOST');
     $fn = __FILE__;  $fn=explode('/',$fn);  $fn=array_pop($fn);
+    $ts = stub(bash("du -sb ./"),[' ',"\t"])[0];
+    $rs = (3*($ts*1));
+    $fs = free(floor($rs/1024));
+    $fs=(($fs/1024)/1024);
+    $rs=(($rs/1024)/1024);
+    $hm = 'Please backup any important files before confirming.';
+# -----------------------------------------------------------------------------------------------------------------------------
+die("<pre>$rs\n$fs</pre>");
+
+
+# cond :: (disk-space) : check it!
+# -----------------------------------------------------------------------------------------------------------------------------
+    if($fs<$rs)
+    {
+        $mesg="<b>Not enough disk-space.</b><br>You need at least <b>{$mb}Mb</b> free.";
+        $butn="<a href=\"https://$hn/$fn\"><button class=\"cool\">try again</button></a>";
+        $html=str_replace('(~confirm~)',$butn,$html);
+        $html=str_replace('(~message~)',$mesg,$html);
+        print_r($html); die();
+    };
 # -----------------------------------------------------------------------------------------------------------------------------
 
 
@@ -209,6 +264,7 @@ $html=ob_get_clean();
         {
             $butn="<a href=\"https://$hn/$fn?confirm=1\"><button class=\"cool\">confirm</button></a>";
             $html=str_replace('(~confirm~)',$butn,$html);
+            $html=str_replace('(~message~)',$hm,$html);
             print_r($html); die();
         };
     }

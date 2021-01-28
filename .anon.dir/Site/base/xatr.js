@@ -194,7 +194,7 @@ extend(custom.attrib)
          let d=this.getBoundingClientRect(); let f=document.createDocumentFragment(); f.appendChild(this);
          this.style.position='absolute'; this.style.zIndex=9991; this.style.left=(d.x+'px'); this.style.top=(d.y+'px');
          this.style.width=(d.width+'px'); this.style.height=(d.height+'px'); document.body.appendChild(this);
-         document.body.appendChild(this); cursor.bind(this,d.x,d.y); this.signal('grablift',{origin:this.myorigin,target:this.myorigin});
+         document.body.appendChild(this); cursor.glue(this,d.x,d.y); this.signal('grablift',{origin:this.myorigin,target:this.myorigin});
       });
 
       n.listen('boundmove',function(e)

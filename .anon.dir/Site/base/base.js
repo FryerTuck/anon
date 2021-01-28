@@ -2099,17 +2099,20 @@
       {
          posx:0, posy:0, refs:{}, grab:0,
 
-         bind:function(r,x,y)
+         glue:function(r,x,y)
          {
-            // if(isNode(r)){if(!r.id){r.id=('EL'+hash())}; r=('#'+r.id)}; let n=select(r);
-            // if(!isNode(n)){fail('expecting node with id '+r+' to exist in the DOM');return};
-            // if(cStyle(n,'position')!='absolute'){fail('expecting `position:absolute`');return};
-            // if(!isNumr(x)){x=0;}; if(!isNumr(y)){y=0;}; this.refs[r]={xd:x,yd:y};
-
             if(isNode(r)){if(!r.id){r.id=('EL'+hash())}; r=('#'+r.id)}; let n=select(r);
             if(!isNode(n)){fail('expecting node with id '+r+' to exist in the DOM');}; let dx,dy;
             dx=(cursor.posx-x); dy=(cursor.posy-y);
             if(!isNumr(x)){x=0;}; if(!isNumr(y)){y=0;}; this.refs[r]={xd:dx,yd:dy};
+         },
+
+         bind:function(r,x,y)
+         {
+            if(isNode(r)){if(!r.id){r.id=('EL'+hash())}; r=('#'+r.id)}; let n=select(r);
+            if(!isNode(n)){fail('expecting node with id '+r+' to exist in the DOM');return};
+            if(cStyle(n,'position')!='absolute'){fail('expecting `position:absolute`');return};
+            if(!isNumr(x)){x=0;}; if(!isNumr(y)){y=0;}; this.refs[r]={xd:x,yd:y};
          },
 
          drop:function(r)
