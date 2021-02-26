@@ -191,7 +191,6 @@ $html=ob_get_clean();
     function free($m=null)
     {
         $p=(base()."/.spacer"); $f=0; $w=''; $k=0; $mb=(1024*1024);
-        $m=($m?(($m/1024)/1024));
         if(!$m){$m=((1024*1024)*1024);}; // max 1Gb if no max
         for ($i=0; $i<$mb; $i++){$w.="A";};
         do
@@ -230,26 +229,26 @@ $html=ob_get_clean();
     $ck = '(~ck~)';
     $hn = $hn=envi('HOST');
     $fn = __FILE__;  $fn=explode('/',$fn);  $fn=array_pop($fn);
-    $ts = stub(bash("du -sb ./"),[' ',"\t"])[0];
-    $rs = (3*($ts*1));
-    $fs = free(floor($rs/1024));
-    $fs=(($fs/1024)/1024);
-    $rs=(($rs/1024)/1024);
+    // $ts = stub(bash("du -sb ./"),[' ',"\t"])[0];
+    // $rs = (3*($ts*1));
+    // $fs = free(floor($rs/1024));
+    // $fs=(($fs/1024)/1024);
+    // $rs=(($rs/1024)/1024);
     $hm = 'Please backup any important files before confirming.';
 # -----------------------------------------------------------------------------------------------------------------------------
-die("<pre>$rs\n$fs</pre>");
+
 
 
 # cond :: (disk-space) : check it!
 # -----------------------------------------------------------------------------------------------------------------------------
-    if($fs<$rs)
-    {
-        $mesg="<b>Not enough disk-space.</b><br>You need at least <b>{$mb}Mb</b> free.";
-        $butn="<a href=\"https://$hn/$fn\"><button class=\"cool\">try again</button></a>";
-        $html=str_replace('(~confirm~)',$butn,$html);
-        $html=str_replace('(~message~)',$mesg,$html);
-        print_r($html); die();
-    };
+    // if($fs<$rs)
+    // {
+    //     $mesg="<b>Not enough disk-space.</b><br>You need at least <b>{$mb}Mb</b> free.";
+    //     $butn="<a href=\"https://$hn/$fn\"><button class=\"cool\">try again</button></a>";
+    //     $html=str_replace('(~confirm~)',$butn,$html);
+    //     $html=str_replace('(~message~)',$mesg,$html);
+    //     print_r($html); die();
+    // };
 # -----------------------------------------------------------------------------------------------------------------------------
 
 

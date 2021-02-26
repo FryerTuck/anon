@@ -90,7 +90,7 @@
     RewriteRule ^(.*)$ - [R=404,L]
 
     RewriteCond %{ENV:ANONINDX} !^$
-    RewriteCond %{HTTP_COOKIE} !RECEIVER=anon;?
+    RewriteCond %{HTTP_COOKIE} !RECEIVER=anon;? [OR]
     RewriteCond %{HTTP_COOKIE} !RECEIVER=nona;?
     RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
 
