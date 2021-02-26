@@ -7,7 +7,7 @@ extend(repl)
       if(repl.ENV.target!='login') // no password given, command start
       {
          if(!a){a='master'}; if(!isWord(a)){repl.mumble('invalid username');return}; s.un=a;
-         repl.ENV.target='login'; p.modify({innerHTML:'password:'}); f.modify({type:'password'}); return;
+         repl.ENV.target='login'; p.modify({innerHTML:'password:'}); f.enclan("passwd"); return;
       }; // default user & prompt password
 
       if(!isText(a,6)){repl.mumble('try again');return}; s.pw=a; // validate password
@@ -16,7 +16,7 @@ extend(repl)
       {
          s.un=VOID; s.pw=VOID; b=r.body; if(b!=OK) // login check
          {
-            repl.mumble(b); repl.ENV.target='exec'; f.modify({type:'text'}); f.modify({value:''}); // notify & reset
+            repl.mumble(b); repl.ENV.target='exec';  f.declan("passwd"); f.modify({value:''}); // notify & reset
             p.modify({innerHTML:('['+sesn('USER')+'&nbsp;'+repl.PWD+']')}); return;  // reset mechanism
          };
 
