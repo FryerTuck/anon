@@ -46,22 +46,23 @@ window.script=function(src,cbf, txt,nde)
 
 window.bootAnon=function(gate)
 {
-    if(((typeof gate)=='string')&&(gate.indexOf('/')>-1)){script(gate); return};
-    gate=gate.getAttribute('data-src').split(';base64,').pop();
+    if(((typeof gate)=="string")&&(gate.indexOf("/")>-1)){script(gate); return};
+    gate=gate.getAttribute("data-src").split(";base64,").pop();
     try{gate=atob(gate);}catch(e){console.error(gate); return}; script(gate);
 };
 
 
 window.isModern.t=setInterval(function(gate)
 {
-    gate=document.getElementById('AnonGate'); if(!gate){return;}; clearInterval(window.isModern.t); // wait until ready
-    if('(~RECEIVER~)'=='nona'){document.body.style.backgroundColor="(~conf('Site/bootSkin/handlrBG'~)"} // blend althandler
+    gate=document.getElementById("AnonGate"); if(!gate){return;}; clearInterval(window.isModern.t); // wait until ready
+    if("(~RECEIVER~)"=="nona"){document.body.style.backgroundColor="(~conf('Site/bootSkin/handlrBG'~)"} // blend althandler
     else if(window.self!==window.top){document.body.style.backgroundColor="(~conf('Site/bootSkin/parentBG'~)"};// blend parent
 
     setTimeout(function(){isModern(function(really) // wait for evasive snth to misbehave
     {
         if(pageGone){return}; // gotcha bitch .. smart-bot
-        if(!really){userView('(~DBUGPATH~)?#lcjs'); return};  // bad browser goes to graceful fail
+        if(!really){userView("(~DBUGPATH~)?#lcjs"); return};  // bad browser goes to graceful fail
+        console.log("receiver: (~RECEIVER~)");
         if('(~RECEIVER~)'=='anon'){bootAnon(gate); return}; // no other framework detected
         userView('(~NAVIPURL~)',function(){bootAnon(gate)}); // boot handler first -if present
     })},250);
