@@ -87,11 +87,15 @@
 # cond :: Anon : for if Anon is installed AND: there is no Anon session, or request is for Anon directly
 # -----------------------------------------------------------------------------------------------------------------------------
     RewriteCond %{THE_REQUEST} \s/{2,}
-    RewriteRule ^(.*)$ - [R=404,L]
+    RewriteRule ^(.*)$ - [R=400,L]
 
     RewriteCond %{ENV:ANONINDX} !^$
-    RewriteCond %{HTTP_COOKIE} !RECEIVER=anon;?
-    RewriteCond %{HTTP_COOKIE} !RECEIVER=nona;?
+    RewriteCond %{HTTP_COOKIE} !RECEIVER=anon;
+    RewriteCond %{HTTP_COOKIE} !RECEIVER=nona;
+    RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
+
+    RewriteCond %{ENV:ANONINDX} !^$
+    RewriteCond %{HTTP_COOKIE} RECEIVER=anon;
     RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
 
     RewriteCond %{ENV:ANONINDX} !^$
