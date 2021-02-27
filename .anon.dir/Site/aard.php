@@ -19,25 +19,18 @@ namespace Anon;
 
       static function handle($p)
       {
-        $np="$p"; $fc=null; $ps=path::stem($np); if(!isWord($ps)||!isFold("$/$ps")){$ps=null;};
+        $np="$p"; $fc=null; $sf=0; $ps=path::stem($np); if(!isWord($ps)||!isFold("$/$ps")){$ps=null;};
         if($ps&&($np==="/$ps/panl.js")){$fc=knob("$/$ps/pack.inf")->forClans;
         if($fc&&($fc!=='*')&&!userDoes($fc)&&!userDoes('sudo')){finish(403);exit;}};
-        if(($ps||(envi('RECEIVER')==='nona'))&&facing("DPR")&&isee($np)){finish($np);}; // file request .. handle quick
         if(isFold($np)){$ix=path::indx($np,'aard.php'); if($ix){$np=(rshave($np,'/')."/$ix");}}; // get index-file
+        if(($ps||(envi('RECEIVER')==='nona'))&&facing("DPR")&&isee($np)){finish($np);}; // file request .. handle quick
         $tn=conf("Site/autoConf")->template; if(!isWord($tn)||!isee("$/Site/tmpl/$tn")){$tn="Anon";};
         $uc=sesn("CLAN"); $tp="$/Site/tmpl/$tn"; $tc=knob("$tp/conf"); $cv=$tc->clanView; $rc=null; $rp=null;
-        if(isKnob($cv)){$rc=pick($uc,keys($cv));}; if($rc&&isKnob($cv)){$rp=$cv->$rc;};
-
-        if($rp&&(is_int($rp)||isPath($rp)||isPath("/$rp")))
-        {
-            if(is_int($rp)){finish($rp); exit;};
-            $rp=(arg($rp)->startsWith("/")?$rp:"$tp/$rp"); if(!isee($rp)){fail::config("file not found: `$rp`");};
-            finish($rp);
-        }
-
-        $rp=test::{$np}($tc->redirect);
-        if(is_int($rp)){finish($rp); exit;}; // EXIT :: graceful status
-        if(isText($rp,1)&&(isPath($rp)||isPath("/$rp"))){$np=(arg($rp)->startsWith("/")?$rp:"$tp/$rp");}; // redirected path
+        $rp=test::{$np}($tc->redirect); if(is_int($rp)){finish($rp); exit;}elseif(isPath($rp)){$np=$rp;}; // graceful exit
+        if(isKnob($cv)){$rc=pick($uc,keys($cv)); if($rc){$rp=$cv->$rc; if(!arg($rp)->startsWith("/")){$rp="$tp/$rp";}}};
+        if($rp&&is_int($rp)){finish($rp); exit;};
+        if(isText($rp,1)&&isee("/$rp")){$rp="/$rp"; $np=$rp; $sf=1;}; if(!$sf&&isPath($rp)&&isee($rp)){$sf=1; $np=$rp;};
+        if(isPath($rp)&&!$sf){fail::config("override-path not found: `$rp`"); return;};
         if(isFold($np)&&!conf('Proc/autoConf')->viewDirs){finish(403);}; // configured to deny viewing folders
 
         finish($np);
