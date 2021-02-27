@@ -257,7 +257,7 @@
          {
              np=location.href; np+=((isin(np,"?")?"&":"?")+"init"); render(np,(r)=>
              {
-                 let fr=(nodeName(r)=="iframe"); if(fr){r.id="AnonSiteView"; r.listen("load",ab);};
+                 let fr=(nodeName(r)=="iframe"); if(fr){r.id="AnonSiteView"; r.listen("load",av);};
                  select('#anonMainView').insert(r);
                  if(!fr){tick.after(250,()=>{signal("boot"); bz(100); Busy.done();});};
              });
