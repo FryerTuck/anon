@@ -87,11 +87,12 @@
    {
       // Cookies.set(sesn('HASH'),'...');
 
-      let hr=location.href; let fg=stub(hr,["?freshGui","&freshGui"]);
+      let hr=location.href; let fg=stub(hr,["?freshGui=","&freshGui="]);
       if(fg)
       {
-          hr=(fg[0]+(fg[0].startsWith("?")?"?":"")+(fg[2]||""));
-          window.history.replaceState({id:"100"},"freshGui",hr);
+
+          hr=fg[0]; fg=(fg[1]+fg[2]).slice(0,32); hr+=fg; dump(fg);
+          window.history.replaceState({id:"100"},fg,hr);
       };
 
       wait.until(()=>{return (!!MAIN.Busy)},()=>
@@ -255,7 +256,7 @@
 
          if(!av)
          {
-             np=location.href; np+=((isin(np,"?")?"&":"?")+"init"); render(np,(r)=>
+             np=location.href; np+=((isin(np,"?")?"&":"?")+"init="+fash()); render(np,(r)=>
              {
                  let fr=(nodeName(r)=="iframe"); if(fr){r.id="AnonSiteView"; r.listen("load",av);};
                  select('#anonMainView').insert(r);

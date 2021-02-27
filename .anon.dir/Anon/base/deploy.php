@@ -1,4 +1,14 @@
-<?php ob_start(); ?>
+<?php
+# exec :: (init) : show all errors and increase eecution time .. record output buffer
+# -----------------------------------------------------------------------------------------------------------------------------
+    ini_set("display_errors",true);
+    ini_set("max_execution_time",300);
+
+    error_reporting(E_ALL);
+    set_time_limit(300);
+    ob_start();
+# -----------------------------------------------------------------------------------------------------------------------------
+?>
 
 <html>
     <head>
@@ -73,13 +83,7 @@
 
 <?php
 
-$html=ob_get_clean();
-
-# dbug :: (errors) : show all errors
-# -----------------------------------------------------------------------------------------------------------------------------
-    ini_set('display_errors',true);
-    error_reporting(E_ALL);
-# -----------------------------------------------------------------------------------------------------------------------------
+$html=trim(ob_get_clean());
 
 
 
@@ -148,6 +152,20 @@ $html=ob_get_clean();
     {
         $b=base(); if(!file_exists($b.$p)){return '';};
         return file_get_contents($b.$p);
+    }
+
+    function rcpy($src,$dst)
+    {
+        $dir = opendir($src);
+        if(!file_exists($dst)){mkdir($dst);};
+        while(false !== ( $file = readdir($dir)) )
+        {
+            if(($file==".")||($file=="..")){continue;};
+            if(is_dir("$src/$file")){rcpy("$src/$file","$dst/$file");}
+            else{copy("$src/$file","$dst/$file");}
+        }
+        closedir($dir);
+        return true;
     }
 
 
@@ -295,8 +313,26 @@ $html=ob_get_clean();
 
 
 
-# exec :: (cleanup) : backup .htaccess & remove all anon-related files
+# exec :: (cleanup) : backup & remove all anon-related files
 # -----------------------------------------------------------------------------------------------------------------------------
+    if(file_exists("$bp/.anon.dir/User/data"))
+    {
+        if(!file_exists("$bp/.bkp")){mkdir("$bp/.bkp");};
+        if(!file_exists("$bp/.bkp/usr")){mkdir("$bp/.bkp/usr");};
+        if(!file_exists("$bp/.bkp/cfg")){mkdir("$bp/.bkp/cfg");};
+        if(!file_exists("$bp/.bkp/usr/master")){rcpy("$bp/.anon.dir/User/data","$bp/.bkp/usr");};
+        if(!file_exists("$bp/.bkp/cfg/Anon"))
+        {
+            $sl=array_diff(scandir("$bp/.anon.dir"),[".",".."]); foreach($sl as $sn)
+            {
+                if(!file_exists("$bp/.bkp/cfg/$sn")){mkdir("$bp/.bkp/cfg/$sn");};
+                if(!file_exists("$bp/.anon.dir/$sn/conf")){continue;};
+                $cl=array_diff(scandir("$bp/.anon.dir/$sn/conf"),[".",".."]);
+                foreach($cl as $ci){copy("$bp/.anon.dir/$sn/conf/$ci","$bp/.bkp/cfg/$sn/$ci");};
+            };
+        };
+    };
+
     $ls=["anon",".anon.dir",".git",".anon.php","README.md"];
     foreach($ls as $li){if(($li!==$fn)&&file_exists("$bp/$li")){bash("rm -rf ./$li");}};
 # -----------------------------------------------------------------------------------------------------------------------------
@@ -312,11 +348,22 @@ $html=ob_get_clean();
     file_put_contents("$bp/.htaccess",$ht); chmod("$bp/.htaccess",0444); // fused htaccess as read-only
     $mp=password_hash(trim(pget("/.anon.dir/Proc/info/pass.inf")),PASSWORD_DEFAULT);
     file_put_contents("$bp/.anon.dir/User/data/master/pass",$mp);
+
+    if(file_exists("$bp/.bkp/usr/master")){rcpy("$bp/.bkp/usr","$bp/.anon.dir/User/data");};
+    if(file_exists("$bp/.bkp/cfg/Anon"))
+    {
+        $rl=array_diff(scandir("$bp/.bkp/cfg"),[".",".."]); foreach($rl as $ri)
+        {
+            $cl=array_diff(scandir("$bp/.bkp/cfg/$ri"),[".",".."]); unset($ci);
+            foreach($cl as $ci){copy("$bp/.bkp/cfg/$ri/$ci","$bp/.anon.dir/$ri/conf/$ci");};
+        };
+    };
+    if(file_exists("$bp/.bkp")){bash("rm -rf ./.bkp");};
 # -----------------------------------------------------------------------------------------------------------------------------
 
 
 
-# cond :: (test) : check if installation works
+# exec :: (test) : check if installation works
 # -----------------------------------------------------------------------------------------------------------------------------
     $tl="https://$hn"; $gone=(new DeleteOnExit());
     header("Location: $tl");

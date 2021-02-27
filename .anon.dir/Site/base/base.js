@@ -920,7 +920,7 @@
    {
       server.stream.close(); MAIN.CONFIRMLEAVE=0; if(isKnob(p)){v=p; p=VOID};
       if(isPath(p)){t=(location.protocol+'//'+location.host+p)}else{t=location.href};
-      a=rstub(t,"#"); if(a){t=a[0]; a=a[2]}else{a=""}; t=((!isin(t,"?")?"?":"&")+"freshGui"+a);
+      a=rstub(t,"#"); if(a){t=a[0]; a=("#"+a[2])}else{a=""}; t=((!isin(t,"?")?"?":"&")+"freshGui="+fash()+a);
       b=[{input:'#INTRFACE', type:'hidden', value:'GUI'}]; cookie.delete("RECEIVER");
       if(isKnob(v)){v.each((vd,vn)=>{radd(b,{input:`#${vn}`, type:'hidden', value:vd})})};
       document.body.insert([{form:'#anonReboot', action:t, method:'POST', style:'position:absolute;opacity:0', contents:b}]);

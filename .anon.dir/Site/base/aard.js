@@ -31,6 +31,7 @@ window.userView=function(url,cbf)
 {
     var view=document.createElement('iframe'); if(!cbf){cbf=function(){}};
     view.setAttribute('id','AnonView'); view.setAttribute('frameborder',0);
+    var char=((url.indexOf("?")<0)?"?":"&"); //url+=(char+"i=PROCHASH");
     view.setAttribute('class','layr'); view.setAttribute('src',url); view.onload=cbf;
     document.getElementById('anonMainView').appendChild(view);
 };
@@ -62,7 +63,7 @@ window.isModern.t=setInterval(function(gate)
     {
         if(pageGone){return}; // gotcha bitch .. smart-bot
         if(!really){userView("(~DBUGPATH~)?#lcjs"); return};  // bad browser goes to graceful fail
-        console.log("receiver: (~RECEIVER~)");
+        // console.log("receiver: (~RECEIVER~)");
         if("(~RECEIVER~)"=="anon"){bootAnon(gate); return}; // no other framework detected
         userView("(~NAVIPURL~)",function(){bootAnon(gate)}); // boot handler first -if present
     })},250);
