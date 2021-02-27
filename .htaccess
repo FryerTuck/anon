@@ -141,18 +141,3 @@
 # cond :: innate : for other handlers to get creative .. please LEAVE THE CRAYON for the other kids who draw here
 # -----------------------------------------------------------------------------------------------------------------------------
 # ((̲̅ ̲̅(̲̅C̲̅r̲̅a̲̅y̲̅o̲̅l̲̲̅̅a̲̅( ̲̅((>
-
-# BEGIN WordPress
-# The directives (lines) between `BEGIN WordPress` and `END WordPress` are
-# dynamically generated, and should only be modified via WordPress filters.
-# Any changes to the directives between these markers will be overwritten.
-<IfModule mod_rewrite.c>
-RewriteEngine On
-RewriteBase /
-RewriteRule ^index\.php$ - [L]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule . /index.php [L]
-</IfModule>
-
-# END WordPress
