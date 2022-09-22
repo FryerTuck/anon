@@ -1,0 +1,4 @@
+appImage: /Site/dcor/logo.png
+appTitle: (~HOSTNAME~)
+appMotto: `Anon infused website`
+appWords: `Anon web-framework abstraction-layer`

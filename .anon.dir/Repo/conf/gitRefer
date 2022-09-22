@@ -1,0 +1,8 @@
+AnonOrigin: https://github.com/CharlSteynberg/anon.git
+AnonBranch: main
+
+SiteOrigin: VOID
+SiteBranch: main
+
+UserOrigin: file://$/Repo/data/remote/tank.git
+UserBranch: main

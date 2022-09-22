@@ -1,0 +1,83 @@
+<head>
+    <style>
+        html,body
+        {
+            height:100%;
+            margin:0px; padding:0px;
+            background:hsla(210,3%,16%,1);
+            font-size:15px; line-height:20px;
+            font-family: Arial, Helvetica, sans-serif;
+            color:#AAA;
+            overflow:hidden;
+        }
+
+        table,th,tr,td
+        {
+            border-width:0px;
+            border-collapse:collapse;
+            margin:0px;
+            padding:0px;
+            vertical-align:top;
+        }
+
+        #AnonDevlPage
+        {
+            position:absolute;
+            width:100%; height:100%;
+            user-select:none;
+        }
+
+        #AnonDevlPage td
+        {
+            user-select:none;
+        }
+
+        .hzrdTape
+        {
+            height:10%; min-height:40px;
+            background:url("/Site/tmpl/Anon/bits/constape.jpg");
+            background-size: auto 100%;
+        }
+
+        .pageBody
+        {
+            background:url("/Site/tmpl/Anon/bits/tarmac.jpg");
+            user-select:none;
+        }
+
+        .viewLayer
+        {
+            height:100%;
+            overflow:hidden;
+            user-select:none;
+        }
+
+        .devlSign
+        {
+            position:absolute;
+            height:100%;
+            left:50%; transform:translate(-50%,0%);
+            user-select:none;
+        }
+
+        .liteFade
+        {
+            position:absolute;
+            width:100%; height:100%;
+            background:url("/Site/tmpl/Anon/bits/litefade.png");
+            background-size:cover;
+            user-select:none;
+        }
+    </style>
+</head>
+<body>
+    <div class="viewLayer">
+        <table id="AnonDevlPage">
+            <tr><td class="hzrdTape"></td></tr>
+            <tr><td class="pageBody"></td></tr>
+            <tr><td class="hzrdTape"></td></tr>
+        </table>
+        <img class="devlSign" src="/Site/tmpl/Anon/bits/conslogo.png" />
+        <div class="liteFade"></div>
+    </div>
+</body>

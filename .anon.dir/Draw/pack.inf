@@ -1,0 +1,5 @@
+needsPHP: 5.6
+needsExt:
+packVrsn: 0.1.0
+panlIcon: palette
+forClans: draw,lead

@@ -1,0 +1,5 @@
+viewDirs: false
+eventSpy: false
+httpTime: 50
+evntBufr: 12000
+memLimit: 256M

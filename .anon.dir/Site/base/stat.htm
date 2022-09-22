@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>(~code~) - (~text~)</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1"/>
+      <style>
+         (~"$/Site/dcor/aard.css"~)
+
+         body
+         {background:hsla(210,3%,16%,1);}
+
+         #pane
+         {
+            min-width:30rem; max-width:60rem;
+            padding:2rem;
+            border-radius:0.3rem;
+            background-color:hsla(0,0%,100%,0.05);
+            text-align:center;
+            border:0.15rem solid hsla(0,0%,100%,0.1);
+            box-shadow:0rem 0rem 0.2rem hsla(0,0%,0%,0.1);
+            position:absolute; top:40%; left:50%; transform:translate(-50%,-40%);
+         }
+      </style>
+   </head>
+   <body>
+      <layr id="anonMarkView" style="opacity:0.1"></layr>
+      <layr>
+         <div id="pane">
+            <h1 id="code">(~code~)</h1>
+            <span id="text">(~text~)</span>
+         </div>
+     </layr>
+   </body>
+</html>

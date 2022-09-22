@@ -1,0 +1,23 @@
+/               : page/home.htm
+/favicon.ico    : face/favicon.ico
+
+
+/apple-touch-icon.png   : face/apple-touch-icon.png
+/favicon-32x32.png      : face/favicon-32x32.png
+/favicon-16x16.png      : face/favicon-16x16.png
+/site.webmanifest       : face/site.webmanifest
+
+
+/safari-pinned-tab.svg  : face/safari-pinned-tab.svg
+/browserconfig.xml      : face/browserconfig.xml
+
+
+/mstile-70x70.png       : face/mstile-70x70.png
+/mstile-144x144.png     : face/mstile-144x144.png
+/mstile-150x150.png     : face/mstile-150x150.png
+/mstile-310x150.png     : face/mstile-310x150.png
+/mstile-310x310.png     : face/mstile-310x310.png
+
+
+/home.htm       : page/home.htm
+/about.htm      : page/about.htm

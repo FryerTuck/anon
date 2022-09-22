@@ -1,0 +1,145 @@
+
+# note :: important : read this
+# -----------------------------------------------------------------------------------------------------------------------------
+# the directives expressed in this file are compatible with shared hosting and crucial to security and Anon framework integrity
+# the objective is to provide a fast/solid/stable runtime environment that compliments the designated PHP framework.. elegantly
+# ...
+# THE METAPHORICAL CHRONICLE
+# these are the memoirs of Anon "the legendary server", who lives and dies to serve others and yet always manages to stay alive
+# waking up, finding yourself trapped inside dark muddy pit, with only a few options available to survive .. but i won't flinch
+# here we are in "the pit" .. we don't even know if we can get out of here, keep calm, let's see if PHP is available, may it be
+# -----------------------------------------------------------------------------------------------------------------------------
+
+
+
+# init :: flow : initialize rewrite engine and force subdomain as `www` .. this must be here 1st, at the top
+# -----------------------------------------------------------------------------------------------------------------------------
+    RewriteEngine on
+    RewriteBase /
+
+    RewriteCond %{HTTP_HOST} ^[^.]+\.[^.]+\.[^.]+$
+    RewriteCond %{HTTP_HOST} ^[^.]+\.[^.]+$
+    RewriteRule ^(.*)$ %{REQUEST_SCHEME}://www.%{HTTP_HOST}/$1 [L,R=301]
+# -----------------------------------------------------------------------------------------------------------------------------
+
+
+
+# prep :: vars : this does no redirection and does not exit, it only writes variables to be used further down
+# -----------------------------------------------------------------------------------------------------------------------------
+    RewriteCond %{THE_REQUEST} \s/+([^?]*?)/*[\s?]
+    RewriteRule ^ - [E=HREFPATH:%1]
+
+    RewriteCond %{ENV:HREFPATH} !^$
+    RewriteCond %{ENV:HREFPATH} ([a-zA-Z0-9-_\.~\$]+)
+    RewriteRule ^(.*)$ - [E=PATHSTEM:%1]
+
+    RewriteRule ^(.*)$ - [E=ROOTPATH:%{DOCUMENT_ROOT}]
+
+    RewriteCond %{HTTP_HOST} ([a-z0-9]+)\.
+    RewriteRule ^(.*)$ - [E=HREFBASE:%1]
+    RewriteCond %{ENV:ROOTPATH}/%{ENV:HREFBASE} !-d
+    RewriteRule ^(.*)$ - [E=HREFBASE:]
+    RewriteCond %{ENV:HREFBASE} ^$
+    RewriteCond %{ENV:ROOTPATH}/%{HTTP_HOST} -d
+    RewriteRule ^(.*)$ - [E=HREFBASE:%{HTTP_HOST}]
+
+    RewriteRule ^(.*)$ - [E=ANONFOLD:.anon.dir]
+    RewriteCond %{ENV:HREFBASE} !^$
+    RewriteCond %{ENV:ROOTPATH}/%{ENV:ANONFOLD} !-d
+    RewriteRule ^(.*)$ - [E=ANONFOLD:%{ENV:HREFBASE}/%{ENV:ANONFOLD}]
+    RewriteCond %{ENV:ROOTPATH}/%{ENV:ANONFOLD} !-d
+    RewriteRule ^(.*)$ - [E=ANONFOLD:]
+
+    RewriteRule ^(.*)$ - [E=ANONINDX:.anon.php]
+    RewriteCond %{ENV:ROOTPATH}/%{ENV:ANONINDX} -f
+    RewriteRule ^(.*)$ - [E=ANONTOPD:yes]
+
+    RewriteCond %{ENV:HREFBASE} !^$
+    RewriteCond %{ENV:ANONTOPD} ^$
+    RewriteRule ^(.*)$ - [E=ANONINDX:%{ENV:HREFBASE}/%{ENV:ANONINDX}]
+    RewriteCond %{ENV:ROOTPATH}/%{ENV:ANONINDX} !-f
+    RewriteRule ^(.*)$ - [E=ANONINDX:]
+
+    RewriteCond %{ENV:HREFBASE} !^$
+    RewriteCond %{ENV:ROOTPATH}/%{ENV:HREFBASE}/index.php -f
+    RewriteRule ^(.*)$ - [E=HOSTINDX:%{ENV:HREFBASE}/index.php]
+    RewriteCond %{ENV:HOSTINDX} ^$
+    RewriteCond %{ENV:ROOTPATH}/index.php -f
+    RewriteRule ^(.*)$ - [E=HOSTINDX:index.php]
+
+    RewriteCond %{ENV:HOSTINDX} ^$
+    RewriteCond %{ENV:ROOTPATH}/index.html -f
+    RewriteRule ^(.*)$ - [E=HOSTINDX:index.html]
+
+
+    RewriteCond %{ENV:ANONFOLD} !^$
+    RewriteRule ^(.*)$ - [E=DBUGPATH:%{ENV:ANONFOLD}/Site/base/dbug.htm]
+
+    RewriteCond %{ENV:ANONFOLD} !^$
+    RewriteRule ^(.*)$ - [E=BOTMATCH:bot|crawl|fetch|find|grab|scan|search|site|slurp|spider|wget|curl]
+
+    RewriteCond %{ENV:ANONFOLD} !^$
+    RewriteRule ^(.*)$ - [E=FUSEPATH:%{ENV:ANONFOLD}/Repo/data/native/fuse]
+# -----------------------------------------------------------------------------------------------------------------------------
+
+
+
+# cond :: Anon : for if Anon is installed AND: there is no Anon session, or request is for Anon directly
+# -----------------------------------------------------------------------------------------------------------------------------
+    RewriteCond %{THE_REQUEST} \s/{2,}
+    RewriteRule ^(.*)$ - [R=400,L]
+
+    RewriteCond %{ENV:ANONINDX} !^$
+    RewriteCond %{HTTP_COOKIE} !RECEIVER=anon;?
+    RewriteCond %{HTTP_COOKIE} !RECEIVER=nona;?
+    RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
+
+    RewriteCond %{ENV:ANONINDX} !^$
+    RewriteCond %{HTTP_COOKIE} RECEIVER=anon;
+    RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
+
+    RewriteCond %{ENV:ANONINDX} !^$
+    RewriteCond %{HTTP_HOST}@@%{HTTP_REFERER} !^([^@]*)@@https?://\1/.*
+    RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
+
+    RewriteCond %{ENV:ANONINDX} !^$
+    RewriteCond %{ENV:PATHSTEM} !^$
+    RewriteCond %{ENV:ROOTPATH}/%{ENV:ANONFOLD}/%{ENV:PATHSTEM} -d
+    RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
+
+    RewriteCond %{ENV:ANONINDX} !^$
+    RewriteCond %{ENV:PATHSTEM} !^$
+    RewriteCond %{ENV:ROOTPATH}/%{ENV:PATHSTEM}/aard.php -f
+    RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
+
+    RewriteCond %{ENV:ANONINDX} !^$
+    RewriteCond %{ENV:PATHSTEM} ^/?~
+    RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
+
+    RewriteCond %{ENV:ANONINDX} !^$
+    RewriteCond %{ENV:ROOTPATH}/%{ENV:ANONFOLD}/Proc/temp/lock/AnonSystemLock -f
+    RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
+
+    RewriteCond %{ENV:ANONINDX} !^$
+    RewriteCond %{ENV:HREFPATH} (\.jpg|\.jpeg|\.png|\.gif|\.webp)$ [NC]
+    RewriteCond %{ENV:ROOTPATH}/%{ENV:HREFPATH} -f
+    RewriteCond %{ENV:ROOTPATH}/%{ENV:ANONFOLD}/Proc/vars/stainImg -f
+    RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
+
+    RewriteCond %{ENV:ANONINDX} !^$
+    RewriteCond %{QUERY_STRING} (^|&)ANONREPOTEST($|&)
+    RewriteCond %{REQUEST_URI} !/%{ENV:FUSEPATH}/
+    RewriteRule ^(.*)$ /%{ENV:FUSEPATH}/ [L,QSA]
+
+    RewriteCond %{ENV:ANONINDX} !^$
+    RewriteCond %{ENV:HOSTINDX} ^$
+    RewriteRule ^(.*)$ %{ENV:ANONINDX} [L,QSA]
+# -----------------------------------------------------------------------------------------------------------------------------
+
+
+
+# cond :: innate : for other handlers to get creative .. please LEAVE THE CRAYON & spacer-# for the other kids who draw here
+# -----------------------------------------------------------------------------------------------------------------------------
+# ((̲̅ ̲̅(̲̅C̲̅r̲̅a̲̅y̲̅o̲̅l̲̲̅̅a̲̅( ̲̅((>
+#
+#

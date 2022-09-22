@@ -1,0 +1,689 @@
+
+/* tags :: base : view-span, base-size, base-tint
+/* ------------------------------------------------------------------------------------------------------------- */
+   html,body
+   {
+      position:relative;
+      height:100%;
+      background:hsla(210,3%,16%,1);
+      font-size:15px; line-height:20px;
+      font-family: Arial, Helvetica, sans-serif;
+      color:#AAA;
+      overflow:hidden;
+      padding:0px;
+      margin:0px;
+   }
+
+   ::-webkit-scrollbar
+   {
+      width:10px; height:10px;
+   }
+
+   ::-webkit-scrollbar-track
+   {
+      background:hsla(0,0%,40%,0.2);
+   }
+
+   ::-webkit-scrollbar-thumb
+   {
+      background:hsla(0,0%,50%,0.2);
+      border:1px solid hsla(0,0%,50%,0.2);
+      border-radius:2px;
+   }
+
+   ::-webkit-scrollbar-corner
+   {background:hsla(0,0%,40%,0.2);}
+/* ------------------------------------------------------------------------------------------------------------- */
+
+
+/* shim :: normalize : focus-outline
+/* ------------------------------------------------------------------------------------------------------------- */
+    *,*:focus,*:hover
+    {
+        outline:none;
+    }
+/* ------------------------------------------------------------------------------------------------------------- */
+
+
+
+/* clan :: show/hide : standardize
+/* ------------------------------------------------------------------------------------------------------------- */
+   .hide
+   {
+      display:none;
+   }
+
+   .show
+   {
+      display:block;
+   }
+/* ------------------------------------------------------------------------------------------------------------- */
+
+
+
+
+/* tags :: base : standardize
+/* ------------------------------------------------------------------------------------------------------------- */
+   div
+   {
+      display:block;
+      position:relative;
+      vertical-align:top;
+      box-sizing:border-box;
+      padding:0px;
+      margin:0px;
+   }
+
+   table,th,tr,td
+   {
+      border-width:0px;
+      border-collapse:collapse;
+      margin:0px;
+      padding:0px;
+      vertical-align:top;
+   }
+   table.show{display:table;}
+
+   iframe,object
+   {
+      display:inline-block;
+      position:relative;
+      box-sizing:border-box;
+      padding:0px;
+      margin:0px;
+      border:none;
+      background:transparent;
+  }
+
+   pre
+   {
+      position:relative; padding:0px; margin:0px;
+      box-sizing:border-box;
+   }
+
+
+   ul
+   {
+      margin:0px;
+      padding:0px;
+      margin-left:1.5rem;
+      margin-top:0.5rem;
+   }
+
+   li
+   {
+      margin:0px;
+      padding:0px;
+   }
+
+   p
+   {
+      margin:0px;
+      margin-bottom:1rem;
+   }
+
+   a
+   {
+      font-weight:bold;
+      cursor:pointer;
+      text-decoration:underline;
+      color:#CCC;
+   }
+
+   a:hover
+   {color:#EEE;}
+
+   textarea
+   {
+      position:relative; margin:0px; padding:4px;
+      box-sizing:border-box;
+      resize:none;
+      font-family:monospace; font-size:12px; line-height:14px;
+      border:1px solid #AAA; border-radius:2px;
+   }
+
+   input
+   {
+       user-select: none;
+   }
+
+   code
+   {
+      position:relative !important; margin:0px !important; padding:0px !important;
+      box-sizing:border-box;
+   }
+
+   sub, sup
+   {
+      font-size: 75%;
+      line-height: 0;
+      position: relative;
+      vertical-align: baseline;
+   }
+
+   sup{top: -0.5em;}
+   sub{bottom: -0.25em;}
+
+   small
+   {
+      display:inline-block;
+      font-size: 11px;
+      line-height: 14px;
+      position: relative;
+      vertical-align: baseline;
+   }
+/* ------------------------------------------------------------------------------------------------------------- */
+
+
+
+
+/* tags :: grid : tables
+/* ------------------------------------------------------------------------------------------------------------- */
+   grid
+   {
+      display:table; box-sizing:border-box;
+      width:100% ; height:100%;
+      border-width:0px; border:none;
+      margin:0px; padding:0px;
+   }
+   grid.show{display:table;}
+
+   row
+   {
+      display:table-row; height:auto;
+   }
+   row.show{display:table-row;}
+
+   col
+   {
+      display:table-cell; box-sizing:border-box !important;
+      width:unset; height:unset;
+      vertical-align:top; text-align:left;
+   }
+   col.show{display:table-cell;}
+   col.tiny
+   {
+      width:1px; height:1px;
+      font-size:12px; line-height:12px;
+   }
+
+   datagrid
+   {
+      display:table; box-sizing:border-box;
+      border-width:0px; border:none;
+      margin:0px; padding:0px;
+   }
+/* ------------------------------------------------------------------------------------------------------------- */
+
+
+
+
+/* view :: floats ontop, fills window
+/* ------------------------------------------------------------------------------------------------------------- */
+   view
+   {
+      display:block;
+      position:fixed;
+      z-index:9990;
+      top:0px; left:0px;
+      width:100%;
+      vertical-align:top;
+      box-sizing:border-box;
+      padding:0px;
+      margin:0px;
+   }
+
+   view.show
+   {
+      display:block !important;
+   }
+
+   view.hide
+   {
+      display:none !important;
+   }
+
+   view.part
+   {
+      height:auto !important;
+   }
+
+   view.full
+   {
+      height:100%;
+      overflow:hidden;
+   }
+
+
+   .layr
+   {
+      display:block;
+      position:absolute;
+      z-index:9990;
+      top:0px; left:0px;
+      width:100%; height:100%;
+      vertical-align:top;
+      text-align:left;
+      box-sizing:border-box;
+      padding:0px;
+      margin:0px;
+   }
+
+
+   .dbugPanl
+   {
+      position:fixed !important; top:0px; left:0px;
+      z-index:99999997;
+   }
+
+   #failExit
+   {
+      position:fixed !important; z-index:99999999; top:0px; right:0px;
+      width:20px; height:20px;
+      background:hsla(0,0%,0%,0.7);
+      cursor:pointer;
+      font-weight:bold;
+      font-size:14px; line-height:17px;
+      text-align:center;
+      overflow:hidden;
+   }
+/* ------------------------------------------------------------------------------------------------------------- */
+
+
+
+/* view :: boot : layers
+/* ------------------------------------------------------------------------------------------------------------- */
+   #snth
+   {
+       display:inline-block;
+       position:absolute;
+       width:320px; height:240px;
+       top:-9500px; left:-9500px;
+       overflow:hidden;
+   }
+
+
+   #anonHidnView
+   {
+       overflow:hidden;
+       opacity:0;
+   }
+
+   #anonMarkView
+   {
+      background:url('/Site/dcor/syfy.png') !important;
+      overflow:hidden;
+      opacity:0.1;
+   }
+
+   #anonMainView
+   {
+      overflow:auto;
+   }
+
+   #AnonSystemLock
+   {
+       background:hsla(210,3%,16%,0.9);
+       z-index:99999999;
+   }
+/* ------------------------------------------------------------------------------------------------------------- */
+
+
+
+
+/* tags :: divs : delimiters
+/* ------------------------------------------------------------------------------------------------------------- */
+   vdiv
+   {
+      display:block; position:relative; box-sizing:border-box; height:100%;
+      overflow:hidden; margin:0px; padding:0px;
+   }
+
+   hdiv
+   {
+      display:block; position:relative; box-sizing:border-box; width:100%;
+      overflow:hidden; margin:0px; padding:0px;
+   }
+
+   .panlVertDlim
+   {
+      width:5px !important; height:100% !important; max-width:5px !important; padding:0px !important; margin:0px !important;
+   }
+   .panlVertDlim > vdiv
+   {
+      width:5px; min-width:5px; max-width:5px; height:100% !important;
+      background:hsla(210,3%,12%,1);
+      border-left:1px solid hsla(210,3%,8%,1); border-right:1px solid hsla(210,3%,22%,1);
+   }
+
+   .panlVertLine{width:1px; min-width:1px; max-width:1px;}
+   .panlVertLine > vdiv
+   {
+      width:1px; min-width:1px; max-width:1px;
+      border-left:1px solid hsla(210,3%,8%,1); border-right:1px solid hsla(210,3%,22%,1);
+   }
+
+   .panlHorzDlim{width:100% !important; height:5px; min-height:5px; max-height:5px;}
+   .panlHorzDlim > hdiv
+   {
+      width:100% !important; height:5px; min-height:5px; max-height:5px;
+      background:hsla(210,3%,12%,1);
+      border-top:1px solid hsla(210,3%,8%,1); border-bottom:1px solid hsla(210,3%,22%,1);
+   }
+
+   .panlHorzLine{height:1px; min-height:1px; max-height:1px;}
+   .panlHorzLine > hdiv
+   {
+      height:1px; min-height:1px; max-height:1px;
+      border-top:1px solid hsla(210,3%,8%,1); border-bottom:1px solid hsla(210,3%,22%,1);
+   }
+/* ------------------------------------------------------------------------------------------------------------- */
+
+
+
+
+/* bots :: trap : only bots can see the element
+/* ------------------------------------------------------------------------------------------------------------- */
+   .nonhuman
+   {
+      display:inline-block; position:absolute;
+      width:320px; height:240px; top:-500px; left:-500px;
+      overflow:hidden;
+   }
+/* ------------------------------------------------------------------------------------------------------------- */
+
+
+
+
+/* clan :: dbug : visually see boundaries .. for prototyping
+/* ------------------------------------------------------------------------------------------------------------- */
+   .dbug
+   {
+      min-width:20px !important;
+      min-height:20px !important;
+      background:#BADA55 !important;
+      font-size:11px !important;
+      color:#AA0000 !important;
+      border:1px solid #AA0000 !important;
+      border-radius:0px !important;
+      opacity:1 !important;
+   }
+
+   .dbug-block
+   {
+      display:block !important;
+      position:relative !important;
+      min-width:20px !important;
+      min-height:20px !important;
+      background:#BADA55 !important;
+      font-size:11px !important;
+      color:#AA0000 !important;
+      border:1px solid #AA0000 !important;
+      border-radius:0px !important;
+      opacity:1 !important;
+   }
+
+   .dbug-inline
+   {
+      display:inline-block !important;
+      position:relative !important;
+      min-width:20px !important;
+      min-height:20px !important;
+      background:#BADA55 !important;
+      font-size:11px !important;
+      color:#AA0000 !important;
+      border:1px solid #AA0000 !important;
+      border-radius:0px !important;
+      opacity:1 !important;
+   }
+
+   .dbug-layer
+   {
+      display:block !important;
+      position:absolute !important;
+      min-width:20px !important;
+      min-height:20px !important;
+      left:0px; top:0px;
+      background:#BADA55 !important;
+      font-size:11px !important;
+      color:#AA0000 !important;
+      border:1px solid #AA0000 !important;
+      border-radius:0px !important;
+      opacity:1 !important;
+   }
+/* ------------------------------------------------------------------------------------------------------------- */
+
+
+
+
+/* clan :: holder : general container
+/* ------------------------------------------------------------------------------------------------------------- */
+   .holder
+   {
+      display:block; position:relative;
+      box-sizing:border-box;
+      overflow:auto;
+   }
+/* ------------------------------------------------------------------------------------------------------------- */
+
+
+
+
+/* clan :: passwd : mimic password field
+/* ------------------------------------------------------------------------------------------------------------- */
+   .passwd
+   {
+      text-security: disc;
+      -webkit-text-security: disc;
+      -moz-text-security: disc;
+   }
+/* ------------------------------------------------------------------------------------------------------------- */
+
+
+
+
+/* clan :: dropZone : for file uploads
+/* ------------------------------------------------------------------------------------------------------------- */
+   .dropZone
+   {
+      display:flex; position:absolute;
+      width:50%; height:50%; background:hsla(0,0%,50%,0.1);
+      justify-content:center; align-items:center; text-align:center;
+      font-family:Arial Helvetica sans-serif; font-size:3vw; color:hsla(0,0%,50%,0.4);
+      border:2px dashed hsla(0,0%,50%,0.4); border-radius:1vw;
+      top:50%; left:50%; transform:translate(-50%, -50%);
+   }
+   .dropZoneInfo
+   {
+      padding-top:3vw;
+      font-size:1.5vw;
+   }
+/* ------------------------------------------------------------------------------------------------------------- */
+
+
+
+
+/* clan :: move
+/* ------------------------------------------------------------------------------------------------------------- */
+   .moveHorz {cursor:col-resize;}
+   .moveVert {cursor:row-resize;}
+   .moveBoth {cursor:move;}
+/* ------------------------------------------------------------------------------------------------------------- */
+
+
+
+
+/* tags :: custom
+/* ------------------------------------------------------------------------------------------------------------- */
+   panl
+   {
+      display:block; position:relative;
+      box-sizing:border-box; width:100%; height:100%;
+      user-select:text !important;
+      outline:none;
+      overflow:auto;
+   }
+
+   slab
+   {
+      display:block; position:absolute;
+      box-sizing:border-box; width:100%; height:100%;
+      outline:none;
+      overflow:hidden;
+   }
+
+   wrap
+   {
+      display:block; position:relative;
+      box-sizing:border-box; width:100%; height:100%;
+      outline:none;
+      overflow:hidden;
+   }
+
+   layr
+   {
+      display:block; position:absolute;
+      box-sizing:border-box; width:100%; height:100%;
+      overflow:hidden;
+   }
+
+   note
+   {
+      display:inline-block; position:relative; box-sizing:border-box;
+      border:1px solid hsla(0,0%,30%,1);
+      background-color:#2e3133;
+      border:1px solid #5e6163; border-radius:2px;
+      box-shadow:0px 0px 12px hsla(0,0%,0%,0.2);
+      font-family: Arial, Helvetica, sans-serif;
+      text-align:center; color:#FFF;
+      padding:2em;
+   }
+
+   tiny
+   {
+      display:inline-block; position:relative; box-sizing:border-box;
+      font-size:10px; font-style:italic;
+      opacity:0.7;
+   }
+
+   page
+   {
+      display:block; position:relative;
+      box-sizing:border-box; width:100%; height:100%;
+      user-select:text !important;
+      outline:none;
+      overflow:auto;
+   }
+/* ------------------------------------------------------------------------------------------------------------- */
+
+
+
+
+/* clan :: alignment
+/* ------------------------------------------------------------------------------------------------------------- */
+   .center {position:absolute !important; left:50%; transform:translate(-50%,0%);}
+   .middle {position:absolute !important; top:50%; transform:translate(0%,-50%);}
+   .cenmid {position:absolute !important; left:50% !important; top:50% !important; transform:translate(-50%,-50%) !important;}
+   .midcen {position:absolute !important; left:50% !important; top:50% !important; transform:translate(-50%,-50%) !important;}
+
+   .cntrChld {text-align:center !important;}
+   .midlChld {vertical-align:middle !important;}
+
+   .noSpan {width:unset !important; height:unset !important;}
+   .noWrap {white-space:nowrap !important;}
+
+   .noSpanBoth {width:unset !important; height:unset !important;}
+   .noSpanHorz {width:unset !important;}
+   .noSpanVert {height:unset !important;}
+
+   .spanHorz {width:100% !important;}
+   .spanVert {height:100% !important;}
+   .spanBoth {width:100% !important; height:100% !important;}
+   .spanFull {width:100% !important; height:100% !important;}
+
+   .flipHorz{transform:scale(-1,1);}
+   .flipVert{transform:scale(1,-1);}
+
+
+   .absoSpanPrnt {position:relative !important;}
+   .absoSpanChld {position:absolute !important;}
+
+   .posAbs {position:absolute !important;}
+   .posRel {position:relative !important; box-sizing:border-box !important;}
+   .posDrift {position:absolute !important; z-index:999999;}
+
+   .absLft {position:absolute !important; left:0px !important;}
+   .absRgt {position:absolute !important; right:0px !important;}
+   .absTop {position:absolute !important; top:0px !important;}
+   .absBtm {position:absolute !important; bottom:0px !important;}
+
+   .inline {position:relative !important; display:inline-block !important;}
+   .nwline {position:relative !important; display:block !important;}
+
+   .scrollAuto {overflow:auto !important;}
+   .scrollHide {overflow:hidden !important;}
+   .scrollShow {overflow:scroll !important;}
+
+   .spanHorz00 {width:0.1rem !important;}
+   .spanHorz05 {width:0.5rem; min-width:0.5rem; max-width:0.5rem;}
+   .spanHorz10 {width:1rem; min-width:1rem; max-width:1rem;}
+   .spanHorz15 {width:1.5rem; min-width:1.5rem; max-width:1.5rem;}
+   .spanHorz20 {width:2rem; min-width:2rem; max-width:2rem;}
+   .spanHorz25 {width:2.5rem; min-width:2.5rem; max-width:2.5rem;}
+   .spanHorz30 {width:3rem; min-width:3rem; max-width:3rem;}
+
+   .spanVert00 {height:0.1rem !important;}
+   .spanVert05 {height:0.5rem; min-height:0.5rem; max-height:0.5rem;}
+   .spanVert10 {height:1rem; min-height:1rem; max-height:1rem;}
+   .spanVert15 {height:1.5rem; min-height:1.5rem; max-height:1.5rem;}
+   .spanVert20 {height:2rem; min-height:2rem; max-height:2rem;}
+   .spanVert25 {height:2.5rem; min-height:2.5rem; max-height:2.5rem;}
+   .spanVert30 {height:3rem; min-height:3rem; max-height:3rem;}
+
+   .padnBoth00 {padding:0px !important;}
+   .padnBoth05 {padding:0.5rem !important;}
+   .padnBoth10 {padding:1rem !important;}
+   .padnBoth15 {padding:1.5rem !important;}
+   .padnBoth20 {padding:2rem !important;}
+   .padnBoth25 {padding:2.5rem !important;}
+   .padnBoth30 {padding:3rem !important;}
+
+   .mrgnBoth00 {margin:0px !important;}
+   .mrgnBoth05 {margin:0.5rem !important;}
+   .mrgnBoth10 {margin:1rem !important;}
+   .mrgnBoth15 {margin:1.5rem !important;}
+   .mrgnBoth20 {margin:2rem !important;}
+   .mrgnBoth25 {margin:2.5rem !important;}
+   .mrgnBoth30 {margin:3rem !important;}
+
+   .fontSize10 {font-size:10px !important;}
+   .fontSize11 {font-size:11px !important;}
+   .fontSize12 {font-size:12px !important;}
+   .fontSize13 {font-size:13px !important;}
+   .fontSize14 {font-size:14px !important;}
+   .fontSize15 {font-size:15px !important;}
+   .fontSize16 {font-size:16px !important;}
+/* ------------------------------------------------------------------------------------------------------------- */
+
+
+
+
+/* clan :: link
+/* ------------------------------------------------------------------------------------------------------------- */
+   .link
+   {
+      cursor:pointer !important;
+   }
+   .link:hover
+   {
+      text-decoration:underline !important;
+   }
+/* ------------------------------------------------------------------------------------------------------------- */
+
+
+
+
+/* path :: include : knob
+/* ------------------------------------------------------------------------------------------------------------- */
+/*(~'/Site/base/knob.css'~)*/
+/* ------------------------------------------------------------------------------------------------------------- */

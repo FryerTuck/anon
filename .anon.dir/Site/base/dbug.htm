@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Server Maintenance</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1"/>
+      <style>
+         html,body
+         {
+            position:relative;
+            height:100%;
+            background-color:#2e3133;
+            font-family: Arial, Helvetica, sans-serif; font-size:12px; line-height:14px; color:#AAA;
+            overflow:hidden;
+            padding:0px; margin:0px;
+         }
+
+         body
+         {
+            background-size:cover;
+         }
+
+         .nonhuman
+         {
+            display:inline-block; position:absolute;
+            width:320px; height:240px; top:-500px; left:-500px;
+            overflow:hidden;
+         }
+
+         .view
+         {
+            display:block;
+            position:absolute;
+            top:0px; left:0px;
+            width:100%; height:100%;
+            overflow:auto;
+         }
+
+         .view.dbug
+         {
+            display:block;
+            position:absolute;
+            top:0px; left:0px;
+            width:100%; height:100%;
+            background-color:hsla(220,4%,14%,0.95);
+         }
+
+         .dbug.pane
+         {
+            width:100%; height:70%;
+            text-align:center;
+            overflow:auto;
+         }
+
+         .dbug.dump
+         {
+            font-family:monospace;
+            width:100%; height:100%;
+            text-align:left;
+            font-size:10px;
+            line-height:12px;
+            padding:10px;
+            display:none;
+         }
+
+         .dbug.fail
+         {
+            display:none;
+            max-width:50rem;
+            background:#3e1113;
+            font-size:0.85rem;
+            color:hsla(0,0%,100%,0.8);
+            border:1px solid #5b1f21;
+            box-shadow:0rem 0.1rem 0.5rem rgba(0,0,0,0.1);
+            border-radius:3px;
+            margin:1rem;
+            margin-top:4rem;
+            text-align:left;
+         }
+
+         .dbug.fail h1
+         {
+            display:block;
+            margin:0px;
+            font-size:0.9rem;
+            line-height:1.3rem;
+            font-weight:bold;
+            color:hsla(0,0%,100%,0.7);
+            padding: 0.3rem;
+            padding-left: 0.6rem;
+            border-bottom:1px solid #5e1113;
+         }
+
+         .dbug.fail div
+         {
+            background:#4c0911;
+            padding:1.2rem;
+            padding-top:0.8rem;
+            border-radius:0.2rem;
+         }
+
+         .dbug.fail div pre
+         {
+            font-size:11px;
+            opacity:0.7;
+         }
+
+         .dbug.fail div a
+         { color:#EEE; }
+
+         .dbug.fail div p
+         { margin:0px; margin-bottom:1rem; }
+
+         .dbug.fail div ul
+         { margin-bottom:1rem; }
+
+         #slogView
+         {
+            width:100%; height:100%;
+            font-family:code;
+            text-align:left;
+            font-size:16px;
+            line-height:16px;
+            color:#AAA;
+            overflow:auto;
+            white-space:nowrap;
+         }
+
+         .slog table
+         { height:100%;}
+
+         .slog table tr td
+         {
+            height:16px;
+            vertical-align:top;
+            padding-left:10px; padding-right:40px;
+         }
+
+         .slog table tr:nth-child(1) td
+         { padding-top:10px; }
+
+         .slog table tr td:nth-child(1)
+         {
+            background:hsla(220,0%,5%,0.45);
+            padding-left:10px; padding-right:10px;
+            border-right:1px solid hsla(0,0%,10%,1);
+            text-align:right;
+         }
+
+         .slog table tr:last-child td
+         { height:auto; }
+
+         .slogFail table tr:nth-child(1) td
+         { padding-top:10px; color:hsla(0,100%,65%,1); }
+
+         .slogDump table tr:nth-child(1) td
+         { padding-top:10px; color:hsla(220,100%,65%,1); }
+
+         ::-webkit-scrollbar
+         {
+            width:10px; height:10px;
+         }
+
+         ::-webkit-scrollbar-track
+         {
+            background:hsla(210,3%,15%,0.9);
+         }
+
+         ::-webkit-scrollbar-thumb
+         {
+            background:hsla(210,4%,22%,1);
+            border:1px solid hsla(210,3%,15%,0.9);
+            border-radius:3px;
+         }
+
+         ::-webkit-scrollbar-corner
+         {background:hsla(210,3%,15%,0.9);}
+      </style>
+      <script>
+      // shim :: Array.prototype.forEach : https://gist.github.com/hufyhang/c303ce1b80c7b6f8a73e
+      // --------------------------------------------------------------------------------------------------------
+         (function(){Array.prototype.forEach||(Array.prototype.forEach=function(b,c){if("function"!==typeof b)throw new TypeError(b+" is not a function");c=c||this;for(var a=0,d=this.length;a!==d;++a)b.call(c,this[a],a,this)})})();
+      // --------------------------------------------------------------------------------------------------------
+
+
+      // shim :: Array.prototype.indexOf : https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf
+      // --------------------------------------------------------------------------------------------------------------------------------------------
+         (function(){Array.prototype.indexOf||(Array.prototype.indexOf=function(d,e){if(null==this)throw new TypeError('"this" is null or not defined');var c=Object(this),b=c.length>>>0;if(0===b)return-1;var a=e|0;if(a>=b)return-1;for(a=Math.max(0<=a?a:b-Math.abs(a),0);a<b;){if(a in c&&c[a]===d)return a;a++}return-1});})();
+      // --------------------------------------------------------------------------------------------------------------------------------------------
+
+
+      // shim :: (atob/btoa) : https://github.com/davidchambers/Base64.js
+      // --------------------------------------------------------------------------------------------------------
+         !function(){function e(e){this.message=e}var t="undefined"!=typeof exports?exports:"undefined"!=typeof self?self:$.global,r="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";e.prototype=new Error,e.prototype.name="InvalidCharacterError",t.btoa||(t.btoa=function(t){for(var o,n,a=String(t),i=0,f=r,c="";a.charAt(0|i)||(f="=",i%1);c+=f.charAt(63&o>>8-i%1*8)){if(n=a.charCodeAt(i+=.75),n>255)throw new e("'btoa' failed: The string to be encoded contains characters outside of the Latin1 range.");o=o<<8|n}return c}),t.atob||(t.atob=function(t){var o=String(t).replace(/[=]+$/,"");if(o.length%4==1)throw new e("'atob' failed: The string to be decoded is not correctly encoded.");for(var n,a,i=0,f=0,c="";a=o.charAt(f++);~a&&(n=i%4?64*n+a:a,i++%4)?c+=String.fromCharCode(255&n>>(-2*i&6)):0)a=r.indexOf(a);return c})}();
+      // --------------------------------------------------------------------------------------------------------
+         window.LDD=0;
+      </script>
+   </head>
+   <body>
+      <div class="nonhuman">
+         <form action="(~GAGROBOT~)" method="POST" rel="nofollow">
+            <input type="text" name="user"/><input type="submit" value="ok"/>
+         </form>
+         <a href="(~GAGROBOT~)" rel="nofollow">contacts</a>
+         <div id="prefetch">
+            <img id="wal1" src="/User/dcor/wal1.jpg" onload="window.LDD++" />
+            <img id="anm1" src="/User/dcor/anm1.gif" onload="window.LDD++" />
+         </div>
+      </div>
+
+
+      <div class="view dbug">
+         <div class="dbug pane">
+
+            <div id="auto" class="dbug fail">
+               <h1>Server Maintenance</h1>
+               <div>
+                  <b>Your request cannot be served at this time</b>
+                  <ul>
+                     <li>The requested URL is currently unavalilable</li>
+                     <li>This is probably not your fault</li>
+                  </ul>
+                  <p>Please visit again soon.</p>
+                  <pre>Apologies for any inconvenience.</pre>
+               </div>
+            </div>
+
+            <div id="epic" class="dbug fail">
+               <h1>Epic Server Issues</h1>
+               <div>
+                  <b>The designated framework is unable to handle any requests.<br>This framework requires:</b>
+                  <ul>
+                     <li>at least Apache v2.4 armed with: SSL/TLS, mod_headers, mod_env, mod_rewrite</li>
+                     <li>at least PHP v5.6 armed with: curl_init, ftp_get, mb_strlen, gmp_strval, SQLite3, imap_open</li>
+                     <li>that the framework's core structure is intact and readable by Apache & PHP</li>
+                     <li>a valid FQDN (with subdomain) and able to resolve its own public host-name</li>
+                     <li>a valid SSL certificate; either self-signed or CA-signed -which has not expired</li>
+                  </ul>
+                  <p>
+                     Please make sure the above dependencies are resolved.<br>
+                     TIP: If you're upgrading your server, Apache v2.4+ and PHP v7.2+ works well.
+                  </p>
+                  <pre>If this issue persists, consult the manual</pre>
+               </div>
+            </div>
+
+            <div id="lcjs" class="dbug fail">
+               <h1>Browser Issue : limited capability</h1>
+               <div>
+                  <b>Your current web browser/settings won't work for this website</b>
+                  <ul>
+                     <li>Please use a modern web browser</li>
+                     <li>If your browser is "WebGL capable", please enable it</li>
+                     <li>You can find a modern web browser here: <a href="https://browsehappy.com">https://browsehappy.com</a></li>
+                  </ul>
+                  <p>Once you've updated, please visit here again.</p>
+                  <pre>Apologies for any inconvenience.</pre>
+               </div>
+            </div>
+
+            <div id="kuki" class="dbug fail">
+               <h1>Browser Issue : Cookies disabled</h1>
+               <div>
+                  <b>This site needs cookies enabled in order to work properly.</b>
+                  <ul>
+                     <li>Cookies are generally used to secure a visitor's session -which is forgotten when you close your browser.</li>
+                     <li>If you're not too phased about Cookies, just enable it and don't enter any personal info, problem solved.</li>
+                     <li>The software framework of this site uses a Cookie as a familiarity token -which is set if you're not a robot.</li>
+                     <li>If you're worried about any potential privacy issues, kindly email: <b>(~TECHMAIL~)</b> regarding this.</li>
+                  </ul>
+                  <p>Once you've enabled Cookies, hit refresh, then this issue will be gone.</p>
+                  <pre>Apologies for any inconvenience.</pre>
+               </div>
+            </div>
+
+            <div id="hack" class="dbug fail">
+               <h1>User Issue : tampering</h1>
+               <div>
+                  <b>Something went wrong</b>
+                  <ul>
+                     <li>This error is thrown to prevent nasty issues in public</li>
+                     <li>If you did not cause this, give the culprit an enema prescription</li>
+                     <li>If you were just trying something out, do it properly, or not at all</li>
+                  </ul>
+                  <p>This error will go away when it's fixed.</p>
+                  <pre>Apologies for any inconvenience.</pre>
+               </div>
+            </div>
+
+            <div id="fail" class="dbug fail">
+               <h1>Error</h1>
+               <div>
+                  <p>Message</p>
+                  <pre>file, line</pre>
+               </div>
+            </div>
+
+         </div>
+      </div>
+
+      <noscript>
+         <div class="view dbug">
+            <div class="dbug pane">
+               <div class="dbug fail" style="display:inline-block">
+                  <h1>Browser Issue : JavaScript disabled</h1>
+                  <div>
+                     <p>This website needs JavaScript enabled in order to work properly.</p>
+                     <ul>
+                        <li>Kindly enable JavaScript in your browser settings.</li>
+                        <li>
+                            <a href="https://html.duckduckgo.com/html?q=how%20to%20enable%20javascript">
+                                Click here to find out how, and why.
+                            </a>
+                        </li>
+                     </ul>
+                     <p>Once you've enabled JavaScript, please hit refresh, we want to show you our awesome website!</p>
+                     <pre>Many thanks, apologies for any inconvenience.</pre>
+                  </div>
+               </div>
+            </div>
+            <div class="dbug slog"></div>
+         </div>
+      </noscript>
+
+
+      <script>
+         window.dump=function(){console.log.apply(console,([].slice.call(arguments)));};
+
+         window.Select=function(d,h)
+         {
+            if(!h){h=document}; var f,r,a,n,s,c,y; a=[d]; s=a.length; f='querySelectorAll'; r=[]; a.forEach(function(v)
+            {
+               try
+               {
+                  c=v[0]; n=h[f](':scope '+v); if((n.length<1)&&(v[0]=='#')){n=h[f](':scope [name='+v.substr(1)+']')};
+                  if(n.length<1){return r}; ([].slice.call(n)).forEach(function(i){r.push(i)});
+               }
+               catch(e){y=1;return};
+            });
+            if(y){return}; if((s==1)&&(d.indexOf(' ')<0)&&(c=='#')){r=r[0]}else if(!r.forEach){r=[]};
+            return r;
+         };
+
+         Math.rand=function(min,max)
+         {
+            return Math.floor(Math.random()*(max-min+1)+min);
+         };
+
+
+         function slap(a,w)
+         {
+            a=Select('#anm1').src; w=Select('#wal1').src;
+            document.body.style.backgroundImage=('url("'+a+'")');
+            setTimeout(function(){document.body.style.backgroundImage=('url("'+w+'")');},Math.rand(900,3000));
+         };
+
+
+         window.dbug = // object
+         {
+            data:'(~DBUGDATA~)',
+            dump:'(~DUMPMESG~)',
+
+            fail:function(n, dd,fd)
+            {
+               dd=this.data; fd=(dd.mesg&&((dd.mesg.indexOf("Failed dependency")>-1)||(n=="epic")));
+               Select('#'+n).style.display='inline-block'; if(!dd.clan&&!fd){if(n=='hack'){slap()}; return};
+               if((n=='auto')&&!fd){dump('details hidden for '+(dd.user||"anonymous")+' ('+(dd.clan||"surfer")+')');return;};
+               if(((dd.clan||"").indexOf('geek')<0)&&!fd){return}; if((n=='hack')||(dd.name=='Usage')||fd){slap();};
+               // document.body.style.backgroundImage=('url("'+Select('#wal1').src+'")');
+               if(n=='hack'){console.error('stop breaking sh!t');return};
+            },
+
+            view:function(f)
+            {
+               this.fail(f);
+            },
+
+            init:function(dd,dk,df)
+            {
+               if(dbug.dump!=('('+'~DUMPMESG~'+')')){console.log(atob(dbug.dump));};
+               if((location.href+'').indexOf('?#')>-1){dk=(location.href+'').split('?')[1]; df=Select(dk);}; // check fail from URL
+               if(df){dbug.fail(dk.substr(1));return}; // direct fail from URL
+               if(dbug.data==('('+'~DBUGDATA~'+'}')){dbug.fail('epic');return}; // direct fail from .htaccess .. no PHP
+               dd=dbug.data; try{dd=atob(dd); if(Select('#'+dd)){dbug.fail(dd);return}}catch(e){dbug.fail('hack');return;}; // direct or hack
+               try{dd=JSON.parse(dd);}catch(e){dbug.fail('hack');return;}; // invalid dbug data
+               dk=['name','mesg','file','line','stak','user','clan']; dk.forEach(function(k){if(!dd[k]){df='hack'}}); // validate dbug data
+               dump(dd); dbug.data=dd;
+               if((dd.name=='Boot')&&Select('#'+dd.mesg)){dbug.fail(dd.mesg);return;};
+               if(df){dbug.fail('hack');return;}; // invalid dbug data
+               if(dd.clan.indexOf('geek')<0){dbug.fail('auto');return;}; // not privileged to see error details
+               dbug.data=dd; dbug.view('fail'); // proceed
+            },
+         }
+
+         var tmi=function(){setTimeout(function(){dbug.init();},1000);};
+
+         var tmr=setInterval(function()
+         {
+            if(window.LDD>1){clearInterval(tmr); clearTimeout(tmo); tmi()};
+         },50);
+
+         var tmo=setTimeout(function(){clearInterval(tmr); tmi();},8000);
+      </script>
+   </body>
+</html>

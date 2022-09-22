@@ -1,0 +1,1482 @@
+
+/* clan :: butn
+/* ----------------------------------------------------------------------------------------------- */
+   butn
+   {
+      display:inline-block; position:relative; box-sizing:border-box;
+      min-width:80px; height:28px;
+      background:linear-gradient(0deg, hsla(0,0%,85%,1) 0%, hsla(0,0%,95%,1) 100%);
+      padding-left:0.5rem; padding-right:0.5rem; margin:0.5rem;
+      font-family:"butn" !important;
+      font-size:14px; color:hsla(0,0%,30%,1); line-height:26px;
+      text-align:center;
+      text-shadow:0px 0px 1px hsla(0,0%,0%,0.6);
+      border:1px solid hsla(0,0%,70%,1); border-radius:3px !important;
+      box-shadow:0px 0px 3px hsla(0,0%,0%,0.15);
+      white-space:nowrap !important;
+      cursor:pointer;
+      user-select:none;
+   }
+
+   butn>span
+   {
+       font-family:"butn" !important;
+   }
+
+   butn:hover
+   {
+      background:linear-gradient(0deg, hsla(0,0%,90%,1) 0%, hsla(0,0%,100%,1) 100%);
+      color:hsla(0,0%,40%,1);
+      border:1px solid hsla(0,0%,80%,1);
+   }
+
+   butn.subfocus
+   {
+      outline:auto !important;
+      outline-color:hsla(200,100%,70%,0.4) !important;
+   }
+
+
+   butn .butnIcon
+   {
+      width:10px !important;
+      text-align:center !important;
+      vertical-align:middle !important;
+      padding-bottom:3px;
+   }
+   butn .butnLine
+   {
+      width:2px; max-width:2px; min-width:2px;
+   }
+   butn .butnLine>vdiv
+   {
+      border-left:1px solid hsla(0,0%,0%,0.25); border-right:1px solid hsla(0,0%,100%,0.08);
+      margin-top:-2px !important;
+   }
+
+   col.butnLine
+   {
+      padding-left:6px;
+      padding-right:6px;
+      padding-top:0px;
+   }
+
+
+   butn.dark
+   {
+      background:linear-gradient(0deg, hsla(210,3%,19%,1) 0%, hsla(210,3%,23%,1) 100%);
+      color:hsla(0,0%,70%,1);
+      border-color:hsla(210,3%,26%,1); box-shadow:0px 0px 3px hsla(0,0%,0%,0.5);
+      text-shadow:0px 0px 1px hsla(0,0%,0%,1);
+   }
+
+   butn.dark:hover
+   {
+      background:linear-gradient(0deg, hsla(210,3%,26%,1) 0%, hsla(210,3%,30%,1) 100%);
+      color:hsla(0,0%,95%,1);
+      border:1px solid hsla(210,3%,36%,1);
+   }
+
+   butn.dark.actv
+   {
+      background:hsla(210,3%,30%,1);
+      color:hsla(0,0%,95%,1);
+      box-shadow:none; border:1px solid hsla(210,60%,50%,1);
+   }
+
+
+   butn.good
+   {
+      background:linear-gradient(0deg, hsla(120,90%,25%,1) 0%, hsla(120,90%,35%,1) 100%);
+      color:hsla(0,0%,95%,1);
+      border:1px solid hsla(120,100%,35%,1);
+      box-shadow:0px 0px 3px hsla(0,0%,0%,0.3);
+   }
+
+   butn.good:hover
+   {
+      background:linear-gradient(0deg, hsla(120,90%,30%,1) 0%, hsla(120,90%,40%,1) 100%);
+      color:hsla(0,0%,100%,1);
+      border:1px solid hsla(120,100%,40%,1);
+   }
+
+   butn.hovrGood:hover
+   {
+      background:linear-gradient(0deg, hsla(120,90%,25%,1) 0%, hsla(120,90%,35%,1) 100%);
+      color:hsla(0,0%,95%,1);
+      border:1px solid hsla(120,100%,35%,1);
+   }
+
+
+
+   butn.cool
+   {
+      background:linear-gradient(0deg, hsla(220,90%,30%,1) 0%, hsla(220,90%,40%,1) 100%);
+      color:hsla(0,0%,95%,1);
+      border:1px solid hsla(220,100%,40%,1);
+      box-shadow:0px 0px 3px hsla(0,0%,0%,0.3);
+   }
+
+   butn.cool:hover
+   {
+      background:linear-gradient(0deg, hsla(220,90%,35%,1) 0%, hsla(220,90%,45%,1) 100%);
+      color:hsla(0,0%,100%,1);
+      border:1px solid hsla(220,100%,45%,1);
+   }
+
+   butn.hovrCool:hover
+   {
+      background:linear-gradient(0deg, hsla(220,90%,30%,1) 0%, hsla(220,90%,40%,1) 100%);
+      color:hsla(0,0%,95%,1);
+      border:1px solid hsla(220,100%,40%,1);
+   }
+
+
+   butn.need
+   {
+      background:linear-gradient(0deg, hsla(280,60%,25%,1) 0%, hsla(280,60%,35%,1) 100%);
+      color:hsla(0,0%,95%,1);
+      border:1px solid hsla(280,60%,35%,1);
+      box-shadow:0px 0px 3px hsla(0,0%,0%,0.3);
+   }
+
+   butn.need:hover
+   {
+      background:linear-gradient(0deg, hsla(280,60%,30%,1) 0%, hsla(280,60%,40%,1) 100%);
+      color:hsla(0,0%,100%,1);
+      border:1px solid hsla(280,60%,40%,1);
+   }
+
+   butn.hovrNeed:hover
+   {
+      background:linear-gradient(0deg, hsla(280,60%,25%,1) 0%, hsla(280,60%,35%,1) 100%);
+      color:hsla(0,0%,95%,1);
+      border:1px solid hsla(280,60%,35%,1);
+   }
+
+
+   butn.warn
+   {
+      background:linear-gradient(0deg, hsla(35,100%,45%,1) 0%, hsla(35,100%,55%,1) 100%);
+      color:hsla(0,0%,95%,1);
+      border:1px solid hsla(35,100%,55%,1);
+      box-shadow:0px 0px 3px hsla(0,0%,0%,0.3);
+   }
+
+   butn.warn:hover
+   {
+      background:linear-gradient(0deg, hsla(35,100%,50%,1) 0%, hsla(35,100%,60%,1) 100%);
+      color:hsla(0,0%,100%,1);
+      border:1px solid hsla(35,100%,60%,1);
+   }
+
+   butn.hovrWarn:hover
+   {
+      background:linear-gradient(0deg, hsla(35,100%,45%,1) 0%, hsla(35,100%,55%,1) 100%);
+      color:hsla(0,0%,95%,1);
+      border:1px solid hsla(35,100%,55%,1);
+   }
+
+
+   butn.harm
+   {
+      background:linear-gradient(0deg, hsla(0,100%,35%,1) 0%, hsla(0,100%,45%,1) 100%);
+      color:hsla(0,0%,95%,1);
+      border:1px solid hsla(0,100%,45%,1);
+      box-shadow:0px 0px 3px hsla(0,0%,0%,0.3);
+   }
+
+   butn.harm:hover
+   {
+      background:linear-gradient(0deg, hsla(0,100%,40%,1) 0%, hsla(0,100%,50%,1) 100%);
+      color:hsla(0,0%,100%,1);
+      border:1px solid hsla(0,100%,50%,1);
+   }
+
+   butn.hovrHarm:hover
+   {
+      background:linear-gradient(0deg, hsla(0,100%,35%,1) 0%, hsla(0,100%,45%,1) 100%);
+      color:hsla(0,0%,100%,1);
+      border:1px solid hsla(0,100%,45%,1);
+   }
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* clan :: icon
+/* ----------------------------------------------------------------------------------------------- */
+   icon
+   {
+      display:inline-block; position:relative; box-sizing:border-box;
+      transform-origin:center;
+      padding:0px; margin:0px; font-size:16px; line-height:16px;
+   }
+   icon>div
+   {
+      display:inline-block !important;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size:0.85em;
+      padding-left:0.3em;
+   }
+
+   icon.cool
+   {color:hsla(220,90%,45%,1);}
+
+   icon.need
+   {color:hsla(280,60%,20%,1);}
+
+   icon.warn
+   {color:hsla(35,100%,45%,1);}
+
+   icon.harm
+   {color:hsla(0,100%,45%,1);}
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* clan :: dropmenu
+/* ----------------------------------------------------------------------------------------------- */
+   dropmenu
+   {
+      display:inline-block; position:absolute; box-sizing:border-box;
+      z-index:9990;
+      text-align:left;
+      color:#BBB;
+      background-color:hsla(210,3%,18%,1);
+      border:1px solid hsla(210,3%,28%,1);
+      border-radius:2px;
+      box-shadow:0px 0px 1px hsla(0,0%,0%,0.4), 0px 0px 4px hsla(0,0%,0%,0.3), 0px 0px 20px hsla(0,0%,0%,0.2);
+   }
+
+   item
+   {
+      display:block; position:relative; box-sizing:border-box;
+      margin:0px;
+   }
+
+   dropmenu>h1
+   {
+      display:block !important; position:relative !important; box-sizing:border-box !important;
+      min-width:130px !important; max-width:400px !important;
+      padding:6px !important;
+      margin:0px !important;
+      font-size:11px !important;
+      font-weight:bold;
+      line-height:11px !important;
+      color:hsla(0,0%,60%,1);
+      white-space:nowrap !important;
+      background-color:hsla(210,3%,15%,1);
+      cursor:default !important;
+   }
+
+   dropmenu>h1>icon
+   {
+      font-size:16px !important; line-height:16px !important;
+      margin-right:8px !important;
+   }
+
+   dropmenu>h1>div
+   {
+      display:inline-block !important;
+      padding-top:3px;
+   }
+
+   dropmenu>item
+   {
+      min-width:130px !important; max-width:400px !important;
+      padding:2px !important;
+      padding-top:4px !important;
+      padding-left:6px !important;
+      padding-right:12px !important;
+      font-size:12px !important;
+      line-height:18px !important;
+      white-space:nowrap !important;
+      overflow:hidden !important;
+      cursor:default !important;
+   }
+
+   dropmenu>item:hover
+   {
+      background-color:#3e4143;
+      color:#EEE;
+   }
+
+   dropmenu>line
+   {
+      display:block !important; position:relative !important; box-sizing:border-box !important;
+      height:1px !important; min-height:1px !important; max-height:1px !important;
+      border-left:none !important; border-right:none !important;
+      border-top:1px solid hsla(210,3%,8%,1) !important;
+      border-bottom:1px solid hsla(210,3%,22%,1) !important;
+      padding:0px !important; margin:0px !important;
+   }
+
+   dropmenu>item>icon
+   {
+      font-size:16px !important;
+      line-height:16px !important;
+      padding:0px !important;
+      margin:0px !important;
+   }
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* clan :: tabs
+/* ----------------------------------------------------------------------------------------------- */
+   tabs
+   {
+      display:block; box-sizing:border-box; position:relative;
+      margin:0px !important;
+      padding:0px !important;
+   }
+
+   tabs.ctrl
+   {
+      display:block; box-sizing:border-box; position:relative;
+      text-align:right;
+      margin-top:1rem;
+   }
+
+   tabs.view
+   {
+      display:block; box-sizing:border-box; position:relative;
+      background:#FFFFFF; overflow:auto;
+      border:1px solid hsla(0,0%,50%,1);
+      margin:0px !important;
+      padding:0px !important;
+      z-index:1;
+   }
+
+   tab
+   {
+      display:block; box-sizing:border-box; position:relative;
+   }
+
+   tab.head
+   {
+      display:inline-block !important;
+      min-width:16px; min-height:16px;
+      cursor:pointer; user-select:none;
+      z-index:0;
+      /* margin-bottom:-2px; */
+      /* margin-left:-2px !important; */
+   }
+
+   tab.head.vert
+   {
+      width:25px;
+      height:50px;
+   }
+
+
+   tab.head.pasv
+   {
+      z-index:0;
+   }
+
+   tab.head.actv
+   {
+      z-index:1;
+   }
+
+   tab.body
+   {
+      display:none; box-sizing:border-box; position:relative;
+      width:100%; height:100%; overflow:hidden;
+      margin:0px !important;
+      padding:0px !important;
+   }
+
+
+   tabber
+   {
+      display:block; box-sizing:border-box; position:relative;
+      margin:0px; padding:0px;
+   }
+   tabber.horz{width:100%; height:25px;}
+   tabber.vert{width:25px; height:100%;}
+
+   .tabhdr
+   {
+      display:inline-block !important;
+      position:relative;
+      overflow:hidden;
+   }
+   .tabhdr.horz
+   {
+      width:100%;
+      height:25px;
+   }
+   .tabhdr.vert
+   {
+      width:25px;
+      height:100%;
+      /* padding-left:4px; */
+   }
+
+   .tabdeck
+   {
+      position:absolute;
+      width:100%; height:100%;
+   }
+
+   .tabtext
+   {
+      display:inline-block;
+      font-size:12px; line-height:16px;
+      padding:5px;
+   }
+   .tabtext.vert
+   {
+      transform:rotate(-90deg);
+   }
+
+   .tabtext span
+   {
+      margin-left:10px;
+      margin-right:10px;
+   }
+
+
+
+   tab.dark .tabdeck
+   {
+      background:hsla(210,3%,16%,1);
+      border: 1px solid hsla(210,3%,36%,1);
+      border-top: 1.3px solid hsla(210,3%,36%,1);
+      border-bottom:none;
+      border-radius:3px;
+      box-shadow:0px 0px 6px hsla(0,0%,0%,0.6);
+   }
+
+   tab.dark .tabdeck.pasv
+   {
+      border: 1px solid hsla(210,3%,36%,0.5);
+      border-top: 1.3px solid hsla(210,3%,36%,0.5);
+      border-bottom:none;
+      box-shadow:0px 0px 4px hsla(0,0%,0%,0.4);
+   }
+
+   tab.dark .tabtext.pasv
+   {
+      color:hsla(0,0%,85%,0.3);
+   }
+
+   tab.dark .tabtext.actv
+   {
+      color:hsla(0,0%,85%,1);
+   }
+
+   tab.dark icon
+   {
+      width:11px; height:11px;
+      text-align:center; font-size:8px !important; line-height:11px;
+   }
+
+   tab.dark icon.shutEdit
+   {
+      color:hsla(60,100%,60%,1) !important;
+      font-size:9px !important; line-height:11px !important;
+   }
+
+   tab.dark icon:hover
+   {
+      color:#FFFFFF;
+      text-shadow: 0px 0px 3px hsla(0,0%,100%,0.3);
+   }
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* node :: flap
+/* ----------------------------------------------------------------------------------------------- */
+   flap
+   {
+      display:block; position:relative;
+      box-sizing:border-box;
+      cursor:pointer;
+   }
+   flap>div
+   {
+      border:1px solid hsla(0,0%,50%,1);
+      border-radius:2px;
+   }
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* node :: dropzone
+/* ----------------------------------------------------------------------------------------------- */
+   dropzone
+   {
+      display:block; position:relative;
+      width:100%; height:100%;
+      box-sizing:border-box;
+      border:2px dashed hsla(0,0%,70%,1);
+      border-radius:10px;
+      color:hsla(0,0%,70%,1);
+      overflow:hidden;
+      opacity:0.8;
+      text-shadow:0px 0px 1px #000000, 0px 0px 2px #000000;
+      box-shadow:0px 0px 1px #000000, 0px 0px 2px #000000;
+   }
+   dropzone>div
+   {
+      position:absolute !important; left:50%; top:50%;
+      transform:translate(-50%,-50%);
+      text-align:center !important;
+   }
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* Anon :: repo : diff colors
+/* ----------------------------------------------------------------------------------------------- */
+   .diffXX
+   {
+      /* eXists eXclusive .. untouched */
+   }
+
+   .diffUN
+   {
+      /* Untracked Natively */
+      color:hsla(120,100%,70%,1) !important;
+   }
+
+   .diffAN
+   {
+      /* Added Natively */
+      color:hsla(220,100%,70%,1) !important;
+   }
+
+   .diffMN
+   {
+      /* Modified Natively */
+      color:hsla(65,75%,60%,1) !important;
+   }
+
+   .diffAR
+   {
+      /* Added Remotely */
+      color:hsla(120,100%,70%,1) !important;
+   }
+
+   .diffMR
+   {
+      /* Modified Remotely */
+      color:hsla(330,100%,75%,1) !important;
+   }
+
+   .diffDR
+   {
+      /* Deleted Remotely */
+      color:hsla(0,0%,45%,1) !important;
+   }
+
+   .diffGC
+   {
+      /* Git Conflict */
+      color:hsla(5,100%,60%,1) !important;
+   }
+
+   .diffANMR
+   {
+      /* Modified Natively + Modified Remotely */
+      color:hsla(265,100%,65%,1) !important;
+   }
+
+   .diffANMN
+   {
+      /* Added Natively + Modified Natively */
+      color:hsla(120,100%,60%,1) !important;
+   }
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* node :: treeview
+/* ----------------------------------------------------------------------------------------------- */
+   treeview
+   {
+      display:block;
+      position:relative;
+      width:100%; height:100%;
+      overflow:visible;
+      text-align:left;
+      vertical-align:top;
+      box-sizing:border-box;
+      padding:0px;
+      padding-top:4px;
+      margin:0px;
+      user-select:none;
+   }
+
+
+   treeface
+   {
+      display:block;
+      position:relative;
+      text-align:left;
+      vertical-align:top;
+      box-sizing:border-box;
+      padding:0px;
+      margin:0px;
+      outline:none;
+      user-select:none;
+   }
+
+
+   treetwig
+   {
+      display:block;
+      position:relative;
+      text-align:left;
+      vertical-align:top;
+      box-sizing:border-box;
+      padding:0px;
+      margin:0px;
+      outline:none;
+      text-shadow:0px 0px 1px hsla(0,0%,0%,0.3), 0px 0px 1px hsla(0,0%,0%,0.3), 0px 0px 1px hsla(0,0%,0%,0.3);
+      user-select:none;
+      cursor:default !important;
+   }
+
+   .treeTwig col
+   {
+       user-select:none;
+   }
+
+   .treeTwigArro
+   {
+      width:12px !important;
+      font-size:12px !important;
+      line-height:18px !important;
+      text-align:center !important;
+      color:inherit !important;
+      user-select:none;
+      padding-left:4px;
+   }
+
+   .treeTwigIcon
+   {
+      width:16px !important;
+      font-size:16px !important;
+      line-height:18px !important;
+      vertical-align:middle;
+      padding-left:6px !important;
+      padding-right:4px !important;
+      color:inherit !important;
+      user-select:none;
+      -webkit-font-smoothing: antialiased !important;
+   }
+
+   .treeTwigText input
+   {
+      position:relative !important;
+      box-sizing:border-box !important;
+      width:100% !important;
+      background:transparent !important;
+      font-family:'hack';
+      font-size:11px !important;
+      line-height:18px !important;
+      padding:none !important;
+      border:none !important;
+      color:inherit !important;
+      text-shadow:inherit !important;
+      user-select:none !important;
+      cursor:inherit !important;
+      -webkit-font-smoothing: antialiased !important;
+      pointer-events:none;
+   }
+
+   treeTwig.dragOver
+   {
+      outline:auto !important;
+      outline-color:hsla(120,100%,65%,1) !important;
+   }
+
+   treefork
+   {
+      display:block;
+      position:relative;
+      text-align:left;
+      vertical-align:top;
+      box-sizing:border-box;
+      padding:0px;
+      margin:0px;
+      display:none;
+      user-select:none;
+   }
+
+   .treeItemCtrl
+   {
+      color:hsla(50,100%,65%,1) !important;
+      cursor:pointer !important;
+   }
+
+
+   .treeItemShft
+   {
+      color:hsla(220,100%,70%,1) !important;
+      cursor:pointer !important;
+   }
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+
+/* node :: modal
+/* ----------------------------------------------------------------------------------------------- */
+   modal
+   {
+      display:block;
+      position:fixed;
+      z-index:9990;
+      top:0px; left:0px;
+      width:100% !important; height:100%!important;
+      vertical-align:top;
+      box-sizing:border-box;
+      padding:0px;
+      margin:0px;
+      overflow:hidden;
+      background:hsla(0,0%,6%,0.95);
+      outline:none;
+   }
+
+   modal .modalBox
+   {
+      width:unset; height:unset;
+      min-width:320px !important;
+      min-height:130px !important;
+      background:hsla(0,0%,95%,1);
+      border:1px solid hsla(0,0%,50%,1);
+      border-radius:2px;
+      box-shadow:0px 0px 8px hsla(0,0%,0%,0.5);
+   }
+
+   /* modal .modalBox grid
+   {
+      width:100% !important; height:100% !important;
+   } */
+
+   modal .modalBox .head
+   {
+      height:10px;
+      padding:5px;
+      font-size:13px; color:hsla(0,0%,20%,1);
+      font-weight:bold;
+      border-bottom:1px solid hsla(0,0%,85%,1);
+      background:hsla(0,0%,93%,1);
+   }
+
+   modal .modalBox .head .shut
+   {
+      position:absolute; top:5px; right:4px;
+      font-size:10px; line-height:10px;
+      color:hsla(0,0%,50%,1);
+      cursor:pointer;
+   }
+   modal .modalBox .head .shut.dark:hover
+   {
+      color:hsla(0,0%,90%,1);
+   }
+
+   modal .modalBox .head>div>span
+   {
+      margin-left:6px;
+   }
+
+   modal .modalBox .body
+   {
+      position:relative;
+      box-sizing:border-box !important;
+      max-width:900px; max-height:600px;
+      min-width:320px !important; min-height:50px !important;
+      color:hsla(0,0%,30%,1);
+   }
+
+   modal .modalBox .body .wrap
+   {
+      position:absolute !important;
+      width:100% !important; height:100% !important;
+      overflow:hidden !important;
+   }
+
+   modal .modalBox .body .info
+   {
+      width:100px;
+      padding:4px;
+      padding-left:8px;
+      font-size:13px; color:hsla(0,0%,20%,1);
+      border-right:1px solid hsla(0,0%,85%,1);
+   }
+
+   modal .modalBox .body .view
+   {position:relative !important;}
+
+   modal .modalBox .body .view>panl
+   {padding:15px;}
+   modal .modalBox .body .view>page
+   {padding:15px;}
+
+   modal .modalBox .body .view h1,h2,h3
+   {margin-top:0px;}
+
+   modal .modalBox .foot
+   {
+      height:10px;
+      background:hsla(0,0%,93%,1);
+      border-top:1px solid hsla(0,0%,85%,1);
+      font-size:13px; color:hsla(0,0%,20%,1);
+   }
+
+   modal .modalBox .foot {padding:5px; text-align:right;}
+   modal .modalBox .foot .footLeft{text-align:left;}
+   modal .modalBox .foot .footRait{text-align:right;}
+
+
+   modal .modalBox .side
+   {
+      width:3px !important; max-width:3px !important; min-width:3px !important;
+   }
+
+   modal .modalBox .side>div
+   {
+      display:none;
+      background-color:hsla(220,100%,50%,1);
+   }
+
+   modal .modalBox .body .modlInfoItem>icon
+   {font-size:16px !important; margin-right:4px !important}
+
+   modal .modalBox .view>page.hide{display:none;}
+   modal .modalBox .view>panl.hide{display:none;}
+   modal .modalBox .view>page.show{display:block;}
+   modal .modalBox .view>panl.show{display:block;}
+
+   modal .modalBox .body pre
+   {
+      font-family:'hack';
+      font-size:11px; line-height:14px;
+      padding:2px;
+      background:hsla(0,0%,98%,1);
+   }
+
+   modal .modalBox .body input
+   {
+      position:relative !important;
+      box-sizing:border-box !important;
+      width:100%;
+      display:block;
+      font-family:'hack';
+      font-size:11px !important; line-height:14px !important;
+      padding:4px;
+      background:hsla(0,0%,98%,1);
+      border:1px solid hsla(0,0%,80%,1);
+      border-radius:2px;
+   }
+
+   modal .modalBox .body textarea
+   {
+      position:relative !important;
+      box-sizing:border-box !important;
+      width:100%;
+      display:block;
+      font-family:'hack';
+      font-size:11px !important; line-height:14px !important;
+      padding:4px;
+      background:hsla(0,0%,98%,1);
+      border:1px solid hsla(0,0%,80%,1);
+      border-radius:2px;
+   }
+
+   modal .modalBox .foot
+   {
+      /* height:100px; min-height:100px !important; */
+   }
+
+
+
+   modal .modalBox.dark
+   {
+      background:hsla(210,3%,18%,1) !important;
+      border:1px solid hsla(0,0%,22%,1) !important;
+   }
+
+   modal .modalBox.dark .head
+   {
+      color:hsla(0,0%,70%,1) !important;
+      background:hsla(210,3%,16%,1) !important;
+      border-bottom:1px solid hsla(0,0%,22%,1) !important;
+   }
+
+   modal .modalBox.dark .body
+   {
+      color:hsla(0,0%,80%,1) !important;
+      background:hsla(210,3%,19%,1) !important;
+   }
+
+   modal .modalBox.dark .body pre
+   {
+      color:hsla(0,0%,80%,1) !important;
+      background:hsla(210,3%,24%,1) !important;
+      margin-top:6px; margin-bottom:6px;
+      padding:6px; border-radius:2px;
+   }
+
+   modal .modalBox.dark .body input
+   {
+      color:hsla(0,0%,80%,1) !important;
+      background:hsla(210,3%,24%,1) !important;
+      border:1px solid hsla(0,0%,32%,1);
+   }
+
+   modal .modalBox.dark .body textarea
+   {
+      color:hsla(0,0%,80%,1) !important;
+      background:hsla(210,3%,24%,1) !important;
+      border:1px solid hsla(0,0%,32%,1);
+   }
+
+   modal .modalBox.dark .body .info
+   {
+      color:hsla(0,0%,80%,1) !important;
+      border-right:1px solid hsla(0,0%,25%,1);
+   }
+
+   modal .modalBox.dark .foot
+   {
+      background:hsla(210,3%,16%,1) !important;
+      border-top:1px solid hsla(0,0%,22%,1) !important;
+   }
+
+   modal .modalBox .markdown-body
+   {
+      font-size:12px;
+   }
+
+   modal .modalBox .markdown-body p
+   {
+      margin:6px;
+   }
+
+   modal .modalBox.dark .markdown-body a
+   {
+      color:hsla(220,100%,75%,1);
+   }
+
+   modal .modalBox.dark .markdown-body
+   {
+      color:hsla(0,0%,85%,1);
+   }
+
+   modal .modalBox.dark .markdown-body blockquote
+   {
+      color:hsla(0,0%,85%,1);
+      opacity:0.7;
+      padding: 0 0.7em;
+   }
+
+   .xbar
+   {
+       position:absolute;
+       width:3px;
+       height:100%;
+       background:hsla(220,100%,60%,1);
+   }
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* clan :: AnonTreeModl
+/* ----------------------------------------------------------------------------------------------- */
+   .AnonTreeModl .body .view
+   {
+      padding:10px;
+      font-size:13px;
+   }
+
+   .AnonTreeModl .body grid
+   {
+      height:unset;
+   }
+
+   .AnonTreeModl .body input
+   {
+      margin-bottom:10px;
+   }
+
+   .AnonTreeModl .body .text
+   {
+      width:20px; min-width:20px; max-width:20px;
+   }
+
+   .AnonTreeModl .body small
+   {
+      opacity:0.6 !important;
+   }
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* clan :: AnonTreeModl
+/* ----------------------------------------------------------------------------------------------- */
+   .AnonPopAlert .bodyicon
+   {
+      padding:10px !important;
+      opacity:0.05;
+   }
+   .AnonPopAlert .bodyicon icon
+   {
+      font-size:120px !important;
+      line-height:120px !important;
+   }
+
+   .AnonPopAlert .bodymesg
+   {
+      padding:10px !important;
+      text-shadow:0px 0px 1px hsla(0,0%,0%,0.3);
+   }
+
+   .AnonPopAlert .bodymesg .markdown-body p
+   {
+      margin-left:0px !important;
+   }
+
+   .AnonPopAlert .bodymesg .markdown-body blockquote
+   {
+      color:hsla(0,0%,80%,1);
+      opacity:0.6;
+   }
+
+   .AnonPopAlert .bodymesg .markdown-body pre code
+   {
+      font-family:'hack' !important;
+      font-size:11px !important;
+      line-height:14px !important;
+   }
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* clan :: validate : Good, Warn, Fail
+/* ----------------------------------------------------------------------------------------------- */
+   .validateGood
+   {
+      outline:auto !important;
+      outline-color:hsla(120,100%,60%,1) !important;
+   }
+
+   .validateNeed
+   {
+      outline:auto !important;
+      outline-color:hsla(295,100%,55%,1) !important;
+   }
+
+   .validateWarn
+   {
+      outline:auto !important;
+      outline-color:hsla(35,100%,60%,1) !important;
+   }
+
+   .validateFail
+   {
+      outline:auto !important;
+      outline-color:hsla(0,100%,60%,1) !important;
+   }
+/* ----------------------------------------------------------------------------------------------- */
+
+
+
+
+/* clan :: note
+/* ------------------------------------------------------------------------------------------------------------- */
+   notedeck
+   {
+      display:inline-block; position:absolute; box-sizing:border-box;
+      z-index:99999;
+      text-align:left; color:#BBB;
+      outline:none;
+   }
+
+   notedeck.show{display:inline-block !important;}
+   notedeck.hide{display:none !important;}
+
+   noteface
+   {
+      display:inline-block; position:relative; box-sizing:border-box;
+      border:1px solid hsla(0,0%,30%,1);
+      background-color:#2e3133;
+      border:1px solid #5e6163; border-radius:2px;
+      box-shadow:0px 0px 12px hsla(0,0%,0%,0.2);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size:12px; line-height:14px; color:#FFF;
+      padding:6px;
+   }
+
+   noteicon
+   {
+      display:block; position:absolute; box-sizing:border-box;
+      z-index:99999;
+      background-color:#2e3133;
+      line-height:0px; text-align:center; color:#FFF;
+      padding:3px;
+      outline:none;
+      box-shadow:0px 0px 2px hsla(0,0%,0%,0.2);
+   }
+
+   notedeck.hintPeek noteface
+   {
+      padding:0px !important;
+   }
+
+   notedeck.hintPeek .hintWrap
+   {
+      width:128px !important; height:128px !important;
+   }
+
+   notedeck.hintPeek .hintDeck
+   {
+      position:absolute !important;
+      width:100% !important; height:100% !important;
+      background-size:cover !important;
+   }
+
+   notedeck.hintPeek .hintText
+   {
+      position:absolute !important; bottom:0px;
+      width:100% !important; height:20px !important;
+      background:hsla(0,0%,0%,0.7);
+      padding:2px !important; overflow:hidden;
+   }
+
+   notearro
+   {
+      display:inline-block; position:absolute; box-sizing:border-box;
+      width:12px; height:6px; overflow:hidden; margin-top:-5px;
+   }
+
+   notearro div
+   {
+      display:inline-block; position:relative; box-sizing:border-box;
+      width:12px; height:12px; margin-top:2px; overflow:hidden; transform:rotate(45deg);
+      background-color:hsla(210,3%,16%,1);
+      border:1px solid #5e6163;
+   }
+
+   notedeck.dark>noteface,notedeck.dark>notearro>div,noteicon.dark{background-color:hsla(210,3%,16%,1); border:1px solid hsla(210,3%,22%,1);}
+   notedeck.good>noteface,notedeck.good>notearro>div,noteicon.good{background-color:hsla(140,60%,20%,1); border:1px solid hsla(140,60%,40%,1);}
+   notedeck.cool>noteface,notedeck.cool>notearro>div,noteicon.cool{background-color:hsla(210,60%,20%,1); border:1px solid hsla(210,60%,40%,1);}
+   notedeck.need>noteface,notedeck.need>notearro>div,noteicon.need{background-color:hsla(280,60%,20%,1); border:1px solid hsla(280,60%,40%,1);}
+   notedeck.warn>noteface,notedeck.warn>notearro>div,noteicon.warn{background-color:hsla(40,60%,20%,1); border:1px solid hsla(40,60%,40%,1);}
+   notedeck.fail>noteface,notedeck.fail>notearro>div,noteicon.fail{background-color:hsla(0,60%,20%,1); border:1px solid hsla(0,60%,40%,1);}
+
+   notearro.TL {left:0px;  top:0px;}
+   notearro.TM {left:50%;  top:0px; transform:translate(-50%,0%);}
+   notearro.TR {right:0px; top:0px;}
+
+   notearro.RT {transform:rotate(90deg);  right:0px; top:0px;}
+   notearro.RM {transform:rotate(90deg);  right:0px; top:50%; transform:translate(0%,-50%);}
+   notearro.RB {transform:rotate(90deg);  right:0px; bottom:0px;}
+
+   notearro.BR {transform:rotate(180deg); right:0px; bottom:0px;}
+   notearro.BM {transform:rotate(180deg); left:50%;  transform:translate(50%,0%); bottom:0px;}
+   notearro.BL {transform:rotate(180deg); left:0px;  bottom:-5px;}
+
+   notearro.LB {transform:rotate(270deg); left:0px;  bottom:0px;}
+   notearro.LM {transform:rotate(270deg); left:0px;  top:50%; transform:translate(0%,-50%);}
+   notearro.LT {transform:rotate(270deg); left:-8px;  top:6px;}
+/* ------------------------------------------------------------------------------------------------------------- */
+
+
+
+/* clan :: toolGridFeed
+/* ------------------------------------------------------------------------------------------------------------- */
+   grid.toolFormGrid
+   {
+      box-sizing:border-box !important;
+      height:unset !important;
+   }
+
+   grid.toolFormGrid .horzSpacer
+   {
+      height:6px !important; min-height:6px !important;
+   }
+/* ------------------------------------------------------------------------------------------------------------- */
+
+
+
+/* clan :: toolTextFeed
+/* ------------------------------------------------------------------------------------------------------------- */
+   input.toolTextFeed
+   {
+      position:relative !important;
+      box-sizing:border-box !important;
+      width:100%;
+      display:block;
+      font-family:'hack';
+      font-size:11px !important; line-height:14px !important;
+      padding:4px;
+      background:none;
+      border:1px solid hsla(0,0%,80%,1);
+      border-radius:2px;
+      margin:6px !important;
+      margin-bottom:0px !important;
+   }
+
+   input.toolTextFeed.dark
+   {
+      background:hsla(0,0%,0%,0.2);
+      color:hsla(0,0%,60%,1);
+      border:1px solid hsla(0,0%,25%,1);
+   }
+
+   input.toolTextFeed.show{display:block !important;}
+   input.toolTextFeed.hide{display:none !important;}
+
+
+   textarea.toolTextFeed
+   {
+      display:block !important;
+      position:relative !important;
+      box-sizing:border-box !important;
+      width:100%;
+      height:100%;
+      font-family:'hack';
+      font-size:11px !important; line-height:14px !important;
+      padding:4px;
+      padding-top:2px;
+      background:none;
+      border:1px solid hsla(0,0%,80%,1);
+      border-radius:2px;
+      margin:6px !important;
+      margin-bottom:0px !important;
+   }
+
+   textarea.toolTextFeed.dark
+   {
+      background:hsla(0,0%,0%,0.2);
+      color:hsla(0,0%,60%,1);
+      border:1px solid hsla(0,0%,25%,1);
+   }
+
+   textarea.toolTextFeed.show{display:block !important;}
+   textarea.toolTextFeed.hide{display:none !important;}
+/* ------------------------------------------------------------------------------------------------------------- */
+
+
+
+/* clan :: input : size
+/* ------------------------------------------------------------------------------------------------------------- */
+   input.tiny
+   {width:20px !important; min-width:20px !important;}
+
+   input.mini
+   {width:40px !important; min-width:40px !important;}
+
+   input.midi
+   {width:60px !important; min-width:60px !important;}
+/* ------------------------------------------------------------------------------------------------------------- */
+
+
+
+/* clan :: toolButnCell
+/* ------------------------------------------------------------------------------------------------------------- */
+   .toolButnCell
+   {
+      width:194px !important;
+      min-width:194px !important;
+      padding-left:6px;
+   }
+
+   .toolButnCell butn
+   {
+      display:inline-block !important;
+      padding:2px !important;
+      height:20px !important;
+      font-size:12px !important;
+      line-height:14px !important;
+      margin:6px !important;
+      margin-bottom:0px !important;
+   }
+
+   butn.toolButnDubl
+   {
+      width:166px !important;
+   }
+
+   butn.toolButnSngl
+   {
+      margin-right:0px !important;
+      min-width:85px !important;
+      width:85px !important;
+   }
+
+   butn.toolButnTiny
+   {
+      margin:2px !important;
+      margin-top:0px !important;
+      margin-right:0px !important;
+      padding:2px !important;
+      width:21px !important; min-width:21px !important; max-width:21px !important;
+      height:21px !important; min-height:21px !important; max-height:21px !important;
+      font-size:12px !important;
+      line-height:14px !important;
+   }
+/* ------------------------------------------------------------------------------------------------------------- */
+
+
+
+/* clan :: editLock : locked input fields which can be unlocked
+/* ------------------------------------------------------------------------------------------------------------- */
+   input.editLock
+   {
+      outline:none !important;
+      opacity:0.75 !important;
+      cursor:default !important;
+   }
+   input.editLock:hover{opacity:1 !important;}
+
+   input.editLockFeel
+   {
+      outline:auto !important;
+      outline-color:hsla(280,100%,65%,1) !important;
+   }
+
+   input.editLockOpen
+   {
+      outline:auto !important;
+      outline-color:hsla(120,100%,65%,1) !important;
+      opacity:1 !important;
+      cursor:unset !important;
+   }
+/* ------------------------------------------------------------------------------------------------------------- */
+
+
+
+/* clan :: input : range slider
+/* ------------------------------------------------------------------------------------------------------------- */
+   input[type=range]
+   {
+      -webkit-appearance: none;
+      display:block; position:relative;
+      width:100%;
+      background: transparent;
+      margin:0px !important;
+   }
+   input[type=range]:focus
+   {
+      outline: none;
+   }
+   input[type=range]::-webkit-slider-runnable-track
+   {
+      width: 100%;
+      height: 2px;
+      cursor: pointer;
+      background: hsla(0,0%,25%,1);
+   }
+   input[type=range]::-webkit-slider-thumb
+   {
+      -webkit-appearance: none;
+      height: 10px; width: 16px;
+      background: hsla(0,0%,20%,1);
+      border: 1px solid hsla(0,0%,50%,1);
+      border-radius: 4px;
+      box-shadow: 0px 0px 1px hsla(0,0%,0%,1);
+      margin-top:-4px;
+      cursor: pointer;
+   }
+   input[type=range]::-moz-range-track
+   {
+      width: 100%;
+      height: 2px;
+      cursor: pointer;
+      background: hsla(0,0%,25%,1);
+   }
+   input[type=range]::-moz-range-thumb
+   {
+      height: 10px; width: 16px;
+      background: hsla(0,0%,15%,1);
+      border: 1px solid hsla(0,0%,50%,1);
+      border-radius: 4px;
+      box-shadow: 0px 0px 1px hsla(0,0%,0%,1);
+      margin-top:-4px;
+      cursor: pointer;
+   }
+/* ------------------------------------------------------------------------------------------------------------- */
+
+
+
+/* clan :: selectable : highlight on focus
+/* ------------------------------------------------------------------------------------------------------------- */
+   grid.selectable
+   {
+      outline:none !important;
+      border:1px solid hsla(220,100%,65%,0) !important;
+      border-radius:2px;
+      background:hsla(0,0,60%,0) !important;
+   }
+
+   grid.selectable.hasFocus
+   {
+      border:1px solid hsla(220,100%,65%,1) !important;
+      background:hsla(0,0,60%,0.1) !important;
+   }
+
+   grid.selectable:focus
+   {
+      border:1px solid hsla(220,100%,65%,1) !important;
+      background:hsla(0,0,60%,0.1) !important;
+   }
+/* ------------------------------------------------------------------------------------------------------------- */
+
+
+
+/* clan :: (bool) : explicitly applied class-name to boolean attributes
+/* ------------------------------------------------------------------------------------------------------------- */
+   .disabled
+   {
+      opacity:0.5 !important;
+      cursor:default !important;
+      pointer-events:none !important;
+   }
+/* ------------------------------------------------------------------------------------------------------------- */
+
+
+
+/* clan :: dragover : on drag focus
+/* ------------------------------------------------------------------------------------------------------------- */
+   .dragover
+   {
+       outline:auto !important;
+       outline-color:hsla(220,100%,65%,1) !important;
+   }
+/* ------------------------------------------------------------------------------------------------------------- */
+
+
+
+/* clan :: panlHeadBanr : to use anywhere
+/* ------------------------------------------------------------------------------------------------------------- */
+    .panlHeadBanr
+    {
+        width:100%; height:100%;
+        background:hsla(0,0%,90%,0.05);
+        padding:15px;
+        font-size:14px;
+        border-bottom:1px solid hsla(0,0%,23%,1);
+        box-shadow:0px 0px 8px hsla(0,0%,0%,0.6);
+        z-index:99000;
+    }
+/* ------------------------------------------------------------------------------------------------------------- */

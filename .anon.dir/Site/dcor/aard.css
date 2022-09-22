@@ -1,0 +1,97 @@
+#SiteToolMenu
+{
+   padding:10px;
+}
+
+
+#SiteBodyPanl .SitePanlHead
+{
+   height:60px;
+}
+
+
+
+#SiteTmplBody
+{
+    overflow:hidden;
+}
+
+
+#importPurl
+{
+   padding:6px !important;
+   border:1px solid hsla(0,0%,35%,1);
+}
+
+
+#browseIndx
+{
+    width:40px;
+    padding:6px;
+    margin-right:6px;
+    margin-top:0px;
+}
+
+
+#browseFltr
+{
+    width:160px;
+    padding:6px;
+    margin-right:6px;
+    margin-top:0px;
+}
+
+
+.SiteBrwsCats
+{
+    width:160px;
+    max-height:300px;
+    overflow:auto !important;
+    margin-left:6px;
+    margin-top:-6px;
+}
+
+
+.SiteTmplMenu
+{
+    width:200px;
+    max-height:300px;
+    overflow:auto !important;
+    margin-left:6px;
+}
+
+
+#browseButn
+{
+    margin-top:3px;
+}
+
+
+#SiteBrwsBody wrap
+{
+    display:inline-block;
+    width:240px;
+    height:180px;
+    padding:4px;
+    background:hsla(0,0%,100%,0.1);
+    border:1px solid hsla(0,0%,100%,0.3);
+    border-radius:3px;
+    margin-top:10px !important;
+    margin-left:10px !important;
+    margin-right:0px !important;
+    margin-bottom:0px !important;
+    cursor:pointer;
+    opacity:0.9;
+}
+#SiteBrwsBody wrap:hover
+{
+    background:hsla(0,0%,100%,0.2);
+    border:1px solid hsla(0,0%,100%,0.4);
+    opacity:1;
+}
+
+
+#SiteBrwsBody .tmplItem
+{
+    background-size:cover;
+}

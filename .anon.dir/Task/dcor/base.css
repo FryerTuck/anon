@@ -1,0 +1,542 @@
+
+#TaskPanlSlab
+{
+   width:100%; height:100%;
+   position:relative;
+   overflow:auto;
+}
+
+#TaskPanlSlab .slabMenuBody
+{
+   position:relative;
+   min-width:260px;
+}
+
+#TaskPanlSlab .slabMenuBody>panl
+{
+   position:absolute;
+   padding:10px;
+}
+
+#TaskPanlSlab .slabMenuBody>panl:focus
+{
+   outline:none;
+   box-shadow:inset 0px 0px 6px 0px hsla(200,100%,60%,0.1);
+}
+
+.slabHasFocus
+{
+   color:hsla(220,100%,70%,1);
+   text-shadow:0px 0px 5px hsla(210,100%,80%,0.2);
+}
+
+
+jobcard
+{
+   display:block;
+   position:relative;
+   vertical-align:top;
+   box-sizing:border-box;
+   padding:0px;
+   margin:0px;
+   width:100%;
+   max-height:200px;
+   background:hsla(0,0%,90%,1);
+   outline:none;
+   border:1px solid hsla(0,0%,70%,1);
+   border-radius:3px;
+   box-shadow:0px 1px 4px hsla(0,0%,0%,0.4);
+   margin-bottom:12px;
+   color:hsla(0,0%,30%,1);
+   overflow:hidden;
+   user-select:text;
+}
+
+.AnonCardLift
+{
+   box-shadow:4px 4px 12px hsla(0,0%,0%,0.3);
+   transform:rotate(2deg);
+}
+
+
+.cardHeadPane
+{
+   width:100%;
+   max-height:40px;
+   overflow:hidden;
+   padding:6px;
+}
+
+.cardHeadIcon
+{
+   width:16px;
+   height:16px;
+   font-size:16px;
+   line-height:16px;
+   text-align:center;
+}
+
+.cardHeadText
+{
+   padding-left:6px;
+   font-size:13px;
+   line-height:16px;
+   font-weight:bold;
+}
+
+
+.cardBodyPane
+{
+   font-size:12px;
+   line-height:12px;
+   max-height:130px;
+   padding:8px;
+   background:hsla(0,0%,95%,1);
+   overflow:hidden;
+   border-top:1px solid hsla(0,0%,85%,1);
+   border-bottom:1px solid hsla(0,0%,85%,1);
+}
+.cardBodyPane .markdown-body
+{
+   font-size:12px !important;
+   line-height:14px !important;
+}
+.cardBodyPane .markdown-body>h1
+{
+   font-size:15px !important; line-height:20px !important;
+   margin:0px !important; margin-bottom:12px !important; padding:0px !important;
+}
+.cardBodyPane .markdown-body>h2
+{
+   font-size:14px !important; line-height:20px !important;
+   margin:0px !important; margin-bottom:12px !important; padding:0px !important;
+}
+.cardBodyPane .markdown-body>h3
+{
+   font-size:13px !important; line-height:20px !important;
+   margin:0px !important; margin-bottom:12px !important; padding:0px !important;
+}
+.cardBodyPane .markdown-body>h4
+{
+   font-size:12px !important; line-height:20px !important;
+   margin:0px !important; margin-bottom:12px !important; padding:0px !important;
+}
+.cardBodyPane .markdown-body>pre
+{
+   font-size:16px !important; line-height:12px !important;
+   margin:0px !important; padding:0px !important;
+   overflow:visible !important;
+}
+.cardBodyPane .markdown-body>pre>code
+{
+   font-family:'hack' !important; font-size:10px !important; line-height:14px !important;
+   margin:0px !important; padding:0px !important;
+}
+
+.cardFootPane
+{
+   min-height:24px;
+   padding:6px;
+   overflow:hidden;
+   text-align:right;
+   font-size:13px;
+   line-height:14px;
+}
+.cardFootPane .cardFootNick
+{
+   font-weight:bold;
+   margin-right:6px;
+}
+.cardFootPane .cardFootTime
+{
+   opacity:0.8;
+}
+
+.cardFaceView
+{
+   width:150px;
+   height:64px;
+}
+
+.cardFacePane
+{
+   width:150px;
+   height:64px;
+   overflow:hidden;
+}
+
+.cardFaceInfo
+{
+   display:inline-block;
+   width:94px;
+   height:64px;
+   padding-right:6px;
+   padding-top:4px;
+   text-align:right;
+   font-size:12px;
+}
+
+.cardFaceHold
+{
+   display:inline-block;
+   width:48px;
+   height:48px;
+   overflow:hidden;
+   border:2px solid #FFFFFF;
+   border-radius:6px;
+   box-shadow:0px 0px 4px hsla(0,0%,0%,0.25);
+   margin-top:8px;
+}
+
+.cardFacePics
+{
+   position:absolute;
+   width:48px;
+   height:48px;
+   user-select:none;
+}
+
+
+.cardButnPane
+{
+   padding:8px;
+   white-space:nowrap;
+   font-size:13px;
+}
+.cardButnPane div
+{
+   display:inline-block;
+   margin-left:8px;
+   margin-right:8px;
+}
+
+
+.cardInfoPane
+{
+   padding:8px;
+   padding-top:6px;
+   font-size:12px;
+   text-align:center;
+   white-space:nowrap;
+}
+
+
+modal .modalBox.AnonTaskDokt
+{
+   width:860px !important;
+   height:560px !important;
+}
+
+
+modal .TaskDoktPage
+{
+   position:relative;
+   width:100% !important;
+   height:100% !important;
+}
+
+
+.TaskDoktPage>panl
+{
+   position:absolute;
+   padding:1rem;
+}
+
+
+.TaskDoktFlap
+{
+   width:0.1px;
+   vertical-align:middle;
+}
+.TaskDoktFlap>flap
+{margin-right:-1px;}
+.TaskDoktFlap>flap>div
+{
+   background:hsla(0,0%,95%,0.02);
+   border-left:2px solid hsla(0,0%,85%,0.2);
+}
+.TaskDoktFlap>flap>icon
+{
+   margin-top:-1px;
+   margin-left:2px;
+   color:hsla(0,0%,50%,1);
+}
+
+.TaskDoktConf
+{
+   width:0.1px;
+   background:hsla(0,0%,95%,0.02);
+   border-left:1px solid hsla(0,0%,85%,0.1);
+}
+
+.TaskDoktConf>panl
+{
+   width:200px !important;
+   padding:4px;
+   overflow:hidden !important;
+}
+
+.TaskDoktConf>panl>h4
+{
+   font-size:16px;
+   margin-top:10px;
+   margin-bottom:2px;
+}
+
+.TaskDoktConf>panl>h4>icon
+{
+   margin-right:6px;
+}
+
+.TaskDoktConf>panl>div
+{
+   font-size:13px;
+   padding-left:20px;
+   margin-bottom:20px;
+   opacity:0.6;
+}
+
+.TaskDoktConf>panl>input.toolTextFeed.dark
+{
+   width:180px !important;
+   margin-bottom:4px;
+}
+
+.TaskDoktConf.open
+{width:200px;}
+.TaskDoktConf.open>panl
+{display:block !important;}
+
+.TaskDoktConf.shut
+{width:0.1px;}
+.TaskDoktConf.shut>panl
+{display:none !important;}
+
+.TaskDoktConf>panl>grid
+{
+   margin-top:20px;
+}
+.TaskDoktConf>panl>grid butn
+{
+   font-size:13px;
+}
+
+
+.DoktCmntWrap
+{
+   width:100%;
+   border:1px solid hsla(0,0%,85%,0.2);
+   border-radius:2px;
+   background:hsla(0,0%,98%,0.05);
+   margin-bottom:30px;
+   overflow-x:auto;
+}
+
+.DoktCmntText>div
+{
+   padding:10px;
+}
+
+modal .modalBox.AnonTaskDokt pre
+{
+    padding-left:10px !important;
+    font-size:12px;
+}
+
+.DoktCmntAtch
+{
+   width:26px;
+   padding:4px;
+   border-left:1px solid hsla(0,0%,85%,0.1);
+}
+.DoktCmntAtch>icon
+{
+   color:hsla(0,0%,70%,1);
+   margin:2px;
+   margin-bottom:0px;
+   line-height:16px;
+   cursor:pointer;
+}
+
+
+.DoktCmntMade
+{
+   width:1px;
+   font-size:13px;
+   padding-top:30px;
+   padding-right:30px;
+   white-space:nowrap;
+}
+.DoktCmntMade>b
+{
+   display:block;
+}
+
+
+.DoktCmntRate
+{
+   width:40px;
+   min-width:40px;
+   padding-top:3px;
+   padding-left:10px;
+}
+.DoktCmntRate>div
+{
+   font-size:16px;
+   line-height:16px;
+   font-weight:bold;
+   text-align:center;
+   color:hsla(0,0%,60%,1);
+}
+.DoktCmntRate>div>icon
+{
+   font-size:24px !important;
+   line-height:24px !important;
+   cursor:pointer;
+}
+
+
+.DoktCmntUser
+{
+   width:20px;
+   padding:6px;
+}
+
+.DoktUserFace
+{
+   width:60px; height:60px;
+}
+.DoktUserFace>div
+{
+   width:60px; height:60px;
+   background:hsla(0,0%,95%,0.1);
+   border:3px solid hsla(0,0%,100%,0.3);
+   border-radius:5px;
+   box-shadow:0px 0px 2px hsla(0,0%,0%,0.3);
+   overflow:hidden;
+}
+.DoktUserFace>div>img
+{
+   position:absolute; top:-2px; left:-2px;
+   width:60px; height:60px;
+   border-radius:5px;
+   margin:0px;
+}
+
+.DoktUserInfo
+{
+   padding-left:6px;
+   font-size:13px;
+}
+.DoktUserInfo>span
+{
+   display:block;
+}
+
+
+.DoktCmntMake
+{
+   width:100%; height:110px;
+   border:none !important;
+   outline:none !important;
+   background:transparent;
+   /* font-family:Arial, Helvetica, sans-serif; */
+   font-size:13px;
+   line-height:13px;
+   color:hsla(0,0%,0%,1);
+}
+.DoktAtchKnob
+{
+   margin-bottom:10px !important;
+}
+
+modal .modalBox.DoktCmntModl.dark .body input
+{
+   background:transparent !important;
+   width:97%;
+}
+
+/* modal .modalBox.DoktCmntModl panl
+{
+   width:200px !important;
+   height:60px !important;
+   overflow:scroll !important;
+} */
+
+modal .modalBox.DoktCmntModl.CmntAtchPanl
+{
+   width:600px !important;
+   height:300px !important;
+}
+
+.CmntAtchMenu
+{
+   width:200px;
+   min-width:200px !important;
+   border-right:1px solid hsla(0,0%,22%,1);
+}
+
+.CmntAtchView
+{
+   padding:10px;
+}
+
+.CmntAtchList
+{
+   width:200px;
+   min-width:200px !important;
+   border-left:1px solid hsla(0,0%,22%,1);
+   padding:10px;
+}
+.CmntAtchList b
+{
+   display:block !important;
+   margin:auto !important;
+}
+.CmntAtchList icon
+{
+   display:block !important;
+   margin-top:4px !important;
+}
+
+
+modal .modalBox.DoktCmntModl.AtchSavePanl
+{
+   width:360px !important;
+   height:300px !important;
+}
+
+.AtchSaveTree
+{
+   padding:6px !important;
+}
+
+.AtchSavePath
+{
+   height:1px;
+   padding:6px !important;
+   border-bottom:1px solid hsla(0,0%,22%,1) !important;
+}
+
+.DoktConfButnGrid
+{
+    height:unset !important;
+    margin-top:0px !important;
+}
+
+
+#TaskJectMesg
+{
+   height:60px;
+   margin-top:20px;
+}
+
+.DoktCmntInfo
+{
+   margin-bottom:6px;
+}
+
+.TaskDoktPage>panl>small
+{
+   opacity:0.6;
+}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>(~appTitle~)</title>
+
+        <meta name="description" content="(~appMotto~)" />
+        <meta name="keywords" content="(~appWords~)" />
+
+        <meta property="og:title" content="(~appTitle~)" />
+        <meta property="og:site_name" content="(~HOSTNAME~)" />
+        <meta property="og:url" content="https://(~HOSTNAME~)/" />
+        <meta property="og:description" content="(~appMotto~)" />
+        <meta property="og:type" content="website">
+        <meta property="og:image" content="https://(~HOSTNAME~)(~appImage~)" />
+
+        <meta name="generator" content="Anon" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <link rel="stylesheet" type="text/css" href="(~durl('$/Site/base/aard.css'~)" />
+
+        <script src="(~durl('$/Site/base/aard.js'~)"></script>
+    </head>
+    <body>
+        <div id="snth">
+            <h1>(~appTitle~)</h1>
+            <p>(~appMotto~)</p>
+            <img id="AnonGate" data-src="data:image/jpeg;base64,(~encode::b64('$/Site/base/prep.js'~)" />
+            <form action="(~botHoney~)" method="POST" rel="nofollow">
+                <input type="text" name="age"/><input type="submit" value="ok" />
+                <noscript id="nojs"><meta http-equiv="refresh" content="1; URL=(~DBUGPATH~)" /></noscript>
+            </form>
+            <a href="(~botHoney~)?welcome=yes" rel="nofollow">contacts</a>
+            <!-- that daring look on your face is justified ;) -->
+        </div>
+
+        <view id="anonHidnView" class="full"></view>
+        <view id="anonMarkView" class="full"></view>
+        <view id="anonMainView" class="full"></view>
+        <view id="anonPanlView" class="hide"></view>
+    </body>
+</html>

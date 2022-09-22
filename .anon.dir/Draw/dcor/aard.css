@@ -1,0 +1,210 @@
+#DrawPanlSlab
+{
+   overflow:hidden;
+}
+
+#DrawMainGrid
+{
+   width:100%, height:100%;
+}
+
+#DrawViewGrid
+{
+   width:100%, height:100%;
+}
+
+
+
+
+#DrawTreeView
+{
+   position:relative !important;
+}
+
+#DrawTreePanl
+{
+   width:100% !important;
+   height:100% !important;
+}
+
+
+
+
+#DrawBodyView
+{
+   position:relative;
+}
+
+#DrawBodyPanl
+{
+   position:absolute !important;
+   width:100% !important; height:100% !important;
+   overflow:hidden !important;
+}
+
+
+
+
+
+#DrawBodyView
+{
+   width:auto; height:auto;
+}
+
+#DrawToolView
+{
+   position:relative;
+   width:68px; min-width:68px; height:100%;
+   background:hsla(0,0%,0%,0.1);
+}
+
+#DrawToolPanl
+{
+   position:absolute;
+   overflow:hidden !important;
+   padding:2px;
+}
+
+#DrawToolPanl butn.AnonToolButn
+{
+   margin-top:2px !important;
+   margin-bottom:0px !important;
+}
+
+#DrawToolPanl .panlHorzLine
+{
+   margin-top:4px;
+   margin-bottom:6px;
+}
+
+#DrawPropTabB .panlHorzLine
+{
+   margin-top:6px;
+   margin-bottom:6px;
+}
+
+
+
+#DrawBodyPanl
+{
+   overflow:hidden !important;
+}
+
+
+.DrawViewPanl
+{
+
+}
+
+.DrawViewWrap
+{
+   outline:none !important;
+   background:url('/Draw/dcor/void.jpg');
+}
+
+
+
+
+#DrawPropView
+{
+   width:250px; min-width:250px;
+   background:hsla(0,0%,0%,0.1);
+}
+
+#DrawPropTabH
+{
+   width:30px; min-width:30px;
+   padding-left:5px;
+   background:hsla(220,3%,14%,0.8);
+}
+
+#DrawPropTabB
+{
+   width:220px; min-width:220px;
+   font-size:12px; color:hsla(0,0%,50%,1);
+   background:hsla(220,3%,14%,0.8);
+}
+
+.DrawPropView
+{
+   font-family:'head';
+   font-size:10px;
+   line-height:10px;
+   padding:6px;
+   padding-top:9px;
+   text-align:center;
+   height:1px;
+   opacity:0.7;
+}
+
+.DrawPropPanl
+{
+   padding:2px;
+   text-align:center !important;
+}
+
+.DrawPropPanl col
+{
+   position:relative !important;
+   box-sizing:border-box !important;
+   padding:2px;
+}
+
+.DrawPropPanl input
+{
+   margin:0px !important;
+}
+
+
+
+
+#DrawScanView
+{
+   height:66px; min-height:66px; max-height:66px;
+   background:hsla(0,0%,0%,0.1);
+}
+
+#DrawScanPanl
+{
+   position:absolute !important;
+   height:66px; min-height:66px; max-height:66px;
+   padding:1px;
+   overflow-x:auto !important;
+   overflow-y:hidden !important;
+   opacity:0;
+}
+
+.DrawScanPick
+{
+   display:inline-block !important;
+   position:relative !important;
+   box-sizing:border-box !important;
+   height:60px;
+   border:1px solid hsla(0,0%,65%,1);
+   border-radius:2px;
+   box-shadow:0px 0px 1px #000000, 0px 0px 1px #000000;
+   margin:2px;
+   opacity:0.75;
+}
+
+div.DrawScanPick
+{
+   width:92px; max-width:92px;
+   background-color:hsla(0,0%,90%,1);
+   overflow:hidden !important;
+}
+
+.DrawScanPick:hover
+{
+   opacity:1;
+}
+
+.DrawScanGlyf
+{
+   display:inline-block !important;
+   width:16px; height:16px;
+   font-size:16px; line-height:16px; text-align:center !important;
+   color:#000000;
+   overflow:hidden;
+   margin:1px !important;
+}

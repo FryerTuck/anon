@@ -1,0 +1,114 @@
+<div id="busyPane" style="position:fixed; z-index:99999999; width:100%; height:100%; top:0px; left:0px; background:(~conf('Site/anonBusy/overlayColor'~); display:none">
+   <svg id="busyGear" viewBox="0 0 100 100" style="width:5rem; height:5rem; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);">
+      <style>
+         path.line
+         {
+            fill:none;
+            stroke:(~conf('Site/anonBusy/objectsColor'~);
+            stroke-width:0.8;
+            /* stroke-linecap:round;
+            stroke-linejoin:round; */
+            stroke-miterlimit:4;
+            stroke-opacity:1;
+            stroke-dasharray:none;
+         }
+
+         path.fill
+         {
+            stroke-width:0.8;
+            fill:(~conf('Site/anonBusy/objectsColor'~);
+            fill-opacity:0.5;
+            opacity:0.5;
+         }
+      </style>
+      <path class="rota line" d="m 56.688,95.108 2.381,-8.894 5.198,-1.764 4.922,-2.428 7.971,4.607 5.082,-4.384 4.383,-5.081 -4.607,-7.973 2.427,-4.921 1.765,-5.198 8.894,-2.382 0.496,-6.689 -0.496,-6.69 -8.894,-2.381 -1.765,-5.199 -2.427,-4.923 4.607,-7.972 -4.383,-5.08 -5.082,-4.382 -7.971,4.607 -4.922,-2.428 -5.198,-1.765 -2.377,-8.8946 -6.693,-0.4935 -6.69,0.4935 -2.381,8.8946 -5.198,1.764 -4.923,2.428 -7.971,-4.606 -5.08,4.382 -4.382,5.08 4.606,7.972 -2.427,4.923 -1.765,5.199 -8.8944,2.381 -0.4936,6.69 0.4936,6.689 8.8944,2.382 1.765,5.198 2.427,4.921 -4.607,7.973 4.383,5.081 5.08,4.384 7.971,-4.607 4.923,2.428 5.198,1.764 2.381,8.894 6.69,0.492 z">
+         <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="0 50 50" to="360 50 50" dur="4s" repeatCount="indefinite"/>
+      </path>
+      <path class="line" d="m 66.13,49.976 c 0,8.895 -7.211,16.105 -16.106,16.105 -8.894,0 -16.105,-7.21 -16.105,-16.105 0,-8.895 7.211,-16.106 16.105,-16.106 8.895,0 16.106,7.211 16.106,16.106 z m 11.519,0 c 0,15.257 -12.368,27.625 -27.625,27.625 -15.257,0 -27.624,-12.368 -27.624,-27.625 0,-15.258 12.367,-27.627 27.624,-27.627 15.257,0 27.625,12.369 27.625,27.627 z"></path>
+      <g class="pgrp">
+         <path name="1" class="line fill" d="m 46.275,26.382 2.999,3.799 c 3.117,-0.139 5.996,0.696 8.879,1.758 l -0.995,-4.744 c -3.575,-1.178 -7.19,-1.104 -10.883,-0.813 z"></path>
+         <path name="2" class="line fill" d="m 60.805,28.694 0.213,4.844 c 2.603,1.727 4.442,4.103 6.154,6.665 l 1.959,-4.425 c -2.2,-3.066 -5.171,-5.142 -8.326,-7.084 z"></path>
+         <path name="3" class="line fill" d="m 71.208,39.144 -2.671,4.04 c 1.096,2.931 1.196,5.941 1.079,9.026 L 73.8,49.79 c 0,-3.778 -1.178,-7.21 -2.592,-10.646 z"></path>
+         <path name="4" class="line fill" d="m 73.511,53.741 -4.524,1.691 c -0.832,3.021 -2.512,5.511 -4.408,7.938 l 4.797,0.516 c 2.221,-3.053 3.268,-6.531 4.135,-10.145 z"></path>
+         <path name="5" class="line fill" d="m 66.829,66.906 -4.647,-1.3 c -2.438,1.954 -5.257,2.977 -8.21,3.82 l 3.579,3.248 c 3.583,-1.155 6.466,-3.352 9.278,-5.768 z"></path>
+         <path name="6" class="line fill" d="m 53.724,73.619 -2.999,-3.802 c -3.117,0.141 -5.996,-0.693 -8.879,-1.756 l 0.998,4.744 c 3.572,1.176 7.191,1.106 10.88,0.814 z"></path>
+         <path name="7" class="line fill" d="m 39.194,71.305 -0.213,-4.843 c -2.592,-1.727 -4.434,-4.105 -6.144,-6.666 l -1.969,4.428 c 2.201,3.062 5.171,5.137 8.326,7.081 z"></path>
+         <path name="8" class="line fill" d="m 28.792,60.854 2.67,-4.036 c -1.095,-2.934 -1.194,-5.945 -1.079,-9.029 l -4.183,2.42 c 0,3.777 1.176,7.21 2.592,10.645 z"></path>
+         <path name="9" class="line fill" d="m 26.491,46.258 4.523,-1.688 c 0.83,-3.024 2.512,-5.515 4.409,-7.942 l -4.8,-0.516 c -2.22,3.053 -3.268,6.532 -4.132,10.146 z"></path>
+         <path name="10" class="line fill" d="m 33.17,33.092 4.648,1.302 c 2.44,-1.953 5.256,-2.977 8.213,-3.82 l -3.583,-3.25 c -3.579,1.157 -6.466,3.353 -9.278,5.768 z"></path>
+         <animateTransform attributeName="transform" attributeType="XML" type="rotate" from="360 50 50" to="0 50 50" dur="4s" repeatCount="indefinite"/>
+      </g>
+   </svg>
+</div>
+
+<script>
+   Object.defineProperty(window,'Busy',{writable:false,enumerable:false,configurable:false,value:(new EventTarget())});
+   Busy.base = {skin:document.getElementById('busyPane').getAttribute('style'), gear:document.getElementById('busyPane').innerHTML};
+   Busy.node = null;
+   Busy.jobs = {};
+   Busy.data = 0;
+   Busy.size = 4.5;
+   Busy.actv = 0;
+
+
+   Busy.edit = function(k,v, n,j,t,l,i,d,m,p,u,g,a)
+   {
+      if(((typeof k)!='string')||(k.length<1)||((typeof v)!='number')){return}; if(!Busy.node){Busy.init(k,v); return}; Busy.dead=false;
+      n=Busy.node; Busy.jobs[k]=((v>100)?100:v); j=Busy.jobs; l=0; t=((Object.getOwnPropertyNames(j)).length*100);
+      for(i in j){if(j.hasOwnProperty(i)){l+=j[i];}}; d=Math.floor((l/t)*100); n.style.opacity=1; //n.focus();
+      Busy.data=d; m=Math.floor(d/10); g=n.getElementsByClassName('pgrp')[0]; p=g.getElementsByTagName('path');
+      i=null; for(i in p){if(p.hasOwnProperty(i)){u=(p[i].getAttribute('name')*1); p[i].style.opacity=((u<=m)?1:0.5);}};
+      if(d>0){a=g.getElementsByTagName('animateTransform')[0]; if(a){a.parentNode.removeChild(a);}}; if(d>99){Busy.done()};
+   };
+
+
+   Busy.tint = function(c, n,l,f,i)
+   {
+      if(!Busy.node){return}; n=Busy.node; n.style.opacity=1; l=n.getElementsByClassName('line'); f=n.getElementsByClassName('fill');
+      for(i in l){if(l.hasOwnProperty(i)){l[i].style.stroke=c;}}; i=null;
+      for(i in f){if(f.hasOwnProperty(i)){f[i].style.fill=c; f[i].style.fillOpacity=0.5;}};
+   };
+
+
+   Busy.done = function(p,w,x,o,f,t,n,p)
+   {
+      p=document.getElementById('busyPane'); if(!p||!Busy.node){return;}; Busy.jobs={}; Busy.dead=true; w=(Busy.fail?'fail':'done');
+      n=Busy.node; n.style.opacity=1; x=100; o=1; f=round(((o/x)*5),3); p=n.parentNode;
+      setTimeout(function()
+      {
+         t=setInterval(function()
+         {
+            if(!Busy.dead){clearInterval(t); p.style.opacity=1; return}; Busy.signal(w,ONCE); o-=f; if(o>0){p.style.opacity=o; return};
+            clearInterval(t); p.style.opacity=0; p=document.getElementById('busyPane'); if(p&&p.parentNode){p.parentNode.removeChild(p)};
+            Busy.fail=false; Busy.node=null; n=null; p=null; Busy.data=0; tick.after(150,()=>{Busy.actv=0});
+         },5);
+         setTimeout(()=>
+         {
+            if(Busy.dead&&document.getElementById('busyPane')){Busy.kill()};
+         },1250);
+      },260);
+   };
+
+
+   Busy.init = function(j,v, ap,sb)
+   {
+      sb=(("(~conf('Site/anonBusy/alwaysRender'~)"=="true")?1:window.ANONSHOWBUSY);
+      if(sb){Busy.base.skin=Busy.base.skin.split("display:none").join("display:block");};
+
+      if(!!Busy.node){Busy.node.style.opacity=1; Busy.edit(j,(v||0)); return};
+      var p=document.createElement('div'); p.id='busyPane';
+      p.setAttribute('style',Busy.base.skin); p.innerHTML=Busy.base.gear; document.body.appendChild(p);
+      Busy.node=document.getElementById('busyGear'); let s=Busy.size; if((s*1)==s){s+='rem'};
+      Busy.node.style.width=s; Busy.node.style.height=s; Busy.node.style.opacity=1; Busy.node.setAttribute('tabindex',-1);
+      Busy.node.tabindex=-1; Busy.node.style.outline='none'; Busy.actv=1; Busy.edit(j,(v||0));
+   };
+
+   Busy.kill = function()
+   {
+      Busy.jobs={}; Busy.dead=true; Busy.fail=false; Busy.node=(function(){}());
+      let p=document.getElementById('busyPane'); if(!p){return}; p.parentNode.removeChild(p);
+   };
+
+   Busy.kill();
+   Busy.init();
+</script>

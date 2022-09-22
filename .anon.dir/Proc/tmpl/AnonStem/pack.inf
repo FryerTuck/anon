@@ -1,0 +1,5 @@
+needsPHP: 7.2
+needsExt:
+packVrsn: 0.1.0
+panlIcon: question-circle
+forClans: *

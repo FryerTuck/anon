@@ -1,0 +1,444 @@
+
+/* Anon :: view
+/* ----------------------------------------------------------------------------------------------------------------------------------------- */
+   #anonPanlView
+   {
+      width:100%; overflow:hidden;
+      background:hsla(210,3%,16%,1);
+      color:hsla(0,0%,90%,1);
+      bottom:0px;
+      box-shadow:0px 0px 5px hsla(0,0%,0%,0.5);
+   }
+   #anonPanlView.part
+   {top:auto !important; bottom:0px !important;}
+
+   #AnonAppsView .panlHorzDlim {opacity:0.9;}
+   #AnonAppsView .panlHorzLine {opacity:0.9;}
+   #AnonAppsView .panlVertDlim {opacity:0.9;}
+   #AnonAppsView .panlVertLine {opacity:0.9;}
+/* ----------------------------------------------------------------------------------------------------------------------------------------- */
+
+
+
+
+/* Anon :: Main : grid
+/* ----------------------------------------------------------------------------------------------------------------------------------------- */
+   #AnonMainGrid
+   {
+      width:100%; height:100%;
+      background:url('/User/dcor/wal1.jpg');
+      background-size:cover;
+      user-select:none;
+   }
+
+   #MainGridRow1
+   {
+      height:100%;
+   }
+
+   #MainGridCol2 {height:5px; min-height:5px; max-height:5px;}
+
+   #AnonMainPanl
+   {
+      background:hsla(210,3%,16%,0.95);
+      overflow:hidden;
+      user-select:none;
+   }
+
+   #AnonAppsGrid
+   {
+      width:100% !important; height:100% !important;
+   }
+/* ----------------------------------------------------------------------------------------------------------------------------------------- */
+
+
+
+
+/* Anon :: Main : Menu
+/* ----------------------------------------------------------------------------------------------------------------------------------------- */
+   #AnonAppsMenu
+   {
+      width:46px; height:100%;
+      user-select:none;
+   }
+   #AnonAppsMenu > wrap
+   {
+      width:46px !important;
+   }
+   #AnonAppsMenu > wrap > div
+   {
+      position:absolute !important;
+      width:66px; height:100%;
+      overflow:auto;
+   }
+/* ----------------------------------------------------------------------------------------------------------------------------------------- */
+
+
+
+
+/* Anon :: Main : View
+/* ----------------------------------------------------------------------------------------------------------------------------------------- */
+   #AnonAppsDeck
+   {
+   }
+
+   #AnonAppsView
+   {
+      position:absolute !important;
+      width:100% !important; height:100% !important;
+      overflow:hidden !important;
+   }
+/* ----------------------------------------------------------------------------------------------------------------------------------------- */
+
+
+
+
+/* Anon :: Repl
+/* ----------------------------------------------------------------------------------------------------------------------------------------- */
+   #AnonReplView
+   {
+      height:40px;
+      vertical-align:top;
+      background:url('/User/dcor/wal2.jpg');
+      background-size:cover;
+      background-position: 0px -36vw;
+   }
+
+   #AnonReplPanl
+   {
+      overflow:auto;
+      font-family:'hack';
+      font-size:11px;
+      line-height:16px;
+      background:hsla(0,0%,3%,0.9);
+   }
+
+   .replEchoProm::selection
+   {
+       color:hsla(0,0%,0%,1);
+       background:hsla(0,0%,100%,0.5);
+   }
+
+   .replEchoCmnd::selection
+   {
+       color:hsla(0,0%,0%,1);
+       background:hsla(0,0%,100%,0.5);
+   }
+
+   .replEchoMumb::selection
+   {
+       color:hsla(0,0%,0%,1);
+       background:hsla(0,0%,100%,0.5);
+   }
+
+   #AnonReplProm::selection
+   {
+       color:hsla(0,0%,0%,1);
+       background:hsla(0,0%,100%,0.5);
+   }
+
+   #AnonReplFeed::selection
+   {
+       color:hsla(0,0%,0%,1);
+       background:hsla(0,0%,100%,0.5);
+   }
+
+   #AnonReplPanl grid
+   {
+      height:10px;
+   }
+
+   #AnonReplFlog
+   {
+      display:block !important;
+      font-family:'hack' !important;
+      text-align:left !important;
+      font-size:11px !important;
+      line-height:16px !important;
+      color:#BBB !important;
+      padding:0px !important;
+      margin:0px;
+      margin-top:5px;
+      margin-left:5px;
+   }
+
+   #AnonReplForm
+   {
+      width: 100%;
+      height:unset;
+      /* margin-top:5px;
+      margin-left:5px; */
+   }
+
+   #AnonReplProc
+   {
+      /* padding-top:5px; */
+      padding-left:5px;
+      width:10px;
+   }
+
+   #AnonReplProm
+   {
+      display:inline-block !important;
+      font-family:'hack' !important;
+      font-size:11px !important;
+      line-height:16px !important;
+      color:#777;
+      padding:0px !important;
+      margin:0px !important;
+   }
+
+   #AnonReplFeed
+   {
+      width:100% !important;
+      height:16px !important;
+      border:none !important;
+      background:transparent !important;
+      color:#CCC;
+      text-align:left;
+      font-size:11px !important;
+      line-height:16px !important;
+      outline:none;
+      font-family:'hack';
+      margin:0px !important;
+      padding:0px !important;
+      /* padding-left:6px !important; */
+      margin-top:-1px !important;
+      border:none !important;
+   }
+
+   .replEchoProm
+   {
+      color:#777;
+      margin-right:6px;
+   }
+
+   .replEchoProm
+   {
+      color:#777;
+      margin-right:6px;
+   }
+
+   .replEchoMumb
+   {
+      color:#555;
+   }
+/* ----------------------------------------------------------------------------------------------------------------------------------------- */
+
+
+
+
+/* Anon :: Main : Butn
+/* ----------------------------------------------------------------------------------------------------------------------------------------- */
+   .AnonMainButn
+   {
+      float:left;
+      width:36px; height:36px; margin:5px; margin-top:6px; margin-bottom:0px; min-width:36px !important; padding:0px !important;
+      background:linear-gradient(0deg, hsla(210,3%,19%,1) 0%, hsla(210,3%,23%,1) 100%);
+      font-size:25px; text-align:center; color:hsla(0,0%,70%,1);
+      border-color:hsla(210,3%,26%,1); box-shadow:0px 0px 2px hsla(0,0%,0%,0.4);
+   }
+   .AnonMainButn .butnIcon
+   {
+      padding-bottom:2px !important;
+   }
+   .AnonMainButn:hover
+   {
+      background:linear-gradient(0deg, hsla(210,3%,26%,1) 0%, hsla(210,3%,30%,1) 100%);
+      color:hsla(0,0%,95%,1);
+      border:1px solid hsla(210,3%,36%,1);
+   }
+   .AnonActvKnob
+   {
+      background:hsla(210,3%,30%,1) !important;
+      color:hsla(0,0%,100%,1) !important;
+      box-shadow:none; border:1px solid hsla(210,60%,50%,1) !important;
+   }
+   .AnonButnWarn
+   {
+      color:hsla(50,100%,65%,1) !important;
+      border:1px solid hsla(50,100%,65%,1) !important;
+      outline-color:hsla(50,100%,65%,1) !important;
+   }
+/* ----------------------------------------------------------------------------------------------------------------------------------------- */
+
+
+
+
+/* Anon :: Tool : Butn
+/* ----------------------------------------------------------------------------------------------------------------------------------------- */
+   .AnonToolButn
+   {
+      width:28px; height:28px; margin:2px; min-width:28px !important; padding:0px !important;
+      background:linear-gradient(0deg, hsla(210,3%,19%,1) 0%, hsla(210,3%,23%,1) 100%);
+      font-size:16px; line-height:26px; text-align:center; color:hsla(0,0%,70%,1);
+      border-color:hsla(210,3%,26%,1); box-shadow:0px 0px 2px hsla(0,0%,0%,0.4);
+   }
+   .AnonToolButn:hover
+   {
+      background:linear-gradient(0deg, hsla(210,3%,26%,1) 0%, hsla(210,3%,30%,1) 100%);
+      color:hsla(0,0%,95%,1);
+      border:1px solid hsla(210,3%,36%,1);
+   }
+/* ----------------------------------------------------------------------------------------------------------------------------------------- */
+
+
+
+
+/* Anon :: Panl : Slab
+/* ----------------------------------------------------------------------------------------------------------------------------------------- */
+   .AnonPanlSlab
+   {
+      width:100%; height:100%;
+   }
+
+   .panlSlabMenu
+   {
+      width:200px;
+   }
+
+   .slabMenuHead
+   {
+      width:200px; height:46px;
+      text-align:center; vertical-align:middle;
+      font-family:"head";
+      color:hsla(0,0%,60%,1);
+      padding-top:6px;
+      background:hsla(0,0%,0%,0.1);
+   }
+
+   .slabViewHead
+   {
+      width:auto; height:46px;
+      text-align:left; vertical-align:bottom;
+      color:hsla(0,0%,60%,1);
+      padding:0px;
+      background:hsla(0,0%,0%,0.1);
+   }
+
+   .panlSlabTool
+   {
+      width:200px;
+   }
+
+   .slabToolHead
+   {
+      width:200px; height:36px;
+      text-align:center; vertical-align:middle;
+      font-family:"head";
+   }
+
+   .slabMenuBody
+   {
+      width:200px;
+   }
+
+   .slabViewBody
+   {
+      width:auto;
+      background: hsla(0,0%,0%,0) !important;
+   }
+
+   .slabMenuButn
+   {
+      display:block; height:28px;
+      padding:0px !important; padding-left:6px !important; padding-right:6px !important;
+      background:linear-gradient(0deg, hsla(210,3%,19%,1) 0%, hsla(210,3%,23%,1) 100%);
+      font-size:13px; line-height:26px; text-align:center; color:hsla(0,0%,70%,1);
+      border-color:hsla(210,3%,26%,1); box-shadow:0px 0px 3px hsla(0,0%,0%,0.5);
+      margin:0px !important; margin-bottom:10px !important;
+      /* display:block;
+      width:144px; height:24px; margin:5px;
+      background:linear-gradient(0deg, hsla(210,3%,19%,1) 0%, hsla(210,3%,23%,1) 100%);
+      font-family:"butn"; font-size:12px; font-weight:bold; line-height:24px; text-align:center; color:hsla(0,0%,70%,1);
+      border-color:hsla(210,3%,26%,1); box-shadow:0px 0px 2px hsla(0,0%,0%,0.4);
+      margin-left:auto; margin-right:auto; */
+   }
+   .slabMenuButn:hover
+   {
+      background:linear-gradient(0deg, hsla(210,3%,26%,1) 0%, hsla(210,3%,30%,1) 100%);
+      color:hsla(0,0%,95%,1);
+      border:1px solid hsla(210,3%,36%,1);
+   }
+   .slabMenuActv
+   {
+      /* background:hsla(210,3%,30%,1); */
+      color:hsla(0,0%,95%,1);
+      box-shadow:none; border:1px solid hsla(210,60%,50%,1);
+   }
+
+   .panlSlabView
+   {
+      width:auto;
+      height:auto;
+   }
+/* ----------------------------------------------------------------------------------------------------------------------------------------- */
+
+
+
+
+/* clan :: sideMenuView
+/* ----------------------------------------------------------------------------------------------------------------------------------------- */
+   .sideMenuView
+   {
+      width:200px;
+      min-width:200px !important;
+      font-size:16px !important;
+      line-height:18px !important;
+      user-select: none;
+   }
+
+   .sideMenuView col
+   {
+      user-select: none;
+   }
+
+   .sideMenuView treetwig:focus
+   {
+      background:hsla(0,0%,100%,0.05);
+   }
+
+   .sideMenuView .treeTwigText input
+   {
+      color:hsla(0,0%,85%,1);
+   }
+
+   .sideMenuView .treeTwigText input
+   {
+      color:hsla(0,0%,85%,1);
+   }
+
+   .sideMenuView .sideMenuToolPanl
+   {
+       padding:10px;
+   }
+/* ----------------------------------------------------------------------------------------------------------------------------------------- */
+
+
+
+
+/* clan :: longMenuButn
+/* ----------------------------------------------------------------------------------------------- */
+   .longMenuButn
+   {
+      display:block; height:28px;
+      padding:0px !important; padding-left:6px !important; padding-right:6px !important;
+      background:linear-gradient(0deg, hsla(210,3%,19%,1) 0%, hsla(210,3%,23%,1) 100%);
+      font-size:12px; line-height:26px; text-align:center; color:hsla(0,0%,70%,1);
+      border-color:hsla(210,3%,26%,1); box-shadow:0px 0px 3px hsla(0,0%,0%,0.5);
+      margin:0px !important; margin-bottom:10px !important;
+      white-space:nowrap;
+   }
+   .longMenuButn:hover
+   {
+      background:linear-gradient(0deg, hsla(210,3%,26%,1) 0%, hsla(210,3%,30%,1) 100%);
+      color:hsla(0,0%,95%,1);
+      border:1px solid hsla(210,3%,36%,1);
+   }
+   .longActvButn
+   {
+      background:hsla(210,3%,30%,1);
+      color:hsla(0,0%,95%,1);
+      box-shadow:none; border:1px solid hsla(210,60%,50%,1);
+   }
+/* ----------------------------------------------------------------------------------------------- */

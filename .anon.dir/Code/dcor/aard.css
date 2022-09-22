@@ -1,0 +1,175 @@
+#CodePanlSlab
+{
+   overflow:hidden;
+}
+
+#CodeMainGrid
+{
+   width:100%, height:100%;
+}
+
+#CodeViewGrid
+{
+   width:100%, height:100%;
+}
+
+
+
+
+#CodeTreeView
+{
+   position:relative !important;
+}
+
+#CodeTreePanl
+{
+   position:absolute !important;
+   width:100% !important;
+   height:100% !important;
+}
+
+
+
+
+
+#CodeBodyPanl
+{
+   width:100% !important; height:100% !important;
+   overflow:hidden !important;
+}
+
+
+
+
+.CodeEditWrap
+{
+   /* position:absolute; */
+   width:100%; height:100%;
+   font-size:12px !important;
+   line-height:16px !important;
+   /* background:none;
+   overflow:hidden; */
+}
+
+
+.CodeViewWrap
+{
+    position:absolute;
+    top:0px; left:0px;
+    overflow:auto;
+}
+
+
+.ace_active-line
+{
+   opacity:0.5 !important;
+}
+
+.ace_comment
+{
+   color:hsla(0,0%,35%,1) !important;
+}
+
+
+.ace_gutter-cell
+{
+    /* min-width:60px; */
+}
+
+.ace_gutter-cell.ace_error
+{
+   background:hsla(0,100%,70%,0.05) !important;
+   color:hsla(0,100%,60%,1) !important;
+}
+
+.ace_gutter-cell.ace_warning
+{
+   background:hsla(40,100%,70%,0.05) !important;
+   color:hsla(40,100%,60%,1) !important;
+}
+
+.ace_selection
+{
+   background:hsla(0,0%,100%,0.1) !important;
+}
+
+.ace_print-margin
+{
+   opacity:0.6 !important;
+}
+
+.ace_tooltip
+{
+   background:hsla(0,0%,5%,0.8) !important;
+   font-size:10px;
+   color:hsla(0,0%,70%,1) !important;
+   border-radius:2px !important;
+}
+
+
+
+
+#CodeToolHold
+{
+   background:hsla(0,0%,0%,0.15);
+}
+
+#CodeToolHold.show {height:90px !important;}
+#CodeToolHold.hide {height:0.1px !important;}
+
+
+
+
+#CodeInfoView
+{
+   height:24px; min-height:24px; max-height:24px;
+   background:hsla(0,0%,0%,0.15);
+}
+
+#CodeInfoPanl
+{
+   height:24px;
+   overflow:hidden;
+}
+
+#CodeInfoPanl col
+{
+   vertical-align:top;
+   white-space:nowrap;
+   padding-top:2px;
+}
+
+.CodeInfoPadn
+{min-width:20px;}
+
+#CodeInfoPanl col>div
+{
+   font-family:'hack' !important;
+   font-size:11px !important;
+   color:hsla(0,0%,60%,1);
+   line-height:19px !important;
+}
+
+#CodeInfoPanl col>icon
+{
+   margin-right:4px;
+   font-size:16px !important;
+   color:hsla(0,0%,60%,1);
+   line-height:18px !important;
+}
+
+#CodeInfoBufr
+{width:20px;}
+
+#CodeInfoRepo
+{width:20px;}
+
+
+
+#CodeBulkPanl .link
+{
+   font-family:'hack';
+   font-size:11px;
+   line-height:14px !important;
+   margin-top:2px;
+}

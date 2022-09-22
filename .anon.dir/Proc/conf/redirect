@@ -1,0 +1,7 @@
+*.php : 404
+*.inf : 404
+*.cfg : 404
+*.key : 404
+*.url : 404
+
+/favicon.ico : /Site/dcor/favicon.ico

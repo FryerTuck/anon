@@ -1,0 +1,82 @@
+#TimePanlSlab
+{
+   overflow:hidden;
+}
+
+#TimeMainGrid
+{
+   width:100%, height:100%;
+}
+
+#TimeViewGrid
+{
+   width:100%, height:100%;
+}
+
+
+
+
+#TimeTreeView
+{
+   position:relative !important;
+}
+
+#TimeTreePanl
+{
+   position:absolute !important;
+   width:100% !important;
+   height:100% !important;
+}
+
+
+
+
+#TimeBodyView
+{
+   position:relative;
+}
+
+#TimeBodyPanl
+{
+   position:absolute !important;
+   width:100% !important; height:100% !important;
+   overflow:hidden !important;
+}
+
+
+
+
+
+#TimeBodyView
+{
+   width:auto; height:auto;
+}
+
+#TimeToolView
+{
+   width:64px; min-width:64px; height:100%;
+   background:hsla(0,0%,0%,0.1);
+   padding:2px;
+}
+
+#TimeToolPanl
+{
+   overflow:hidden !important;
+}
+
+#TimeBodyPanl
+{
+   overflow:hidden !important;
+}
+
+
+
+.TimeViewPanl
+{
+   background:hsla(0,0%,75%,1);
+}
+
+.ct-label
+{
+   color:hsla(0,0%,20%,1) !important;
+}
